@@ -9,6 +9,7 @@ dependencies {
     api project(':data')
     api 'com.rubyhuntersky:stockcatalog:1.0.0'
     api "io.reactivex.rxjava2:rxjava:2.2.5"
+    api 'com.github.wehjin:interaction-core:72948a2d7b'
     testImplementation 'junit:junit:4.12'
     testImplementation "com.nhaarman.mockitokotlin2:mockito-kotlin:2.1.0"
 }
