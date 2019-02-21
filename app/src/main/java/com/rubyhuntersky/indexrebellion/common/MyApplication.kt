@@ -7,6 +7,7 @@ import com.rubyhuntersky.data.cash.CashAmount
 import com.rubyhuntersky.data.index.Constituent
 import com.rubyhuntersky.data.index.MarketWeight
 import com.rubyhuntersky.indexrebellion.books.SharedRebellionBook
+import com.rubyhuntersky.stockcatalog.StockMarket
 import kotlinx.serialization.json.Json
 import java.util.*
 
@@ -14,6 +15,8 @@ class MyApplication : Application() {
 
     override fun onCreate() {
         super.onCreate()
+
+        StockMarket.network = SharedHttpNetwork
 
         // TODO Figure out why this is needed.
         // Without it, we get a runtime error about inability to find SharePrice.Unknown.serializer

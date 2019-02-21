@@ -28,9 +28,11 @@ interface RebellionBook : Book<Rebellion> {
         }
     }
 
-    fun updateConstituent(constituent: Constituent) {
-        value.updateConstituent(constituent)
-    }
+    val symbols: List<String>
+        get() = value.index.constituents.map(Constituent::assetSymbol).map(AssetSymbol::string)
+
+    fun updateConstituent(constituent: Constituent) =
+        write(value.updateConstituent(constituent))
 
     fun constituentReader(assetSymbol: AssetSymbol): Observable<Constituent> {
         return reader.switchMap { rebellion ->
@@ -42,6 +44,9 @@ interface RebellionBook : Book<Rebellion> {
             }
         }
     }
+
+    fun updateConstituents(constituents: List<Constituent>) =
+        write(value.updateConstituents(constituents))
 }
 
 

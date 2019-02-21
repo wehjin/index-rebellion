@@ -1,23 +1,26 @@
 package com.rubyhuntersky.indexrebellion.presenters.main
 
 import android.support.v7.widget.RecyclerView
+import android.text.format.DateFormat
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import com.rubyhuntersky.data.report.Correction
 import com.rubyhuntersky.indexrebellion.R
 import kotlinx.android.synthetic.main.view_corrections_footer.view.*
+import kotlinx.android.synthetic.main.view_corrections_header.view.*
+import java.util.*
 import kotlin.math.max
 
 class CorrectionsRecyclerViewAdapter(
     private val onAddConstituentClick: () -> Unit,
     private val onCorrectionDetailsClick: (Correction) -> Unit
-) :
-    RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     enum class CorrectionsViewType { HEADER, FOOTER, BODY, CONNECTOR_SHORT, CONNECTOR_TALL }
 
     private var corrections: List<Correction> = emptyList()
     private var correctionsHighWeight: Double = corrections.highWeight
+    private var refreshDate: Date = Date(0)
 
     override fun getItemCount(): Int = 1 + corrections.size * 2 + 2
 
@@ -38,9 +41,10 @@ class CorrectionsRecyclerViewAdapter(
         }
     }
 
-    fun setCorrections(value: List<Correction>) {
-        corrections = value
-        correctionsHighWeight = value.highWeight
+    fun bind(corrections: List<Correction>, refreshDate: Date) {
+        this.corrections = corrections
+        this.refreshDate = refreshDate
+        correctionsHighWeight = corrections.highWeight
         notifyDataSetChanged()
     }
 
@@ -74,7 +78,17 @@ class CorrectionsRecyclerViewAdapter(
                     onCorrectionDetailsClick
                 )
             }
-            CorrectionsViewType.HEADER -> Unit
+            CorrectionsViewType.HEADER -> {
+                if (refreshDate.after(Date(0))) {
+                    viewHolder.itemView.dateTextView.text =
+                        DateFormat.getMediumDateFormat(viewHolder.itemView.context).format(refreshDate)
+                    viewHolder.itemView.timeTextView.text =
+                        DateFormat.getTimeFormat(viewHolder.itemView.context).format(refreshDate)
+                } else {
+                    viewHolder.itemView.dateTextView.text = viewHolder.itemView.context.getString(R.string.index)
+                    viewHolder.itemView.timeTextView.text = null
+                }
+            }
             CorrectionsViewType.CONNECTOR_SHORT -> Unit
             CorrectionsViewType.CONNECTOR_TALL -> Unit
         }

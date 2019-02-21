@@ -4,6 +4,7 @@ import com.rubyhuntersky.data.Rebellion
 import com.rubyhuntersky.data.cash.CashAmount
 import com.rubyhuntersky.data.cash.CashEquivalent
 import com.rubyhuntersky.data.index.MarketWeight
+import java.util.*
 
 data class RebellionReport(private val rebellion: Rebellion) {
 
@@ -11,6 +12,9 @@ data class RebellionReport(private val rebellion: Rebellion) {
     val currentInvestment: CashEquivalent by lazy { rebellion.index.cashEquivalentOfAllConstituents }
     val newInvestment: CashAmount get() = rebellion.newInvestment
     val fullInvestment: CashEquivalent get() = rebellion.fullInvestment
+
+    val refreshDate: Date
+        get() = rebellion.index.refreshDate
 
     data class Funding(
         val currentInvestment: CashEquivalent,

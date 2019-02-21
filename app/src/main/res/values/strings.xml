@@ -39,8 +39,8 @@
     <string name="new_constituent">New Constituent</string>
     <string name="searching">Searching…</string>
     <string name="update_shares">Update Shares</string>
-    <string name="buy_not_advice">Buy $%1$s » $%2$s</string>
-    <string name="sell_not_advice">Sell $%1$s » $%2$s</string>
+    <string name="buy_not_advice">Buy $%1$s => $%2$s</string>
+    <string name="sell_not_advice">Sell $%1$s => $%2$s</string>
     <string name="hold_not_advice">Hold</string>
     <string name="buy_not_advice_short">Buy $%1$s</string>
     <string name="sell_not_advice_short">Sell $%1$s</string>
@@ -49,7 +49,7 @@
     <string name="more">More</string>
     <string name="total">Total</string>
     <string name="shares">Shares</string>
-    <string name="n_shares">%1$s shares — $%2$s </string>
+    <string name="n_shares">%1$s shares ~ $%2$s </string>
     <string name="share_price">Share price</string>
     <string name="adjust_cash_in">Subtract value from cash</string>
     <string name="old_shares_format">%1$s\nshares</string>

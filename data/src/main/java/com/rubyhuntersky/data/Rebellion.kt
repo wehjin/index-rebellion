@@ -16,6 +16,9 @@ data class Rebellion(val index: Index, val newInvestment: CashAmount) {
     val fullInvestment: CashEquivalent
         get() = index.cashEquivalentOfAllConstituents + newInvestment
 
+    fun updateConstituents(constituents: List<Constituent>): Rebellion =
+        Rebellion(index.updateConstituents(constituents), newInvestment)
+
     fun addConstituent(assetSymbol: AssetSymbol, marketWeight: MarketWeight): Rebellion =
         Rebellion(index.addConstituent(assetSymbol, marketWeight), newInvestment)
 
@@ -33,7 +36,8 @@ data class Rebellion(val index: Index, val newInvestment: CashAmount) {
         return index.constituents.find { it.assetSymbol == assetSymbol }
     }
 
-    fun setNewInvestment(cashAmount: CashAmount): Rebellion = Rebellion(index, cashAmount)
+    fun setNewInvestment(cashAmount: CashAmount): Rebellion =
+        Rebellion(index, cashAmount)
 
     companion object {
         val SEED = Rebellion(Index.EMPTY, CashAmount.ZERO)

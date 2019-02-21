@@ -15,6 +15,7 @@ import com.rubyhuntersky.interaction.core.Portal
 import com.rubyhuntersky.interaction.main.Action
 import com.rubyhuntersky.interaction.main.MainInteraction
 import com.rubyhuntersky.interaction.main.Vision
+import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.rxkotlin.addTo
 import kotlinx.android.synthetic.main.activity_main_viewing.*
@@ -22,11 +23,12 @@ import kotlinx.android.synthetic.main.view_funding.*
 
 class MainActivity : AppCompatActivity() {
 
-    private val disposable = CompositeDisposable()
+    private val composite = CompositeDisposable()
 
     override fun onStart() {
         mainActivity = this
         mainInteraction.visionStream
+            .observeOn(AndroidSchedulers.mainThread())
             .subscribe {
                 Log.d(this.javaClass.simpleName, "VISION: $it")
                 when (it) {
@@ -40,7 +42,7 @@ class MainActivity : AppCompatActivity() {
                     }
                 }
             }
-            .addTo(disposable)
+            .addTo(composite)
         super.onStart()
     }
 
@@ -52,16 +54,23 @@ class MainActivity : AppCompatActivity() {
                 mainInteraction.sendAction(Action.OpenCashEditor)
             })
 
-        ConclusionViewHolder(correctionsRecyclerView)
-            .render(
-                conclusion = report.conclusion,
-                onAddConstituentClick = { mainInteraction.sendAction(Action.FindConstituent) },
-                onCorrectionDetailsClick = { mainInteraction.sendAction(Action.OpenCorrectionDetails(it)) }
-            )
+        ConclusionViewHolder(correctionsRecyclerView).render(
+            refreshDate = report.refreshDate,
+            conclusion = report.conclusion,
+            onAddConstituentClick = { mainInteraction.sendAction(Action.FindConstituent) },
+            onCorrectionDetailsClick = { mainInteraction.sendAction(Action.OpenCorrectionDetails(it)) }
+        )
+
+        correctionsSwipeToRefresh.setOnRefreshListener {
+            mainInteraction.sendAction(Action.Refresh)
+        }
+        if (!viewing.isRefreshing) {
+            correctionsSwipeToRefresh.isRefreshing = false
+        }
     }
 
     override fun onStop() {
-        disposable.clear()
+        composite.clear()
         if (mainActivity == this) {
             mainActivity = null
         }

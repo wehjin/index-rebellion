@@ -7,9 +7,9 @@ import com.rubyhuntersky.data.report.CorrectionDetails
 import com.rubyhuntersky.indexrebellion.R
 import com.rubyhuntersky.indexrebellion.common.InteractionBottomSheetDialogFragment
 import com.rubyhuntersky.indexrebellion.presenters.updateshares.UpdateSharesDialogFragment
-import com.rubyhuntersky.interaction.core.Portal
 import com.rubyhuntersky.interaction.core.BehaviorBook
 import com.rubyhuntersky.interaction.core.InteractionRegistry
+import com.rubyhuntersky.interaction.core.Portal
 import com.rubyhuntersky.interaction.correctiondetails.Action
 import com.rubyhuntersky.interaction.correctiondetails.CorrectionDetailsInteractionImpl
 import com.rubyhuntersky.interaction.correctiondetails.Vision

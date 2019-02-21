@@ -2,10 +2,12 @@ package com.rubyhuntersky.data.index
 
 import com.rubyhuntersky.data.assets.AssetSymbol
 import com.rubyhuntersky.data.assets.ShareCount
+import com.rubyhuntersky.data.assets.SharePrice
 import com.rubyhuntersky.data.cash.CashEquivalent
 import com.rubyhuntersky.data.cash.sum
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.Transient
+import java.util.*
 
 @Serializable
 data class Index(val constituents: List<Constituent>, val memo: String) {
@@ -34,7 +36,26 @@ data class Index(val constituents: List<Constituent>, val memo: String) {
         }
     }
 
-    fun updateConstituent(constituent: Constituent): Index = Index(constituents.updateConstituent(constituent), memo)
+    @Transient
+    val refreshDate: Date
+        get() = constituents
+            .map(Constituent::sharePrice)
+            .map { sharePrice ->
+                (sharePrice as? SharePrice.Sample)?.date ?: Date(0)
+            }
+            .fold(Date(0)) { latest, next ->
+                if (next.after(latest)) {
+                    next
+                } else {
+                    latest
+                }
+            }
+
+    fun updateConstituents(constituents: List<Constituent>): Index =
+        Index(constituents, memo)
+
+    fun updateConstituent(constituent: Constituent): Index =
+        Index(constituents.updateConstituent(constituent), memo)
 
     fun addConstituent(assetSymbol: AssetSymbol, marketWeight: MarketWeight): Index =
         Index(constituents = constituents.addConstituent(assetSymbol, marketWeight), memo = memo)
