@@ -51,6 +51,6 @@
     <string name="shares">Shares</string>
     <string name="n_shares">%1$s shares ~ $%2$s </string>
     <string name="share_price">Share price</string>
-    <string name="adjust_cash_in">Subtract value from cash</string>
+    <string name="adjust_cash_in">Subtract new shares value from cash</string>
     <string name="old_shares_format">%1$s\nshares</string>
 </resources>
