@@ -35,6 +35,7 @@ class CorrectionBodyViewHolder(itemView: View) : RecyclerView.ViewHolder(itemVie
             R.string.sell_format,
             correction.surplus.toDouble().toStatString()
         )
+        correctionActionButton.setIconResource(R.drawable.ic_remove_black_24dp)
         rightSpecial.setBackgroundResource(R.drawable.bg_outlined_rectangle)
         setCorrectionWeights(
             CorrectionWeightsCalculator.calculate(
@@ -53,6 +54,7 @@ class CorrectionBodyViewHolder(itemView: View) : RecyclerView.ViewHolder(itemVie
             R.string.buy_format,
             correction.deficit.toDouble().toStatString()
         )
+        correctionActionButton.setIconResource(R.drawable.ic_add_black_24dp)
         rightSpecial.setBackgroundResource(R.color.secondaryColor)
         setCorrectionWeights(
             CorrectionWeightsCalculator.calculate(
@@ -67,6 +69,7 @@ class CorrectionBodyViewHolder(itemView: View) : RecyclerView.ViewHolder(itemVie
 
         correctionHeadingTextView.text = correction.assetSymbol.toString()
         correctionCircleView.setBackgroundResource(R.drawable.ic_check_circle_black_24dp)
+        correctionActionButton.setIconResource(R.drawable.ic_check_black_24dp)
         correctionActionButton.text = context.getString(R.string.hold)
         setCorrectionWeights(
             CorrectionWeightsCalculator.calculate(
