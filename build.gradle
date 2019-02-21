@@ -21,7 +21,6 @@ allprojects {
         google()
         jcenter()
         mavenCentral()
-        maven { url "https://dl.bintray.com/rubyhuntersky/StockCatalog" }
         maven { url "https://kotlin.bintray.com/kotlinx" }
         maven { url 'https://jitpack.io' }
     }
