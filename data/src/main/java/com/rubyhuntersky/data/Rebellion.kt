@@ -32,12 +32,13 @@ data class Rebellion(val index: Index, val newInvestment: CashAmount) {
         newInvestment = cashChange?.let { newInvestment + it } ?: newInvestment
     )
 
-    fun findConstituent(assetSymbol: AssetSymbol): Constituent? {
-        return index.constituents.find { it.assetSymbol == assetSymbol }
-    }
+    fun findConstituent(assetSymbol: AssetSymbol): Constituent? =
+        index.constituents.find { it.assetSymbol == assetSymbol }
 
-    fun setNewInvestment(cashAmount: CashAmount): Rebellion =
-        Rebellion(index, cashAmount)
+    fun setNewInvestment(cashAmount: CashAmount): Rebellion = Rebellion(index, cashAmount)
+
+    fun deleteConstituent(assetSymbol: AssetSymbol): Rebellion =
+        Rebellion(index.deleteConstituent(assetSymbol), newInvestment)
 
     companion object {
         val SEED = Rebellion(Index.EMPTY, CashAmount.ZERO)

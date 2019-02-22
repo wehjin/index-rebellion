@@ -27,4 +27,7 @@ data class Constituent constructor(
         ownedShares = ownedShares,
         isRemoved = false
     )
+
+    fun delete() =
+        Constituent(assetSymbol, marketWeight, sharePrice, ownedShares, true)
 }

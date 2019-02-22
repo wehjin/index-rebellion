@@ -5,9 +5,10 @@ import com.rubyhuntersky.data.assets.AssetSymbol
 import com.rubyhuntersky.data.cash.CashAmount
 import com.rubyhuntersky.data.report.CorrectionDetails
 import com.rubyhuntersky.indexrebellion.R
+import com.rubyhuntersky.indexrebellion.books.SharedRebellionBook
 import com.rubyhuntersky.indexrebellion.common.InteractionBottomSheetDialogFragment
 import com.rubyhuntersky.indexrebellion.presenters.updateshares.UpdateSharesDialogFragment
-import com.rubyhuntersky.interaction.core.BehaviorBook
+import com.rubyhuntersky.interaction.books.CorrectionDetailsBook
 import com.rubyhuntersky.interaction.core.InteractionRegistry
 import com.rubyhuntersky.interaction.core.Portal
 import com.rubyhuntersky.interaction.correctiondetails.Action
@@ -29,6 +30,7 @@ class CorrectionDetailsDialogFragment : InteractionBottomSheetDialogFragment<Vis
                 symbolTextView.text = null
                 currentSharesTextView.text = null
                 updateSharesTextView.isEnabled = false
+                removeFromIndexTextView.isEnabled = false
             }
             is Vision.Viewing -> {
                 val details = vision.details
@@ -60,7 +62,15 @@ class CorrectionDetailsDialogFragment : InteractionBottomSheetDialogFragment<Vis
                         dismiss()
                     }
                 }
+                with(removeFromIndexTextView) {
+                    isEnabled = true
+                    setOnClickListener {
+                        sendAction(Action.Delete)
+                        dismiss()
+                    }
+                }
             }
+            is Vision.Finished -> dismiss()
         }
     }
 
@@ -70,19 +80,18 @@ class CorrectionDetailsDialogFragment : InteractionBottomSheetDialogFragment<Vis
             details: CorrectionDetails,
             getFragmentActivity: () -> FragmentActivity
         ): CorrectionDetailsDialogFragment {
-            val detailsBook = BehaviorBook(details)
-            val updateSharesCatalyst = object : Portal<AssetSymbol> {
-                override fun jump(carry: AssetSymbol) =
-                    UpdateSharesDialogFragment.jump(Pair(carry, getFragmentActivity))
-            }
             val interaction = CorrectionDetailsInteractionImpl(
-                detailsBook,
-                updateSharesCatalyst
+                correctionDetailsBook = CorrectionDetailsBook(details, SharedRebellionBook),
+                updateSharesPortal = object : Portal<AssetSymbol> {
+                    override fun jump(carry: AssetSymbol) =
+                        UpdateSharesDialogFragment.jump(Pair(carry, getFragmentActivity))
+                }
             )
-            return CorrectionDetailsDialogFragment().also {
-                it.indirectInteractionKey = Random.nextLong()
-                InteractionRegistry.addInteraction(it.indirectInteractionKey, interaction)
-            }
+            return CorrectionDetailsDialogFragment()
+                .also {
+                    it.indirectInteractionKey = Random.nextLong()
+                    InteractionRegistry.addInteraction(it.indirectInteractionKey, interaction)
+                }
         }
     }
 }

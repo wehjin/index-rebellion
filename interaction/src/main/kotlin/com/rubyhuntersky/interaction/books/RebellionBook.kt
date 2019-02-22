@@ -34,6 +34,9 @@ interface RebellionBook : Book<Rebellion> {
     fun updateConstituent(constituent: Constituent) =
         write(value.updateConstituent(constituent))
 
+    fun deleteConstituent(assetSymbol: AssetSymbol) =
+        write(value.deleteConstituent(assetSymbol))
+
     fun constituentReader(assetSymbol: AssetSymbol): Observable<Constituent> {
         return reader.switchMap { rebellion ->
             val constituent = rebellion.index.constituents.find { it.assetSymbol == assetSymbol }

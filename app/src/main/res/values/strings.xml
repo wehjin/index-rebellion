@@ -53,4 +53,5 @@
     <string name="share_price">Share price</string>
     <string name="adjust_cash_in">Subtract new shares value from cash</string>
     <string name="old_shares_format">%1$s\nshares</string>
+    <string name="remove_from_index">Remove from index</string>
 </resources>

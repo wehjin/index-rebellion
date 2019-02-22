@@ -58,27 +58,29 @@ data class Index(val constituents: List<Constituent>, val memo: String) {
         Index(constituents.updateConstituent(constituent), memo)
 
     fun addConstituent(assetSymbol: AssetSymbol, marketWeight: MarketWeight): Index =
-        Index(constituents = constituents.addConstituent(assetSymbol, marketWeight), memo = memo)
-
-    private fun List<Constituent>.addConstituent(
-        assetSymbol: AssetSymbol, marketWeight: MarketWeight
-    ): List<Constituent> {
-
-        val existing = find { it.assetSymbol == assetSymbol }
-        return existing?.let {
-            if (marketWeight == it.marketWeight) {
-                constituents
-            } else {
-                updateConstituent(existing.reactivate(marketWeight))
-            }
-        } ?: updateConstituent(Constituent(assetSymbol, marketWeight))
-    }
+        Index(
+            constituents = constituents.find { it.assetSymbol == assetSymbol }?.let {
+                constituents.updateConstituent(it.reactivate(marketWeight))
+            } ?: constituents.updateConstituent(Constituent(assetSymbol, marketWeight)),
+            memo = memo
+        )
 
     private fun List<Constituent>.updateConstituent(constituent: Constituent): List<Constituent> {
         val mutable = toMutableList()
         find { it.assetSymbol == constituent.assetSymbol }?.let { mutable.remove(it) }
         mutable.add(constituent)
         return mutable
+    }
+
+    fun deleteConstituent(assetSymbol: AssetSymbol): Index {
+        val newConstituents = constituents.map {
+            if (it.assetSymbol == assetSymbol) {
+                it.delete()
+            } else {
+                it
+            }
+        }
+        return Index(newConstituents, memo)
     }
 
     companion object {
