@@ -12,65 +12,59 @@ import com.rubyhuntersky.indexrebellion.presenters.cashediting.SharedCashEditing
 import com.rubyhuntersky.indexrebellion.presenters.constituentsearch.ConstituentSearchPortal
 import com.rubyhuntersky.indexrebellion.presenters.correctiondetails.CorrectionDetailsPortal
 import com.rubyhuntersky.interaction.core.Portal
+import com.rubyhuntersky.interaction.core.Projector
 import com.rubyhuntersky.interaction.main.Action
 import com.rubyhuntersky.interaction.main.MainInteraction
 import com.rubyhuntersky.interaction.main.Vision
 import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.disposables.CompositeDisposable
-import io.reactivex.rxkotlin.addTo
 import kotlinx.android.synthetic.main.activity_main_viewing.*
 import kotlinx.android.synthetic.main.view_funding.*
 
 class MainActivity : AppCompatActivity() {
 
-    private val composite = CompositeDisposable()
+    private val projector = Projector(
+        mainInteraction,
+        observeOn = AndroidSchedulers.mainThread(),
+        log = { Log.d(this.javaClass.simpleName, "VISION: $it") }
+    ).addComponent(object : Projector.Component<Vision, Vision.Loading, Action> {
+        override fun convert(vision: Vision): Vision.Loading? = vision as? Vision.Loading
+        override fun render(vision: Vision.Loading, sendAction: (Action) -> Unit) {
+            setContentView(R.id.mainLoading, R.layout.activity_main_loading)
+        }
+    }).addComponent(object : Projector.Component<Vision, Vision.Viewing, Action> {
+        override fun convert(vision: Vision) = vision as? Vision.Viewing
+        override fun render(vision: Vision.Viewing, sendAction: (Action) -> Unit) {
+            setContentView(R.id.mainViewing, R.layout.activity_main_viewing)
+            setSupportActionBar(toolbar)
+            val report = vision.rebellionReport
+            supportActionBar!!.title = getString(R.string.funding)
+            FundingViewHolder(fundingView)
+                .render(report.funding, onNewInvestmentClick = {
+                    sendAction(Action.OpenCashEditor)
+                })
+            ConclusionViewHolder(correctionsRecyclerView).render(
+                refreshDate = report.refreshDate,
+                conclusion = report.conclusion,
+                onAddConstituentClick = { sendAction(Action.FindConstituent) },
+                onCorrectionDetailsClick = { sendAction(Action.OpenCorrectionDetails(it)) }
+            )
+            correctionsSwipeToRefresh.setOnRefreshListener {
+                sendAction(Action.Refresh)
+            }
+            if (!vision.isRefreshing) {
+                correctionsSwipeToRefresh.isRefreshing = false
+            }
+        }
+    })
 
     override fun onStart() {
-        mainActivity = this
-        mainInteraction.visionStream
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribe {
-                Log.d(this.javaClass.simpleName, "VISION: $it")
-                when (it) {
-                    is Vision.Loading -> {
-                        setContentView(R.id.mainLoading, R.layout.activity_main_loading)
-                    }
-                    is Vision.Viewing -> {
-                        setContentView(R.id.mainViewing, R.layout.activity_main_viewing)
-                        setSupportActionBar(toolbar)
-                        renderViewing(it)
-                    }
-                }
-            }
-            .addTo(composite)
         super.onStart()
-    }
-
-    private fun renderViewing(viewing: Vision.Viewing) {
-        val report = viewing.rebellionReport
-        supportActionBar!!.title = getString(R.string.funding)
-        FundingViewHolder(fundingView)
-            .render(report.funding, onNewInvestmentClick = {
-                mainInteraction.sendAction(Action.OpenCashEditor)
-            })
-
-        ConclusionViewHolder(correctionsRecyclerView).render(
-            refreshDate = report.refreshDate,
-            conclusion = report.conclusion,
-            onAddConstituentClick = { mainInteraction.sendAction(Action.FindConstituent) },
-            onCorrectionDetailsClick = { mainInteraction.sendAction(Action.OpenCorrectionDetails(it)) }
-        )
-
-        correctionsSwipeToRefresh.setOnRefreshListener {
-            mainInteraction.sendAction(Action.Refresh)
-        }
-        if (!viewing.isRefreshing) {
-            correctionsSwipeToRefresh.isRefreshing = false
-        }
+        mainActivity = this
+        projector.start()
     }
 
     override fun onStop() {
-        composite.clear()
+        projector.stop()
         if (mainActivity == this) {
             mainActivity = null
         }
