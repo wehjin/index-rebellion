@@ -34,4 +34,9 @@ class MyApplication : Application() {
         )
         SharedRebellionBook.open(this)
     }
+
+    companion object {
+        val RANDOM = Random()
+    }
+
 }

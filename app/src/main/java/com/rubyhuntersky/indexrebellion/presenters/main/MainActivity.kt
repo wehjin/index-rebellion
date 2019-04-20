@@ -5,6 +5,7 @@ import android.support.annotation.LayoutRes
 import android.support.v7.app.AppCompatActivity
 import android.util.Log
 import android.view.Menu
+import android.view.MenuItem
 import android.view.View
 import com.rubyhuntersky.indexrebellion.R
 import com.rubyhuntersky.indexrebellion.books.SharedRebellionBook
@@ -12,6 +13,7 @@ import com.rubyhuntersky.indexrebellion.presenters.cashediting.CashEditingDialog
 import com.rubyhuntersky.indexrebellion.presenters.cashediting.SharedCashEditingInteraction
 import com.rubyhuntersky.indexrebellion.presenters.constituentsearch.ConstituentSearchPortal
 import com.rubyhuntersky.indexrebellion.presenters.correctiondetails.CorrectionDetailsPortal
+import com.rubyhuntersky.indexrebellion.robinhood.RobinhoodLoginPortal
 import com.rubyhuntersky.interaction.core.Portal
 import com.rubyhuntersky.interaction.core.Projector
 import com.rubyhuntersky.interaction.main.Action
@@ -61,6 +63,14 @@ class MainActivity : AppCompatActivity() {
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         menuInflater.inflate(R.menu.menu_main, menu)
         return true
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        if (item.itemId == R.id.robinhood) {
+            RobinhoodLoginPortal(this).open()
+            return true
+        }
+        return super.onOptionsItemSelected(item)
     }
 
     override fun onStart() {

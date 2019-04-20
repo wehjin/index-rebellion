@@ -77,5 +77,6 @@ class RobinhoodApi(private val httpClient: OkHttpClient) {
     companion object {
         private const val domain = "api.robinhood.com"
         private const val APPLICATION_JSON = "application/json"
+        val SHARED = RobinhoodApi(OkHttpClient())
     }
 }
