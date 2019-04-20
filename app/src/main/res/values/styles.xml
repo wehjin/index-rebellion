@@ -7,4 +7,10 @@
         <item name="colorAccent">@color/secondaryColor</item>
     </style>
 
+    <style name="ToolbarTheme" parent="ThemeOverlay.AppCompat.ActionBar">
+        <item name="android:background">@color/primaryColor</item>
+        <item name="android:textColorPrimary">@color/primaryTextColor</item>
+        <item name="android:textColorSecondary">@color/primaryTextColor</item>
+        <item name="android:tint">@color/primaryTextColor</item>
+    </style>
 </resources>
