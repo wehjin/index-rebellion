@@ -8,7 +8,7 @@ import com.rubyhuntersky.data.assets.AssetSymbol
 import com.rubyhuntersky.data.assets.SharePrice
 import com.rubyhuntersky.indexrebellion.R
 import com.rubyhuntersky.indexrebellion.books.SharedRebellionBook
-import com.rubyhuntersky.indexrebellion.common.InteractionBottomSheetDialogFragment
+import com.rubyhuntersky.indexrebellion.vxandroid.InteractionBottomSheetDialogFragment
 import com.rubyhuntersky.interaction.core.Portal
 import com.rubyhuntersky.interaction.books.RebellionConstituentBook
 import com.rubyhuntersky.interaction.updateshares.UpdateShares

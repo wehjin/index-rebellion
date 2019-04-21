@@ -6,7 +6,7 @@ import com.rubyhuntersky.data.cash.CashAmount
 import com.rubyhuntersky.data.report.CorrectionDetails
 import com.rubyhuntersky.indexrebellion.R
 import com.rubyhuntersky.indexrebellion.books.SharedRebellionBook
-import com.rubyhuntersky.indexrebellion.common.InteractionBottomSheetDialogFragment
+import com.rubyhuntersky.indexrebellion.vxandroid.InteractionBottomSheetDialogFragment
 import com.rubyhuntersky.indexrebellion.presenters.updateshares.UpdateSharesDialogFragment
 import com.rubyhuntersky.interaction.books.CorrectionDetailsBook
 import com.rubyhuntersky.interaction.core.InteractionRegistry

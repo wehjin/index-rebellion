@@ -54,4 +54,8 @@
     <string name="adjust_cash_in">Subtract new shares value from cash</string>
     <string name="old_shares_format">%1$s\nshares</string>
     <string name="remove_from_index">Remove from index</string>
+    <string name="user">User</string>
+    <string name="password">Password</string>
+    <string name="sign_in">Sign In</string>
+    <string name="robinhood">Robinhood</string>
 </resources>

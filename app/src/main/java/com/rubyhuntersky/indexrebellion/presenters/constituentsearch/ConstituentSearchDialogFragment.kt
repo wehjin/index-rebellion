@@ -5,7 +5,7 @@ import android.text.Editable
 import android.text.TextWatcher
 import android.view.View
 import com.rubyhuntersky.indexrebellion.R
-import com.rubyhuntersky.indexrebellion.common.InteractionBottomSheetDialogFragment
+import com.rubyhuntersky.indexrebellion.vxandroid.InteractionBottomSheetDialogFragment
 import com.rubyhuntersky.interaction.constituentsearch.Action
 import com.rubyhuntersky.interaction.constituentsearch.Vision
 import kotlinx.android.synthetic.main.fragment_constituent_search.*

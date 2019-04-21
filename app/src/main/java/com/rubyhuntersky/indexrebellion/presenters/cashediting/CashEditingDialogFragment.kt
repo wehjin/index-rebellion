@@ -5,7 +5,7 @@ import android.util.Log
 import android.view.View
 import com.rubyhuntersky.data.cash.CashAmount
 import com.rubyhuntersky.indexrebellion.R
-import com.rubyhuntersky.indexrebellion.common.InteractionBottomSheetDialogFragment
+import com.rubyhuntersky.indexrebellion.vxandroid.InteractionBottomSheetDialogFragment
 import com.rubyhuntersky.interaction.cashediting.Action
 import com.rubyhuntersky.interaction.cashediting.Vision
 import com.rubyhuntersky.vx.Dash
