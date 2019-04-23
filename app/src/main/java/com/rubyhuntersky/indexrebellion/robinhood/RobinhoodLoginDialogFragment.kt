@@ -13,7 +13,8 @@ import kotlinx.android.synthetic.main.view_robinhoodlogin.view.*
 
 data class RendererData(
     val userTextWatcher: TextWatcher,
-    val passwordTextWatcher: TextWatcher
+    val passwordTextWatcher: TextWatcher,
+    val mfaTextWatcher: TextWatcher
 )
 
 class RobinhoodLoginDialogFragment : RendererBottomSheetDialogFragment<Vision, Action, RendererData>(
@@ -27,10 +28,14 @@ class RobinhoodLoginDialogFragment : RendererBottomSheetDialogFragment<Vision, A
                 },
                 passwordTextWatcher = object : SimpleTextWatcher {
                     override fun textChanged(s: Editable) = sendAction(Action.SetPassword(s.toString()))
+                },
+                mfaTextWatcher = object : SimpleTextWatcher {
+                    override fun textChanged(s: Editable) = sendAction(Action.SetMfa(s.toString()))
                 }
             ).also {
                 view.userEditText.addTextChangedListener(it.userTextWatcher)
                 view.passwordEditText.addTextChangedListener(it.passwordTextWatcher)
+                view.mfaEditText.addTextChangedListener(it.mfaTextWatcher)
                 view.signInButton.setOnClickListener { sendAction(Action.Submit) }
             }
         }
@@ -38,6 +43,7 @@ class RobinhoodLoginDialogFragment : RendererBottomSheetDialogFragment<Vision, A
         override fun end(view: View, data: RendererData) {
             view.userEditText.removeTextChangedListener(data.userTextWatcher)
             view.passwordEditText.removeTextChangedListener(data.passwordTextWatcher)
+            view.mfaEditText.removeTextChangedListener(data.mfaTextWatcher)
             super.end(view, data)
         }
 
@@ -62,6 +68,11 @@ class RobinhoodLoginDialogFragment : RendererBottomSheetDialogFragment<Vision, A
                         isEnabled = true
                         visibility = View.VISIBLE
                     }
+                    with(view.mfaEditText) {
+                        updateText(vision.mfa, data.mfaTextWatcher)
+                        isEnabled = true
+                        visibility = View.VISIBLE
+                    }
                     with(view.signInButton) {
                         isEnabled = vision.submittable
                         visibility = View.VISIBLE
@@ -74,12 +85,17 @@ class RobinhoodLoginDialogFragment : RendererBottomSheetDialogFragment<Vision, A
                         isEnabled = false
                         visibility = View.VISIBLE
                     }
+                    with(view.mfaEditText) {
+                        isEnabled = false
+                        visibility = View.VISIBLE
+                    }
                     view.signInButton.visibility = View.INVISIBLE
                     data
                 }
                 is Vision.Reporting -> {
                     view.userEditText.isEnabled = false
                     view.passwordEditText.visibility = View.INVISIBLE
+                    view.mfaEditText.visibility = View.INVISIBLE
                     view.signInButton.visibility = View.INVISIBLE
                     Log.d(TAG, "REPORT: $vision")
                     data

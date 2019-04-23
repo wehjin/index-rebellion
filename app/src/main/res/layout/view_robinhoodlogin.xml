@@ -41,6 +41,20 @@
             android:inputType="textPassword" />
     </android.support.design.widget.TextInputLayout>
 
+    <android.support.design.widget.TextInputLayout
+        style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="@string/code_optional">
+
+        <android.support.design.widget.TextInputEditText
+            android:id="@+id/mfaEditText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:enabled="false"
+            android:inputType="number" />
+    </android.support.design.widget.TextInputLayout>
+
     <android.support.design.button.MaterialButton
         android:id="@+id/signInButton"
         style="@style/Widget.MaterialComponents.Button.TextButton.Dialog"

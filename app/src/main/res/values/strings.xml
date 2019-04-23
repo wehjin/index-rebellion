@@ -58,4 +58,5 @@
     <string name="password">Password</string>
     <string name="sign_in">Sign In</string>
     <string name="robinhood">Robinhood</string>
+    <string name="code_optional">Code (optional)</string>
 </resources>

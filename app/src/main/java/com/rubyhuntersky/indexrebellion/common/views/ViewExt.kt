@@ -3,13 +3,28 @@ package com.rubyhuntersky.indexrebellion.common.views
 import android.text.Editable
 import android.text.TextWatcher
 import android.widget.EditText
+import io.reactivex.Observable
 
-fun EditText.updateText(update: String, textWatcher: TextWatcher) {
+fun EditText.updateText(update: String, textWatcher: TextWatcher? = null) {
     val old = text.toString()
     if (old != update) {
-        removeTextChangedListener(textWatcher)
+        textWatcher?.let {
+            removeTextChangedListener(textWatcher)
+        }
         setText(update)
         setSelection(update.length)
+        textWatcher?.let {
+            addTextChangedListener(textWatcher)
+        }
+    }
+}
+
+fun EditText.toTextChanges(): Observable<String> {
+    return Observable.create { emitter ->
+        val textWatcher = object : SimpleTextWatcher {
+            override fun textChanged(s: Editable) = emitter.onNext(s.toString())
+        }
+        emitter.setCancellable { removeTextChangedListener(textWatcher) }
         addTextChangedListener(textWatcher)
     }
 }
