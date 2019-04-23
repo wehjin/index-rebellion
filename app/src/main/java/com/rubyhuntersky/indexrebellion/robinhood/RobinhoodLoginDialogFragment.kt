@@ -60,6 +60,7 @@ class RobinhoodLoginDialogFragment : RendererBottomSheetDialogFragment<Vision, A
                         updateText(vision.password, data.passwordTextWatcher)
                         error = if (vision.error.isBlank()) null else vision.error
                         isEnabled = true
+                        visibility = View.VISIBLE
                     }
                     with(view.signInButton) {
                         isEnabled = vision.submittable
@@ -69,11 +70,20 @@ class RobinhoodLoginDialogFragment : RendererBottomSheetDialogFragment<Vision, A
                 }
                 is Vision.Submitting -> {
                     view.userEditText.isEnabled = false
-                    view.passwordEditText.isEnabled = false
+                    with(view.passwordEditText) {
+                        isEnabled = false
+                        visibility = View.VISIBLE
+                    }
                     view.signInButton.visibility = View.INVISIBLE
                     data
                 }
-                is Vision.Reporting -> TODO()
+                is Vision.Reporting -> {
+                    view.userEditText.isEnabled = false
+                    view.passwordEditText.visibility = View.INVISIBLE
+                    view.signInButton.visibility = View.INVISIBLE
+                    Log.d(TAG, "REPORT: $vision")
+                    data
+                }
             }
         }
     }

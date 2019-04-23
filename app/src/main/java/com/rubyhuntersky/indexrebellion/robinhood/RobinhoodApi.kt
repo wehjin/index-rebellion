@@ -26,17 +26,18 @@ class RobinhoodApi(private val httpClient: OkHttpClient) {
             val formBody = FormBody.Builder()
                 .add("username", username)
                 .add("password", password)
-                .add("grant_type", "password")
                 .add("client_id", "c82SH0WZOsabOXGP2sxqcj34FxkvfnWRZBKlBjFS")
+                .add("grant_type", "password")
+                .add("scope", "internal")
                 .build()
             val request = Request.Builder().post(formBody).url(url).addHeader("Accept", APPLICATION_JSON).build()
             val result = try {
                 val response = httpClient.newCall(request).execute()
                 if (response.isSuccessful) {
+                    // TODO Deal with response containing "{"mfa_required":true,"mfa_type":"app"}"
                     Result.success(response.body()!!.string())
                 } else {
-                    val description = response.body()?.string() ?: response.message()
-                    Result.failure(Error.Server(description))
+                    Result.failure(Error.Server(response.body()?.string() ?: response.message()))
                 }
             } catch (tr: Throwable) {
                 Result.failure<String>(Error.Network(tr))
@@ -58,8 +59,7 @@ class RobinhoodApi(private val httpClient: OkHttpClient) {
                         if (response.isSuccessful) {
                             Result.success(response.body()!!.string())
                         } else {
-                            val description = response.body()?.string() ?: response.message()
-                            Result.failure(Error.Server(description))
+                            Result.failure(Error.Server(response.body()?.string() ?: response.message()))
                         }
                     } catch (tr: Throwable) {
                         Result.failure<String>(Error.Network(tr))
