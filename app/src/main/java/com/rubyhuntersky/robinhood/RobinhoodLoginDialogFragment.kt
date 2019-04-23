@@ -1,4 +1,4 @@
-package com.rubyhuntersky.indexrebellion.robinhood
+package com.rubyhuntersky.robinhood
 
 import android.text.Editable
 import android.text.TextWatcher

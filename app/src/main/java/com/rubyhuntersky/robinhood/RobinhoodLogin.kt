@@ -1,4 +1,4 @@
-package com.rubyhuntersky.indexrebellion.robinhood
+package com.rubyhuntersky.robinhood
 
 import com.rubyhuntersky.interaction.core.BehaviorInteraction
 import io.reactivex.disposables.Disposable

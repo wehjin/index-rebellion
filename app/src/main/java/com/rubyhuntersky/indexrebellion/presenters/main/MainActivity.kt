@@ -13,7 +13,7 @@ import com.rubyhuntersky.indexrebellion.presenters.cashediting.CashEditingDialog
 import com.rubyhuntersky.indexrebellion.presenters.cashediting.SharedCashEditingInteraction
 import com.rubyhuntersky.indexrebellion.presenters.constituentsearch.ConstituentSearchPortal
 import com.rubyhuntersky.indexrebellion.presenters.correctiondetails.CorrectionDetailsPortal
-import com.rubyhuntersky.indexrebellion.robinhood.RobinhoodLoginPortal
+import com.rubyhuntersky.robinhood.RobinhoodLoginPortal
 import com.rubyhuntersky.interaction.core.Portal
 import com.rubyhuntersky.interaction.core.Projector
 import com.rubyhuntersky.interaction.main.Action

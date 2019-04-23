@@ -1,4 +1,4 @@
-package com.rubyhuntersky.indexrebellion.robinhood
+package com.rubyhuntersky.robinhood
 
 import com.beust.klaxon.JsonObject
 import com.beust.klaxon.Parser

@@ -1,4 +1,4 @@
-package com.rubyhuntersky.indexrebellion.robinhood
+package com.rubyhuntersky.robinhood
 
 import android.support.v4.app.FragmentActivity
 import com.rubyhuntersky.indexrebellion.common.MyApplication
