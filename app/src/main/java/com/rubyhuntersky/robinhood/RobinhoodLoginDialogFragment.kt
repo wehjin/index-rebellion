@@ -9,6 +9,7 @@ import com.rubyhuntersky.indexrebellion.common.views.SimpleTextWatcher
 import com.rubyhuntersky.indexrebellion.common.views.updateText
 import com.rubyhuntersky.indexrebellion.vxandroid.Renderer
 import com.rubyhuntersky.indexrebellion.vxandroid.RendererBottomSheetDialogFragment
+import com.rubyhuntersky.indexrebellion.vxandroid.UpdateResult
 import kotlinx.android.synthetic.main.view_robinhoodlogin.view.*
 
 data class RendererData(
@@ -54,7 +55,7 @@ class RobinhoodLoginDialogFragment : RendererBottomSheetDialogFragment<Vision, A
             sendAction: (Action) -> Unit,
             view: View,
             data: RendererData
-        ): RendererData {
+        ): UpdateResult<RendererData> {
             Log.d(TAG, "VISION: $vision")
             return when (vision) {
                 is Vision.Editing -> {
@@ -77,7 +78,7 @@ class RobinhoodLoginDialogFragment : RendererBottomSheetDialogFragment<Vision, A
                         isEnabled = vision.submittable
                         visibility = View.VISIBLE
                     }
-                    data
+                    UpdateResult.Continue(data)
                 }
                 is Vision.Submitting -> {
                     view.userEditText.isEnabled = false
@@ -90,7 +91,7 @@ class RobinhoodLoginDialogFragment : RendererBottomSheetDialogFragment<Vision, A
                         visibility = View.VISIBLE
                     }
                     view.signInButton.visibility = View.INVISIBLE
-                    data
+                    UpdateResult.Continue(data)
                 }
                 is Vision.Reporting -> {
                     view.userEditText.isEnabled = false
@@ -98,7 +99,7 @@ class RobinhoodLoginDialogFragment : RendererBottomSheetDialogFragment<Vision, A
                     view.mfaEditText.visibility = View.INVISIBLE
                     view.signInButton.visibility = View.INVISIBLE
                     Log.d(TAG, "REPORT: $vision")
-                    data
+                    UpdateResult.Finish(data)
                 }
             }
         }

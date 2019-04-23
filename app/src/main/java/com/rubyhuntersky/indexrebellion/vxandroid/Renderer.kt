@@ -9,5 +9,6 @@ interface Renderer<V : Any, A : Any, Data : Any> {
 
     fun start(view: View, sendAction: (A) -> Unit): Data
     fun end(view: View, data: Data) = Unit
-    fun update(vision: V, sendAction: (A) -> Unit, view: View, data: Data): Data = data
+    fun update(vision: V, sendAction: (A) -> Unit, view: View, data: Data): UpdateResult<Data> =
+        UpdateResult.Continue(data)
 }
