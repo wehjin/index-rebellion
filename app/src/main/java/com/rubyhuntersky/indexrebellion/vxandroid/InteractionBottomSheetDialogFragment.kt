@@ -33,6 +33,7 @@ abstract class InteractionBottomSheetDialogFragment<V : Any, A : Any>(
     protected val renderedVision get() = _vision
 
     protected abstract fun render(vision: V)
+    protected open fun erase() = Unit
 
     protected fun sendAction(action: A) {
         Log.d(this.javaClass.simpleName, "ACTION: $action")
@@ -60,6 +61,7 @@ abstract class InteractionBottomSheetDialogFragment<V : Any, A : Any>(
 
     override fun onStop() {
         visionDisposable?.dispose()
+        erase()
         super.onStop()
     }
 

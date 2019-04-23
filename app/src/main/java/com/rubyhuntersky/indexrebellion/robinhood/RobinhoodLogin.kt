@@ -2,10 +2,10 @@ package com.rubyhuntersky.indexrebellion.robinhood
 
 import com.rubyhuntersky.interaction.core.BehaviorInteraction
 import io.reactivex.disposables.Disposable
+import io.reactivex.schedulers.Schedulers
 
 sealed class Vision {
-    object Idle : Vision()
-    data class Editing(val username: String, val password: String, val error: String?, val submittable: Boolean) :
+    data class Editing(val username: String, val password: String, val error: String, val submittable: Boolean) :
         Vision()
 
     data class Submitting(val username: String, val password: String) : Vision()
@@ -23,49 +23,49 @@ sealed class Action {
 }
 
 class RobinhoodLoginInteraction(private val robinhoodApi: RobinhoodApi) :
-    BehaviorInteraction<Vision, Action>(startVision = Vision.Idle) {
+    BehaviorInteraction<Vision, Action>(startVision = Vision.Editing("", "", "", false)) {
 
     override fun sendAction(action: Action) {
         var afterUpdate: (() -> Unit)? = null
         endLogin()
-        val state = state
+        val oldState = state
         this.state = when (action) {
             is Action.Start -> State.Editing(
-                partialUsername = action.username ?: state.nearestUsername,
-                partialPassword = state.nearestPassword,
+                partialUsername = action.username ?: oldState.nearestUsername,
+                partialPassword = oldState.nearestPassword,
                 error = ""
             )
             is Action.SetUsername -> State.Editing(
                 partialUsername = action.username,
-                partialPassword = state.nearestPassword,
-                error = state.nearestError
+                partialPassword = oldState.nearestPassword,
+                error = oldState.nearestError
             )
             is Action.SetPassword -> State.Editing(
-                partialUsername = state.nearestUsername,
+                partialUsername = oldState.nearestUsername,
                 partialPassword = action.password,
-                error = state.nearestError
+                error = oldState.nearestError
             )
             is Action.Submit -> {
-                if (state is State.Editing && state.isSubmittable) {
-                    val username = state.partialUsername
-                    val password = state.partialPassword
+                if (oldState is State.Editing && oldState.isSubmittable) {
+                    val username = oldState.partialUsername
+                    val password = oldState.partialPassword
                     afterUpdate = { startLogin(username, password) }
                     State.Verifying(possibleUsername = username, possiblePassword = password)
                 } else {
-                    state
+                    oldState
                 }
             }
-            is Action.Succeed -> State.Reporting(state.nearestUsername, action.token)
+            is Action.Succeed -> State.Reporting(oldState.nearestUsername, action.token)
             is Action.Fail -> State.Editing(
-                partialUsername = state.nearestUsername,
-                partialPassword = state.nearestPassword,
+                partialUsername = oldState.nearestUsername,
+                partialPassword = oldState.nearestPassword,
                 error = action.throwable.localizedMessage
             )
             is Action.Cancel -> {
-                when (state) {
+                when (oldState) {
                     is State.Verifying -> State.Editing(
-                        partialUsername = state.possibleUsername,
-                        partialPassword = state.possiblePassword,
+                        partialUsername = oldState.possibleUsername,
+                        partialPassword = oldState.possiblePassword,
                         error = ""
                     )
                     else -> State.Reporting(verifiedUsername = "", token = "")
@@ -80,6 +80,7 @@ class RobinhoodLoginInteraction(private val robinhoodApi: RobinhoodApi) :
         loginDisposable = robinhoodApi.login(username, password)
             .map<Action>(Action::Succeed)
             .onErrorReturn(Action::Fail)
+            .subscribeOn(Schedulers.io())
             .subscribe(this::sendAction)
     }
 
@@ -89,23 +90,17 @@ class RobinhoodLoginInteraction(private val robinhoodApi: RobinhoodApi) :
 
     private var loginDisposable: Disposable? = null
 
-    private var state: State = State.Idle
+    private var state: State = State.Editing("", "", "")
 
     private sealed class State {
         abstract fun toVision(): Vision
-
-        object Idle : State() {
-            override fun toVision(): Vision {
-                return Vision.Idle
-            }
-        }
 
         data class Editing(val partialUsername: String, val partialPassword: String, val error: String) : State() {
 
             override fun toVision(): Vision = Vision.Editing(partialUsername, partialPassword, error, isSubmittable)
 
             val isSubmittable: Boolean
-                get() = partialUsername.isNotBlank() && partialPassword.isNotBlank()
+                get() = partialUsername.isNotBlank() && partialPassword.isNotBlank() && partialPassword.length > 2
         }
 
         data class Verifying(val possibleUsername: String, val possiblePassword: String) : State() {
@@ -124,7 +119,6 @@ class RobinhoodLoginInteraction(private val robinhoodApi: RobinhoodApi) :
 
         val nearestUsername: String
             get() = when (this) {
-                is Idle -> ""
                 is Editing -> partialUsername
                 is Verifying -> possibleUsername
                 is Reporting -> verifiedUsername

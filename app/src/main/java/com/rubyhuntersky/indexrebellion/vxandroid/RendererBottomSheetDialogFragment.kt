@@ -1,11 +1,17 @@
 package com.rubyhuntersky.indexrebellion.vxandroid
 
-abstract class RendererBottomSheetDialogFragment<S : Any, V : Any, A : Any>(private val renderer: Renderer<S, V, A>) :
-    InteractionBottomSheetDialogFragment<V, A>(renderer.layoutRes, null) {
+abstract class RendererBottomSheetDialogFragment<V : Any, A : Any, Data : Any>(
+    private val renderer: Renderer<V, A, Data>
+) : InteractionBottomSheetDialogFragment<V, A>(renderer.layoutRes, null) {
 
-    private var state = renderer.start()
+    private lateinit var data: Data
 
     override fun render(vision: V) {
-        state = renderer.update(state, this.view!!, vision, this::sendAction)
+        val oldData = if (::data.isInitialized) data else renderer.start(this.view!!, this::sendAction)
+        data = renderer.update(vision, this::sendAction, this.view!!, oldData)
+    }
+
+    override fun erase() {
+        renderer.end(this.view!!, data)
     }
 }

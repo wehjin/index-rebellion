@@ -3,9 +3,11 @@ package com.rubyhuntersky.indexrebellion.vxandroid
 import android.support.annotation.LayoutRes
 import android.view.View
 
-data class Renderer<S : Any, V : Any, A : Any>(
-    @LayoutRes val layoutRes: Int,
-    val start: () -> S,
-    val update: (state: S, contentView: View, vision: V, sendAction: (A) -> Unit) -> S = { state, _, _, _ -> state },
-    val end: ((state: S) -> Unit)? = null
-)
+interface Renderer<V : Any, A : Any, Data : Any> {
+    @get:LayoutRes
+    val layoutRes: Int
+
+    fun start(view: View, sendAction: (A) -> Unit): Data
+    fun end(view: View, data: Data) = Unit
+    fun update(vision: V, sendAction: (A) -> Unit, view: View, data: Data): Data = data
+}

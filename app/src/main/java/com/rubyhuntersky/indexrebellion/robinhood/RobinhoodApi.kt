@@ -16,20 +16,27 @@ class RobinhoodApi(private val httpClient: OkHttpClient) {
     sealed class Error(message: String?, cause: Throwable?) : Throwable(message, cause) {
         object InsufficientSession : RobinhoodApi.Error("Session is not active", null)
         class Server(message: String) : RobinhoodApi.Error("Server error: $message", null)
-        class Network(cause: Throwable) : RobinhoodApi.Error("Network error", cause)
+        class Network(cause: Throwable) :
+            RobinhoodApi.Error("Network error: ${cause.localizedMessage ?: cause.javaClass.simpleName} ", cause)
     }
 
     fun login(username: String, password: String): Single<String> =
         Single.create<String> { emitter ->
-            val url = "$domain/api-token-auth/"
-            val formBody = FormBody.Builder().add("username", username).add("password", password).build()
+            val url = "$schemeDomain/oauth2/token/"
+            val formBody = FormBody.Builder()
+                .add("username", username)
+                .add("password", password)
+                .add("grant_type", "password")
+                .add("client_id", "c82SH0WZOsabOXGP2sxqcj34FxkvfnWRZBKlBjFS")
+                .build()
             val request = Request.Builder().post(formBody).url(url).addHeader("Accept", APPLICATION_JSON).build()
             val result = try {
                 val response = httpClient.newCall(request).execute()
                 if (response.isSuccessful) {
-                    Result.success(response.body().toString())
+                    Result.success(response.body()!!.string())
                 } else {
-                    Result.failure(Error.Server(response.message()))
+                    val description = response.body()?.string() ?: response.message()
+                    Result.failure(Error.Server(description))
                 }
             } catch (tr: Throwable) {
                 Result.failure<String>(Error.Network(tr))
@@ -43,15 +50,16 @@ class RobinhoodApi(private val httpClient: OkHttpClient) {
             if (it is Session.Active) {
                 Single.create<String> { emitter ->
                     val token = it.token
-                    val url = "$domain/accounts/${it.accountId}/positions/?nonzero=true"
+                    val url = "$schemeDomain/accounts/${it.accountId}/positions/?nonzero=true"
                     val request = Request.Builder().get().url(url).addHeader("Accept", APPLICATION_JSON)
-                        .addHeader("Authorization", "Token $token").build()
+                        .addHeader("Authorization", "Bearer $token").build()
                     val result = try {
                         val response = httpClient.newCall(request).execute()
                         if (response.isSuccessful) {
-                            Result.success(response.body().toString())
+                            Result.success(response.body()!!.string())
                         } else {
-                            Result.failure(Error.Server(response.message()))
+                            val description = response.body()?.string() ?: response.message()
+                            Result.failure(Error.Server(description))
                         }
                     } catch (tr: Throwable) {
                         Result.failure<String>(Error.Network(tr))
@@ -75,7 +83,7 @@ class RobinhoodApi(private val httpClient: OkHttpClient) {
     }
 
     companion object {
-        private const val domain = "api.robinhood.com"
+        private const val schemeDomain = "https://api.robinhood.com"
         private const val APPLICATION_JSON = "application/json"
         val SHARED = RobinhoodApi(OkHttpClient())
     }

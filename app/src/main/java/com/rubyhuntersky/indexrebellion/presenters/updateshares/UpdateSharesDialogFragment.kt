@@ -9,10 +9,10 @@ import com.rubyhuntersky.data.assets.SharePrice
 import com.rubyhuntersky.indexrebellion.R
 import com.rubyhuntersky.indexrebellion.books.SharedRebellionBook
 import com.rubyhuntersky.indexrebellion.vxandroid.InteractionBottomSheetDialogFragment
-import com.rubyhuntersky.interaction.core.Portal
 import com.rubyhuntersky.interaction.books.RebellionConstituentBook
-import com.rubyhuntersky.interaction.updateshares.UpdateShares
 import com.rubyhuntersky.interaction.core.InteractionRegistry
+import com.rubyhuntersky.interaction.core.Portal
+import com.rubyhuntersky.interaction.updateshares.UpdateShares
 import kotlinx.android.synthetic.main.view_update_share_count.*
 import java.util.*
 import kotlin.random.Random
@@ -147,17 +147,17 @@ class UpdateSharesDialogFragment : InteractionBottomSheetDialogFragment<UpdateSh
 
     companion object : Portal<Pair<AssetSymbol, () -> FragmentActivity>> {
 
-        override fun jump(seed: Pair<AssetSymbol, () -> FragmentActivity>) {
-            Log.d(this::class.java.simpleName, "Catalyzing UpdateShares: ${seed.first}")
+        override fun jump(carry: Pair<AssetSymbol, () -> FragmentActivity>) {
+            Log.d(this::class.java.simpleName, "Catalyzing UpdateShares: ${carry.first}")
             val key = Random.nextLong()
             val fragment = UpdateSharesDialogFragment()
                 .also {
-                    val constituentBook = RebellionConstituentBook(SharedRebellionBook, seed.first)
+                    val constituentBook = RebellionConstituentBook(SharedRebellionBook, carry.first)
                     val interaction = UpdateShares.Interaction(constituentBook).apply { reset() }
                     it.indirectInteractionKey = key
                     InteractionRegistry.addInteraction(it.indirectInteractionKey, interaction)
                 }
-            fragment.show(seed.second().supportFragmentManager, key.toString())
+            fragment.show(carry.second().supportFragmentManager, key.toString())
         }
     }
 }

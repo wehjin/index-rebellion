@@ -1,19 +1,86 @@
 package com.rubyhuntersky.indexrebellion.robinhood
 
+import android.text.Editable
+import android.text.TextWatcher
+import android.util.Log
+import android.view.View
 import com.rubyhuntersky.indexrebellion.R
+import com.rubyhuntersky.indexrebellion.common.views.SimpleTextWatcher
+import com.rubyhuntersky.indexrebellion.common.views.updateText
 import com.rubyhuntersky.indexrebellion.vxandroid.Renderer
 import com.rubyhuntersky.indexrebellion.vxandroid.RendererBottomSheetDialogFragment
+import kotlinx.android.synthetic.main.view_robinhoodlogin.view.*
 
-sealed class State {
-    object None : State()
-}
+data class RendererData(
+    val userTextWatcher: TextWatcher,
+    val passwordTextWatcher: TextWatcher
+)
 
-class RobinhoodLoginDialogFragment : RendererBottomSheetDialogFragment<State, Vision, Action>(Renderer(
-    layoutRes = R.layout.view_robinhoodlogin,
-    start = { State.None }
-)) {
+class RobinhoodLoginDialogFragment : RendererBottomSheetDialogFragment<Vision, Action, RendererData>(
+    object : Renderer<Vision, Action, RendererData> {
+        override val layoutRes: Int = R.layout.view_robinhoodlogin
+
+        override fun start(view: View, sendAction: (Action) -> Unit): RendererData {
+            return RendererData(
+                userTextWatcher = object : SimpleTextWatcher {
+                    override fun textChanged(s: Editable) = sendAction(Action.SetUsername(s.toString()))
+                },
+                passwordTextWatcher = object : SimpleTextWatcher {
+                    override fun textChanged(s: Editable) = sendAction(Action.SetPassword(s.toString()))
+                }
+            ).also {
+                view.userEditText.addTextChangedListener(it.userTextWatcher)
+                view.passwordEditText.addTextChangedListener(it.passwordTextWatcher)
+                view.signInButton.setOnClickListener { sendAction(Action.Submit) }
+            }
+        }
+
+        override fun end(view: View, data: RendererData) {
+            view.userEditText.removeTextChangedListener(data.userTextWatcher)
+            view.passwordEditText.removeTextChangedListener(data.passwordTextWatcher)
+            super.end(view, data)
+        }
+
+        private val TAG = "RobinhoodLogin"
+
+        override fun update(
+            vision: Vision,
+            sendAction: (Action) -> Unit,
+            view: View,
+            data: RendererData
+        ): RendererData {
+            Log.d(TAG, "VISION: $vision")
+            return when (vision) {
+                is Vision.Editing -> {
+                    with(view.userEditText) {
+                        updateText(vision.username, data.userTextWatcher)
+                        isEnabled = true
+                    }
+                    with(view.passwordEditText) {
+                        updateText(vision.password, data.passwordTextWatcher)
+                        error = if (vision.error.isBlank()) null else vision.error
+                        isEnabled = true
+                    }
+                    with(view.signInButton) {
+                        isEnabled = vision.submittable
+                        visibility = View.VISIBLE
+                    }
+                    data
+                }
+                is Vision.Submitting -> {
+                    view.userEditText.isEnabled = false
+                    view.passwordEditText.isEnabled = false
+                    view.signInButton.visibility = View.INVISIBLE
+                    data
+                }
+                is Vision.Reporting -> TODO()
+            }
+        }
+    }
+) {
     companion object {
-        fun new(interactionKey: Long): RobinhoodLoginDialogFragment = RobinhoodLoginDialogFragment()
-            .also { it.indirectInteractionKey = interactionKey }
+        fun new(interactionKey: Long) = RobinhoodLoginDialogFragment().also {
+            it.indirectInteractionKey = interactionKey
+        }
     }
 }
