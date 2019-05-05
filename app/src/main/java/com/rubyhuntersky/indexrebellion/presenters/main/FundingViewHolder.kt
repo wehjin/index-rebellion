@@ -3,11 +3,11 @@ package com.rubyhuntersky.indexrebellion.presenters.main
 import android.support.v7.widget.RecyclerView
 import android.util.Log
 import android.view.View
-import com.rubyhuntersky.data.cash.CashAmount
-import com.rubyhuntersky.data.cash.CashEquivalent
-import com.rubyhuntersky.data.report.RebellionReport
-import com.rubyhuntersky.data.toStatString
 import com.rubyhuntersky.indexrebellion.R
+import com.rubyhuntersky.indexrebellion.data.cash.CashAmount
+import com.rubyhuntersky.indexrebellion.data.cash.CashEquivalent
+import com.rubyhuntersky.indexrebellion.data.report.RebellionReport
+import com.rubyhuntersky.indexrebellion.data.toStatString
 import kotlinx.android.synthetic.main.view_funding.view.*
 
 

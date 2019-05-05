@@ -2,8 +2,8 @@ package com.rubyhuntersky.indexrebellion.presenters.constituentsearch
 
 import com.rubyhuntersky.indexrebellion.books.SharedRebellionBook
 import com.rubyhuntersky.indexrebellion.common.SharedHttpNetwork
-import com.rubyhuntersky.interaction.constituentsearch.ConstituentSearch
-import com.rubyhuntersky.interaction.constituentsearch.ConstituentSearchInteraction
+import com.rubyhuntersky.indexrebellion.interactions.constituentsearch.ConstituentSearch
+import com.rubyhuntersky.indexrebellion.interactions.constituentsearch.ConstituentSearchInteraction
 import com.rubyhuntersky.stockcatalog.StockCatalog
 
 object SharedConstituentSearch : ConstituentSearchInteraction

@@ -4,15 +4,15 @@ import android.support.v4.app.FragmentActivity
 import android.text.Editable
 import android.text.TextWatcher
 import android.util.Log
-import com.rubyhuntersky.data.assets.AssetSymbol
-import com.rubyhuntersky.data.assets.SharePrice
 import com.rubyhuntersky.indexrebellion.R
 import com.rubyhuntersky.indexrebellion.books.SharedRebellionBook
+import com.rubyhuntersky.indexrebellion.data.assets.AssetSymbol
+import com.rubyhuntersky.indexrebellion.data.assets.SharePrice
+import com.rubyhuntersky.indexrebellion.interactions.books.RebellionConstituentBook
+import com.rubyhuntersky.indexrebellion.interactions.updateshares.UpdateShares
 import com.rubyhuntersky.indexrebellion.vxandroid.InteractionBottomSheetDialogFragment
-import com.rubyhuntersky.interaction.books.RebellionConstituentBook
 import com.rubyhuntersky.interaction.core.InteractionRegistry
 import com.rubyhuntersky.interaction.core.Portal
-import com.rubyhuntersky.interaction.updateshares.UpdateShares
 import kotlinx.android.synthetic.main.view_update_share_count.*
 import java.util.*
 import kotlin.random.Random
@@ -64,10 +64,7 @@ class UpdateSharesDialogFragment : InteractionBottomSheetDialogFragment<UpdateSh
         sharePriceEditText.removeTextChangedListener(sharePriceTextWatcher)
         sharePriceEditText.setOnFocusChangeListener { _, hasFocus ->
             if (hasFocus) {
-                sharePriceEditText.hint = when (oldPrice) {
-                    is SharePrice.Unknown -> null
-                    is SharePrice.Sample -> oldPrice.cashAmount.toDouble().toString()
-                }
+                sharePriceEditText.hint = oldPrice?.let { oldPrice.cashAmount.toDouble().toString() }
             } else {
                 sharePriceEditText.hint = null
             }
@@ -153,7 +150,10 @@ class UpdateSharesDialogFragment : InteractionBottomSheetDialogFragment<UpdateSh
             val fragment = UpdateSharesDialogFragment()
                 .also {
                     val constituentBook = RebellionConstituentBook(SharedRebellionBook, carry.first)
-                    val interaction = UpdateShares.Interaction(constituentBook).apply { reset() }
+                    val interaction = UpdateShares.Interaction(constituentBook)
+                        .apply {
+                            reset()
+                        }
                     it.indirectInteractionKey = key
                     InteractionRegistry.addInteraction(it.indirectInteractionKey, interaction)
                 }

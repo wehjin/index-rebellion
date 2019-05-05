@@ -15,7 +15,7 @@ object GapDash : Dash<GapSight, Nothing> {
             override val latitudes: Observable<Dash.Latitude> get() = heightBehavior.map { Dash.Latitude(it) }
             private val heightBehavior = BehaviorSubject.create<Int>()
             override fun setAnchor(anchor: Anchor) = Unit
-            override fun setSight(content: GapSight) = heightBehavior.onNext((content as GapSight.Pixels).count)
+            override fun setSight(sight: GapSight) = heightBehavior.onNext((sight as GapSight.Pixels).count)
             override val events: Observable<Nothing> = Observable.never()
         }
 }

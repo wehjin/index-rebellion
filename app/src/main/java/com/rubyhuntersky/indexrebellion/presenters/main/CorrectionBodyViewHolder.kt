@@ -4,9 +4,9 @@ import android.support.v7.widget.RecyclerView
 import android.util.Log
 import android.view.View
 import android.widget.LinearLayout
-import com.rubyhuntersky.data.report.Correction
-import com.rubyhuntersky.data.toStatString
 import com.rubyhuntersky.indexrebellion.R
+import com.rubyhuntersky.indexrebellion.data.report.Correction
+import com.rubyhuntersky.indexrebellion.data.toStatString
 import kotlinx.android.synthetic.main.view_corrections_body.view.*
 
 class CorrectionBodyViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {

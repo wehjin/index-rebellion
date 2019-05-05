@@ -2,10 +2,10 @@ package com.rubyhuntersky.indexrebellion.books
 
 import android.content.Context
 import android.content.SharedPreferences
-import com.rubyhuntersky.data.Rebellion
+import com.rubyhuntersky.indexrebellion.data.Rebellion
+import com.rubyhuntersky.indexrebellion.interactions.books.RebellionBook
 import com.rubyhuntersky.interaction.core.BehaviorBook
 import com.rubyhuntersky.interaction.core.Book
-import com.rubyhuntersky.interaction.books.RebellionBook
 import io.reactivex.Single
 import io.reactivex.disposables.Disposable
 import kotlinx.serialization.json.Json

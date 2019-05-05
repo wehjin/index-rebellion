@@ -1,6 +1,6 @@
 package com.rubyhuntersky.robinhood
 
-import com.rubyhuntersky.interaction.core.BehaviorInteraction
+import com.rubyhuntersky.interaction.core.SubjectInteraction
 import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
 
@@ -28,8 +28,12 @@ sealed class Action {
     object Cancel : Action()
 }
 
+sealed class Report {
+    object Done : Report()
+}
+
 class RobinhoodLoginInteraction(private val robinhoodApi: RobinhoodApi) :
-    BehaviorInteraction<Vision, Action>(startVision = Vision.Editing("", "", "", false, "")) {
+    SubjectInteraction<Vision, Action>(startVision = Vision.Editing("", "", "", false, "")) {
 
     override fun sendAction(action: Action) {
         var afterUpdate: (() -> Unit)? = null

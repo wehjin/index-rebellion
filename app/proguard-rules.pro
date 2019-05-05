@@ -23,10 +23,10 @@
 # Kotlinx serialization rules
 -keepattributes *Annotation*, InnerClasses
 -dontnote kotlinx.serialization.SerializationKt
--keep,includedescriptorclasses class com.rubyhuntersky.data.**$$serializer { *; }
--keepclassmembers class com.rubyhuntersky.data.** {
+-keep,includedescriptorclasses class com.rubyhuntersky.**$$serializer { *; }
+-keepclassmembers class com.rubyhuntersky.** {
     *** Companion;
 }
--keepclasseswithmembers class com.rubyhuntersky.data.** {
+-keepclasseswithmembers class com.rubyhuntersky.** {
     kotlinx.serialization.KSerializer serializer(...);
 }

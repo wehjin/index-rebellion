@@ -3,8 +3,8 @@ package com.rubyhuntersky.indexrebellion.presenters.main
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.util.Log
-import com.rubyhuntersky.data.report.Correction
-import com.rubyhuntersky.data.report.RebellionReport
+import com.rubyhuntersky.indexrebellion.data.report.Correction
+import com.rubyhuntersky.indexrebellion.data.report.RebellionReport
 import java.util.*
 
 class ConclusionViewHolder(private val conclusionView: RecyclerView) : RecyclerView.ViewHolder(conclusionView) {

@@ -9,19 +9,20 @@ import android.view.MenuItem
 import android.view.View
 import com.rubyhuntersky.indexrebellion.R
 import com.rubyhuntersky.indexrebellion.books.SharedRebellionBook
+import com.rubyhuntersky.indexrebellion.interactions.main.Action
+import com.rubyhuntersky.indexrebellion.interactions.main.MainInteraction
+import com.rubyhuntersky.indexrebellion.interactions.main.Vision
 import com.rubyhuntersky.indexrebellion.presenters.cashediting.CashEditingDialogFragment
 import com.rubyhuntersky.indexrebellion.presenters.cashediting.SharedCashEditingInteraction
 import com.rubyhuntersky.indexrebellion.presenters.constituentsearch.ConstituentSearchPortal
 import com.rubyhuntersky.indexrebellion.presenters.correctiondetails.CorrectionDetailsPortal
-import com.rubyhuntersky.robinhood.RobinhoodLoginPortal
 import com.rubyhuntersky.interaction.core.Portal
 import com.rubyhuntersky.interaction.core.Projector
-import com.rubyhuntersky.interaction.main.Action
-import com.rubyhuntersky.interaction.main.MainInteraction
-import com.rubyhuntersky.interaction.main.Vision
+import com.rubyhuntersky.robinhood.RobinhoodLoginPortal
 import io.reactivex.android.schedulers.AndroidSchedulers
 import kotlinx.android.synthetic.main.activity_main_viewing.*
 import kotlinx.android.synthetic.main.view_funding.*
+import com.rubyhuntersky.indexrebellion.interactions.cashediting.Action as CashEditingAction
 
 class MainActivity : AppCompatActivity() {
 
@@ -101,7 +102,7 @@ class MainActivity : AppCompatActivity() {
             constituentSearchPortal = ConstituentSearchPortal { mainActivity!! },
             cashEditingPortal = object : Portal<Unit> {
                 override fun jump(carry: Unit) {
-                    SharedCashEditingInteraction.reset()
+                    SharedCashEditingInteraction.sendAction(CashEditingAction.Load)
                     mainActivity?.supportFragmentManager?.let {
                         CashEditingDialogFragment.newInstance().show(it, "cash_editing")
                     }

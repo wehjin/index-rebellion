@@ -1,19 +1,19 @@
 package com.rubyhuntersky.indexrebellion.presenters.correctiondetails
 
 import android.support.v4.app.FragmentActivity
-import com.rubyhuntersky.data.assets.AssetSymbol
-import com.rubyhuntersky.data.cash.CashAmount
-import com.rubyhuntersky.data.report.CorrectionDetails
 import com.rubyhuntersky.indexrebellion.R
 import com.rubyhuntersky.indexrebellion.books.SharedRebellionBook
-import com.rubyhuntersky.indexrebellion.vxandroid.InteractionBottomSheetDialogFragment
+import com.rubyhuntersky.indexrebellion.data.assets.AssetSymbol
+import com.rubyhuntersky.indexrebellion.data.cash.CashAmount
+import com.rubyhuntersky.indexrebellion.data.report.CorrectionDetails
+import com.rubyhuntersky.indexrebellion.interactions.books.CorrectionDetailsBook
+import com.rubyhuntersky.indexrebellion.interactions.correctiondetails.Action
+import com.rubyhuntersky.indexrebellion.interactions.correctiondetails.CorrectionDetailsInteractionImpl
+import com.rubyhuntersky.indexrebellion.interactions.correctiondetails.Vision
 import com.rubyhuntersky.indexrebellion.presenters.updateshares.UpdateSharesDialogFragment
-import com.rubyhuntersky.interaction.books.CorrectionDetailsBook
+import com.rubyhuntersky.indexrebellion.vxandroid.InteractionBottomSheetDialogFragment
 import com.rubyhuntersky.interaction.core.InteractionRegistry
 import com.rubyhuntersky.interaction.core.Portal
-import com.rubyhuntersky.interaction.correctiondetails.Action
-import com.rubyhuntersky.interaction.correctiondetails.CorrectionDetailsInteractionImpl
-import com.rubyhuntersky.interaction.correctiondetails.Vision
 import kotlinx.android.synthetic.main.view_correction_details.*
 import kotlin.random.Random
 

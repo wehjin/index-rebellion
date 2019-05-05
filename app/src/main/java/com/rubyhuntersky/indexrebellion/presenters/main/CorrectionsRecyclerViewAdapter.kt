@@ -4,8 +4,8 @@ import android.support.v7.widget.RecyclerView
 import android.text.format.DateFormat
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import com.rubyhuntersky.data.report.Correction
 import com.rubyhuntersky.indexrebellion.R
+import com.rubyhuntersky.indexrebellion.data.report.Correction
 import kotlinx.android.synthetic.main.view_corrections_footer.view.*
 import kotlinx.android.synthetic.main.view_corrections_header.view.*
 import java.util.*
