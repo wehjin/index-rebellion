@@ -1,4 +1,4 @@
-package com.rubyhuntersky.robinhood.api
+package com.rubyhuntersky.robinhood.api.results
 
 data class RbhAccountsResult(
     val accountNumber: String,

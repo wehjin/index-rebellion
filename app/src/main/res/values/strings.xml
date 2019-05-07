@@ -59,4 +59,5 @@
     <string name="sign_in">Sign In</string>
     <string name="robinhood">Robinhood</string>
     <string name="code_optional">Code (optional)</string>
+    <string name="refresh_holdings">Refresh holdings</string>
 </resources>

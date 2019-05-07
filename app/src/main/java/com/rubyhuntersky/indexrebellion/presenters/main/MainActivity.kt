@@ -7,8 +7,10 @@ import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
+import android.widget.Toast
 import com.rubyhuntersky.indexrebellion.R
 import com.rubyhuntersky.indexrebellion.books.SharedRebellionBook
+import com.rubyhuntersky.indexrebellion.common.MyApplication
 import com.rubyhuntersky.indexrebellion.interactions.main.Action
 import com.rubyhuntersky.indexrebellion.interactions.main.MainInteraction
 import com.rubyhuntersky.indexrebellion.interactions.main.Vision
@@ -20,11 +22,37 @@ import com.rubyhuntersky.interaction.core.Portal
 import com.rubyhuntersky.interaction.core.Projector
 import com.rubyhuntersky.robinhood.login.RobinhoodLoginPortal
 import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.disposables.Disposable
+import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.activity_main_viewing.*
 import kotlinx.android.synthetic.main.view_funding.*
 import com.rubyhuntersky.indexrebellion.interactions.cashediting.Action as CashEditingAction
 
 class MainActivity : AppCompatActivity() {
+
+    private val tag = this.javaClass.simpleName
+
+    private fun refreshHoldings() {
+        val token = MyApplication.accessBook.value.token
+        holdingsFetch = MyApplication.rbhApi.holdings(token)
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe({ result ->
+                Log.d(tag, "RbhHoldingsResult: $result")
+                val text = result.positions
+                    .map { position ->
+                        val quote = result.quotesByInstrumentLocation[position.instrumentLocation]
+                        "${position.quantity} shares of ${quote?.symbol ?: "Unknown"}"
+                    }
+                    .joinToString(", ")
+                Toast.makeText(this, text, Toast.LENGTH_LONG).show()
+            }, {
+                Log.e(tag, it.localizedMessage, it)
+                Toast.makeText(this, it.localizedMessage, Toast.LENGTH_LONG).show()
+            })
+    }
+
+    private var holdingsFetch: Disposable? = null
 
     private val projector = Projector(
         mainInteraction,
@@ -67,11 +95,11 @@ class MainActivity : AppCompatActivity() {
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        if (item.itemId == R.id.robinhood) {
-            RobinhoodLoginPortal(this).open()
-            return true
+        return when (item.itemId) {
+            R.id.robinhood -> true.also { RobinhoodLoginPortal(this).open() }
+            R.id.refreshHoldings -> true.also { refreshHoldings() }
+            else -> super.onOptionsItemSelected(item)
         }
-        return super.onOptionsItemSelected(item)
     }
 
     override fun onStart() {
@@ -81,6 +109,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     override fun onStop() {
+        holdingsFetch?.dispose()
         projector.stop()
         if (mainActivity == this) {
             mainActivity = null

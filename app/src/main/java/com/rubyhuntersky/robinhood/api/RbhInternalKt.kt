@@ -3,6 +3,10 @@ package com.rubyhuntersky.robinhood.api
 import com.beust.klaxon.JsonObject
 import com.beust.klaxon.Parser
 import com.rubyhuntersky.indexrebellion.BuildConfig
+import com.rubyhuntersky.robinhood.api.results.RbhAccountsResult
+import com.rubyhuntersky.robinhood.api.results.RbhInstrumentsResult
+import com.rubyhuntersky.robinhood.api.results.RbhPositionsResult
+import com.rubyhuntersky.robinhood.api.results.RbhQuotesResult
 import okhttp3.FormBody
 import okhttp3.Request
 import java.net.URLEncoder
@@ -71,12 +75,12 @@ internal fun parseAccountsBody(body: String): List<RbhAccountsResult> {
     return parseResultsBody(body) { result ->
         with(result) {
             RbhAccountsResult(
-                accountNumber = string("account_number")!!,
-                cash = string("cash")!!.toDouble(),
-                positionsLocation = string("positions")!!,
-                portfolioLocation = string("portfolio")!!,
-                accountLocation = string("url")!!,
-                userLocation = string("user")!!,
+                accountNumber = stringThrow("account_number"),
+                cash = stringThrow("cash").toDouble(),
+                positionsLocation = stringThrow("positions"),
+                portfolioLocation = stringThrow("portfolio"),
+                accountLocation = stringThrow("url"),
+                userLocation = stringThrow("user"),
                 json = toJsonString()
             )
         }
@@ -97,9 +101,9 @@ internal fun parsePositionsBody(body: String): List<RbhPositionsResult> {
     return parseResultsBody(body) { result ->
         with(result) {
             RbhPositionsResult(
-                quantity = string("quantity")!!.toDouble(),
-                instrumentLocation = string("instrument")!!,
-                averagePrice = string("average_buy_price")!!.toDouble(),
+                quantity = stringThrow("quantity").toDouble(),
+                instrumentLocation = stringThrow("instrument"),
+                averagePrice = stringThrow("average_buy_price").toDouble(),
                 json = toJsonString()
             )
         }
@@ -116,14 +120,14 @@ internal fun parseInstrumentsBody(body: String): List<RbhInstrumentsResult> {
     return parseResultsBody(body) {
         with(it) {
             RbhInstrumentsResult(
-                fundamentalsLocation = string("fundamentals")!!,
-                id = string("id")!!,
-                marketLocation = string("market")!!,
-                quoteLocation = string("quote")!!,
-                name = string("name")!!,
-                simpleName = string("simple_name")!!,
-                symbol = string("symbol")!!,
-                type = string("type")!!,
+                fundamentalsLocation = stringThrow("fundamentals"),
+                id = stringThrow("id"),
+                marketLocation = stringThrow("market"),
+                quoteLocation = stringThrow("quote"),
+                name = stringThrow("name"),
+                simpleName = stringThrow("simple_name"),
+                symbol = stringThrow("symbol"),
+                type = stringThrow("type"),
                 json = toJsonString()
             )
         }
@@ -133,25 +137,25 @@ internal fun parseInstrumentsBody(body: String): List<RbhInstrumentsResult> {
 internal fun quotesRequest(instrumentLocations: List<String>, token: String): Request {
     val instruments = instrumentLocations.map { URLEncoder.encode(it, "utf-8") }.joinToString("%2C")
     return bearerRequestBuilder(token).get()
-        .url("$HTTPS_DOMAIN/instruments/?instruments=$instruments")
+        .url("$HTTPS_DOMAIN/marketdata/quotes/?instruments=$instruments")
         .build()
 }
 
 
-internal fun parseQuotesBody(body: String): List<RobinhoodQuotesResult> {
+internal fun parseQuotesBody(body: String): List<RbhQuotesResult> {
     return parseResultsBody(body) {
         with(it) {
-            RobinhoodQuotesResult(
-                symbol = string("symbol")!!,
-                lastPrice = string("last_trade_price")!!.toDouble(),
-                updatedAt = string("updated_at")!!
+            RbhQuotesResult(
+                symbol = stringThrow("symbol"),
+                lastPrice = stringThrow("last_trade_price").toDouble(),
+                updatedAt = stringThrow("updated_at"),
+                instrumentLocation = stringThrow("instrument"),
+                json = toJsonString()
             )
         }
     }
 }
 
-data class RobinhoodQuotesResult(
-    val symbol: String,
-    val lastPrice: Double,
-    val updatedAt: String
-)
+private fun JsonObject.stringThrow(fieldName: String): String =
+    string(fieldName) ?: throw Exception("No '$fieldName' in $this")
+
