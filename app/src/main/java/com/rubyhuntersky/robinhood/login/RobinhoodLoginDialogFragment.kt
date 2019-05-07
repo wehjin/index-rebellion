@@ -1,4 +1,4 @@
-package com.rubyhuntersky.robinhood
+package com.rubyhuntersky.robinhood.login
 
 import android.text.Editable
 import android.text.TextWatcher
@@ -25,13 +25,16 @@ class RobinhoodLoginDialogFragment : RendererBottomSheetDialogFragment<Vision, A
         override fun start(view: View, sendAction: (Action) -> Unit): RendererData {
             return RendererData(
                 userTextWatcher = object : SimpleTextWatcher {
-                    override fun textChanged(s: Editable) = sendAction(Action.SetUsername(s.toString()))
+                    override fun textChanged(s: Editable) =
+                        sendAction(Action.SetUsername(s.toString()))
                 },
                 passwordTextWatcher = object : SimpleTextWatcher {
-                    override fun textChanged(s: Editable) = sendAction(Action.SetPassword(s.toString()))
+                    override fun textChanged(s: Editable) =
+                        sendAction(Action.SetPassword(s.toString()))
                 },
                 mfaTextWatcher = object : SimpleTextWatcher {
-                    override fun textChanged(s: Editable) = sendAction(Action.SetMfa(s.toString()))
+                    override fun textChanged(s: Editable) =
+                        sendAction(Action.SetMfa(s.toString()))
                 }
             ).also {
                 view.userEditText.addTextChangedListener(it.userTextWatcher)

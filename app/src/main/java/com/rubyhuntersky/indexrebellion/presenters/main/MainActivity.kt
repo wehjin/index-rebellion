@@ -18,7 +18,7 @@ import com.rubyhuntersky.indexrebellion.presenters.constituentsearch.Constituent
 import com.rubyhuntersky.indexrebellion.presenters.correctiondetails.CorrectionDetailsPortal
 import com.rubyhuntersky.interaction.core.Portal
 import com.rubyhuntersky.interaction.core.Projector
-import com.rubyhuntersky.robinhood.RobinhoodLoginPortal
+import com.rubyhuntersky.robinhood.login.RobinhoodLoginPortal
 import io.reactivex.android.schedulers.AndroidSchedulers
 import kotlinx.android.synthetic.main.activity_main_viewing.*
 import kotlinx.android.synthetic.main.view_funding.*

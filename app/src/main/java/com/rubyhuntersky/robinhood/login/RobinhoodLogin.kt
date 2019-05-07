@@ -1,6 +1,7 @@
-package com.rubyhuntersky.robinhood
+package com.rubyhuntersky.robinhood.login
 
 import com.rubyhuntersky.interaction.core.SubjectInteraction
+import com.rubyhuntersky.robinhood.api.RbhApi
 import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
 
@@ -28,12 +29,15 @@ sealed class Action {
     object Cancel : Action()
 }
 
-sealed class Report {
-    object Done : Report()
-}
-
-class RobinhoodLoginInteraction(private val robinhoodApi: RobinhoodApi) :
-    SubjectInteraction<Vision, Action>(startVision = Vision.Editing("", "", "", false, "")) {
+class RobinhoodLoginInteraction(private val rbhApi: RbhApi) :
+    SubjectInteraction<Vision, Action>(startVision = Vision.Editing(
+        "",
+        "",
+        "",
+        false,
+        ""
+    )
+    ) {
 
     override fun sendAction(action: Action) {
         var afterUpdate: (() -> Unit)? = null
@@ -87,7 +91,10 @@ class RobinhoodLoginInteraction(private val robinhoodApi: RobinhoodApi) :
                     oldState
                 }
             }
-            is Action.Succeed -> State.Reporting(oldState.nearestUsername, action.token)
+            is Action.Succeed -> State.Reporting(
+                oldState.nearestUsername,
+                action.token
+            )
             is Action.Fail -> State.Editing(
                 partialUsername = oldState.nearestUsername,
                 partialPassword = oldState.nearestPassword,
@@ -102,7 +109,10 @@ class RobinhoodLoginInteraction(private val robinhoodApi: RobinhoodApi) :
                         error = "",
                         partialMfa = oldState.possibleMfa
                     )
-                    else -> State.Reporting(verifiedUsername = "", token = "")
+                    else -> State.Reporting(
+                        verifiedUsername = "",
+                        token = ""
+                    )
                 }
             }
         }
@@ -111,7 +121,7 @@ class RobinhoodLoginInteraction(private val robinhoodApi: RobinhoodApi) :
     }
 
     private fun startLogin(username: String, password: String, mfa: String) {
-        loginDisposable = robinhoodApi.login(username, password, mfa)
+        loginDisposable = rbhApi.login(username, password, mfa)
             .map<Action>(Action::Succeed)
             .onErrorReturn(Action::Fail)
             .subscribeOn(Schedulers.io())
@@ -124,7 +134,8 @@ class RobinhoodLoginInteraction(private val robinhoodApi: RobinhoodApi) :
 
     private var loginDisposable: Disposable? = null
 
-    private var state: State = State.Editing("", "", "", "")
+    private var state: State =
+        State.Editing("", "", "", "")
 
     private sealed class State {
         abstract fun toVision(): Vision
@@ -137,7 +148,13 @@ class RobinhoodLoginInteraction(private val robinhoodApi: RobinhoodApi) :
         ) : State() {
 
             override fun toVision(): Vision =
-                Vision.Editing(partialUsername, partialPassword, error, isSubmittable, partialMfa)
+                Vision.Editing(
+                    partialUsername,
+                    partialPassword,
+                    error,
+                    isSubmittable,
+                    partialMfa
+                )
 
             val isSubmittable: Boolean
                 get() = partialUsername.isNotBlank() && partialPassword.isNotBlank() && partialPassword.length > 2
@@ -149,11 +166,13 @@ class RobinhoodLoginInteraction(private val robinhoodApi: RobinhoodApi) :
             val possibleMfa: String
         ) : State() {
 
-            override fun toVision(): Vision = Vision.Submitting(possibleUsername, possiblePassword, possibleMfa)
+            override fun toVision(): Vision =
+                Vision.Submitting(possibleUsername, possiblePassword, possibleMfa)
         }
 
         data class Reporting(val verifiedUsername: String, val token: String) : State() {
-            override fun toVision(): Vision = Vision.Reporting(verifiedUsername, token)
+            override fun toVision(): Vision =
+                Vision.Reporting(verifiedUsername, token)
         }
 
         val nearestError: String

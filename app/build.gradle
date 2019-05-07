@@ -34,6 +34,8 @@ android {
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+        buildConfigField "String", "ROBINHOOD_DEVICE_TOKEN", "\"" + project.property("robinhood_device_token") + "\""
+        buildConfigField "String", "ROBINHOOD_TOKEN", "\"" + project.property("robinhood_token") + "\""
     }
     buildTypes {
         release {
