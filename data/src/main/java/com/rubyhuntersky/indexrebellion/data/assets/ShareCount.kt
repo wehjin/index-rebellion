@@ -13,7 +13,7 @@ data class ShareCount(val value: Double) {
     operator fun minus(rhs: ShareCount): ShareCount =
         ShareCount(value - rhs.value)
 
-    operator fun times(rhs: SharePrice): CashEquivalent =
+    operator fun times(rhs: PriceSample?): CashEquivalent =
         product(rhs, this)
 
     operator fun compareTo(other: ShareCount): Int = value.compareTo(other.value)

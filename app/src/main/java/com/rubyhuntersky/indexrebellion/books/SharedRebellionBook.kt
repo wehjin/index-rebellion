@@ -36,7 +36,7 @@ object SharedRebellionBook : RebellionBook, Book<Rebellion> by BehaviorBook(null
 
     private fun loadRebellion(preferences: SharedPreferences): Rebellion {
         val jsonString = preferences.getString(PAGE_KEY, null)
-        return jsonString?.let { Json.parse(Rebellion.serializer(), it) } ?: Rebellion.SEED
+        return jsonString?.let { Json.parse(Rebellion.serializer(), it) } ?: Rebellion()
     }
 
     private const val PAGE_KEY = "page"

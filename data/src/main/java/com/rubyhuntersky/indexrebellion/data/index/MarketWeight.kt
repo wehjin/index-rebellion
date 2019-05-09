@@ -13,19 +13,10 @@ data class MarketWeight(
     constructor(double: Double) : this(BigDecimal.valueOf(double))
     constructor(long: Long) : this(BigDecimal.valueOf(long))
 
-    operator fun plus(other: MarketWeight): MarketWeight =
-        MarketWeight(value + other.value)
-
+    operator fun plus(other: MarketWeight): MarketWeight = MarketWeight(value + other.value)
     operator fun div(other: MarketWeight): Double = value.divide(other.value, 50, BigDecimal.ROUND_HALF_UP).toDouble()
-
-    override fun equals(other: Any?): Boolean = if (other is MarketWeight) {
-        value.compareTo(other.value) == 0
-    } else {
-        false
-    }
-
+    override fun equals(other: Any?): Boolean = if (other is MarketWeight) value.compareTo(other.value) == 0 else false
     override fun hashCode(): Int = value.toDouble().hashCode()
-
     fun toStatString(): String = value.toDouble().toStatString()
     fun toDouble(): Double = value.toDouble()
 

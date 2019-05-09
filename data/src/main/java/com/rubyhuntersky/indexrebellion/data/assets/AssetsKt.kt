@@ -3,7 +3,7 @@ package com.rubyhuntersky.indexrebellion.data.assets
 import com.rubyhuntersky.indexrebellion.data.cash.CashEquivalent
 
 
-fun product(sharePrice: SharePrice, shareCount: ShareCount): CashEquivalent =
+fun product(sharePrice: PriceSample?, shareCount: ShareCount): CashEquivalent =
     if (shareCount == ShareCount.ZERO) {
         CashEquivalent.ZERO
     } else {
@@ -12,8 +12,9 @@ fun product(sharePrice: SharePrice, shareCount: ShareCount): CashEquivalent =
         } ?: CashEquivalent.Unknown()
     }
 
-data class OwnedAsset(
-    val assetSymbol: AssetSymbol,
-    val shareCount: ShareCount,
-    val sharePrice: SharePrice
-)
+fun OwnedAsset?.fractionOfTotal(totalAmount: CashEquivalent.Amount): Double {
+    return when {
+        totalAmount <= 0 || this == null -> 0.0
+        else -> cashEquivalent as CashEquivalent.Amount / totalAmount
+    }
+}

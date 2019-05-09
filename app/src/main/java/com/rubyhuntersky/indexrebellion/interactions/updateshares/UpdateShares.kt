@@ -2,10 +2,10 @@ package com.rubyhuntersky.indexrebellion.interactions.updateshares
 
 import com.rubyhuntersky.indexrebellion.data.assets.AssetSymbol
 import com.rubyhuntersky.indexrebellion.data.assets.OwnedAsset
+import com.rubyhuntersky.indexrebellion.data.assets.PriceSample
 import com.rubyhuntersky.indexrebellion.data.assets.ShareCount
-import com.rubyhuntersky.indexrebellion.data.assets.SharePrice
 import com.rubyhuntersky.indexrebellion.data.cash.CashAmount
-import com.rubyhuntersky.indexrebellion.interactions.books.ConstituentBook
+import com.rubyhuntersky.indexrebellion.interactions.books.HoldingBook
 import com.rubyhuntersky.interaction.core.SubjectInteraction
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.rxkotlin.addTo
@@ -19,7 +19,7 @@ object UpdateShares {
         data class Prompt(
             val assetSymbol: AssetSymbol,
             val ownedCount: Int,
-            val sharePrice: SharePrice,
+            val sharePrice: PriceSample?,
             val newPrice: String?,
             val shouldUpdateCash: Boolean,
             val numberDelta: NumberDelta,
@@ -40,7 +40,7 @@ object UpdateShares {
     }
 
 
-    class Interaction(private val constituentBook: ConstituentBook) :
+    class Interaction(private val holdingBook: HoldingBook) :
         SubjectInteraction<Vision, Action>(
             startVision = UpdateShares.Vision.Loading,
             startAction = UpdateShares.Action.Reset
@@ -60,14 +60,11 @@ object UpdateShares {
                 is Action.Reset -> {
                     setVision(UpdateShares.Vision.Loading)
                     composite.clear()
-                    constituentBook.reader.subscribe {
-                        val asset = OwnedAsset(
-                            it.assetSymbol,
-                            it.ownedShares,
-                            it.sharePrice
-                        )
-                        sendAction(UpdateShares.Action.Load(asset))
-                    }.addTo(composite)
+                    holdingBook.reader
+                        .subscribe {
+                            sendAction(UpdateShares.Action.Load(it))
+                        }
+                        .addTo(composite)
                 }
                 is Action.Load -> startPrompt(action)
                 is Action.ShouldUpdateCash -> evolvePrompt { shouldUpdateCash = action.shouldUpdateCash }
@@ -94,10 +91,10 @@ object UpdateShares {
             is Vision.Prompt -> {
                 if (canUpdate) {
                     val newPriceDouble = newPrice.toDouble()
-                    constituentBook.updateShareCountPriceAndCash(
+                    holdingBook.updateShareCountPriceAndCash(
                         assetSymbol = ownedAsset!!.assetSymbol,
                         shareCount = numberDelta.toShareCount(ownedAsset!!.shareCount),
-                        sharePrice = SharePrice(CashAmount(newPriceDouble), date),
+                        sharePrice = PriceSample(CashAmount(newPriceDouble), date),
                         cashChange = if (shouldUpdateCash) {
                             val shareDelta = numberDelta.toShareDelta(ownedAsset!!.shareCount)
                             CashAmount(newPriceDouble * shareDelta.value * -1)

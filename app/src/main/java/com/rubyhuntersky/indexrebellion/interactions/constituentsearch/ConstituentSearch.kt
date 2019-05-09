@@ -61,7 +61,7 @@ class ConstituentSearch(private val rebellionBook: Book<Rebellion>) : Constituen
                 val vision = vision
                 val choice = if (vision is Vision.Search) vision.candidates?.firstOrNull() else null
                 choice?.let {
-                    val newRebellion = rebellionBook.value.addConstituent(it.assetSymbol, it.marketWeight)
+                    val newRebellion = rebellionBook.value.withConstituent(it.assetSymbol, it.marketWeight)
                     rebellionBook.write(newRebellion)
                 }
                 setVision(Vision.Finished)

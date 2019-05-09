@@ -12,7 +12,7 @@ import java.math.BigDecimal
 
 class ConstituentSearchTest {
 
-    private val rebellionBehavior = BehaviorSubject.createDefault(Rebellion.SEED)
+    private val rebellionBehavior = BehaviorSubject.createDefault(Rebellion())
 
     private val rebellionBook = mock<RebellionBook> {
         on { reader } doReturn rebellionBehavior

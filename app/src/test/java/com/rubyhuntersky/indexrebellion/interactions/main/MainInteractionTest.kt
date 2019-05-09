@@ -40,7 +40,8 @@ class MainInteractionTest {
     fun shiftsToViewingWhenRebellionArrives() {
         val rebellionBook = object : RebellionBook {
             override val reader: Observable<Rebellion> get() = Observable.fromArray(
-                Rebellion.SEED)
+                Rebellion()
+            )
             override fun write(value: Rebellion) = Unit
         }
         val mainInteraction = MainInteraction(

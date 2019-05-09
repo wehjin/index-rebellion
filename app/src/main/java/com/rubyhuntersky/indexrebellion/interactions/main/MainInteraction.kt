@@ -1,7 +1,7 @@
 package com.rubyhuntersky.indexrebellion.interactions.main
 
 import com.rubyhuntersky.indexrebellion.data.assets.AssetSymbol
-import com.rubyhuntersky.indexrebellion.data.assets.SharePrice
+import com.rubyhuntersky.indexrebellion.data.assets.PriceSample
 import com.rubyhuntersky.indexrebellion.data.cash.CashAmount
 import com.rubyhuntersky.indexrebellion.data.cash.CashEquivalent
 import com.rubyhuntersky.indexrebellion.data.index.Constituent
@@ -77,25 +77,26 @@ class MainInteraction(
             .observeOn(Schedulers.single())
             .subscribe { result ->
                 (result as? StockMarket.Result.Samples)?.let {
-                    val samples = result.samples
-                        .fold(mutableMapOf<AssetSymbol, StockSample>()) { map, sample ->
-                            map[AssetSymbol(sample.symbol)] = sample
-                            map
-                        }
-                    val date = Date()
+                    val samples =
+                        result.samples
+                            .fold(mutableMapOf<AssetSymbol, StockSample>()) { map, sample ->
+                                map.also { it[AssetSymbol(sample.symbol)] = sample }
+                            }
                     val constituents = rebellionBook.value.index.constituents
                         .map { old ->
                             samples[old.assetSymbol]?.let {
-                                Constituent(
-                                    assetSymbol = old.assetSymbol,
-                                    marketWeight = MarketWeight(it.marketCapitalization),
-                                    sharePrice = SharePrice(CashAmount(it.sharePrice), date),
-                                    ownedShares = old.ownedShares,
-                                    isRemoved = old.isRemoved
-                                )
+                                Constituent(old.assetSymbol, MarketWeight(it.marketCapitalization))
                             } ?: old
                         }
-                    rebellionBook.updateConstituents(constituents)
+                    val date = Date()
+                    val holdings = rebellionBook.value.holdings
+                        .map { (symbol, holding) ->
+                            samples[symbol]?.let {
+                                holding.withSharePrice(PriceSample(CashAmount(it.sharePrice), date))
+                            } ?: holding
+                        }
+                    rebellionBook.updateConstituents(constituents, holdings)
+
                 }
             }
             .addTo(composite)
@@ -104,17 +105,12 @@ class MainInteraction(
     private fun openCorrectionDetails(correction: Correction) {
         val rebellion = rebellionBook.value
         val assetSymbol = correction.assetSymbol
-        val constituent = rebellion.findConstituent(assetSymbol) ?: return
-        val ownedShares = constituent.ownedShares
-        val ownedValue = (constituent.cashEquivalent as? CashEquivalent.Amount)?.cashAmount ?: return
+        val holding = rebellion.holdings[assetSymbol] ?: return
+        val ownedShares = holding.shareCount
+        val ownedValue = (holding.cashEquivalent as? CashEquivalent.Amount)?.cashAmount ?: return
         val fullInvestment = (rebellion.fullInvestment as? CashEquivalent.Amount)?.cashAmount ?: return
         val targetValue = correction.targetValue(fullInvestment)
-        val details = CorrectionDetails(
-            assetSymbol,
-            ownedShares,
-            ownedValue,
-            targetValue
-        )
+        val details = CorrectionDetails(assetSymbol, ownedShares, ownedValue, targetValue)
         correctionDetailPortal.jump(details)
     }
 

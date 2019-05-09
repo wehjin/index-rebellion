@@ -5,8 +5,6 @@ import com.rubyhuntersky.indexrebellion.data.common.DateSerializer
 import kotlinx.serialization.Serializable
 import java.util.*
 
-typealias SharePrice = PriceSample?
-
 @Serializable
 data class PriceSample(
     val cashAmount: CashAmount,

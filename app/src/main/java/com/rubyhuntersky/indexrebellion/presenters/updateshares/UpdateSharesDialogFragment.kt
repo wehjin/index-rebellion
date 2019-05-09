@@ -7,8 +7,8 @@ import android.util.Log
 import com.rubyhuntersky.indexrebellion.R
 import com.rubyhuntersky.indexrebellion.books.SharedRebellionBook
 import com.rubyhuntersky.indexrebellion.data.assets.AssetSymbol
-import com.rubyhuntersky.indexrebellion.data.assets.SharePrice
-import com.rubyhuntersky.indexrebellion.interactions.books.RebellionConstituentBook
+import com.rubyhuntersky.indexrebellion.data.assets.PriceSample
+import com.rubyhuntersky.indexrebellion.interactions.books.RebellionHoldingBook
 import com.rubyhuntersky.indexrebellion.interactions.updateshares.UpdateShares
 import com.rubyhuntersky.indexrebellion.vxandroid.InteractionBottomSheetDialogFragment
 import com.rubyhuntersky.interaction.core.InteractionRegistry
@@ -60,7 +60,7 @@ class UpdateSharesDialogFragment : InteractionBottomSheetDialogFragment<UpdateSh
         }
     }
 
-    private fun renderPriceViews(oldPrice: SharePrice, newPrice: String?) {
+    private fun renderPriceViews(oldPrice: PriceSample?, newPrice: String?) {
         sharePriceEditText.removeTextChangedListener(sharePriceTextWatcher)
         sharePriceEditText.setOnFocusChangeListener { _, hasFocus ->
             if (hasFocus) {
@@ -149,7 +149,7 @@ class UpdateSharesDialogFragment : InteractionBottomSheetDialogFragment<UpdateSh
             val key = Random.nextLong()
             val fragment = UpdateSharesDialogFragment()
                 .also {
-                    val constituentBook = RebellionConstituentBook(SharedRebellionBook, carry.first)
+                    val constituentBook = RebellionHoldingBook(SharedRebellionBook, carry.first)
                     val interaction = UpdateShares.Interaction(constituentBook)
                         .apply {
                             reset()
