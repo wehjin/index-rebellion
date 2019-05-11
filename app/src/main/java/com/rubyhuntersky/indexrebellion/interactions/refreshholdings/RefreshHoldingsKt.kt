@@ -1,5 +1,7 @@
 package com.rubyhuntersky.indexrebellion.interactions.refreshholdings
 
+import com.rubyhuntersky.indexrebellion.data.assets.OwnedAsset
+import com.rubyhuntersky.indexrebellion.presenters.main.toHoldings
 import com.rubyhuntersky.interaction.core.*
 import com.rubyhuntersky.robinhood.api.RbhApi
 import com.rubyhuntersky.robinhood.api.results.RbhHoldingsResult
@@ -10,11 +12,11 @@ private fun start(): Vision = Vision.Idle
 sealed class Vision {
     object Idle : Vision()
     object AwaitingResult : Vision()
-    data class Error(val message: String) : Vision()
-    data class Holdings(val holdings: RbhHoldingsResult) : Vision()
+    data class Error(val error: Throwable) : Vision()
+    data class NewHoldings(val newHoldings: List<OwnedAsset>) : Vision()
 }
 
-private fun isTail(maybe: Any?) = false
+private fun isTail(maybe: Any?) = maybe is Vision.NewHoldings || maybe is Vision.Error
 
 private fun update(vision: Vision, action: Action): WellResult<Vision, Action> {
     return when {
@@ -28,10 +30,11 @@ private fun update(vision: Vision, action: Action): WellResult<Vision, Action> {
             WellResult(Vision.AwaitingResult, holdingsWish)
         }
         vision is Vision.AwaitingResult && action is Action.ReceiveError -> {
-            WellResult(Vision.Error(action.throwable.localizedMessage))
+            WellResult(Vision.Error(action.throwable))
         }
         vision is Vision.AwaitingResult && action is Action.ReceiveResult -> {
-            WellResult(Vision.Holdings(action.result))
+            val newHoldings = action.result.toHoldings()
+            WellResult(Vision.NewHoldings(newHoldings))
         }
         else -> throw IllegalStateException("$vision denies $action")
     }
