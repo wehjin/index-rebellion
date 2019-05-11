@@ -25,10 +25,33 @@ typealias MainAction = Action
 
 sealed class Vision {
     object Loading : Vision()
-    data class Viewing(val rebellionReport: RebellionReport, val isRefreshing: Boolean) : Vision()
+    data class Viewing(
+        val rebellionReport: RebellionReport,
+        val isRefreshing: Boolean
+    ) : Vision()
 }
 
+//fun start() = Vision.Loading as Vision
+//
+//fun isEnding(maybe: Any?) = false
+
+//fun revise(vision: Vision, action: Action): Revision<Vision, Action> {
+//    return when {
+//        vision is Vision.Loading && action is Action.Start -> {
+//            val reports = action.book.reader
+//                .subscribe {
+//                    setVision(Vision.Viewing(RebellionReport(it), isRefreshing = false))
+//                }
+//            Revision()
+//        }
+//        else -> throw NotImplementedError()
+//    }
+//}
+
 sealed class Action {
+    //data class Start(val book: RebellionBook, val portals: MainPortals) : Action()
+    //data class SetReport(val report: RebellionReport) : Action()
+
     object FindConstituent : Action()
     object OpenCashEditor : Action()
     data class OpenCorrectionDetails(val correction: Correction) : Action()
@@ -60,11 +83,11 @@ class MainInteraction(
         val vision = this.vision
         when (vision) {
             is Vision.Loading -> updateLoading()
-            is Vision.Viewing -> updateViewing(action, vision)
+            is Vision.Viewing -> updateViewing(vision, action)
         }
     }
 
-    private fun updateViewing(action: MainAction, vision: Vision.Viewing) {
+    private fun updateViewing(vision: Vision.Viewing, action: MainAction) {
         return when (action) {
             is Action.FindConstituent -> portals.constituentSearchPortal.jump(Unit)
             is Action.OpenCashEditor -> portals.cashEditingPortal.jump(Unit)

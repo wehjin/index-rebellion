@@ -12,7 +12,6 @@ import com.rubyhuntersky.indexrebellion.BuildConfig
 import com.rubyhuntersky.indexrebellion.R
 import com.rubyhuntersky.indexrebellion.books.SharedRebellionBook
 import com.rubyhuntersky.indexrebellion.common.MyApplication
-import com.rubyhuntersky.indexrebellion.common.PendingInteractions
 import com.rubyhuntersky.indexrebellion.interactions.main.Action
 import com.rubyhuntersky.indexrebellion.interactions.main.MainInteraction
 import com.rubyhuntersky.indexrebellion.interactions.main.MainPortals
@@ -21,6 +20,7 @@ import com.rubyhuntersky.indexrebellion.presenters.cashediting.CashEditingDialog
 import com.rubyhuntersky.indexrebellion.presenters.cashediting.SharedCashEditingInteraction
 import com.rubyhuntersky.indexrebellion.presenters.constituentsearch.ConstituentSearchPortal
 import com.rubyhuntersky.indexrebellion.presenters.correctiondetails.CorrectionDetailsPortal
+import com.rubyhuntersky.interaction.core.PendingInteractions
 import com.rubyhuntersky.interaction.core.Portal
 import com.rubyhuntersky.interaction.core.Projector
 import com.rubyhuntersky.robinhood.login.RobinhoodLoginPortal

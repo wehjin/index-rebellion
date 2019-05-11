@@ -27,7 +27,7 @@ class CorrectionDetailsInteractionImplTest {
 
     @Test
     fun construction() {
-        interaction.visionStream.test()
+        interaction.visions.test()
             .assertValue(Vision.Viewing(details))
     }
 
@@ -40,7 +40,7 @@ class CorrectionDetailsInteractionImplTest {
             CashAmount.ONE
         )
         saverBook.write(newDetails)
-        interaction.visionStream.test()
+        interaction.visions.test()
             .assertValue(Vision.Viewing(newDetails))
     }
 

@@ -45,7 +45,7 @@ abstract class InteractionBottomSheetDialogFragment<V : Any, A : Any>(
 
     override fun onStart() {
         super.onStart()
-        visionDisposable = interaction.visionStream
+        visionDisposable = interaction.visions
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe(
                 { v ->

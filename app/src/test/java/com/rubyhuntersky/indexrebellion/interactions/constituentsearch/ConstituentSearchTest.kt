@@ -23,7 +23,7 @@ class ConstituentSearchTest {
 
     @Test
     fun startingVisionIsIdle() {
-        interaction.visionStream.test()
+        interaction.visions.test()
             .assertSubscribed()
             .assertValue(Vision.Idle)
             .assertNoErrors()

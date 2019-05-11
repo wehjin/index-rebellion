@@ -31,7 +31,7 @@ class MainInteractionTest {
             )
         )
 
-        mainInteraction.visionStream.test()
+        mainInteraction.visions.test()
             .assertSubscribed()
             .assertValues(Vision.Loading)
             .assertNotComplete()
@@ -57,7 +57,7 @@ class MainInteractionTest {
             )
         )
 
-        mainInteraction.visionStream.test()
+        mainInteraction.visions.test()
             .assertSubscribed()
             .assertValue { it is Vision.Viewing }
             .assertNotComplete()

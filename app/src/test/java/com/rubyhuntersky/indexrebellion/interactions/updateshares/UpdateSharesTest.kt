@@ -21,33 +21,33 @@ class UpdateSharesTest {
         val holdingBook = RebellionHoldingBook(rebellionBook, assetSymbol)
 
         val interaction = UpdateShares.Interaction(holdingBook)
-        interaction.visionStream.test()
+        interaction.visions.test()
             .assertValue {
                 it is UpdateShares.Vision.Loading
             }
 
         val holding = OwnedAsset(assetSymbol, ShareCount.ONE, PriceSample(CashAmount.ZERO, Date(0)))
         interaction.sendAction(UpdateShares.Action.Load(holding))
-        interaction.visionStream.test()
+        interaction.visions.test()
             .assertValue {
                 it is UpdateShares.Vision.Prompt && !it.canUpdate && it.numberDelta is UpdateShares.NumberDelta.Undecided && it.ownedCount == 1
             }
 
         interaction.sendAction(UpdateShares.Action.NewChangeCount("9"))
-        interaction.visionStream.test()
+        interaction.visions.test()
             .assertValue {
                 it is UpdateShares.Vision.Prompt && !it.canUpdate && it.numberDelta is UpdateShares.NumberDelta.Change
             }
 
         interaction.sendAction(UpdateShares.Action.NewPrice("1"))
-        interaction.visionStream.test()
+        interaction.visions.test()
             .assertValue {
                 it is UpdateShares.Vision.Prompt && it.canUpdate
             }
 
         val date = Date(1000000)
         interaction.sendAction(UpdateShares.Action.Save(date))
-        interaction.visionStream.test()
+        interaction.visions.test()
             .assertValue {
                 it is UpdateShares.Vision.Dismissed
             }

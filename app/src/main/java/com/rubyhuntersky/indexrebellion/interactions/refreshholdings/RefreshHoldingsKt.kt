@@ -1,6 +1,5 @@
 package com.rubyhuntersky.indexrebellion.interactions.refreshholdings
 
-import com.rubyhuntersky.indexrebellion.common.Revision
 import com.rubyhuntersky.indexrebellion.data.Rebellion
 import com.rubyhuntersky.indexrebellion.data.assets.OwnedAsset
 import com.rubyhuntersky.indexrebellion.presenters.main.toHoldings
@@ -23,9 +22,11 @@ private fun isEnding(maybe: Any?) = maybe is Vision.NewHoldings || maybe is Visi
 private fun revise(vision: Vision, action: Action): Revision<Vision, Action> {
     return when {
         vision is Vision.Idle && action is Action.Start -> {
-            val holdingsWish = Wish<Action>(
+            val holdingsWish = Wish.One(
                 action = action.api.holdings(action.token)
-                    .map { Action.ReceiveResult(it) as Action }
+                    .map {
+                        Action.ReceiveResult(it) as Action
+                    }
                     .onErrorReturn(Action::ReceiveError),
                 name = "holdings${action.id}"
             )
@@ -57,7 +58,7 @@ sealed class Action {
     data class ReceiveResult(val result: RbhHoldingsResult) : Action()
 }
 
-class RefreshHoldingsInteraction(well: Well) : Interaction<Vision, Action>
-by WellInteraction(well, ::start, ::revise, ::isEnding, REFRESH_HOLDINGS)
+class RefreshHoldingsStory(well: Well) : Interaction<Vision, Action>
+by Story(well, ::start, ::isEnding, ::revise, REFRESH_HOLDINGS)
 
 const val REFRESH_HOLDINGS = "RefreshHoldings"

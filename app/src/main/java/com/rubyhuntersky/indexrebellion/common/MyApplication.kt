@@ -6,7 +6,7 @@ import com.rubyhuntersky.indexrebellion.books.SharedRebellionBook
 import com.rubyhuntersky.indexrebellion.data.Rebellion
 import com.rubyhuntersky.indexrebellion.interactions.refreshholdings.Access
 import com.rubyhuntersky.indexrebellion.interactions.refreshholdings.Action
-import com.rubyhuntersky.indexrebellion.interactions.refreshholdings.RefreshHoldingsInteraction
+import com.rubyhuntersky.indexrebellion.interactions.refreshholdings.RefreshHoldingsStory
 import com.rubyhuntersky.interaction.core.Book
 import com.rubyhuntersky.interaction.core.SwitchWell
 import com.rubyhuntersky.robinhood.api.RbhApi
@@ -33,7 +33,7 @@ class MyApplication : Application() {
         lateinit var accessBook: Book<Access>
         lateinit var rebellionBook: Book<Rebellion>
 
-        fun refreshHoldingsInteraction() = RefreshHoldingsInteraction(mainWell)
+        fun refreshHoldingsInteraction() = RefreshHoldingsStory(mainWell)
             .also {
                 val start = Action.Start(
                     token = accessBook.value.token,
