@@ -14,7 +14,7 @@ sealed class Vision {
     data class Holdings(val holdings: RbhHoldingsResult) : Vision()
 }
 
-private fun isTail(_: Any?) = false
+private fun isTail(maybe: Any?) = false
 
 private fun update(vision: Vision, action: Action): WellResult<Vision, Action> {
     return when {
