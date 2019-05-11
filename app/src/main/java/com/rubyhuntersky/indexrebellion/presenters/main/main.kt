@@ -1,5 +1,25 @@
 package com.rubyhuntersky.indexrebellion.presenters.main
 
+import com.rubyhuntersky.indexrebellion.data.assets.AssetSymbol
+import com.rubyhuntersky.indexrebellion.data.assets.OwnedAsset
+import com.rubyhuntersky.indexrebellion.data.assets.PriceSample
+import com.rubyhuntersky.indexrebellion.data.assets.ShareCount
+import com.rubyhuntersky.indexrebellion.data.cash.CashAmount
+import com.rubyhuntersky.robinhood.api.results.RbhHoldingsResult
+import java.util.*
+
+fun RbhHoldingsResult.toHoldings(): List<OwnedAsset> {
+    return positions.map { positionResult ->
+        val instrumentLocation = positionResult.instrumentLocation
+        val quote = quotesByInstrumentLocation[instrumentLocation]
+            ?: error("No quote for instrument: $instrumentLocation")
+        val assetSymbol = AssetSymbol(quote.symbol)
+        val shareCount = ShareCount(positionResult.quantity)
+        val sharePrice = PriceSample(CashAmount(quote.lastPrice), Date())
+        OwnedAsset(assetSymbol, shareCount, sharePrice)
+    }
+}
+
 data class CorrectionWeights(
     val leftSpace: Double, val leftWing: Double,
     val rightWing: Double, val rightSpecial: Double, val rightSpace: Double

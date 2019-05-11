@@ -8,6 +8,7 @@ import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import android.widget.Toast
+import com.rubyhuntersky.indexrebellion.BuildConfig
 import com.rubyhuntersky.indexrebellion.R
 import com.rubyhuntersky.indexrebellion.books.SharedRebellionBook
 import com.rubyhuntersky.indexrebellion.common.MyApplication
@@ -32,6 +33,17 @@ class MainActivity : AppCompatActivity() {
 
     private val tag = this.javaClass.simpleName
 
+    private fun refreshAccessToken() {
+        RobinhoodLoginPortal(this).open()
+    }
+
+    private fun reloadAccessToken() {
+        val accessBook = MyApplication.accessBook
+        val access = accessBook.value
+        val newAccess = access.withToken(BuildConfig.ROBINHOOD_TOKEN)
+        accessBook.write(newAccess)
+    }
+
     private fun refreshHoldings() {
         val token = MyApplication.accessBook.value.token
         holdingsFetch = MyApplication.rbhApi.holdings(token)
@@ -39,15 +51,11 @@ class MainActivity : AppCompatActivity() {
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe({ result ->
                 Log.d(tag, "RbhHoldingsResult: $result")
-                val text = result.positions
-                    .map { position ->
-                        val quote = result.quotesByInstrumentLocation[position.instrumentLocation]
-                        "${position.quantity} shares of ${quote?.symbol ?: "Unknown"}"
-                    }
-                    .joinToString(", ")
-                Toast.makeText(this, text, Toast.LENGTH_LONG).show()
+                val newHoldings = result.toHoldings()
+                val newRebellion = MyApplication.rebellionBook.value.withHoldings(newHoldings)
+                MyApplication.rebellionBook.write(newRebellion)
             }, {
-                Log.e(tag, it.localizedMessage, it)
+                Log.e(tag, "${it.localizedMessage} TOKEN: $token", it)
                 Toast.makeText(this, it.localizedMessage, Toast.LENGTH_LONG).show()
             })
     }
@@ -96,8 +104,9 @@ class MainActivity : AppCompatActivity() {
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
-            R.id.robinhood -> true.also { RobinhoodLoginPortal(this).open() }
+            R.id.robinhood -> true.also { refreshAccessToken() }
             R.id.refreshHoldings -> true.also { refreshHoldings() }
+            R.id.reloadToken -> true.also { reloadAccessToken() }
             else -> super.onOptionsItemSelected(item)
         }
     }

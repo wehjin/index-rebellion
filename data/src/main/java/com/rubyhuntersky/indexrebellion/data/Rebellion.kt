@@ -55,6 +55,9 @@ data class Rebellion(
         return Rebellion(index, newInvestment, newHoldings)
     }
 
+    fun withHoldings(holdings: List<OwnedAsset>) =
+        Rebellion(index, newInvestment, holdings.associateBy { it.assetSymbol })
+
     fun setNewInvestment(cashAmount: CashAmount): Rebellion {
         return Rebellion(index, cashAmount, holdings)
     }
