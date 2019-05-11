@@ -5,7 +5,10 @@ import com.rubyhuntersky.indexrebellion.BuildConfig
 import com.rubyhuntersky.indexrebellion.books.SharedRebellionBook
 import com.rubyhuntersky.indexrebellion.data.Rebellion
 import com.rubyhuntersky.indexrebellion.interactions.refreshholdings.Access
+import com.rubyhuntersky.indexrebellion.interactions.refreshholdings.Action
+import com.rubyhuntersky.indexrebellion.interactions.refreshholdings.RefreshHoldingsInteraction
 import com.rubyhuntersky.interaction.core.Book
+import com.rubyhuntersky.interaction.core.SwitchWell
 import com.rubyhuntersky.robinhood.api.RbhApi
 import com.rubyhuntersky.stockcatalog.StockMarket
 import com.rubyhuntersky.storage.PreferencesBook
@@ -25,8 +28,20 @@ class MyApplication : Application() {
 
     companion object {
         val RANDOM = Random()
-        val rbhApi = RbhApi.SHARED
+        private val rbhApi = RbhApi.SHARED
+        private val mainWell = SwitchWell()
         lateinit var accessBook: Book<Access>
         lateinit var rebellionBook: Book<Rebellion>
+
+        fun refreshHoldingsStory() = RefreshHoldingsInteraction(mainWell)
+            .also {
+                val start = Action.Start(
+                    token = accessBook.value.token,
+                    api = rbhApi,
+                    book = rebellionBook,
+                    id = RANDOM.nextLong()
+                )
+                it.sendAction(start)
+            }
     }
 }

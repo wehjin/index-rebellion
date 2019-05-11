@@ -24,10 +24,11 @@ import com.rubyhuntersky.interaction.core.Projector
 import com.rubyhuntersky.robinhood.login.RobinhoodLoginPortal
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
-import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.activity_main_viewing.*
 import kotlinx.android.synthetic.main.view_funding.*
 import com.rubyhuntersky.indexrebellion.interactions.cashediting.Action as CashEditingAction
+import com.rubyhuntersky.indexrebellion.interactions.refreshholdings.Action as RefreshHoldingsAction
+import com.rubyhuntersky.indexrebellion.interactions.refreshholdings.Vision as RefreshHoldingsVision
 
 class MainActivity : AppCompatActivity() {
 
@@ -45,22 +46,22 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun refreshHoldings() {
-        val token = MyApplication.accessBook.value.token
-        holdingsFetch = MyApplication.rbhApi.holdings(token)
-            .subscribeOn(Schedulers.io())
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribe({ result ->
-                Log.d(tag, "RbhHoldingsResult: $result")
-                val newHoldings = result.toHoldings()
-                val newRebellion = MyApplication.rebellionBook.value.withHoldings(newHoldings)
-                MyApplication.rebellionBook.write(newRebellion)
-            }, {
-                Log.e(tag, "${it.localizedMessage} TOKEN: $token", it)
-                Toast.makeText(this, it.localizedMessage, Toast.LENGTH_LONG).show()
-            })
+        holdingsFetch = MyApplication.refreshHoldingsStory().tailVision.subscribe { vision ->
+            when (vision) {
+                is RefreshHoldingsVision.NewHoldings -> Log.d(tag, "New holdings: ${vision.newHoldings}")
+                is RefreshHoldingsVision.Error -> presentError(vision.error)
+                else -> throw NotImplementedError()
+            }
+            holdingsFetch?.dispose()
+        }
     }
 
     private var holdingsFetch: Disposable? = null
+
+    private fun presentError(error: Throwable) {
+        Log.e(tag, error.localizedMessage, error)
+        Toast.makeText(this, error.localizedMessage, Toast.LENGTH_LONG).show()
+    }
 
     private val projector = Projector(
         mainInteraction,
