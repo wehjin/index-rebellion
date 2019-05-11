@@ -12,6 +12,7 @@ import com.rubyhuntersky.indexrebellion.BuildConfig
 import com.rubyhuntersky.indexrebellion.R
 import com.rubyhuntersky.indexrebellion.books.SharedRebellionBook
 import com.rubyhuntersky.indexrebellion.common.MyApplication
+import com.rubyhuntersky.indexrebellion.common.PendingInteractions
 import com.rubyhuntersky.indexrebellion.interactions.main.Action
 import com.rubyhuntersky.indexrebellion.interactions.main.MainInteraction
 import com.rubyhuntersky.indexrebellion.interactions.main.Vision
@@ -23,7 +24,6 @@ import com.rubyhuntersky.interaction.core.Portal
 import com.rubyhuntersky.interaction.core.Projector
 import com.rubyhuntersky.robinhood.login.RobinhoodLoginPortal
 import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.disposables.Disposable
 import kotlinx.android.synthetic.main.activity_main_viewing.*
 import kotlinx.android.synthetic.main.view_funding.*
 import com.rubyhuntersky.indexrebellion.interactions.cashediting.Action as CashEditingAction
@@ -46,17 +46,17 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun refreshHoldings() {
-        holdingsFetch = MyApplication.refreshHoldingsStory().tailVision.subscribe { vision ->
+        val interaction = MyApplication.refreshHoldingsInteraction()
+        pendingInteractions.follow(interaction) { vision ->
             when (vision) {
                 is RefreshHoldingsVision.NewHoldings -> Log.d(tag, "New holdings: ${vision.newHoldings}")
                 is RefreshHoldingsVision.Error -> presentError(vision.error)
                 else -> throw NotImplementedError()
             }
-            holdingsFetch?.dispose()
         }
     }
 
-    private var holdingsFetch: Disposable? = null
+    private val pendingInteractions = PendingInteractions()
 
     private fun presentError(error: Throwable) {
         Log.e(tag, error.localizedMessage, error)
@@ -119,7 +119,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     override fun onStop() {
-        holdingsFetch?.dispose()
+        pendingInteractions.dispose()
         projector.stop()
         if (mainActivity == this) {
             mainActivity = null

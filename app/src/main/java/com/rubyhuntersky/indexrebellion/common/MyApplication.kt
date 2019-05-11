@@ -33,7 +33,7 @@ class MyApplication : Application() {
         lateinit var accessBook: Book<Access>
         lateinit var rebellionBook: Book<Rebellion>
 
-        fun refreshHoldingsStory() = RefreshHoldingsInteraction(mainWell)
+        fun refreshHoldingsInteraction() = RefreshHoldingsInteraction(mainWell)
             .also {
                 val start = Action.Start(
                     token = accessBook.value.token,
