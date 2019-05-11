@@ -10,7 +10,6 @@ import com.rubyhuntersky.indexrebellion.data.report.Correction
 import com.rubyhuntersky.indexrebellion.data.report.CorrectionDetails
 import com.rubyhuntersky.indexrebellion.data.report.RebellionReport
 import com.rubyhuntersky.indexrebellion.interactions.books.RebellionBook
-import com.rubyhuntersky.interaction.core.NotImplementedPortal
 import com.rubyhuntersky.interaction.core.Portal
 import com.rubyhuntersky.interaction.core.SubjectInteraction
 import com.rubyhuntersky.stockcatalog.StockMarket
@@ -36,11 +35,15 @@ sealed class Action {
     object Refresh : Action()
 }
 
+data class MainPortals(
+    val correctionDetailPortal: Portal<CorrectionDetails>,
+    val constituentSearchPortal: Portal<Unit>,
+    val cashEditingPortal: Portal<Unit>
+)
+
 class MainInteraction(
     private val rebellionBook: RebellionBook,
-    private val correctionDetailPortal: Portal<CorrectionDetails>,
-    private val constituentSearchPortal: Portal<Unit> = NotImplementedPortal(),
-    private val cashEditingPortal: Portal<Unit> = NotImplementedPortal()
+    private val portals: MainPortals
 ) : SubjectInteraction<MainVision, MainAction>(Vision.Loading) {
 
     private val composite = CompositeDisposable()
@@ -63,8 +66,8 @@ class MainInteraction(
 
     private fun updateViewing(action: MainAction, vision: Vision.Viewing) {
         return when (action) {
-            is Action.FindConstituent -> constituentSearchPortal.jump(Unit)
-            is Action.OpenCashEditor -> cashEditingPortal.jump(Unit)
+            is Action.FindConstituent -> portals.constituentSearchPortal.jump(Unit)
+            is Action.OpenCashEditor -> portals.cashEditingPortal.jump(Unit)
             is Action.OpenCorrectionDetails -> openCorrectionDetails(action.correction)
             Action.Refresh -> refreshConstituents(vision)
         }
@@ -111,7 +114,7 @@ class MainInteraction(
         val fullInvestment = (rebellion.fullInvestment as? CashEquivalent.Amount)?.cashAmount ?: return
         val targetValue = correction.targetValue(fullInvestment)
         val details = CorrectionDetails(assetSymbol, ownedShares, ownedValue, targetValue)
-        correctionDetailPortal.jump(details)
+        portals.correctionDetailPortal.jump(details)
     }
 
     private fun updateLoading() {}

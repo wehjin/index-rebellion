@@ -15,6 +15,7 @@ import com.rubyhuntersky.indexrebellion.common.MyApplication
 import com.rubyhuntersky.indexrebellion.common.PendingInteractions
 import com.rubyhuntersky.indexrebellion.interactions.main.Action
 import com.rubyhuntersky.indexrebellion.interactions.main.MainInteraction
+import com.rubyhuntersky.indexrebellion.interactions.main.MainPortals
 import com.rubyhuntersky.indexrebellion.interactions.main.Vision
 import com.rubyhuntersky.indexrebellion.presenters.cashediting.CashEditingDialogFragment
 import com.rubyhuntersky.indexrebellion.presenters.cashediting.SharedCashEditingInteraction
@@ -138,16 +139,18 @@ class MainActivity : AppCompatActivity() {
 
         private val mainInteraction = MainInteraction(
             rebellionBook = SharedRebellionBook,
-            constituentSearchPortal = ConstituentSearchPortal { mainActivity!! },
-            cashEditingPortal = object : Portal<Unit> {
-                override fun jump(carry: Unit) {
-                    SharedCashEditingInteraction.sendAction(CashEditingAction.Load)
-                    mainActivity?.supportFragmentManager?.let {
-                        CashEditingDialogFragment.newInstance().show(it, "cash_editing")
+            portals = MainPortals(
+                constituentSearchPortal = ConstituentSearchPortal { mainActivity!! },
+                cashEditingPortal = object : Portal<Unit> {
+                    override fun jump(carry: Unit) {
+                        SharedCashEditingInteraction.sendAction(CashEditingAction.Load)
+                        mainActivity?.supportFragmentManager?.let {
+                            CashEditingDialogFragment.newInstance().show(it, "cash_editing")
+                        }
                     }
-                }
-            },
-            correctionDetailPortal = CorrectionDetailsPortal { mainActivity!! }
+                },
+                correctionDetailPortal = CorrectionDetailsPortal { mainActivity!! }
+            )
         )
     }
 }
