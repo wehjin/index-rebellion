@@ -22,31 +22,22 @@ private fun isEnding(maybe: Any?) = maybe is Vision.NewHoldings || maybe is Visi
 private fun revise(vision: Vision, action: Action): Revision<Vision, Action> {
     return when {
         vision is Vision.Idle && action is Action.Start -> {
-            val holdingsWish = Wish.One(
-                action = action.api.holdings(action.token)
-                    .map {
-                        Action.ReceiveResult(it) as Action
-                    }
-                    .onErrorReturn(Action::ReceiveError),
-                name = "holdings${action.id}"
-            )
-            Revision(
-                Vision.AwaitingResult(action.book),
-                holdingsWish
-            )
+            val holdingsWish = action.api.holdings(action.token)
+                .toWish(
+                    name = "holdings",
+                    onSuccess = { Action.ReceiveResult(it) as Action },
+                    onFailure = Action::ReceiveError
+                )
+            Revision(Vision.AwaitingResult(action.book), holdingsWish)
         }
         vision is Vision.AwaitingResult && action is Action.ReceiveResult -> {
             val newHoldings = action.result.toHoldings()
             val newRebellion = vision.book.value.withHoldings(newHoldings)
             vision.book.write(newRebellion)
-            Revision(
-                Vision.NewHoldings(newHoldings)
-            )
+            Revision(Vision.NewHoldings(newHoldings))
         }
         vision is Vision.AwaitingResult && action is Action.ReceiveError -> {
-            Revision(
-                Vision.Error(action.throwable)
-            )
+            Revision(Vision.Error(action.throwable))
         }
         else -> throw IllegalStateException("$vision denies $action")
     }

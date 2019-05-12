@@ -7,14 +7,16 @@ import com.rubyhuntersky.indexrebellion.data.report.CorrectionDetails
 import com.rubyhuntersky.indexrebellion.interactions.books.MemoryRebellionBook
 import com.rubyhuntersky.indexrebellion.interactions.books.RebellionBook
 import com.rubyhuntersky.interaction.core.Portal
+import com.rubyhuntersky.interaction.core.SwitchWell
 import io.reactivex.Observable
 import org.junit.Test
 
-class MainInteractionTest {
+class MainStoryTest {
 
     private val mockCorrectionDetailsCatalyst = mock<Portal<CorrectionDetails>> {}
     private val mockConstituentSearchCatalyst = mock<Portal<Unit>> {}
     private val mockCashEditingCatalyst = mock<Portal<Unit>> {}
+    private val well = SwitchWell()
 
     @Test
     fun startsInLoadingState() {
@@ -22,41 +24,34 @@ class MainInteractionTest {
             override val reader: Observable<Rebellion> get() = Observable.never()
             override fun write(value: Rebellion) = Unit
         }
-        val mainInteraction = MainInteraction(
-            rebellionBook,
-            MainPortals(
-                mockCorrectionDetailsCatalyst,
-                mockConstituentSearchCatalyst,
-                mockCashEditingCatalyst
-            )
-        )
-
+        val mainInteraction = startMainInteraction(rebellionBook)
         mainInteraction.visions.test()
             .assertSubscribed()
-            .assertValues(Vision.Loading)
+            .assertValues(Vision.Loading(mainPortals, rebellionBook))
             .assertNotComplete()
             .assertNoErrors()
+    }
+
+    private val mainPortals = MainPortals(
+        mockCorrectionDetailsCatalyst, mockConstituentSearchCatalyst, mockCashEditingCatalyst
+    )
+
+    private fun startMainInteraction(rebellionBook: RebellionBook): MainStory {
+        return MainStory(well).also {
+            val startAction = Action.Start(rebellionBook, mainPortals)
+            it.sendAction(startAction)
+        }
     }
 
     @Test
     fun shiftsToViewingWhenRebellionArrives() {
         val rebellionBook = object : RebellionBook {
             override val reader: Observable<Rebellion>
-                get() = Observable.fromArray(
-                    Rebellion()
-                )
+                get() = Observable.fromArray(Rebellion())
 
             override fun write(value: Rebellion) = Unit
         }
-        val mainInteraction = MainInteraction(
-            rebellionBook,
-            MainPortals(
-                mockCorrectionDetailsCatalyst,
-                mockConstituentSearchCatalyst,
-                mockCashEditingCatalyst
-            )
-        )
-
+        val mainInteraction = startMainInteraction(rebellionBook)
         mainInteraction.visions.test()
             .assertSubscribed()
             .assertValue { it is Vision.Viewing }
@@ -66,29 +61,14 @@ class MainInteractionTest {
 
     @Test
     fun findConstituentActionStartsConstituentSearchInteraction() {
-        val mainInteraction = MainInteraction(
-            rebellionBook = MemoryRebellionBook(),
-            portals = MainPortals(
-                mockCorrectionDetailsCatalyst,
-                mockConstituentSearchCatalyst,
-                mockCashEditingCatalyst
-            )
-        )
-
+        val mainInteraction = startMainInteraction(MemoryRebellionBook())
         mainInteraction.sendAction(Action.FindConstituent)
         verify(mockConstituentSearchCatalyst).jump(Unit)
     }
 
     @Test
     fun openCashEditorActionCatalyzesCashEditingCatalyst() {
-        val mainInteraction = MainInteraction(
-            rebellionBook = MemoryRebellionBook(),
-            portals = MainPortals(
-                correctionDetailPortal = mockCorrectionDetailsCatalyst,
-                constituentSearchPortal = mockConstituentSearchCatalyst,
-                cashEditingPortal = mockCashEditingCatalyst
-            )
-        )
+        val mainInteraction = startMainInteraction(MemoryRebellionBook())
         mainInteraction.sendAction(Action.OpenCashEditor)
         verify(mockCashEditingCatalyst).jump(Unit)
     }

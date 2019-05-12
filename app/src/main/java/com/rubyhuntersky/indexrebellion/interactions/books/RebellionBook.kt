@@ -6,7 +6,6 @@ import com.rubyhuntersky.indexrebellion.data.assets.OwnedAsset
 import com.rubyhuntersky.indexrebellion.data.assets.PriceSample
 import com.rubyhuntersky.indexrebellion.data.assets.ShareCount
 import com.rubyhuntersky.indexrebellion.data.cash.CashAmount
-import com.rubyhuntersky.indexrebellion.data.index.Constituent
 import com.rubyhuntersky.interaction.core.Book
 
 interface RebellionBook : Book<Rebellion> {
@@ -26,17 +25,8 @@ interface RebellionBook : Book<Rebellion> {
         }
     }
 
-    val symbols: List<String>
-        get() = value.combinedAssetSymbols.map(AssetSymbol::string)
-
-    fun updateHolding(holding: OwnedAsset) =
-        write(value.withHolding(holding))
-
-    fun deleteConstituent(assetSymbol: AssetSymbol) =
-        write(value.deleteConstituent(assetSymbol))
-
-    fun updateConstituents(constituents: List<Constituent>, holdings: List<OwnedAsset>) =
-        write(value.withConstituentsAndHoldings(constituents, holdings))
+    fun updateHolding(holding: OwnedAsset) = write(value.withHolding(holding))
+    fun deleteConstituent(assetSymbol: AssetSymbol) = write(value.deleteConstituent(assetSymbol))
 }
 
 
