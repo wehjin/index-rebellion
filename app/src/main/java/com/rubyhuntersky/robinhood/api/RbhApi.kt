@@ -19,8 +19,12 @@ class RbhApi(private val httpClient: OkHttpClient) {
                     val body = response.body()!!.string()
                     Result.success(body)
                 } else {
-                    val error =
-                        RbhError.Server("${response.code()} ${response.body()?.string() ?: response.message()}")
+                    val code = response.code()
+                    val responseText = response.body()?.string() ?: response.message()
+                    val error = when (code) {
+                        401 -> RbhError.Unauthorized(responseText)
+                        else -> RbhError.Server("$code $responseText")
+                    }
                     Result.failure(error)
                 }
                 result
