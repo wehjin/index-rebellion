@@ -1,25 +1,46 @@
 package com.rubyhuntersky.robinhood.login
 
-import com.rubyhuntersky.interaction.core.SubjectInteraction
+import com.rubyhuntersky.indexrebellion.interactions.refreshholdings.Access
+import com.rubyhuntersky.interaction.core.*
 import com.rubyhuntersky.robinhood.api.RbhApi
-import io.reactivex.disposables.Disposable
+import io.reactivex.Completable
 import io.reactivex.schedulers.Schedulers
 
+class RobinhoodLoginInteraction(well: Well) : Interaction<Vision, Action>
+by Story(well, ::start, ::isEnding, ::revise, ROBINHOOD_LOGIN)
+
+const val ROBINHOOD_LOGIN = "RobinhoodLogin"
+
 sealed class Vision {
+
+    abstract val username: String
+
     data class Editing(
-        val username: String,
+        val services: Services?,
+        override val username: String,
         val password: String,
         val error: String,
         val submittable: Boolean,
         val mfa: String
     ) : Vision()
 
-    data class Submitting(val username: String, val password: String, val mfa: String) : Vision()
-    data class Reporting(val username: String, val token: String) : Vision()
+    data class Submitting(
+        val services: Services,
+        override val username: String,
+        val password: String,
+        val mfa: String
+    ) : Vision()
+
+    data class Reporting(override val username: String, val token: String) : Vision()
 }
 
+data class Services(val rbhApi: RbhApi, val accessBook: Book<Access>)
+
+fun start() = Vision.Editing(null, "", "", "", false, "") as Vision
+fun isEnding(maybe: Any?) = maybe is Vision.Reporting
+
 sealed class Action {
-    data class Start(val username: String?) : Action()
+    data class Start(val services: Services) : Action()
     data class SetUsername(val username: String) : Action()
     data class SetPassword(val password: String) : Action()
     data class SetMfa(val mfa: String) : Action()
@@ -27,179 +48,89 @@ sealed class Action {
     data class Succeed(val token: String) : Action()
     data class Fail(val throwable: Throwable) : Action()
     object Cancel : Action()
+    object Ignore : Action()
 }
 
-class RobinhoodLoginInteraction(private val rbhApi: RbhApi) :
-    SubjectInteraction<Vision, Action>(startVision = Vision.Editing(
-        "",
-        "",
-        "",
-        false,
-        ""
-    )
-    ) {
-
-    override fun sendAction(action: Action) {
-        var afterUpdate: (() -> Unit)? = null
-        endLogin()
-        val oldState = state
-        this.state = when (action) {
-            is Action.Start -> {
-                State.Editing(
-                    partialUsername = action.username ?: oldState.nearestUsername,
-                    partialPassword = oldState.nearestPassword,
-                    error = "",
-                    partialMfa = oldState.nearestMfa
-                )
-            }
-            is Action.SetUsername -> {
-                State.Editing(
-                    partialUsername = action.username,
-                    partialPassword = oldState.nearestPassword,
-                    error = oldState.nearestError,
-                    partialMfa = oldState.nearestMfa
-                )
-            }
-            is Action.SetPassword -> {
-                State.Editing(
-                    partialUsername = oldState.nearestUsername,
-                    partialPassword = action.password,
-                    error = oldState.nearestError,
-                    partialMfa = oldState.nearestMfa
-                )
-            }
-            is Action.SetMfa -> {
-                State.Editing(
-                    partialUsername = oldState.nearestUsername,
-                    partialPassword = oldState.nearestPassword,
-                    error = oldState.nearestError,
-                    partialMfa = action.mfa
-                )
-            }
-            is Action.Submit -> {
-                if (oldState is State.Editing && oldState.isSubmittable) {
-                    val username = oldState.partialUsername
-                    val password = oldState.partialPassword
-                    val mfa = oldState.partialMfa
-                    afterUpdate = { startLogin(username, password, mfa) }
-                    State.Verifying(
-                        possibleUsername = username,
-                        possiblePassword = password,
-                        possibleMfa = mfa
-                    )
-                } else {
-                    oldState
-                }
-            }
-            is Action.Succeed -> State.Reporting(
-                oldState.nearestUsername,
-                action.token
-            )
-            is Action.Fail -> State.Editing(
-                partialUsername = oldState.nearestUsername,
-                partialPassword = oldState.nearestPassword,
-                error = action.throwable.localizedMessage,
-                partialMfa = oldState.nearestMfa
-            )
-            is Action.Cancel -> {
-                when (oldState) {
-                    is State.Verifying -> State.Editing(
-                        partialUsername = oldState.possibleUsername,
-                        partialPassword = oldState.possiblePassword,
-                        error = "",
-                        partialMfa = oldState.possibleMfa
-                    )
-                    else -> State.Reporting(
-                        verifiedUsername = "",
-                        token = ""
-                    )
-                }
+fun revise(vision: Vision, action: Action): Revision<Vision, Action> {
+    return when {
+        action is Action.Start -> {
+            val password = (vision as? Vision.Submitting)?.password ?: ""
+            val username = action.services.accessBook.value.username
+            val mfa = (vision as? Vision.Submitting)?.mfa ?: ""
+            val submittable = isSubmittable(username, password)
+            val endSubmission = Wish.None(SUBMISSION_WISH) as Wish<Action>
+            val editing = Vision.Editing(action.services, username, password, "", submittable, mfa)
+            Revision(editing, endSubmission)
+        }
+        vision is Vision.Editing && action is Action.SetUsername -> {
+            val submittable = isSubmittable(action.username, vision.password)
+            val editing =
+                Vision.Editing(vision.services, action.username, vision.password, vision.error, submittable, vision.mfa)
+            Revision(editing)
+        }
+        vision is Vision.Editing && action is Action.SetPassword -> {
+            val submittable = isSubmittable(vision.username, action.password)
+            val editing =
+                Vision.Editing(vision.services, vision.username, action.password, vision.error, submittable, vision.mfa)
+            Revision(editing)
+        }
+        vision is Vision.Editing && action is Action.SetMfa -> {
+            val submittable = isSubmittable(vision.username, vision.password)
+            val editing =
+                Vision.Editing(vision.services, vision.username, vision.password, vision.error, submittable, action.mfa)
+            Revision(editing)
+        }
+        vision is Vision.Editing && action is Action.Submit -> {
+            if (vision.submittable) {
+                val submissionWish = vision.services
+                    ?.rbhApi?.login(vision.username, vision.password, vision.mfa)
+                    ?.subscribeOn(Schedulers.io())
+                    ?.toWish(SUBMISSION_WISH, Action::Succeed, Action::Fail) as Wish<Action>
+                val submitting =
+                    Vision.Submitting(vision.services, vision.username, vision.password, vision.mfa) as Vision
+                Revision(submitting, submissionWish)
+            } else {
+                Revision(vision as Vision)
             }
         }
-        setVision(state.toVision())
-        afterUpdate?.invoke()
-    }
-
-    private fun startLogin(username: String, password: String, mfa: String) {
-        loginDisposable = rbhApi.login(username, password, mfa)
-            .map<Action>(Action::Succeed)
-            .onErrorReturn(Action::Fail)
-            .subscribeOn(Schedulers.io())
-            .subscribe(this::sendAction)
-    }
-
-    private fun endLogin() {
-        loginDisposable?.dispose()
-    }
-
-    private var loginDisposable: Disposable? = null
-
-    private var state: State =
-        State.Editing("", "", "", "")
-
-    private sealed class State {
-        abstract fun toVision(): Vision
-
-        data class Editing(
-            val partialUsername: String,
-            val partialPassword: String,
-            val error: String,
-            val partialMfa: String
-        ) : State() {
-
-            override fun toVision(): Vision =
-                Vision.Editing(
-                    partialUsername,
-                    partialPassword,
-                    error,
-                    isSubmittable,
-                    partialMfa
-                )
-
-            val isSubmittable: Boolean
-                get() = partialUsername.isNotBlank() && partialPassword.isNotBlank() && partialPassword.length > 2
+        vision is Vision.Submitting && action is Action.Succeed -> {
+            val reporting = Vision.Reporting(vision.username, action.token)
+            val token = action.token
+            val accessBook = vision.services.accessBook
+            val saveTokenWish = saveToken(accessBook, token)
+                .toSingleDefault(Unit)
+                .toWish("save-token", { Action.Ignore as Action }, { Action.Ignore })
+            Revision(reporting, saveTokenWish)
         }
-
-        data class Verifying(
-            val possibleUsername: String,
-            val possiblePassword: String,
-            val possibleMfa: String
-        ) : State() {
-
-            override fun toVision(): Vision =
-                Vision.Submitting(possibleUsername, possiblePassword, possibleMfa)
+        vision is Vision.Submitting && action is Action.Fail -> {
+            val submittable = isSubmittable(vision.username, vision.password)
+            val error = action.throwable.localizedMessage
+            val editing =
+                Vision.Editing(vision.services, vision.username, vision.password, error, submittable, vision.mfa)
+            Revision(editing)
         }
-
-        data class Reporting(val verifiedUsername: String, val token: String) : State() {
-            override fun toVision(): Vision =
-                Vision.Reporting(verifiedUsername, token)
+        vision is Vision.Submitting && action is Action.Cancel -> {
+            val submittable = isSubmittable(vision.username, vision.password)
+            val editing = Vision.Editing(vision.services, vision.username, vision.password, "", submittable, "")
+            val cancelSubmission = Wish.None(SUBMISSION_WISH) as Wish<Action>
+            Revision(editing, cancelSubmission)
         }
-
-        val nearestError: String
-            get() = when (this) {
-                is Editing -> error
-                else -> ""
-            }
-
-        val nearestUsername: String
-            get() = when (this) {
-                is Editing -> partialUsername
-                is Verifying -> possibleUsername
-                is Reporting -> verifiedUsername
-            }
-
-        val nearestPassword: String
-            get() = when (this) {
-                is Editing -> partialPassword
-                is Verifying -> possiblePassword
-                else -> ""
-            }
-
-        val nearestMfa: String
-            get() = when (this) {
-                is Editing -> partialMfa
-                is Verifying -> possibleMfa
-                else -> ""
-            }
+        action is Action.Cancel -> {
+            val reporting = Vision.Reporting(vision.username, "")
+            val cancelSubmission = Wish.None(SUBMISSION_WISH) as Wish<Action>
+            Revision(reporting, cancelSubmission)
+        }
+        else -> throw NotImplementedError()
     }
+}
+
+private fun saveToken(accessBook: Book<Access>, token: String) = Completable.create {
+    val newAccess = accessBook.value.withToken(token)
+    accessBook.write(newAccess)
+}
+
+private const val SUBMISSION_WISH = "submission"
+
+private fun isSubmittable(username: String, password: String): Boolean {
+    return username.isNotBlank() && password.isNotBlank() && password.length > 2
 }

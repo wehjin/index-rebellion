@@ -7,7 +7,6 @@ import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import android.widget.Toast
-import com.rubyhuntersky.indexrebellion.BuildConfig
 import com.rubyhuntersky.indexrebellion.R
 import com.rubyhuntersky.indexrebellion.common.MyApplication
 import com.rubyhuntersky.indexrebellion.interactions.main.Action
@@ -15,7 +14,6 @@ import com.rubyhuntersky.indexrebellion.interactions.main.MAIN_INTERACTION_TAG
 import com.rubyhuntersky.indexrebellion.interactions.main.Vision
 import com.rubyhuntersky.interaction.android.NamedInteractionActivity
 import com.rubyhuntersky.interaction.core.PendingInteractions
-import com.rubyhuntersky.robinhood.login.RobinhoodLoginPortal
 import kotlinx.android.synthetic.main.activity_main_viewing.*
 import kotlinx.android.synthetic.main.view_funding.*
 import com.rubyhuntersky.indexrebellion.interactions.cashediting.Action as CashEditingAction
@@ -26,21 +24,15 @@ class MainActivity : NamedInteractionActivity<Vision, Action>() {
 
     override val name: String = MAIN_INTERACTION_TAG
 
-    private fun refreshAccessToken() {
-        RobinhoodLoginPortal(this).open()
-    }
-
-    private fun reloadAccessToken() {
-        val newAccess = MyApplication.accessBook.value.withToken(BuildConfig.ROBINHOOD_TOKEN)
-        MyApplication.accessBook.write(newAccess)
-    }
-
     private fun refreshHoldings() {
         val interaction = MyApplication.refreshHoldingsInteraction()
         pendingInteractions.follow(interaction) { vision ->
             runOnUiThread {
                 when (vision) {
-                    is RefreshHoldingsVision.NewHoldings -> Log.d(name, "New holdings: ${vision.newHoldings}")
+                    is RefreshHoldingsVision.NewHoldings -> {
+                        Log.d(name, "New holdings: ${vision.newHoldings}")
+                        Toast.makeText(this, "Updated holdings", Toast.LENGTH_SHORT).show()
+                    }
                     is RefreshHoldingsVision.Error -> presentError(vision.error)
                     else -> throw NotImplementedError()
                 }
@@ -95,14 +87,11 @@ class MainActivity : NamedInteractionActivity<Vision, Action>() {
         return true
     }
 
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        return when (item.itemId) {
-            R.id.robinhood -> true.also { refreshAccessToken() }
+    override fun onOptionsItemSelected(item: MenuItem): Boolean =
+        when (item.itemId) {
             R.id.refreshHoldings -> true.also { refreshHoldings() }
-            R.id.reloadToken -> true.also { reloadAccessToken() }
             else -> super.onOptionsItemSelected(item)
         }
-    }
 
     override fun onStart() {
         super.onStart()

@@ -51,15 +51,13 @@ class RobinhoodLoginDialogFragment : RendererBottomSheetDialogFragment<Vision, A
             super.end(view, data)
         }
 
-        private val TAG = "RobinhoodLogin"
-
         override fun update(
             vision: Vision,
             sendAction: (Action) -> Unit,
             view: View,
             data: RendererData
         ): UpdateResult<RendererData> {
-            Log.d(TAG, "VISION: $vision")
+            Log.d(ROBINHOOD_LOGIN, "VISION: $vision")
             return when (vision) {
                 is Vision.Editing -> {
                     with(view.userEditText) {
@@ -101,7 +99,7 @@ class RobinhoodLoginDialogFragment : RendererBottomSheetDialogFragment<Vision, A
                     view.passwordEditText.visibility = View.INVISIBLE
                     view.mfaEditText.visibility = View.INVISIBLE
                     view.signInButton.visibility = View.INVISIBLE
-                    Log.d(TAG, "REPORT: $vision")
+                    Log.d(ROBINHOOD_LOGIN, "REPORT: $vision")
                     UpdateResult.Finish(data)
                 }
             }

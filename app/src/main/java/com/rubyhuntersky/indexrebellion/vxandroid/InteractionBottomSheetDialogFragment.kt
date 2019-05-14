@@ -8,8 +8,10 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import com.rubyhuntersky.interaction.android.AndroidEdge
 import com.rubyhuntersky.interaction.core.Interaction
 import com.rubyhuntersky.interaction.core.InteractionRegistry
+import com.rubyhuntersky.interaction.core.InteractionSearch
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 
@@ -24,9 +26,12 @@ abstract class InteractionBottomSheetDialogFragment<V : Any, A : Any>(
             arguments = (arguments ?: Bundle()).also { it.putLong(INTERACTION_ARGS_KEY, value) }
         }
 
-    private val interaction: Interaction<V, A> by lazy {
-        directInteraction ?: InteractionRegistry.findInteraction(indirectInteractionKey)!!
-    }
+    private val interaction: Interaction<V, A>
+            by lazy {
+                directInteraction
+                    ?: InteractionRegistry.findInteraction<V, A>(indirectInteractionKey)
+                    ?: AndroidEdge.findInteraction(InteractionSearch.ByKey(indirectInteractionKey))
+            }
 
     private var visionDisposable: Disposable? = null
     private var _vision: V? = null
