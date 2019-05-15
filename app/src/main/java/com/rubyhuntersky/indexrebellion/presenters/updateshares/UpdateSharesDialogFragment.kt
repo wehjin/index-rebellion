@@ -149,8 +149,8 @@ class UpdateSharesDialogFragment : InteractionBottomSheetDialogFragment<UpdateSh
             val key = Random.nextLong()
             val fragment = UpdateSharesDialogFragment()
                 .also {
-                    val constituentBook = RebellionHoldingBook(SharedRebellionBook, carry.first)
-                    val interaction = UpdateShares.Interaction(constituentBook)
+                    val holdingBook = RebellionHoldingBook(SharedRebellionBook, carry.first)
+                    val interaction = UpdateShares.Interaction(holdingBook)
                         .apply {
                             reset()
                         }

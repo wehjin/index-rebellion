@@ -47,7 +47,7 @@ by Saver.InteractionImpl(correctionDetailsBook)
                     controller.setVision(Vision.Finished)
                 }
                 is Action.Delete -> (controller.vision as? Vision.Viewing)?.let {
-                    correctionDetailsBook.delete()
+                    correctionDetailsBook.deleteConstituent()
                     controller.setVision(Vision.Finished)
                 }
             }

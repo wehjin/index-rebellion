@@ -21,6 +21,9 @@ import java.util.*
 
 const val MAIN_INTERACTION_TAG = "MainInteraction"
 
+class MainStory(well: Well) : Interaction<Vision, Action>
+by Story(well, ::start, ::isEnding, ::revise, MAIN_INTERACTION_TAG)
+
 sealed class Vision {
 
     data class Loading(
@@ -125,9 +128,6 @@ fun revise(vision: Vision, action: Action): Revision<Vision, Action> {
 }
 
 
-class MainStory(well: Well) : Interaction<Vision, Action>
-by Story(well, ::start, ::isEnding, ::revise, MAIN_INTERACTION_TAG)
-
 private fun updateRebellionPrices(rebellionBook: Book<Rebellion>, stockMarketResult: StockMarket.Result): Single<Unit> {
     return Completable.create {
         (stockMarketResult as? StockMarket.Result.Samples)?.let {
@@ -160,11 +160,9 @@ private fun updateRebellionPrices(rebellionBook: Book<Rebellion>, stockMarketRes
 private fun openCorrectionDetails(rebellionBook: Book<Rebellion>, portals: MainPortals, correction: Correction) {
     val rebellion = rebellionBook.value
     val assetSymbol = correction.assetSymbol
-    val holding = rebellion.holdings[assetSymbol] ?: return
-    val ownedShares = holding.shareCount
-    val ownedValue = (holding.cashEquivalent as? CashEquivalent.Amount)?.cashAmount ?: return
+    val holding = rebellion.holdings[assetSymbol]
     val fullInvestment = (rebellion.fullInvestment as? CashEquivalent.Amount)?.cashAmount ?: return
     val targetValue = correction.targetValue(fullInvestment)
-    val details = CorrectionDetails(assetSymbol, ownedShares, ownedValue, targetValue)
+    val details = CorrectionDetails(assetSymbol, holding, targetValue)
     portals.correctionDetailPortal.jump(details)
 }

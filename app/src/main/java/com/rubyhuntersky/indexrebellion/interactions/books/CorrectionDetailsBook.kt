@@ -8,5 +8,5 @@ class CorrectionDetailsBook(start: CorrectionDetails?, private val rebellionBook
     Book<CorrectionDetails>
     by BehaviorBook(start) {
 
-    fun delete() = rebellionBook.deleteConstituent(value.assetSymbol)
+    fun deleteConstituent() = rebellionBook.deleteConstituent(value.assetSymbol)
 }

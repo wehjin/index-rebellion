@@ -3,6 +3,8 @@ package com.rubyhuntersky.indexrebellion.interactions.correctiondetails
 import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.verify
 import com.rubyhuntersky.indexrebellion.data.assets.AssetSymbol
+import com.rubyhuntersky.indexrebellion.data.assets.OwnedAsset
+import com.rubyhuntersky.indexrebellion.data.assets.PriceSample
 import com.rubyhuntersky.indexrebellion.data.assets.ShareCount
 import com.rubyhuntersky.indexrebellion.data.cash.CashAmount
 import com.rubyhuntersky.indexrebellion.data.report.CorrectionDetails
@@ -10,14 +12,15 @@ import com.rubyhuntersky.indexrebellion.interactions.books.CorrectionDetailsBook
 import com.rubyhuntersky.indexrebellion.interactions.books.MemoryRebellionBook
 import com.rubyhuntersky.interaction.core.Portal
 import org.junit.Test
+import java.util.*
 
 class CorrectionDetailsInteractionImplTest {
 
     private val assetSymbol = AssetSymbol("TSL")
+    private val date = Date()
     private val details = CorrectionDetails(
         assetSymbol,
-        ShareCount.ONE,
-        CashAmount.ONE,
+        OwnedAsset(assetSymbol, ShareCount.ONE, PriceSample(CashAmount.ONE, date)),
         CashAmount.TEN
     )
     private val mockCatalyst = mock<Portal<AssetSymbol>>()
@@ -35,8 +38,7 @@ class CorrectionDetailsInteractionImplTest {
     fun newDetail() {
         val newDetails = CorrectionDetails(
             assetSymbol,
-            ShareCount.ONE,
-            CashAmount.ONE,
+            OwnedAsset(assetSymbol, ShareCount.ONE, PriceSample(CashAmount.ONE, date)),
             CashAmount.ONE
         )
         saverBook.write(newDetails)

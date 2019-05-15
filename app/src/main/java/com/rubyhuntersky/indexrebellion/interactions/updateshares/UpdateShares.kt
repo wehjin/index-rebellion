@@ -10,6 +10,7 @@ import com.rubyhuntersky.interaction.core.SubjectInteraction
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.rxkotlin.addTo
 import java.util.*
+import com.rubyhuntersky.indexrebellion.interactions.updateshares.UpdateShares.Action as UpdateSharesAction
 
 object UpdateShares {
 
@@ -30,20 +31,20 @@ object UpdateShares {
     }
 
     sealed class Action {
-        object Reset : Action()
-        data class Load(val ownedAsset: OwnedAsset) : Action()
-        data class ShouldUpdateCash(val shouldUpdateCash: Boolean) : Action()
-        data class NewPrice(val newSharePrice: String) : Action()
-        data class NewTotalCount(val newTotalCount: String) : Action()
-        data class NewChangeCount(val newChangeCount: String) : Action()
-        data class Save(val date: Date) : Action()
+        object Reset : UpdateSharesAction()
+        data class Load(val ownedAsset: OwnedAsset) : UpdateSharesAction()
+        data class ShouldUpdateCash(val shouldUpdateCash: Boolean) : UpdateSharesAction()
+        data class NewPrice(val newSharePrice: String) : UpdateSharesAction()
+        data class NewTotalCount(val newTotalCount: String) : UpdateSharesAction()
+        data class NewChangeCount(val newChangeCount: String) : UpdateSharesAction()
+        data class Save(val date: Date) : UpdateSharesAction()
     }
 
 
     class Interaction(private val holdingBook: HoldingBook) :
-        SubjectInteraction<Vision, Action>(
+        SubjectInteraction<Vision, UpdateSharesAction>(
             startVision = UpdateShares.Vision.Loading,
-            startAction = UpdateShares.Action.Reset
+            startAction = UpdateSharesAction.Reset
         ) {
 
         // TODO Delete these and build Prompt from Prompt
@@ -55,27 +56,27 @@ object UpdateShares {
 
         private val composite = CompositeDisposable()
 
-        override fun sendAction(action: Action) {
+        override fun sendAction(action: UpdateSharesAction) {
             when (action) {
-                is Action.Reset -> {
+                is UpdateSharesAction.Reset -> {
                     setVision(UpdateShares.Vision.Loading)
                     composite.clear()
                     holdingBook.reader
                         .subscribe {
-                            sendAction(UpdateShares.Action.Load(it))
+                            sendAction(UpdateSharesAction.Load(it))
                         }
                         .addTo(composite)
                 }
-                is Action.Load -> startPrompt(action)
-                is Action.ShouldUpdateCash -> evolvePrompt { shouldUpdateCash = action.shouldUpdateCash }
-                is Action.NewPrice -> evolvePrompt { newPrice = action.newSharePrice }
-                is Action.NewTotalCount -> evolvePrompt { newTotal = action.newTotalCount }
-                is Action.NewChangeCount -> evolvePrompt { newChange = action.newChangeCount }
-                is Action.Save -> dismissPrompt(action.date)
+                is UpdateSharesAction.Load -> startPrompt(action)
+                is UpdateSharesAction.ShouldUpdateCash -> evolvePrompt { shouldUpdateCash = action.shouldUpdateCash }
+                is UpdateSharesAction.NewPrice -> evolvePrompt { newPrice = action.newSharePrice }
+                is UpdateSharesAction.NewTotalCount -> evolvePrompt { newTotal = action.newTotalCount }
+                is UpdateSharesAction.NewChangeCount -> evolvePrompt { newChange = action.newChangeCount }
+                is UpdateSharesAction.Save -> dismissPrompt(action.date)
             }
         }
 
-        private fun startPrompt(action: Action.Load) = when (vision) {
+        private fun startPrompt(action: UpdateSharesAction.Load) = when (vision) {
             is Vision.Loading, is Vision.Prompt -> {
                 ownedAsset = action.ownedAsset
                 shouldUpdateCash = true
