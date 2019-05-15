@@ -5,7 +5,11 @@ import android.support.v4.app.FragmentActivity
 import com.rubyhuntersky.indexrebellion.BuildConfig
 import com.rubyhuntersky.indexrebellion.books.SharedRebellionBook
 import com.rubyhuntersky.indexrebellion.data.Rebellion
+import com.rubyhuntersky.indexrebellion.data.report.CorrectionDetails
+import com.rubyhuntersky.indexrebellion.interactions.books.CorrectionDetailsBook
 import com.rubyhuntersky.indexrebellion.interactions.cashediting.Action
+import com.rubyhuntersky.indexrebellion.interactions.correctiondetails.CORRECTION_DETAILS
+import com.rubyhuntersky.indexrebellion.interactions.correctiondetails.CorrectionDetailsStory
 import com.rubyhuntersky.indexrebellion.interactions.main.MainPortals
 import com.rubyhuntersky.indexrebellion.interactions.main.MainStory
 import com.rubyhuntersky.indexrebellion.interactions.refreshholdings.Access
@@ -13,7 +17,7 @@ import com.rubyhuntersky.indexrebellion.interactions.refreshholdings.RefreshHold
 import com.rubyhuntersky.indexrebellion.presenters.cashediting.CashEditingDialogFragment
 import com.rubyhuntersky.indexrebellion.presenters.cashediting.SharedCashEditingInteraction
 import com.rubyhuntersky.indexrebellion.presenters.constituentsearch.ConstituentSearchPortal
-import com.rubyhuntersky.indexrebellion.presenters.correctiondetails.CorrectionDetailsPortal
+import com.rubyhuntersky.indexrebellion.presenters.correctiondetails.CorrectionDetailsDialogFragment
 import com.rubyhuntersky.indexrebellion.presenters.main.MainActivity
 import com.rubyhuntersky.interaction.android.AndroidEdge
 import com.rubyhuntersky.interaction.android.ProjectionSource
@@ -27,6 +31,8 @@ import com.rubyhuntersky.robinhood.login.RobinhoodLoginDialogFragment
 import com.rubyhuntersky.robinhood.login.RobinhoodLoginInteraction
 import com.rubyhuntersky.stockcatalog.StockMarket
 import com.rubyhuntersky.storage.PreferencesBook
+import com.rubyhuntersky.indexrebellion.interactions.correctiondetails.Action as CorrectionDetailsAction
+import com.rubyhuntersky.indexrebellion.interactions.correctiondetails.Culture as CorrectionDetailsCulture
 import com.rubyhuntersky.indexrebellion.interactions.main.Action as MainAction
 import com.rubyhuntersky.indexrebellion.interactions.refreshholdings.Action as RefreshholdingsAction
 import com.rubyhuntersky.robinhood.login.Action as RobinhoodLoginAction
@@ -57,14 +63,10 @@ class MyApplication : Application() {
                             CashEditingDialogFragment.newInstance().show(it, "cash_editing")
                         }
                     }
-                },
-                correctionDetailPortal = CorrectionDetailsPortal { MainActivity.currentActivity()!! }
+                }
             )
-            it.sendAction(
-                com.rubyhuntersky.indexrebellion.interactions.main.Action.Start(
-                    rebellionBook, portals
-                )
-            )
+            val start = MainAction.Start(rebellionBook, portals)
+            it.sendAction(start)
         }
 
         AndroidEdge += object : ProjectionSource {
@@ -75,6 +77,17 @@ class MyApplication : Application() {
             ) {
                 RobinhoodLoginDialogFragment.new(key)
                     .show(fragmentActivity.supportFragmentManager, "$ROBINHOOD_LOGIN/Projection")
+            }
+        }
+
+        AndroidEdge += object : ProjectionSource {
+            override val group: String = CORRECTION_DETAILS
+
+            override fun <V, A> startProjection(
+                fragmentActivity: FragmentActivity, interaction: Interaction<V, A>, key: Long
+            ) {
+                val dialogFragment = CorrectionDetailsDialogFragment.new(key)
+                dialogFragment.show(fragmentActivity.supportFragmentManager, "$CORRECTION_DETAILS/Projection")
             }
         }
     }
@@ -100,6 +113,14 @@ class MyApplication : Application() {
             val services = RobinhoodLoginServices(rbhApi, accessBook)
             val start = RobinhoodLoginAction.Start(services)
             it.sendAction(start)
+        }
+
+        fun correctionDetailsStory(details: CorrectionDetails): CorrectionDetailsStory {
+            return CorrectionDetailsStory(mainWell).also {
+                val correctionDetailsBook = CorrectionDetailsBook(details, SharedRebellionBook)
+                val start = CorrectionDetailsAction.Start(CorrectionDetailsCulture(correctionDetailsBook))
+                it.sendAction(start)
+            }
         }
     }
 }

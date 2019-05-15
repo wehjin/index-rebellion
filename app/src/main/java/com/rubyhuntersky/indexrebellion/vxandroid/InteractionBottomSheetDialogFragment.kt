@@ -70,10 +70,13 @@ abstract class InteractionBottomSheetDialogFragment<V : Any, A : Any>(
         super.onStop()
     }
 
+    protected open val dismissAction: A? = null
+
     override fun onDismiss(dialog: DialogInterface?) {
         if (directInteraction == null) {
             InteractionRegistry.dropInteraction(indirectInteractionKey)
         }
+        dismissAction?.also { interaction.sendAction(it) }
         super.onDismiss(dialog)
     }
 

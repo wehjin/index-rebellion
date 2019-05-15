@@ -1,27 +1,20 @@
 package com.rubyhuntersky.indexrebellion.presenters.correctiondetails
 
-import android.support.v4.app.FragmentActivity
 import com.rubyhuntersky.indexrebellion.R
-import com.rubyhuntersky.indexrebellion.books.SharedRebellionBook
-import com.rubyhuntersky.indexrebellion.data.assets.AssetSymbol
 import com.rubyhuntersky.indexrebellion.data.cash.CashAmount
-import com.rubyhuntersky.indexrebellion.data.report.CorrectionDetails
-import com.rubyhuntersky.indexrebellion.interactions.books.CorrectionDetailsBook
 import com.rubyhuntersky.indexrebellion.interactions.correctiondetails.Action
-import com.rubyhuntersky.indexrebellion.interactions.correctiondetails.CorrectionDetailsInteractionImpl
 import com.rubyhuntersky.indexrebellion.interactions.correctiondetails.Vision
-import com.rubyhuntersky.indexrebellion.presenters.updateshares.UpdateSharesDialogFragment
 import com.rubyhuntersky.indexrebellion.vxandroid.InteractionBottomSheetDialogFragment
-import com.rubyhuntersky.interaction.core.InteractionRegistry
-import com.rubyhuntersky.interaction.core.Portal
 import kotlinx.android.synthetic.main.view_correction_details.*
-import kotlin.random.Random
 
 
 class CorrectionDetailsDialogFragment : InteractionBottomSheetDialogFragment<Vision, Action>(
     layoutRes = R.layout.view_correction_details,
     directInteraction = null
 ) {
+
+    override val dismissAction: Action?
+        get() = Action.Cancel
 
     override fun render(vision: Vision) {
         when (vision) {
@@ -65,7 +58,7 @@ class CorrectionDetailsDialogFragment : InteractionBottomSheetDialogFragment<Vis
                 with(removeFromIndexTextView) {
                     isEnabled = true
                     setOnClickListener {
-                        sendAction(Action.Delete)
+                        sendAction(Action.DeleteConstituent)
                         dismiss()
                     }
                 }
@@ -76,22 +69,8 @@ class CorrectionDetailsDialogFragment : InteractionBottomSheetDialogFragment<Vis
 
     companion object {
 
-        fun newInstance(
-            details: CorrectionDetails,
-            getFragmentActivity: () -> FragmentActivity
-        ): CorrectionDetailsDialogFragment {
-            val interaction = CorrectionDetailsInteractionImpl(
-                correctionDetailsBook = CorrectionDetailsBook(details, SharedRebellionBook),
-                updateSharesPortal = object : Portal<AssetSymbol> {
-                    override fun jump(carry: AssetSymbol) =
-                        UpdateSharesDialogFragment.jump(Pair(carry, getFragmentActivity))
-                }
-            )
-            return CorrectionDetailsDialogFragment()
-                .also {
-                    it.indirectInteractionKey = Random.nextLong()
-                    InteractionRegistry.addInteraction(it.indirectInteractionKey, interaction)
-                }
+        fun new(key: Long): CorrectionDetailsDialogFragment = CorrectionDetailsDialogFragment().also {
+            it.indirectInteractionKey = key
         }
     }
 }

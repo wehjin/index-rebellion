@@ -1,6 +1,7 @@
 package com.rubyhuntersky.indexrebellion.interactions.main
 
 import android.util.Log
+import com.rubyhuntersky.indexrebellion.common.MyApplication
 import com.rubyhuntersky.indexrebellion.data.Rebellion
 import com.rubyhuntersky.indexrebellion.data.assets.AssetSymbol
 import com.rubyhuntersky.indexrebellion.data.assets.PriceSample
@@ -11,6 +12,7 @@ import com.rubyhuntersky.indexrebellion.data.index.MarketWeight
 import com.rubyhuntersky.indexrebellion.data.report.Correction
 import com.rubyhuntersky.indexrebellion.data.report.CorrectionDetails
 import com.rubyhuntersky.indexrebellion.data.report.RebellionReport
+import com.rubyhuntersky.interaction.android.AndroidEdge
 import com.rubyhuntersky.interaction.core.*
 import com.rubyhuntersky.stockcatalog.StockMarket
 import com.rubyhuntersky.stockcatalog.StockSample
@@ -57,7 +59,6 @@ sealed class Action {
 }
 
 data class MainPortals(
-    val correctionDetailPortal: Portal<CorrectionDetails>,
     val constituentSearchPortal: Portal<Unit>,
     val cashEditingPortal: Portal<Unit>
 )
@@ -94,8 +95,18 @@ fun revise(vision: Vision, action: Action): Revision<Vision, Action> {
             Revision(vision)
         }
         vision is Vision.Viewing && action is Action.OpenCorrectionDetails -> {
-            openCorrectionDetails(vision.rebellionBook, vision.portals, action.correction)
-            Revision(vision)
+            val rebellion = vision.rebellionBook.value
+            val fullInvestment =
+                (rebellion.fullInvestment as? CashEquivalent.Amount)?.cashAmount ?: error("No investment amount")
+            val details = CorrectionDetails(
+                assetSymbol = action.correction.assetSymbol,
+                holding = rebellion.holdings[action.correction.assetSymbol],
+                targetValue = action.correction.targetValue(fullInvestment)
+            )
+            val detailsWish = MyApplication.correctionDetailsStory(details)
+                .also { AndroidEdge.presentInteraction(it) }
+                .toWish("details") { Action.Ignore as Action }
+            Revision(vision, detailsWish)
         }
         vision is Vision.Viewing && action is Action.Refresh -> {
             val newVision = Vision.Viewing(vision.rebellionReport, true, vision.portals, vision.rebellionBook)
@@ -157,12 +168,3 @@ private fun updateRebellionPrices(rebellionBook: Book<Rebellion>, stockMarketRes
     }.toSingleDefault(Unit)
 }
 
-private fun openCorrectionDetails(rebellionBook: Book<Rebellion>, portals: MainPortals, correction: Correction) {
-    val rebellion = rebellionBook.value
-    val assetSymbol = correction.assetSymbol
-    val holding = rebellion.holdings[assetSymbol]
-    val fullInvestment = (rebellion.fullInvestment as? CashEquivalent.Amount)?.cashAmount ?: return
-    val targetValue = correction.targetValue(fullInvestment)
-    val details = CorrectionDetails(assetSymbol, holding, targetValue)
-    portals.correctionDetailPortal.jump(details)
-}
