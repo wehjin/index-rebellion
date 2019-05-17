@@ -3,7 +3,6 @@ package com.rubyhuntersky.indexrebellion.interactions.main
 import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.verify
 import com.rubyhuntersky.indexrebellion.data.Rebellion
-import com.rubyhuntersky.indexrebellion.data.report.CorrectionDetails
 import com.rubyhuntersky.indexrebellion.interactions.books.MemoryRebellionBook
 import com.rubyhuntersky.indexrebellion.interactions.books.RebellionBook
 import com.rubyhuntersky.interaction.core.Portal
@@ -13,7 +12,6 @@ import org.junit.Test
 
 class MainStoryTest {
 
-    private val mockCorrectionDetailsCatalyst = mock<Portal<CorrectionDetails>> {}
     private val mockConstituentSearchCatalyst = mock<Portal<Unit>> {}
     private val mockCashEditingCatalyst = mock<Portal<Unit>> {}
     private val well = SwitchWell()
@@ -32,9 +30,7 @@ class MainStoryTest {
             .assertNoErrors()
     }
 
-    private val mainPortals = MainPortals(
-        mockCorrectionDetailsCatalyst, mockConstituentSearchCatalyst, mockCashEditingCatalyst
-    )
+    private val mainPortals = MainPortals(mockConstituentSearchCatalyst, mockCashEditingCatalyst)
 
     private fun startMainInteraction(rebellionBook: RebellionBook): MainStory {
         return MainStory(well).also {

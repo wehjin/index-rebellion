@@ -1,8 +1,10 @@
 package com.rubyhuntersky.indexrebellion.interactions.correctiondetails
 
 import android.util.Log
+import com.rubyhuntersky.indexrebellion.common.MyApplication
 import com.rubyhuntersky.indexrebellion.data.report.CorrectionDetails
 import com.rubyhuntersky.indexrebellion.interactions.books.CorrectionDetailsBook
+import com.rubyhuntersky.interaction.android.AndroidEdge
 import com.rubyhuntersky.interaction.core.*
 import com.rubyhuntersky.interaction.core.SubjectInteractionAdapter as Adapter
 
@@ -58,8 +60,10 @@ fun revise(vision: Vision, action: Action): Revision<Vision, Action> {
         }
         vision is Vision.Viewing && action is Action.UpdateShares -> {
             val assetSymbol = vision.details.assetSymbol
-            //vision.culture.updateSharesPortal.jump(assetSymbol)
-            Revision(Vision.Finished)
+            val wish = MyApplication.updateSharesStory(assetSymbol)
+                .also { AndroidEdge.presentInteraction(it) }
+                .toWish("update-shares") { Action.Cancel as Action }
+            Revision(Vision.Finished, wish)
         }
         vision is Vision.Viewing && action is Action.DeleteConstituent -> {
             vision.culture.correctionDetailsBook.deleteConstituent()

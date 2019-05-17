@@ -1,42 +1,36 @@
 package com.rubyhuntersky.indexrebellion.presenters.updateshares
 
-import android.support.v4.app.FragmentActivity
 import android.text.Editable
 import android.text.TextWatcher
 import android.util.Log
 import com.rubyhuntersky.indexrebellion.R
-import com.rubyhuntersky.indexrebellion.books.SharedRebellionBook
-import com.rubyhuntersky.indexrebellion.data.assets.AssetSymbol
 import com.rubyhuntersky.indexrebellion.data.assets.PriceSample
-import com.rubyhuntersky.indexrebellion.interactions.books.RebellionHoldingBook
-import com.rubyhuntersky.indexrebellion.interactions.updateshares.UpdateShares
+import com.rubyhuntersky.indexrebellion.data.assets.ShareCount
+import com.rubyhuntersky.indexrebellion.interactions.updateshares.*
 import com.rubyhuntersky.indexrebellion.vxandroid.InteractionBottomSheetDialogFragment
-import com.rubyhuntersky.interaction.core.InteractionRegistry
-import com.rubyhuntersky.interaction.core.Portal
 import kotlinx.android.synthetic.main.view_update_share_count.*
 import java.util.*
-import kotlin.random.Random
 
 
-class UpdateSharesDialogFragment : InteractionBottomSheetDialogFragment<UpdateShares.Vision, UpdateShares.Action>(
+class UpdateSharesDialogFragment : InteractionBottomSheetDialogFragment<Vision, Action>(
     layoutRes = R.layout.view_update_share_count,
     directInteraction = null
 ) {
 
-
-    override fun render(vision: UpdateShares.Vision) {
+    override fun render(vision: Vision) {
+        Log.d(UPDATE_SHARES, "VISION: $vision")
         when (vision) {
-            is UpdateShares.Vision.Loading -> {
+            is Vision.Loading -> {
                 symbolTextView.text = getString(R.string.loading)
             }
-            is UpdateShares.Vision.Prompt -> {
+            is Vision.Prompt -> {
                 symbolTextView.text = vision.assetSymbol.string
-                renderCountViews(vision.numberDelta, vision.ownedCount)
+                renderCountViews(vision.sharesChange, vision.ownedCount)
                 renderPriceViews(vision.sharePrice, vision.newPrice)
                 renderCashAdjustmentCheckBox(vision.shouldUpdateCash)
                 renderSaveButton(vision.canUpdate)
             }
-            is UpdateShares.Vision.Dismissed -> {
+            is Vision.Dismissed -> {
                 symbolTextView.text = getString(R.string.dismissed)
                 dismiss()
             }
@@ -46,7 +40,7 @@ class UpdateSharesDialogFragment : InteractionBottomSheetDialogFragment<UpdateSh
     private fun renderSaveButton(canUpdate: Boolean) {
         saveButton.isEnabled = canUpdate
         if (canUpdate) {
-            saveButton.setOnClickListener { sendAction(UpdateShares.Action.Save(Date())) }
+            saveButton.setOnClickListener { sendAction(Action.Save(Date())) }
         }
     }
 
@@ -56,7 +50,7 @@ class UpdateSharesDialogFragment : InteractionBottomSheetDialogFragment<UpdateSh
             adjustCashCheckBox.isChecked = shouldUpdateCash
         }
         adjustCashCheckBox.setOnCheckedChangeListener { _, isChecked ->
-            sendAction(UpdateShares.Action.ShouldUpdateCash(isChecked))
+            sendAction(Action.ShouldUpdateCash(isChecked))
         }
     }
 
@@ -75,10 +69,10 @@ class UpdateSharesDialogFragment : InteractionBottomSheetDialogFragment<UpdateSh
         sharePriceEditText.addTextChangedListener(sharePriceTextWatcher)
     }
 
-    private fun renderCountViews(numberDelta: UpdateShares.NumberDelta, ownedCount: Int) {
-        oldCountTextView.text = getString(R.string.old_shares_format, ownedCount.toString())
-        when (numberDelta) {
-            is UpdateShares.NumberDelta.Undecided -> {
+    private fun renderCountViews(sharesChange: SharesChange, ownedCount: ShareCount) {
+        oldCountTextView.text = getString(R.string.old_shares_format, ownedCount.toDouble().toLong().toString())
+        when (sharesChange) {
+            is SharesChange.None -> {
                 totalCountEditText.removeTextChangedListener(totalTextWatcher)
                 totalCountEditText.isEnabled = true
                 totalCountEditText.text = null
@@ -88,27 +82,27 @@ class UpdateSharesDialogFragment : InteractionBottomSheetDialogFragment<UpdateSh
                 deltaCountEditText.text = null
                 deltaCountEditText.addTextChangedListener(deltaTextWatcher)
             }
-            is UpdateShares.NumberDelta.Total -> {
+            is SharesChange.Total -> {
                 totalCountEditText.removeTextChangedListener(totalTextWatcher)
                 totalCountEditText.isEnabled = true
-                if (totalCountEditText.text.toString() != numberDelta.newTotal) {
-                    totalCountEditText.setText(numberDelta.newTotal)
+                if (totalCountEditText.text.toString() != sharesChange.total) {
+                    totalCountEditText.setText(sharesChange.total)
                 }
                 totalCountEditText.addTextChangedListener(totalTextWatcher)
                 deltaCountEditText.removeTextChangedListener(deltaTextWatcher)
                 deltaCountEditText.isEnabled = false
-                val delta = numberDelta.newTotal.toLongOrNull()?.let { it - ownedCount }
+                val delta = sharesChange.total.toLongOrNull()?.let { it - ownedCount.toDouble().toLong() }
                 deltaCountEditText.setText(delta?.toString() ?: getString(R.string.unknown_quantity))
             }
-            is UpdateShares.NumberDelta.Change -> {
+            is SharesChange.Addition -> {
                 totalCountEditText.removeTextChangedListener(totalTextWatcher)
                 totalCountEditText.isEnabled = false
-                val total = numberDelta.newChange.toLongOrNull()?.let { it + ownedCount }
+                val total = sharesChange.addition.toLongOrNull()?.let { it + ownedCount.toDouble().toLong() }
                 totalCountEditText.setText(total?.toString() ?: getString(R.string.unknown_quantity))
                 deltaCountEditText.removeTextChangedListener(deltaTextWatcher)
                 deltaCountEditText.isEnabled = true
-                if (deltaCountEditText.text.toString() != numberDelta.newChange) {
-                    deltaCountEditText.setText(numberDelta.newChange)
+                if (deltaCountEditText.text.toString() != sharesChange.addition) {
+                    deltaCountEditText.setText(sharesChange.addition)
                 }
                 deltaCountEditText.addTextChangedListener(deltaTextWatcher)
             }
@@ -117,7 +111,10 @@ class UpdateSharesDialogFragment : InteractionBottomSheetDialogFragment<UpdateSh
 
     private val totalTextWatcher = object : TextWatcher {
         override fun afterTextChanged(s: Editable?) {
-            s?.let { sendAction(UpdateShares.Action.NewTotalCount(it.toString())) }
+            s?.let {
+                val newSharesChange = Action.NewSharesChange(SharesChange.Total(it.toString()))
+                sendAction(newSharesChange)
+            }
         }
 
         override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) = Unit
@@ -126,7 +123,10 @@ class UpdateSharesDialogFragment : InteractionBottomSheetDialogFragment<UpdateSh
 
     private val deltaTextWatcher = object : TextWatcher {
         override fun afterTextChanged(s: Editable?) {
-            s?.let { sendAction(UpdateShares.Action.NewChangeCount(it.toString())) }
+            s?.let {
+                val newSharesChange = Action.NewSharesChange(SharesChange.Addition(it.toString()))
+                sendAction(newSharesChange)
+            }
         }
 
         override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) = Unit
@@ -135,29 +135,19 @@ class UpdateSharesDialogFragment : InteractionBottomSheetDialogFragment<UpdateSh
 
     private val sharePriceTextWatcher = object : TextWatcher {
         override fun afterTextChanged(s: Editable?) {
-            s?.let { sendAction(UpdateShares.Action.NewPrice(it.toString())) }
+            s?.let { sendAction(Action.NewPrice(it.toString())) }
         }
 
         override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) = Unit
         override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) = Unit
     }
 
-    companion object : Portal<Pair<AssetSymbol, () -> FragmentActivity>> {
+    companion object {
 
-        override fun jump(carry: Pair<AssetSymbol, () -> FragmentActivity>) {
-            Log.d(this::class.java.simpleName, "Catalyzing UpdateShares: ${carry.first}")
-            val key = Random.nextLong()
-            val fragment = UpdateSharesDialogFragment()
-                .also {
-                    val holdingBook = RebellionHoldingBook(SharedRebellionBook, carry.first)
-                    val interaction = UpdateShares.Interaction(holdingBook)
-                        .apply {
-                            reset()
-                        }
-                    it.indirectInteractionKey = key
-                    InteractionRegistry.addInteraction(it.indirectInteractionKey, interaction)
-                }
-            fragment.show(carry.second().supportFragmentManager, key.toString())
+        fun new(key: Long): UpdateSharesDialogFragment {
+            return UpdateSharesDialogFragment().also {
+                it.indirectInteractionKey = key
+            }
         }
     }
 }

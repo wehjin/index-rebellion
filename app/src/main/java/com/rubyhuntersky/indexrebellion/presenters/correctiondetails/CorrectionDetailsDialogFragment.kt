@@ -69,8 +69,10 @@ class CorrectionDetailsDialogFragment : InteractionBottomSheetDialogFragment<Vis
 
     companion object {
 
-        fun new(key: Long): CorrectionDetailsDialogFragment = CorrectionDetailsDialogFragment().also {
-            it.indirectInteractionKey = key
-        }
+        fun new(key: Long): CorrectionDetailsDialogFragment =
+            CorrectionDetailsDialogFragment()
+                .also {
+                    it.indirectInteractionKey = key
+                }
     }
 }

@@ -9,4 +9,7 @@ import java.util.*
 data class PriceSample(
     val cashAmount: CashAmount,
     @Serializable(with = DateSerializer::class) val date: Date
-)
+) {
+
+    fun toDouble(): Double = cashAmount.toDouble()
+}

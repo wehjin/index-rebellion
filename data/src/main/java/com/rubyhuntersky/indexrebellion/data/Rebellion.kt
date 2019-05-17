@@ -3,6 +3,7 @@ package com.rubyhuntersky.indexrebellion.data
 import com.rubyhuntersky.indexrebellion.data.assets.AssetSymbol
 import com.rubyhuntersky.indexrebellion.data.assets.OwnedAsset
 import com.rubyhuntersky.indexrebellion.data.assets.PriceSample
+import com.rubyhuntersky.indexrebellion.data.assets.ShareCount
 import com.rubyhuntersky.indexrebellion.data.cash.CashAmount
 import com.rubyhuntersky.indexrebellion.data.cash.CashEquivalent
 import com.rubyhuntersky.indexrebellion.data.cash.sum
@@ -43,6 +44,28 @@ data class Rebellion(
             .map(OwnedAsset::sharePrice)
             .map(PriceSample::date)
             .fold(Date(0)) { latest, date -> if (date.after(latest)) date else latest }
+
+    fun findHolding(assetSymbol: AssetSymbol): OwnedAsset? = holdings[assetSymbol]
+
+    fun withShareCountPriceAndUnspentInvestment(
+        assetSymbol: AssetSymbol,
+        shareCount: ShareCount,
+        sharePrice: PriceSample?,
+        unspentInvestmentChange: CashAmount
+    ): Rebellion {
+        val newHoldings = when (shareCount) {
+            ShareCount.ZERO -> holdings.filterKeys { it != assetSymbol }
+            else -> {
+                holdings.toMutableMap().also {
+                    val newSharePrice =
+                        sharePrice ?: (holdings[assetSymbol]?.sharePrice ?: PriceSample(CashAmount.ZERO, Date()))
+                    it[assetSymbol] = OwnedAsset(assetSymbol, shareCount, newSharePrice)
+                }
+            }
+        }
+        val newUnspentInvestment = unspentInvestmentChange.let { newInvestment + it }
+        return Rebellion(index, newUnspentInvestment, newHoldings)
+    }
 
     fun withConstituent(assetSymbol: AssetSymbol, marketWeight: MarketWeight): Rebellion {
         return Rebellion(index.withConstituent(assetSymbol, marketWeight), newInvestment, holdings)
