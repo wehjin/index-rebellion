@@ -6,17 +6,17 @@ import android.widget.EditText
 import io.reactivex.Observable
 
 fun EditText.updateText(update: String, textWatcher: TextWatcher? = null) {
+    textWatcher?.let(this::removeTextChangedListener)
+
     val old = text.toString()
     if (old != update) {
-        textWatcher?.let {
-            removeTextChangedListener(textWatcher)
-        }
         setText(update)
         setSelection(update.length)
-        textWatcher?.let {
-            addTextChangedListener(textWatcher)
-        }
     }
+
+    // Add watcher even if text has not changed. If not, the watcher is missing whenever this method
+    // is used after removeTextChangedListener is separately called.
+    textWatcher?.let(this::addTextChangedListener)
 }
 
 fun EditText.toTextChanges(): Observable<String> {
