@@ -39,7 +39,7 @@ sealed class Correction {
 
     val highWeight: Double
         get() = when (this) {
-            is Hold -> 0.0
+            is Hold -> weight
             is Buy -> max(actualWeight, targetWeight)
             is Sell -> max(actualWeight, targetWeight)
         }
