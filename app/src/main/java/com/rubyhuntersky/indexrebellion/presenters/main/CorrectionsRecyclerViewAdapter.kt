@@ -1,13 +1,11 @@
 package com.rubyhuntersky.indexrebellion.presenters.main
 
 import android.support.v7.widget.RecyclerView
-import android.text.format.DateFormat
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import com.rubyhuntersky.indexrebellion.R
 import com.rubyhuntersky.indexrebellion.data.report.Correction
 import kotlinx.android.synthetic.main.view_corrections_footer.view.*
-import kotlinx.android.synthetic.main.view_corrections_header.view.*
 import java.util.*
 import kotlin.math.max
 
@@ -26,18 +24,20 @@ class CorrectionsRecyclerViewAdapter(
 
     override fun getItemViewType(position: Int): Int = getViewType(position).ordinal
 
-    private fun getViewType(position: Int): CorrectionsViewType = if (position % 2 == 1) {
-        if ((position + 1) / 2 == 1 + corrections.size) {
-            CorrectionsViewType.CONNECTOR_TALL
+    private fun getViewType(position: Int): CorrectionsViewType {
+        return if (position % 2 == 1) {
+            if ((position == 1) || ((position + 1) / 2 == 1 + corrections.size)) {
+                CorrectionsViewType.CONNECTOR_TALL
+            } else {
+                CorrectionsViewType.CONNECTOR_SHORT
+            }
         } else {
-            CorrectionsViewType.CONNECTOR_SHORT
-        }
-    } else {
-        val elementPosition = position / 2
-        when {
-            elementPosition == 0 -> CorrectionsViewType.HEADER
-            elementPosition - 1 < corrections.size -> CorrectionsViewType.BODY
-            else -> CorrectionsViewType.FOOTER
+            val elementPosition = position / 2
+            when {
+                elementPosition == 0 -> CorrectionsViewType.HEADER
+                elementPosition - 1 < corrections.size -> CorrectionsViewType.BODY
+                else -> CorrectionsViewType.FOOTER
+            }
         }
     }
 
@@ -67,8 +67,7 @@ class CorrectionsRecyclerViewAdapter(
 
 
     override fun onBindViewHolder(viewHolder: RecyclerView.ViewHolder, position: Int) {
-        val viewType = getViewType(position)
-        when (viewType) {
+        when (getViewType(position)) {
             CorrectionsViewType.FOOTER -> viewHolder.itemView.plusConstituentButton.setOnClickListener { onAddConstituentClick() }
             CorrectionsViewType.BODY -> {
                 val correction = corrections[position / 2 - 1]
@@ -78,17 +77,7 @@ class CorrectionsRecyclerViewAdapter(
                     onCorrectionDetailsClick
                 )
             }
-            CorrectionsViewType.HEADER -> {
-                if (refreshDate.after(Date(0))) {
-                    viewHolder.itemView.dateTextView.text =
-                        DateFormat.getMediumDateFormat(viewHolder.itemView.context).format(refreshDate)
-                    viewHolder.itemView.timeTextView.text =
-                        DateFormat.getTimeFormat(viewHolder.itemView.context).format(refreshDate)
-                } else {
-                    viewHolder.itemView.dateTextView.text = viewHolder.itemView.context.getString(R.string.index)
-                    viewHolder.itemView.timeTextView.text = null
-                }
-            }
+            CorrectionsViewType.HEADER -> Unit
             CorrectionsViewType.CONNECTOR_SHORT -> Unit
             CorrectionsViewType.CONNECTOR_TALL -> Unit
         }

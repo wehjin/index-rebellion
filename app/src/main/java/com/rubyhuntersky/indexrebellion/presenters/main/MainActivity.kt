@@ -16,6 +16,7 @@ import com.rubyhuntersky.interaction.android.NamedInteractionActivity
 import com.rubyhuntersky.interaction.core.PendingInteractions
 import kotlinx.android.synthetic.main.activity_main_viewing.*
 import kotlinx.android.synthetic.main.view_funding.*
+import java.text.SimpleDateFormat
 import com.rubyhuntersky.indexrebellion.interactions.cashediting.Action as CashEditingAction
 import com.rubyhuntersky.indexrebellion.interactions.refreshholdings.Action as RefreshHoldingsAction
 import com.rubyhuntersky.indexrebellion.interactions.refreshholdings.Vision as RefreshHoldingsVision
@@ -60,6 +61,7 @@ class MainActivity : NamedInteractionActivity<Vision, Action>() {
                     .render(report.funding, onNewInvestmentClick = {
                         interaction.sendAction(Action.OpenCashEditor)
                     })
+                timestampTextView.text = SimpleDateFormat.getDateTimeInstance().format(report.refreshDate)
                 ConclusionViewHolder(correctionsRecyclerView).render(
                     refreshDate = report.refreshDate,
                     conclusion = report.conclusion,
