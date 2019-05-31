@@ -31,8 +31,8 @@ android {
         applicationId "com.rubyhuntersky.indexrebellion"
         minSdkVersion 23
         targetSdkVersion 28
-        versionCode 2
-        versionName "1.0.1"
+        versionCode 3
+        versionName "1.0.2"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         buildConfigField "String", "ROBINHOOD_USERNAME", "\"" + project.property("robinhood_username") + "\""
         buildConfigField "String", "ROBINHOOD_DEVICE_TOKEN", "\"" + project.property("robinhood_device_token") + "\""
