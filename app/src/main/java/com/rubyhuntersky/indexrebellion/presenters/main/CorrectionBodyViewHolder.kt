@@ -8,6 +8,7 @@ import com.rubyhuntersky.indexrebellion.R
 import com.rubyhuntersky.indexrebellion.data.report.Correction
 import com.rubyhuntersky.indexrebellion.data.toStatString
 import kotlinx.android.synthetic.main.view_corrections_body.view.*
+import kotlin.math.abs
 
 class CorrectionBodyViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
@@ -42,6 +43,7 @@ class CorrectionBodyViewHolder(itemView: View) : RecyclerView.ViewHolder(itemVie
                 actualValue = correction.actualWeight
             )
         )
+        setTilt(correction.actualWeight, correction.targetWeight)
     }
 
     private fun View.bindBuy(correction: Correction.Buy, correctionsHighWeight: Double) {
@@ -61,6 +63,7 @@ class CorrectionBodyViewHolder(itemView: View) : RecyclerView.ViewHolder(itemVie
                 actualValue = correction.actualWeight
             )
         )
+        setTilt(correction.actualWeight, correction.targetWeight)
     }
 
     private fun View.bindHold(correction: Correction.Hold, correctionsHighWeight: Double) {
@@ -76,6 +79,43 @@ class CorrectionBodyViewHolder(itemView: View) : RecyclerView.ViewHolder(itemVie
                 actualValue = correction.weight
             )
         )
+        setTilt(correction.weight, correction.weight)
+    }
+
+    private fun View.setTilt(actualWeight: Double, targetWeight: Double) {
+        val tilt = 0.15f
+        val balancedScale = 1.0f - tilt
+        when {
+            actualWeight == targetWeight -> {
+                leftWing.scaleY = balancedScale
+                rightWing.scaleY = balancedScale
+                rightSpecial.scaleY = balancedScale
+            }
+            actualWeight > targetWeight -> {
+                val degree = if (actualWeight.equals(0f)) {
+                    1.0f
+                } else {
+                    (abs(actualWeight - targetWeight) / actualWeight).toFloat()
+                }
+                val rightScale = balancedScale - tilt * degree
+                val leftScale = balancedScale + tilt * degree
+                leftWing.scaleY = leftScale
+                rightWing.scaleY = rightScale
+                rightSpecial.scaleY = rightScale
+            }
+            else -> {
+                val degree = if (targetWeight.equals(0f)) {
+                    1.0f
+                } else {
+                    (abs(actualWeight - targetWeight) / targetWeight).toFloat()
+                }
+                val rightScale = balancedScale + tilt * degree
+                val leftScale = balancedScale - tilt * degree
+                leftWing.scaleY = leftScale
+                rightWing.scaleY = rightScale
+                rightSpecial.scaleY = rightScale
+            }
+        }
     }
 
     private fun View.setCorrectionWeights(correctionWeights: CorrectionWeights) {

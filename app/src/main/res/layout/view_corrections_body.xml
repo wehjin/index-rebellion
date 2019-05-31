@@ -45,7 +45,7 @@
         <View
             android:id="@+id/leftWing"
             android:layout_width="0dp"
-            android:layout_height="20dp"
+            android:layout_height="@dimen/wing_height"
             android:layout_weight="30"
             android:background="@color/primaryColor" />
 
@@ -60,16 +60,18 @@
         <View
             android:id="@+id/rightWing"
             android:layout_width="0dp"
-            android:layout_height="20dp"
+            android:layout_height="@dimen/wing_height"
             android:layout_weight="30"
-            android:background="@color/primaryColor" />
+            android:background="@color/primaryColor"
+            android:scaleY="0.75" />
 
         <View
             android:id="@+id/rightSpecial"
             android:layout_width="0dp"
-            android:layout_height="20dp"
+            android:layout_height="@dimen/wing_height"
             android:layout_weight="10"
-            android:background="@drawable/bg_outlined_rectangle" />
+            android:background="@drawable/bg_outlined_rectangle"
+            android:scaleY="0.75" />
 
         <Space
             android:id="@+id/rightSpace"
