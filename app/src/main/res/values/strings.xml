@@ -22,8 +22,9 @@
     <string name="hold">Hold</string>
     <string name="buy">Buy</string>
     <string name="sell">Sell</string>
-    <string name="buy_format">Buy $%1$s</string>
-    <string name="sell_format">Sell $%1$s</string>
+    <string name="buy_format">+ $%1$s</string>
+    <string name="sell_format">- $%1$s</string>
+    <string name="hold_value">\u00B1 $0</string>
     <string name="stock_symbol">Stock Symbol</string>
     <string name="none_selected">None selected</string>
     <string name="choose_a_stock">Choose a stock</string>
@@ -60,4 +61,6 @@
     <string name="robinhood">Robinhood</string>
     <string name="code_optional">Code (optional)</string>
     <string name="refresh_holdings">Refresh holdings</string>
+    <string name="divest">Div</string>
+    <string name="invest">Inv</string>
 </resources>

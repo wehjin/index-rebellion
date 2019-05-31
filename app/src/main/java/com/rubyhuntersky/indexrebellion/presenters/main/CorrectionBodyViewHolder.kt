@@ -23,19 +23,17 @@ class CorrectionBodyViewHolder(itemView: View) : RecyclerView.ViewHolder(itemVie
                 is Correction.Buy -> bindBuy(correction, correctionsHighWeight)
                 is Correction.Sell -> bindSell(correction, correctionsHighWeight)
             }
-            correctionActionButton.setOnClickListener { onCorrectionDetailsClick(correction) }
+            setOnClickListener { onCorrectionDetailsClick(correction) }
         }
     }
 
     private fun View.bindSell(correction: Correction.Sell, correctionsHighWeight: Double) {
 
-        correctionHeadingTextView.text = correction.assetSymbol.toString()
+        correctionLabel.text = correction.assetSymbol.toString()
         correctionCircleView.setBackgroundResource(R.drawable.ic_remove_circle_black_24dp)
-        correctionActionButton.text = context.getString(
-            R.string.sell_format,
-            correction.surplus.toDouble().toStatString()
-        )
-        correctionActionButton.setIconResource(R.drawable.ic_remove_black_24dp)
+        correctionActionValue.text =
+            context.getString(R.string.sell_format, correction.surplus.toDouble().toStatString())
+        correctionActionVerb.text = context.getString(R.string.divest)
         rightSpecial.setBackgroundResource(R.drawable.bg_outlined_rectangle)
         setCorrectionWeights(
             CorrectionWeightsCalculator.calculate(
@@ -48,13 +46,13 @@ class CorrectionBodyViewHolder(itemView: View) : RecyclerView.ViewHolder(itemVie
 
     private fun View.bindBuy(correction: Correction.Buy, correctionsHighWeight: Double) {
 
-        correctionHeadingTextView.text = correction.assetSymbol.toString()
+        correctionLabel.text = correction.assetSymbol.toString()
         correctionCircleView.setBackgroundResource(R.drawable.ic_add_circle_black_24dp)
-        correctionActionButton.text = context.getString(
+        correctionActionValue.text = context.getString(
             R.string.buy_format,
             correction.deficit.toDouble().toStatString()
         )
-        correctionActionButton.setIconResource(R.drawable.ic_add_black_24dp)
+        correctionActionVerb.text = context.getString(R.string.invest)
         rightSpecial.setBackgroundResource(R.color.secondaryColor)
         setCorrectionWeights(
             CorrectionWeightsCalculator.calculate(
@@ -67,10 +65,10 @@ class CorrectionBodyViewHolder(itemView: View) : RecyclerView.ViewHolder(itemVie
 
     private fun View.bindHold(correction: Correction.Hold, correctionsHighWeight: Double) {
 
-        correctionHeadingTextView.text = correction.assetSymbol.toString()
+        correctionLabel.text = correction.assetSymbol.toString()
         correctionCircleView.setBackgroundResource(R.drawable.ic_check_circle_black_24dp)
-        correctionActionButton.setIconResource(R.drawable.ic_check_black_24dp)
-        correctionActionButton.text = context.getString(R.string.hold)
+        correctionActionValue.text = context.getString(R.string.hold_value)
+        correctionActionVerb.text = context.getString(R.string.hold)
         setCorrectionWeights(
             CorrectionWeightsCalculator.calculate(
                 highValue = correctionsHighWeight,

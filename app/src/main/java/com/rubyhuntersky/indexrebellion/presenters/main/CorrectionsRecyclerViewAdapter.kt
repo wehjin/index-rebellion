@@ -14,30 +14,21 @@ class CorrectionsRecyclerViewAdapter(
     private val onCorrectionDetailsClick: (Correction) -> Unit
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
-    enum class CorrectionsViewType { HEADER, FOOTER, BODY, CONNECTOR_SHORT, CONNECTOR_TALL }
+    enum class CorrectionsViewType { HEADER, FOOTER, BODY }
 
     private var corrections: List<Correction> = emptyList()
     private var correctionsHighWeight: Double = corrections.highWeight
     private var refreshDate: Date = Date(0)
 
-    override fun getItemCount(): Int = 1 + corrections.size * 2 + 2
+    override fun getItemCount(): Int = 2 + corrections.size
 
     override fun getItemViewType(position: Int): Int = getViewType(position).ordinal
 
     private fun getViewType(position: Int): CorrectionsViewType {
-        return if (position % 2 == 1) {
-            if ((position == 1) || ((position + 1) / 2 == 1 + corrections.size)) {
-                CorrectionsViewType.CONNECTOR_TALL
-            } else {
-                CorrectionsViewType.CONNECTOR_SHORT
-            }
-        } else {
-            val elementPosition = position / 2
-            when {
-                elementPosition == 0 -> CorrectionsViewType.HEADER
-                elementPosition - 1 < corrections.size -> CorrectionsViewType.BODY
-                else -> CorrectionsViewType.FOOTER
-            }
+        return when {
+            position == 0 -> CorrectionsViewType.HEADER
+            position <= corrections.size -> CorrectionsViewType.BODY
+            else -> CorrectionsViewType.FOOTER
         }
     }
 
@@ -53,9 +44,7 @@ class CorrectionsRecyclerViewAdapter(
         val correctionsViewType = CorrectionsViewType.values()[viewType]
         val layoutRes = when (correctionsViewType) {
             CorrectionsViewType.HEADER -> R.layout.view_corrections_header
-            CorrectionsViewType.CONNECTOR_SHORT -> R.layout.view_corrections_connector_short
             CorrectionsViewType.BODY -> R.layout.view_corrections_body
-            CorrectionsViewType.CONNECTOR_TALL -> R.layout.view_corrections_connector_tall
             CorrectionsViewType.FOOTER -> R.layout.view_corrections_footer
         }
         val itemView = layoutInflater.inflate(layoutRes, parent, false)
@@ -70,7 +59,7 @@ class CorrectionsRecyclerViewAdapter(
         when (getViewType(position)) {
             CorrectionsViewType.FOOTER -> viewHolder.itemView.plusConstituentButton.setOnClickListener { onAddConstituentClick() }
             CorrectionsViewType.BODY -> {
-                val correction = corrections[position / 2 - 1]
+                val correction = corrections[position - 1]
                 (viewHolder as CorrectionBodyViewHolder).bindCorrection(
                     correction,
                     correctionsHighWeight,
@@ -78,8 +67,6 @@ class CorrectionsRecyclerViewAdapter(
                 )
             }
             CorrectionsViewType.HEADER -> Unit
-            CorrectionsViewType.CONNECTOR_SHORT -> Unit
-            CorrectionsViewType.CONNECTOR_TALL -> Unit
         }
     }
 

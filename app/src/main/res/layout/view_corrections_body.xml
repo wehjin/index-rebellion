@@ -6,24 +6,30 @@
     android:id="@+id/correctionsCorrectionLayout"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:gravity="center_horizontal"
-    android:orientation="vertical"
-    android:paddingTop="8dp">
+    android:background="?attr/selectableItemBackground"
+    android:clickable="true"
+    android:focusable="true"
+    android:gravity="center"
+    android:orientation="horizontal"
+    android:padding="16dp">
 
     <TextView
-        android:id="@+id/correctionHeadingTextView"
-        android:layout_width="wrap_content"
+        android:id="@+id/correctionLabel"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:text="@string/correctionViewDefaultSymbolText"
-        android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle2" />
+        android:layout_weight="1"
+        android:textAppearance="@style/TextAppearance.MaterialComponents.Body1"
+        android:textColor="@color/primaryDarkColor"
+        tools:text="SYMB" />
 
     <LinearLayout
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="24dp"
+        android:layout_marginStart="16dp"
         android:layout_marginTop="4dp"
-        android:layout_marginRight="24dp"
+        android:layout_marginEnd="16dp"
         android:layout_marginBottom="4dp"
+        android:layout_weight="3"
         android:gravity="center_vertical"
         android:orientation="horizontal">
 
@@ -69,14 +75,35 @@
             android:layout_weight="5" />
     </LinearLayout>
 
-    <android.support.design.button.MaterialButton
-        android:id="@+id/correctionActionButton"
-        style="@style/Widget.MaterialComponents.Button.OutlinedButton.Icon"
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:drawableTint="@color/primaryLightColor"
-        android:textColor="@color/primaryLightColor"
-        app:iconTint="@color/primaryLightColor"
-        tools:text="Sell $10.4K" />
+        android:layout_weight="1"
+        android:orientation="vertical">
 
+        <TextView
+            android:id="@+id/correctionActionValue"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="end"
+            android:lines="1"
+            android:textAppearance="@style/TextAppearance.MaterialComponents.Body1"
+            android:textColor="@color/primaryLightColor"
+            app:iconTint="@color/primaryLightColor"
+            tools:text="- $10.4K" />
+
+        <TextView
+            android:id="@+id/correctionActionVerb"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="end|top"
+            android:lines="1"
+            android:text="@string/divest"
+            android:textAllCaps="true"
+            android:textAppearance="@style/TextAppearance.MaterialComponents.Caption"
+            android:textColor="@color/primaryLightColor"
+            app:iconTint="@color/primaryLightColor" />
+
+
+    </LinearLayout>
 </LinearLayout>
