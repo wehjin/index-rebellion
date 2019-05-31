@@ -11,7 +11,10 @@
     android:focusable="true"
     android:gravity="center"
     android:orientation="horizontal"
-    android:padding="16dp">
+    android:paddingStart="16dp"
+    android:paddingTop="24dp"
+    android:paddingEnd="16dp"
+    android:paddingBottom="24dp">
 
     <TextView
         android:id="@+id/correctionLabel"

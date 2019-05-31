@@ -5,30 +5,27 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import com.rubyhuntersky.indexrebellion.R
 import com.rubyhuntersky.indexrebellion.data.report.Correction
-import kotlinx.android.synthetic.main.view_corrections_footer.view.*
 import java.util.*
 import kotlin.math.max
 
 class CorrectionsRecyclerViewAdapter(
-    private val onAddConstituentClick: () -> Unit,
     private val onCorrectionDetailsClick: (Correction) -> Unit
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
-    enum class CorrectionsViewType { HEADER, FOOTER, BODY }
+    enum class CorrectionsViewType { BODY }
 
     private var corrections: List<Correction> = emptyList()
     private var correctionsHighWeight: Double = corrections.highWeight
     private var refreshDate: Date = Date(0)
 
-    override fun getItemCount(): Int = 2 + corrections.size
+    override fun getItemCount(): Int = corrections.size
 
     override fun getItemViewType(position: Int): Int = getViewType(position).ordinal
 
     private fun getViewType(position: Int): CorrectionsViewType {
         return when {
-            position == 0 -> CorrectionsViewType.HEADER
-            position <= corrections.size -> CorrectionsViewType.BODY
-            else -> CorrectionsViewType.FOOTER
+            position >= 0 && position < corrections.size -> CorrectionsViewType.BODY
+            else -> throw IllegalStateException("Invalid position $position")
         }
     }
 
@@ -43,30 +40,25 @@ class CorrectionsRecyclerViewAdapter(
         val layoutInflater = LayoutInflater.from(parent.context)
         val correctionsViewType = CorrectionsViewType.values()[viewType]
         val layoutRes = when (correctionsViewType) {
-            CorrectionsViewType.HEADER -> R.layout.view_corrections_header
             CorrectionsViewType.BODY -> R.layout.view_corrections_body
-            CorrectionsViewType.FOOTER -> R.layout.view_corrections_footer
         }
         val itemView = layoutInflater.inflate(layoutRes, parent, false)
         return when (correctionsViewType) {
             CorrectionsViewType.BODY -> CorrectionBodyViewHolder(itemView)
-            else -> object : RecyclerView.ViewHolder(itemView) {}
         }
     }
 
 
     override fun onBindViewHolder(viewHolder: RecyclerView.ViewHolder, position: Int) {
         when (getViewType(position)) {
-            CorrectionsViewType.FOOTER -> viewHolder.itemView.plusConstituentButton.setOnClickListener { onAddConstituentClick() }
             CorrectionsViewType.BODY -> {
-                val correction = corrections[position - 1]
+                val correction = corrections[position]
                 (viewHolder as CorrectionBodyViewHolder).bindCorrection(
                     correction,
                     correctionsHighWeight,
                     onCorrectionDetailsClick
                 )
             }
-            CorrectionsViewType.HEADER -> Unit
         }
     }
 

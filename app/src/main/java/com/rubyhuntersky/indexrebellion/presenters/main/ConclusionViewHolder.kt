@@ -12,7 +12,6 @@ class ConclusionViewHolder(private val conclusionView: RecyclerView) : RecyclerV
     fun render(
         refreshDate: Date,
         conclusion: RebellionReport.Conclusion,
-        onAddConstituentClick: () -> Unit,
         onCorrectionDetailsClick: (Correction) -> Unit
     ) {
         with(conclusionView) {
@@ -21,7 +20,7 @@ class ConclusionViewHolder(private val conclusionView: RecyclerView) : RecyclerV
             }
 
             val adapter: CorrectionsRecyclerViewAdapter = adapter as? CorrectionsRecyclerViewAdapter
-                ?: CorrectionsRecyclerViewAdapter(onAddConstituentClick, onCorrectionDetailsClick)
+                ?: CorrectionsRecyclerViewAdapter(onCorrectionDetailsClick)
                     .also {
                         adapter = it
                     }

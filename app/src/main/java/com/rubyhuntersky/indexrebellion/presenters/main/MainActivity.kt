@@ -62,10 +62,10 @@ class MainActivity : NamedInteractionActivity<Vision, Action>() {
                         interaction.sendAction(Action.OpenCashEditor)
                     })
                 timestampTextView.text = SimpleDateFormat.getDateTimeInstance().format(report.refreshDate)
+                correctionsAddButton.setOnClickListener { interaction.sendAction(Action.FindConstituent) }
                 ConclusionViewHolder(correctionsRecyclerView).render(
                     refreshDate = report.refreshDate,
                     conclusion = report.conclusion,
-                    onAddConstituentClick = { interaction.sendAction(Action.FindConstituent) },
                     onCorrectionDetailsClick = { interaction.sendAction(Action.OpenCorrectionDetails(it)) }
                 )
                 correctionsSwipeToRefresh.setOnRefreshListener {
