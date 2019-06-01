@@ -90,9 +90,10 @@
             android:id="@+id/correctionActionValue"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:autoSizeTextType="uniform"
             android:gravity="end"
             android:lines="1"
-            android:textAppearance="@style/TextAppearance.MaterialComponents.Body1"
+            android:textAppearance="@style/TextAppearance.MaterialComponents.Body2"
             android:textColor="@color/primaryLightColor"
             app:iconTint="@color/primaryLightColor"
             tools:text="- $10.4K" />
