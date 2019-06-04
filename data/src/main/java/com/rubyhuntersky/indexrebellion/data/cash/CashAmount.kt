@@ -52,3 +52,6 @@ data class CashAmount(
         val TEN = CashAmount(BigDecimal.TEN)
     }
 }
+
+fun Int.toCashAmount() = CashAmount(this.toLong())
+fun Long.toCashAmount() = CashAmount(this)
