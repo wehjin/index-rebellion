@@ -13,10 +13,11 @@ import java.time.Month
 import java.util.*
 
 val DOLLAR_ID = InstrumentId("USD", InstrumentType.Fiat)
+const val DOLLAR_NAME = "US Dollars"
 
 val UNIT_DOLLAR_SAMPLE = InstrumentSample(
     instrumentId = DOLLAR_ID,
-    instrumentTitle = "US Dollars",
+    instrumentName = DOLLAR_NAME,
     sharePrice = CashAmount.ONE,
     macroPrice = CashAmount(BigDecimal("3286668000000")),
     sampleDate = GregorianCalendar(1933, Month.JUNE.ordinal, 5).time

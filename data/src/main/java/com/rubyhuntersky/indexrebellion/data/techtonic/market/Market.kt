@@ -12,6 +12,19 @@ data class Market(
                 instrumentSamples.map { it.instrumentId }.toSet()
             }
 
+    private val byId: Map<InstrumentId, InstrumentSample>
+            by lazy {
+                instrumentSamples.associateBy { it.instrumentId }
+            }
+
+    fun contains(instrumentId: InstrumentId): Boolean {
+        return ids.contains(instrumentId)
+    }
+
+    fun findSample(instrumentId: InstrumentId): InstrumentSample? {
+        return byId[instrumentId]
+    }
+
     fun replaceSample(sample: InstrumentSample): Market {
         return copy(
             instrumentSamples = instrumentSamples.toMutableSet()
@@ -20,9 +33,5 @@ data class Market(
                     samples.add(sample)
                 }
         )
-    }
-
-    fun contains(instrumentId: InstrumentId): Boolean {
-        return ids.contains(instrumentId)
     }
 }

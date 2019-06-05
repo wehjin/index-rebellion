@@ -1,50 +1,62 @@
 package com.rubyhuntersky.indexrebellion.data.techtonic
 
+import com.rubyhuntersky.indexrebellion.data.cash.CashAmount
 import com.rubyhuntersky.indexrebellion.data.cash.toCashAmount
 import com.rubyhuntersky.indexrebellion.data.techtonic.instrument.InstrumentId
 import com.rubyhuntersky.indexrebellion.data.techtonic.instrument.InstrumentType
 import com.rubyhuntersky.indexrebellion.data.techtonic.market.InstrumentSample
 import com.rubyhuntersky.indexrebellion.data.techtonic.vault.Custodian
 import com.rubyhuntersky.indexrebellion.data.techtonic.vault.SpecificHolding
+import org.junit.Assert.assertEquals
 import org.junit.Test
+import java.math.BigDecimal
 import java.util.*
 
 class DriftTest {
 
     private val now = Date()
     private val teslaId = InstrumentId("TSLA", InstrumentType.StockExchange)
+    private val teslaName = "Tesla, Inc."
+    private val teslaSharePrice = 420.toCashAmount()
     private val teslaSample = InstrumentSample(
         instrumentId = teslaId,
-        instrumentTitle = "Tesla, Inc.",
-        sharePrice = 420.toCashAmount(),
+        instrumentName = teslaName,
+        sharePrice = teslaSharePrice,
         macroPrice = 50000000000.toCashAmount(),
         sampleDate = now
     )
+    private val teslaSize = 100.toBigDecimal()
+    private val teslaFullSize = teslaSize.times(2.toBigDecimal())
     private val teslaHolding1 = SpecificHolding(
         instrumentId = teslaId,
         custodian = Custodian.Etrade,
-        size = 100.toBigDecimal(),
+        size = teslaSize,
         lastModified = now
     )
     private val teslaHolding2 = SpecificHolding(
         instrumentId = teslaId,
         custodian = Custodian.None,
-        size = 100.toBigDecimal(),
+        size = teslaSize,
         lastModified = now
     )
+    private val teslaValue = teslaSharePrice.times(teslaFullSize.toDouble())
 
     private val bitcoinId = InstrumentId("BTC", InstrumentType.BlockChain)
+    private val bitcoinName = "Bitcoin"
+    private val bitcoinPrice = 8000.toCashAmount()
+    private val bitcoinSize = 1.toBigDecimal()
+    private val bitcoinValue = bitcoinPrice.times(bitcoinSize.toDouble())
     private val bitcoinSample = InstrumentSample(
         instrumentId = bitcoinId,
-        instrumentTitle = "Bitcoin",
-        sharePrice = 8000.toCashAmount(),
+        instrumentName = bitcoinName,
+        sharePrice = bitcoinPrice,
         macroPrice = 140000000000.toCashAmount(),
         sampleDate = now
     )
     private val bitcoinHolding = SpecificHolding(
         instrumentId = bitcoinId,
         custodian = Custodian.Robinhood,
-        size = 1.toBigDecimal(),
+        size = bitcoinSize,
         lastModified = now
     )
 
@@ -56,5 +68,19 @@ class DriftTest {
             .replaceHolding(teslaHolding2)
             .replaceSample(bitcoinSample)
             .replaceHolding(bitcoinHolding)
+        val expectedHoldings = setOf(
+            GeneralHolding(
+                DOLLAR_ID,
+                BigDecimal.ZERO,
+                setOf(Custodian.None),
+                DOLLAR_NAME,
+                CashAmount.ZERO,
+                ZERO_DOLLAR_HOLDING_LAST_MODIFIED
+            ),
+            GeneralHolding(teslaId, teslaFullSize, setOf(Custodian.None, Custodian.Etrade), teslaName, teslaValue, now),
+            GeneralHolding(bitcoinId, bitcoinSize, setOf(Custodian.Robinhood), bitcoinName, bitcoinValue, now)
+        )
+        val holdings = drift.generalHoldings
+        assertEquals(expectedHoldings, holdings)
     }
 }
