@@ -5,8 +5,8 @@ import com.nhaarman.mockitokotlin2.verify
 import com.rubyhuntersky.indexrebellion.data.Rebellion
 import com.rubyhuntersky.indexrebellion.interactions.books.MemoryRebellionBook
 import com.rubyhuntersky.indexrebellion.interactions.books.RebellionBook
+import com.rubyhuntersky.interaction.core.Edge
 import com.rubyhuntersky.interaction.core.Portal
-import com.rubyhuntersky.interaction.core.SwitchWell
 import io.reactivex.Observable
 import org.junit.Test
 
@@ -14,7 +14,6 @@ class MainStoryTest {
 
     private val mockConstituentSearchCatalyst = mock<Portal<Unit>> {}
     private val mockCashEditingCatalyst = mock<Portal<Unit>> {}
-    private val well = SwitchWell()
 
     @Test
     fun startsInLoadingState() {
@@ -33,10 +32,14 @@ class MainStoryTest {
     private val mainPortals = MainPortals(mockConstituentSearchCatalyst, mockCashEditingCatalyst)
 
     private fun startMainInteraction(rebellionBook: RebellionBook): MainStory {
-        return MainStory(well).also {
-            val startAction = Action.Start(rebellionBook, mainPortals)
-            it.sendAction(startAction)
-        }
+        return MainStory()
+            .also { story ->
+                with(Edge()) {
+                    enableMainStory(lamp)
+                    addInteraction(story)
+                }
+                story.sendAction(Action.Start(rebellionBook, mainPortals))
+            }
     }
 
     @Test

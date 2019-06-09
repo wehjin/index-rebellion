@@ -1,20 +1,31 @@
 package com.rubyhuntersky.indexrebellion.interactions.refreshholdings
 
-import com.rubyhuntersky.indexrebellion.common.MyApplication
+import com.rubyhuntersky.indexrebellion.common.MyApplication.Companion.accessBook
+import com.rubyhuntersky.indexrebellion.common.MyApplication.Companion.rbhApi
 import com.rubyhuntersky.indexrebellion.data.Rebellion
 import com.rubyhuntersky.indexrebellion.data.assets.OwnedAsset
 import com.rubyhuntersky.indexrebellion.presenters.main.toHoldings
-import com.rubyhuntersky.interaction.android.AndroidEdge
 import com.rubyhuntersky.interaction.core.*
+import com.rubyhuntersky.interaction.core.wish.Lamp
+import com.rubyhuntersky.interaction.core.wish.Wish
 import com.rubyhuntersky.robinhood.api.RbhApi
 import com.rubyhuntersky.robinhood.api.RbhError
 import com.rubyhuntersky.robinhood.api.results.RbhHoldingsResult
+import com.rubyhuntersky.robinhood.login.RobinhoodLoginInteraction
+import com.rubyhuntersky.robinhood.login.Services
+import com.rubyhuntersky.robinhood.login.Action as RobinhoodLoginAction
 import com.rubyhuntersky.robinhood.login.Vision as RobinhoodLoginVision
 
-class RefreshHoldingsStory(well: Well) : Interaction<Vision, Action>
-by Story(well, ::start, ::isEnding, ::revise, REFRESH_HOLDINGS)
+class RefreshHoldingsStory : Interaction<Vision, Action>
+by Story(::start, ::isEnding, ::revise, REFRESH_HOLDINGS)
 
 const val REFRESH_HOLDINGS = "RefreshHoldings"
+
+fun enableRefreshHoldings(lamp: Lamp) {
+    with(lamp) {
+        add(FetchRbhHoldingsGenie)
+    }
+}
 
 sealed class Vision {
 
@@ -34,17 +45,18 @@ sealed class Action {
     data class ReceiveResult(val result: RbhHoldingsResult) : Action()
 }
 
-private fun revise(vision: Vision, action: Action): Revision<Vision, Action> {
+private fun revise(vision: Vision, action: Action, edge: Edge): Revision<Vision, Action> {
     return when {
         action is Action.Start -> {
-            val holdingsWish = action.api.holdings(action.token)
-                .toWish(
-                    name = "holdings",
-                    onSuccess = { Action.ReceiveResult(it) as Action },
-                    onFailure = Action::ReceiveError
-                )
-            val newVision = Vision.AwaitingResult(action.api, action.book)
-            Revision(newVision, holdingsWish)
+            val api = action.api
+            val newVision = Vision.AwaitingResult(api, action.book)
+            val wish = FetchRbhHoldingsGenie.wish(
+                name = "holdings",
+                params = FetchRbhHoldings(api, action.token),
+                resultToAction = Action::ReceiveResult,
+                errorToAction = Action::ReceiveError
+            )
+            Revision(newVision, wish, Wish.none("update-access-token"))
         }
         vision is Vision.AwaitingResult && action is Action.ReceiveResult -> {
             val newHoldings = action.result.toHoldings()
@@ -56,9 +68,11 @@ private fun revise(vision: Vision, action: Action): Revision<Vision, Action> {
         vision is Vision.AwaitingResult && action is Action.ReceiveError -> {
             when (action.throwable) {
                 is RbhError.Unauthorized -> {
-                    val loginWish = MyApplication.robinhoodLoginInteraction()
-                        .also { AndroidEdge.presentInteraction(it) }
-                        .toWish("update-access") {
+                    val loginWish = edge.wish(
+                        name = "update-access-token",
+                        interaction = RobinhoodLoginInteraction(),
+                        startAction = RobinhoodLoginAction.Start(Services(rbhApi, accessBook)),
+                        endVisionToAction = {
                             val token = (it as RobinhoodLoginVision.Reporting).token
                             if (token.isNotBlank()) {
                                 Action.Start(token, vision.api, vision.book)
@@ -66,6 +80,7 @@ private fun revise(vision: Vision, action: Action): Revision<Vision, Action> {
                                 Action.ReceiveError(action.throwable)
                             }
                         }
+                    )
                     Revision(vision as Vision, loginWish)
                 }
                 else -> {

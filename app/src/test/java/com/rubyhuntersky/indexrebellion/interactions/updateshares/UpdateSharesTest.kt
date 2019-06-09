@@ -11,7 +11,7 @@ import com.rubyhuntersky.indexrebellion.data.assets.PriceSample
 import com.rubyhuntersky.indexrebellion.data.assets.ShareCount
 import com.rubyhuntersky.indexrebellion.data.cash.CashAmount
 import com.rubyhuntersky.indexrebellion.interactions.books.RebellionBook
-import com.rubyhuntersky.interaction.core.SwitchWell
+import com.rubyhuntersky.interaction.core.Edge
 import org.junit.Assert.assertEquals
 import org.junit.Test
 import java.util.*
@@ -27,10 +27,12 @@ class UpdateSharesTest {
         val rebellionBook = mock<RebellionBook> {
             on { value } doReturn (rebellion)
         }
-        val well = SwitchWell()
         val date = Date(1000000)
 
-        val interaction = UpdateSharesStory(well)
+        val interaction = UpdateSharesStory()
+            .also {
+                Edge().addInteraction(it)
+            }
         interaction.visions.test()
             .assertValue {
                 it is Vision.Loading

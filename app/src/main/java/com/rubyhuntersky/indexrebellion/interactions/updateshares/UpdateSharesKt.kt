@@ -5,13 +5,16 @@ import com.rubyhuntersky.indexrebellion.data.assets.AssetSymbol
 import com.rubyhuntersky.indexrebellion.data.assets.PriceSample
 import com.rubyhuntersky.indexrebellion.data.assets.ShareCount
 import com.rubyhuntersky.indexrebellion.data.cash.CashAmount
-import com.rubyhuntersky.interaction.core.*
+import com.rubyhuntersky.interaction.core.Book
+import com.rubyhuntersky.interaction.core.Interaction
+import com.rubyhuntersky.interaction.core.Revision
+import com.rubyhuntersky.interaction.core.Story
 import java.util.*
 
 const val UPDATE_SHARES = "UpdateShares"
 
-class UpdateSharesStory(well: Well) : Interaction<Vision, Action>
-by Story(well, ::start, ::isEnding, ::revise, UPDATE_SHARES)
+class UpdateSharesStory : Interaction<Vision, Action>
+by Story(::start, ::isEnding, ::revise, UPDATE_SHARES)
 
 sealed class Vision {
     object Loading : Vision()
@@ -133,8 +136,8 @@ private fun revise(vision: Vision, action: Action): Revision<Vision, Action> {
                 }
                 val unspentInvestmentChange = if (vision.shouldUpdateCash) {
                     val shareDelta = vision.sharesChange.toShareDelta(vision.ownedCount)
-                    val sharePrice = sharePrice?.toDouble() ?: 0.0
-                    CashAmount(sharePrice * shareDelta.value * -1)
+                    val definiteSharePrice = sharePrice?.toDouble() ?: 0.0
+                    CashAmount(definiteSharePrice * shareDelta.value * -1)
                 } else {
                     CashAmount.ZERO
                 }

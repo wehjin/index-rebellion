@@ -1,15 +1,25 @@
 package com.rubyhuntersky.robinhood.login
 
 import com.rubyhuntersky.indexrebellion.interactions.refreshholdings.Access
-import com.rubyhuntersky.interaction.core.*
+import com.rubyhuntersky.interaction.core.Book
+import com.rubyhuntersky.interaction.core.Interaction
+import com.rubyhuntersky.interaction.core.Revision
+import com.rubyhuntersky.interaction.core.Story
+import com.rubyhuntersky.interaction.core.wish.Lamp
+import com.rubyhuntersky.interaction.core.wish.Wish
 import com.rubyhuntersky.robinhood.api.RbhApi
-import io.reactivex.Completable
-import io.reactivex.schedulers.Schedulers
 
-class RobinhoodLoginInteraction(well: Well) : Interaction<Vision, Action>
-by Story(well, ::start, ::isEnding, ::revise, ROBINHOOD_LOGIN)
+class RobinhoodLoginInteraction : Interaction<Vision, Action>
+by Story(::start, ::isEnding, ::revise, ROBINHOOD_LOGIN)
 
 const val ROBINHOOD_LOGIN = "RobinhoodLogin"
+
+fun enableRobinhoodLogin(lamp: Lamp) {
+    with(lamp) {
+        add(FetchRbhAccessTokenGenie)
+        add(SaveAccessTokenGenie)
+    }
+}
 
 sealed class Vision {
 
@@ -20,9 +30,14 @@ sealed class Vision {
         override val username: String,
         val password: String,
         val error: String,
-        val submittable: Boolean,
         val mfa: String
-    ) : Vision()
+    ) : Vision() {
+        val submittable: Boolean
+            get() = services != null
+                    && username.isNotBlank()
+                    && password.isNotBlank()
+                    && password.length > 2
+    }
 
     data class Submitting(
         val services: Services,
@@ -36,7 +51,7 @@ sealed class Vision {
 
 data class Services(val rbhApi: RbhApi, val accessBook: Book<Access>)
 
-fun start() = Vision.Editing(null, "", "", "", false, "") as Vision
+fun start() = Vision.Editing(null, "", "", "", "") as Vision
 fun isEnding(maybe: Any?) = maybe is Vision.Reporting
 
 sealed class Action {
@@ -57,80 +72,65 @@ fun revise(vision: Vision, action: Action): Revision<Vision, Action> {
             val password = (vision as? Vision.Submitting)?.password ?: ""
             val username = action.services.accessBook.value.username
             val mfa = (vision as? Vision.Submitting)?.mfa ?: ""
-            val submittable = isSubmittable(username, password)
-            val endSubmission = Wish.None(SUBMISSION_WISH) as Wish<Action>
-            val editing = Vision.Editing(action.services, username, password, "", submittable, mfa)
+            val endSubmission = Wish.none<Action>(SUBMISSION_WISH)
+            val editing = Vision.Editing(action.services, username, password, "", mfa)
             Revision(editing, endSubmission)
         }
         vision is Vision.Editing && action is Action.SetUsername -> {
-            val submittable = isSubmittable(action.username, vision.password)
-            val editing =
-                Vision.Editing(vision.services, action.username, vision.password, vision.error, submittable, vision.mfa)
-            Revision(editing)
+            val newVision = Vision.Editing(vision.services, action.username, vision.password, vision.error, vision.mfa)
+            Revision(newVision)
         }
         vision is Vision.Editing && action is Action.SetPassword -> {
-            val submittable = isSubmittable(vision.username, action.password)
-            val editing =
-                Vision.Editing(vision.services, vision.username, action.password, vision.error, submittable, vision.mfa)
-            Revision(editing)
+            val newVision = Vision.Editing(vision.services, vision.username, action.password, vision.error, vision.mfa)
+            Revision(newVision)
         }
         vision is Vision.Editing && action is Action.SetMfa -> {
-            val submittable = isSubmittable(vision.username, vision.password)
             val editing =
-                Vision.Editing(vision.services, vision.username, vision.password, vision.error, submittable, action.mfa)
+                Vision.Editing(vision.services, vision.username, vision.password, vision.error, action.mfa)
             Revision(editing)
         }
         vision is Vision.Editing && action is Action.Submit -> {
             if (vision.submittable) {
-                val submissionWish = vision.services
-                    ?.rbhApi?.login(vision.username, vision.password, vision.mfa)
-                    ?.subscribeOn(Schedulers.io())
-                    ?.toWish(SUBMISSION_WISH, Action::Succeed, Action::Fail) as Wish<Action>
-                val submitting =
-                    Vision.Submitting(vision.services, vision.username, vision.password, vision.mfa) as Vision
-                Revision(submitting, submissionWish)
+                val services = vision.services!!
+                val accessTokenWish = FetchRbhAccessTokenGenie.wish(
+                    name = SUBMISSION_WISH,
+                    params = FetchRbhAccessToken(services.rbhApi, vision.username, vision.password, vision.mfa),
+                    resultToAction = Action::Succeed,
+                    errorToAction = Action::Fail
+                )
+                val submitting = Vision.Submitting(services, vision.username, vision.password, vision.mfa) as Vision
+                Revision(submitting, accessTokenWish)
             } else {
                 Revision(vision as Vision)
             }
         }
         vision is Vision.Submitting && action is Action.Succeed -> {
             val reporting = Vision.Reporting(vision.username, action.token)
-            val token = action.token
-            val accessBook = vision.services.accessBook
-            val saveTokenWish = saveToken(accessBook, token)
-                .toSingleDefault(Unit)
-                .toWish("save-token", { Action.Ignore as Action }, { Action.Ignore })
+            val saveTokenWish = SaveAccessTokenGenie.wish(
+                name = "save-token",
+                params = SaveAccessToken(vision.services.accessBook, action.token),
+                resultToAction = { Action.Ignore },
+                errorToAction = { Action.Ignore }
+            )
             Revision(reporting, saveTokenWish)
         }
         vision is Vision.Submitting && action is Action.Fail -> {
-            val submittable = isSubmittable(vision.username, vision.password)
             val error = action.throwable.localizedMessage
-            val editing =
-                Vision.Editing(vision.services, vision.username, vision.password, error, submittable, vision.mfa)
-            Revision(editing)
+            val newVision = Vision.Editing(vision.services, vision.username, vision.password, error, vision.mfa)
+            Revision(newVision)
         }
         vision is Vision.Submitting && action is Action.Cancel -> {
-            val submittable = isSubmittable(vision.username, vision.password)
-            val editing = Vision.Editing(vision.services, vision.username, vision.password, "", submittable, "")
-            val cancelSubmission = Wish.None(SUBMISSION_WISH) as Wish<Action>
-            Revision(editing, cancelSubmission)
+            val newVision = Vision.Editing(vision.services, vision.username, vision.password, "", "")
+            val cancelSubmission = Wish.none<Action>(SUBMISSION_WISH)
+            Revision(newVision, cancelSubmission)
         }
         action is Action.Cancel -> {
             val reporting = Vision.Reporting(vision.username, "")
-            val cancelSubmission = Wish.None(SUBMISSION_WISH) as Wish<Action>
+            val cancelSubmission = Wish.none<Action>(SUBMISSION_WISH)
             Revision(reporting, cancelSubmission)
         }
         else -> throw NotImplementedError()
     }
 }
 
-private fun saveToken(accessBook: Book<Access>, token: String) = Completable.create {
-    val newAccess = accessBook.value.withToken(token)
-    accessBook.write(newAccess)
-}
-
 private const val SUBMISSION_WISH = "submission"
-
-private fun isSubmittable(username: String, password: String): Boolean {
-    return username.isNotBlank() && password.isNotBlank() && password.length > 2
-}

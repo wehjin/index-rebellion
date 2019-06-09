@@ -8,12 +8,14 @@ import com.rubyhuntersky.interaction.core.BehaviorBook
 import com.rubyhuntersky.interaction.core.Book
 import io.reactivex.Single
 import io.reactivex.disposables.Disposable
+import kotlinx.serialization.UnstableDefault
 import kotlinx.serialization.json.Json
 
 object SharedRebellionBook : RebellionBook, Book<Rebellion> by BehaviorBook(null) {
 
     private lateinit var disposable: Disposable
 
+    @UnstableDefault
     fun open(context: Context) {
         val preferences = context.getSharedPreferences("SharedRebellionBook", Context.MODE_PRIVATE)
 
@@ -30,10 +32,12 @@ object SharedRebellionBook : RebellionBook, Book<Rebellion> by BehaviorBook(null
             .subscribe()
     }
 
+    @UnstableDefault
     private fun saveRebellion(preferences: SharedPreferences, it: Rebellion) {
         preferences.edit().putString(PAGE_KEY, Json.stringify(Rebellion.serializer(), it)).apply()
     }
 
+    @UnstableDefault
     private fun loadRebellion(preferences: SharedPreferences): Rebellion {
         val jsonString = preferences.getString(PAGE_KEY, null)
         return jsonString?.let { Json.parse(Rebellion.serializer(), it) } ?: Rebellion()

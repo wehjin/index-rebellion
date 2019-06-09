@@ -14,7 +14,7 @@ class CashEditingTest {
     fun happy() {
         interaction.visions.test().assertValue(Vision.Idle)
 
-        interaction.reset()
+        interaction.sendAction(Action.Load)
         interaction.visions.test().assertValue(Vision.Editing(CashAmount.ZERO, "", false))
 
         interaction.sendAction(Action.SetEdit("3.00"))

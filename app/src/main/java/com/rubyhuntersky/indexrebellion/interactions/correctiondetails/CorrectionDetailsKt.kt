@@ -1,17 +1,28 @@
 package com.rubyhuntersky.indexrebellion.interactions.correctiondetails
 
 import android.util.Log
-import com.rubyhuntersky.indexrebellion.common.MyApplication
+import com.rubyhuntersky.indexrebellion.common.MyApplication.Companion.rebellionBook
 import com.rubyhuntersky.indexrebellion.data.report.CorrectionDetails
 import com.rubyhuntersky.indexrebellion.interactions.books.CorrectionDetailsBook
-import com.rubyhuntersky.interaction.android.AndroidEdge
-import com.rubyhuntersky.interaction.core.*
+import com.rubyhuntersky.indexrebellion.interactions.updateshares.UpdateSharesStory
+import com.rubyhuntersky.interaction.core.Edge
+import com.rubyhuntersky.interaction.core.Interaction
+import com.rubyhuntersky.interaction.core.Revision
+import com.rubyhuntersky.interaction.core.Story
+import com.rubyhuntersky.interaction.core.wish.Lamp
+import com.rubyhuntersky.interaction.core.wish.Wish
+import com.rubyhuntersky.indexrebellion.interactions.updateshares.Action as UpdateSharesAction
 import com.rubyhuntersky.interaction.core.SubjectInteractionAdapter as Adapter
 
 const val CORRECTION_DETAILS = "CorrectionDetails"
 
-class CorrectionDetailsStory(well: Well) : Interaction<Vision, Action>
-by Story(well, ::start, ::isEnding, ::revise, CORRECTION_DETAILS)
+fun enableCorrectionDetails(lamp: Lamp) {
+    with(lamp) {
+        add(ReadCorrectionDetailsDjinn)
+    }
+}
+
+class CorrectionDetailsStory : Interaction<Vision, Action> by Story(::start, ::isEnding, ::revise, CORRECTION_DETAILS)
 
 sealed class Vision {
     data class Loading(val culture: Culture?) : Vision()
@@ -32,12 +43,16 @@ sealed class Action {
     object Cancel : Action()
 }
 
-fun revise(vision: Vision, action: Action): Revision<Vision, Action> {
+fun revise(vision: Vision, action: Action, edge: Edge): Revision<Vision, Action> {
     return when {
         action is Action.Start -> {
             val culture = action.culture
             val newVision = Vision.Loading(culture) as Vision
-            val wish = culture.correctionDetailsBook.reader.toWish("read", Action::Load, ::logError) as Wish<Action>
+            val wish = ReadCorrectionDetailsDjinn.wish(
+                name = "read",
+                params = culture.correctionDetailsBook,
+                resultToAction = { Action.Load(it) },
+                errorToAction = { logError(it); Action.Cancel })
             Revision(newVision, wish)
         }
         action is Action.Cancel -> {
@@ -45,7 +60,7 @@ fun revise(vision: Vision, action: Action): Revision<Vision, Action> {
                 Revision(vision as Vision)
             } else {
                 val newVision = Vision.Finished as Vision
-                val wish = Wish.None("read") as Wish<Action>
+                val wish = Wish.none<Action>("read")
                 Revision(newVision, wish)
             }
         }
@@ -59,10 +74,12 @@ fun revise(vision: Vision, action: Action): Revision<Vision, Action> {
             Revision(newVision)
         }
         vision is Vision.Viewing && action is Action.UpdateShares -> {
-            val assetSymbol = vision.details.assetSymbol
-            val wish = MyApplication.updateSharesStory(assetSymbol)
-                .also { AndroidEdge.presentInteraction(it) }
-                .toWish("update-shares") { Action.Cancel as Action }
+            val wish = edge.wish(
+                name = "update-shares",
+                interaction = UpdateSharesStory(),
+                startAction = UpdateSharesAction.Start(rebellionBook, vision.details.assetSymbol),
+                endVisionToAction = { Action.Cancel as Action }
+            )
             Revision(Vision.Finished, wish)
         }
         vision is Vision.Viewing && action is Action.DeleteConstituent -> {

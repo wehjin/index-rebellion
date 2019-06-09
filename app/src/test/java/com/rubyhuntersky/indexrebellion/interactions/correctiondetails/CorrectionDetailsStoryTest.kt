@@ -8,7 +8,8 @@ import com.rubyhuntersky.indexrebellion.data.cash.CashAmount
 import com.rubyhuntersky.indexrebellion.data.report.CorrectionDetails
 import com.rubyhuntersky.indexrebellion.interactions.books.CorrectionDetailsBook
 import com.rubyhuntersky.indexrebellion.interactions.books.MemoryRebellionBook
-import com.rubyhuntersky.interaction.core.SwitchWell
+import com.rubyhuntersky.interaction.core.Edge
+import org.junit.Before
 import org.junit.Test
 import java.util.*
 
@@ -23,12 +24,27 @@ class CorrectionDetailsStoryTest {
     )
     private val detailsBook = CorrectionDetailsBook(details, MemoryRebellionBook())
 
-    private val well = SwitchWell()
-    private val interaction = CorrectionDetailsStory(well)
-        .also {
+    private val interaction = CorrectionDetailsStory()
+        .also { story: CorrectionDetailsStory ->
+            with(Edge()) {
+                enableCorrectionDetails(lamp)
+                addInteraction(story)
+            }
             val start = Action.Start(Culture(detailsBook))
-            it.sendAction(start)
+            story.sendAction(start)
         }
+
+    private val edge = Edge()
+        .also {
+            enableCorrectionDetails(it.lamp)
+            it.addInteraction(interaction)
+        }
+
+    @Before
+    fun setUp() {
+        enableCorrectionDetails(edge.lamp)
+        edge.addInteraction(interaction)
+    }
 
     @Test
     fun construction() {

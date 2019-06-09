@@ -1,43 +1,45 @@
 package com.rubyhuntersky.indexrebellion.interactions.main
 
 import android.util.Log
-import com.rubyhuntersky.indexrebellion.common.MyApplication
-import com.rubyhuntersky.indexrebellion.data.Rebellion
 import com.rubyhuntersky.indexrebellion.data.assets.AssetSymbol
-import com.rubyhuntersky.indexrebellion.data.assets.PriceSample
-import com.rubyhuntersky.indexrebellion.data.cash.CashAmount
 import com.rubyhuntersky.indexrebellion.data.cash.CashEquivalent
-import com.rubyhuntersky.indexrebellion.data.index.Constituent
-import com.rubyhuntersky.indexrebellion.data.index.MarketWeight
 import com.rubyhuntersky.indexrebellion.data.report.Correction
 import com.rubyhuntersky.indexrebellion.data.report.CorrectionDetails
 import com.rubyhuntersky.indexrebellion.data.report.RebellionReport
-import com.rubyhuntersky.interaction.android.AndroidEdge
+import com.rubyhuntersky.indexrebellion.interactions.books.CorrectionDetailsBook
+import com.rubyhuntersky.indexrebellion.interactions.books.RebellionBook
+import com.rubyhuntersky.indexrebellion.interactions.correctiondetails.CorrectionDetailsStory
 import com.rubyhuntersky.interaction.core.*
+import com.rubyhuntersky.interaction.core.wish.Lamp
 import com.rubyhuntersky.stockcatalog.StockMarket
-import com.rubyhuntersky.stockcatalog.StockSample
-import io.reactivex.Completable
-import io.reactivex.Single
-import io.reactivex.schedulers.Schedulers
-import java.util.*
+import com.rubyhuntersky.indexrebellion.interactions.correctiondetails.Action as CorrectionDetailsAction
+import com.rubyhuntersky.indexrebellion.interactions.correctiondetails.Culture as CorrectionDetailsCulture
 
 const val MAIN_INTERACTION_TAG = "MainInteraction"
 
-class MainStory(well: Well) : Interaction<Vision, Action>
-by Story(well, ::start, ::isEnding, ::revise, MAIN_INTERACTION_TAG)
+fun enableMainStory(lamp: Lamp) {
+    with(lamp) {
+        add(ReadReportsDjinn)
+        add(FetchStockMarketSamplesGenie)
+        add(UpdateRebellionPricesGenie)
+    }
+}
+
+class MainStory : Interaction<Vision, Action>
+by Story(::start, ::isEnding, ::revise, MAIN_INTERACTION_TAG)
 
 sealed class Vision {
 
     data class Loading(
         val maybePortals: MainPortals?,
-        val maybeRebellionBook: Book<Rebellion>?
+        val maybeRebellionBook: RebellionBook?
     ) : Vision()
 
     data class Viewing(
         val rebellionReport: RebellionReport,
         val isRefreshing: Boolean,
         val portals: MainPortals,
-        val rebellionBook: Book<Rebellion>
+        val rebellionBook: RebellionBook
     ) : Vision()
 }
 
@@ -47,7 +49,7 @@ fun start() = Vision.Loading(null, null) as Vision
 fun isEnding(maybe: Any?) = false
 
 sealed class Action {
-    data class Start(val rebellionBook: Book<Rebellion>, val portals: MainPortals) : Action()
+    data class Start(val rebellionBook: RebellionBook, val portals: MainPortals) : Action()
     data class SetReport(val report: RebellionReport) : Action()
     object FindConstituent : Action()
     object OpenCashEditor : Action()
@@ -63,14 +65,15 @@ data class MainPortals(
     val cashEditingPortal: Portal<Unit>
 )
 
-fun revise(vision: Vision, action: Action): Revision<Vision, Action> {
+fun revise(vision: Vision, action: Action, edge: Edge): Revision<Vision, Action> {
     return when {
         vision is Vision.Loading && action is Action.Start -> {
-            val reportsWish = action.rebellionBook.reader
-                .toWish("rebellions",
-                    onNext = { Action.SetReport(RebellionReport(it)) as Action },
-                    onError = { throw IllegalStateException() }
-                )
+            val reportsWish = ReadReportsDjinn.wish(
+                name = "rebellions",
+                params = action.rebellionBook,
+                resultToAction = { Action.SetReport(it) as Action },
+                errorToAction = { throw IllegalStateException() }
+            )
             Revision(Vision.Loading(action.portals, action.rebellionBook), reportsWish)
         }
         action is Action.SetReport -> {
@@ -103,30 +106,40 @@ fun revise(vision: Vision, action: Action): Revision<Vision, Action> {
                 holding = rebellion.holdings[action.correction.assetSymbol],
                 targetValue = action.correction.targetValue(fullInvestment)
             )
-            val detailsWish = MyApplication.correctionDetailsStory(details)
-                .also { AndroidEdge.presentInteraction(it) }
-                .toWish("details") { Action.Ignore as Action }
+            val detailsWish = edge.wish(
+                name = "details",
+                interaction = CorrectionDetailsStory(),
+                startAction = CorrectionDetailsAction.Start(
+                    CorrectionDetailsCulture(
+                        CorrectionDetailsBook(details, vision.rebellionBook)
+                    )
+                ),
+                endVisionToAction = { Action.Ignore as Action }
+            )
             Revision(vision, detailsWish)
         }
         vision is Vision.Viewing && action is Action.Refresh -> {
             val newVision = Vision.Viewing(vision.rebellionReport, true, vision.portals, vision.rebellionBook)
             val symbols = vision.rebellionBook.value.combinedAssetSymbols.map(AssetSymbol::string)
-            val samplesWish = StockMarket.fetchSamples(symbols)
-                .subscribeOn(Schedulers.io())
-                .observeOn(Schedulers.single())
-                .toWish("refresh", Action::ReceiveMarketSamples, Action::ReceiveError)
+            val samplesWish = FetchStockMarketSamplesGenie.wish(
+                name = "refresh",
+                params = FetchStockMarketSamples(symbols),
+                resultToAction = Action::ReceiveMarketSamples,
+                errorToAction = Action::ReceiveError
+            )
             Revision(newVision, samplesWish)
         }
         vision is Vision.Viewing && action is Action.ReceiveMarketSamples -> {
             val newVision = Vision.Viewing(vision.rebellionReport, false, vision.portals, vision.rebellionBook)
             val result = action.result
             val rebellionBook = vision.rebellionBook
-            val writePricesWish = updateRebellionPrices(rebellionBook, result).toWish(
-                "update-prices",
-                { Action.Ignore },
-                Action::ReceiveError
+            val wish = UpdateRebellionPricesGenie.wish(
+                name = "update-prices",
+                params = UpdateRebellionPrices(rebellionBook, result),
+                resultToAction = { Action.Ignore },
+                errorToAction = Action::ReceiveError
             )
-            Revision(newVision, writePricesWish)
+            Revision(newVision, wish)
         }
         vision is Vision.Viewing && action is Action.ReceiveError -> {
             Log.e(MAIN_INTERACTION_TAG, action.error.localizedMessage, action.error)
@@ -137,34 +150,3 @@ fun revise(vision: Vision, action: Action): Revision<Vision, Action> {
         else -> throw NotImplementedError("VISION $vision ACTION $action")
     }
 }
-
-
-private fun updateRebellionPrices(rebellionBook: Book<Rebellion>, stockMarketResult: StockMarket.Result): Single<Unit> {
-    return Completable.create {
-        (stockMarketResult as? StockMarket.Result.Samples)?.let {
-            val samples = mutableMapOf<AssetSymbol, StockSample>()
-            stockMarketResult.samples
-                .fold(samples) { output, nextSample ->
-                    output.also {
-                        it[AssetSymbol(nextSample.symbol)] = nextSample
-                    }
-                }
-            val constituents = rebellionBook.value.index.constituents
-                .map { old ->
-                    samples[old.assetSymbol]?.let {
-                        Constituent(old.assetSymbol, MarketWeight(it.marketCapitalization))
-                    } ?: old
-                }
-            val date = Date()
-            val holdings = rebellionBook.value.holdings
-                .map { (symbol, holding) ->
-                    samples[symbol]?.let {
-                        holding.withSharePrice(PriceSample(CashAmount(it.sharePrice), date))
-                    } ?: holding
-                }
-            val newRebellion = rebellionBook.value.withConstituentsAndHoldings(constituents, holdings)
-            rebellionBook.write(newRebellion)
-        }
-    }.toSingleDefault(Unit)
-}
-

@@ -8,10 +8,14 @@ import android.view.MenuItem
 import android.view.View
 import android.widget.Toast
 import com.rubyhuntersky.indexrebellion.R
-import com.rubyhuntersky.indexrebellion.common.MyApplication
+import com.rubyhuntersky.indexrebellion.common.MyApplication.Companion.accessBook
+import com.rubyhuntersky.indexrebellion.common.MyApplication.Companion.rbhApi
+import com.rubyhuntersky.indexrebellion.common.MyApplication.Companion.rebellionBook
 import com.rubyhuntersky.indexrebellion.interactions.main.Action
 import com.rubyhuntersky.indexrebellion.interactions.main.MAIN_INTERACTION_TAG
 import com.rubyhuntersky.indexrebellion.interactions.main.Vision
+import com.rubyhuntersky.indexrebellion.interactions.refreshholdings.RefreshHoldingsStory
+import com.rubyhuntersky.interaction.android.AndroidEdge
 import com.rubyhuntersky.interaction.android.NamedInteractionActivity
 import com.rubyhuntersky.interaction.core.PendingInteractions
 import kotlinx.android.synthetic.main.activity_main_viewing.*
@@ -26,7 +30,17 @@ class MainActivity : NamedInteractionActivity<Vision, Action>() {
     override val name: String = MAIN_INTERACTION_TAG
 
     private fun refreshHoldings() {
-        val interaction = MyApplication.refreshHoldingsInteraction()
+        val interaction = RefreshHoldingsStory()
+            .also {
+                AndroidEdge.addInteraction(it)
+                it.sendAction(
+                    RefreshHoldingsAction.Start(
+                        token = accessBook.value.token,
+                        api = rbhApi,
+                        book = rebellionBook
+                    )
+                )
+            }
         pendingInteractions.follow(interaction) { vision ->
             runOnUiThread {
                 when (vision) {
