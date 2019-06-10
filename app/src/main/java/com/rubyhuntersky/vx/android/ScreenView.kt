@@ -7,7 +7,10 @@ import com.rubyhuntersky.indexrebellion.R
 import com.rubyhuntersky.indexrebellion.presenters.cashediting.BackingViewInputLayout
 import com.rubyhuntersky.indexrebellion.presenters.cashediting.BackingViewTextView
 import com.rubyhuntersky.indexrebellion.presenters.cashediting.ViewBackedDashView
-import com.rubyhuntersky.vx.*
+import com.rubyhuntersky.vx.Anchor
+import com.rubyhuntersky.vx.Dash
+import com.rubyhuntersky.vx.HBound
+import com.rubyhuntersky.vx.ViewId
 import com.rubyhuntersky.vx.dashes.InputEvent
 import com.rubyhuntersky.vx.dashes.InputSight
 import com.rubyhuntersky.vx.dashes.TextLineSight
@@ -29,7 +32,7 @@ class ScreenView
         updateDashViewFromHBounds(renderedDashView, isAttachedToWindow)
     }
 
-    private var renderedDashView: DashView<*, *>? = null
+    private var renderedDashView: Dash.View<*, *>? = null
 
     private fun <C : Any, E : Any> updateDashViewFromHBounds(dashView: Dash.View<C, E>?, isAttachedToWindow: Boolean) {
         dashViewHBoundUpdates.clear()
