@@ -13,21 +13,21 @@ import org.junit.Test
 class BottomTest {
     private val viewId = ViewId()
 
-    private val latitudeSubjectA = PublishSubject.create<DashLatitude>()
+    private val latitudeSubjectA = PublishSubject.create<Dash.Latitude>()
     private val eventSubjectA = PublishSubject.create<Nothing>()
     private val viewMockA = mock<Dash.View<TextLineSight, Nothing>> {
         on { latitudes } doReturn latitudeSubjectA
         on { events } doReturn eventSubjectA
     }
 
-    private val latitudeSubjectB = PublishSubject.create<DashLatitude>()
+    private val latitudeSubjectB = PublishSubject.create<Dash.Latitude>()
     private val eventSubjectB = PublishSubject.create<Nothing>()
     private val viewMockB = mock<Dash.View<TextLineSight, Nothing>> {
         on { latitudes } doReturn latitudeSubjectB
         on { events } doReturn eventSubjectB
     }
 
-    private val hostMock = mock<ViewHost> {
+    private val hostMock = mock<Dash.ViewHost> {
         on { addTextLine(ViewId().extend(0)) } doReturn viewMockA
         on { addTextLine(ViewId().extend(1)) } doReturn viewMockB
     }
@@ -72,9 +72,9 @@ class BottomTest {
     @Test
     fun latitudes() {
         val test = view.latitudes.test()
-        latitudeSubjectA.onNext(DashLatitude(100))
-        latitudeSubjectB.onNext(DashLatitude(5))
-        test.assertValue(DashLatitude(105))
+        latitudeSubjectA.onNext(Dash.Latitude(100))
+        latitudeSubjectB.onNext(Dash.Latitude(5))
+        test.assertValue(Dash.Latitude(105))
     }
 
     @Test

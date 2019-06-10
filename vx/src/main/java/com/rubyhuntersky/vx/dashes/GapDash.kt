@@ -9,7 +9,7 @@ sealed class GapSight {
 }
 
 object GapDash : Dash<GapSight, Nothing> {
-    override fun enview(viewHost: ViewHost, id: ViewId): Dash.View<GapSight, Nothing> =
+    override fun enview(viewHost: Dash.ViewHost, id: ViewId): Dash.View<GapSight, Nothing> =
         object : Dash.View<GapSight, Nothing> {
             override fun setHBound(hbound: HBound) = Unit
             override val latitudes: Observable<Dash.Latitude> get() = heightBehavior.map { Dash.Latitude(it) }

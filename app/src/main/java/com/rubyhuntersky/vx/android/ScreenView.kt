@@ -22,7 +22,7 @@ class ScreenView
     attrs: AttributeSet? = null,
     defStyleAttr: Int = 0,
     defStyleRes: Int = 0
-) : FrameLayout(context, attrs, defStyleAttr, defStyleRes), ViewHost {
+) : FrameLayout(context, attrs, defStyleAttr, defStyleRes), Dash.ViewHost {
 
     fun <C : Any, E : Any> render(dashView: Dash.View<C, E>) {
         this.renderedDashView = dashView
@@ -76,7 +76,7 @@ class ScreenView
             }
         )
 
-    override fun addTextLine(id: ViewId): DashView<TextLineSight, Nothing> =
+    override fun addTextLine(id: ViewId): Dash.View<TextLineSight, Nothing> =
         ViewBackedDashView(
             frameLayout = this@ScreenView,
             id = id,

@@ -1,7 +1,6 @@
 package com.rubyhuntersky.vx.dashes
 
 import com.rubyhuntersky.vx.Dash
-import com.rubyhuntersky.vx.ViewHost
 import com.rubyhuntersky.vx.ViewId
 
 data class InputSight(
@@ -21,5 +20,5 @@ sealed class InputEvent {
 
 object InputDash :
     Dash<InputSight, InputEvent> {
-    override fun enview(viewHost: ViewHost, id: ViewId): Dash.View<InputSight, InputEvent> = viewHost.addInput(id)
+    override fun enview(viewHost: Dash.ViewHost, id: ViewId): Dash.View<InputSight, InputEvent> = viewHost.addInput(id)
 }

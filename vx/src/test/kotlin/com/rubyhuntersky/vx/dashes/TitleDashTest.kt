@@ -10,13 +10,13 @@ import org.junit.Test
 class TitleDashTest {
 
     private val viewId = ViewId()
-    private val latitudeSubject = PublishSubject.create<DashLatitude>()
+    private val latitudeSubject = PublishSubject.create<Dash.Latitude>()
     private val eventSubject = PublishSubject.create<Nothing>()
     private val viewMock = mock<Dash.View<TextLineSight, Nothing>> {
         on { latitudes } doReturn latitudeSubject
         on { events } doReturn eventSubject
     }
-    private val hostMock = mock<ViewHost> {
+    private val hostMock = mock<Dash.ViewHost> {
         on { addTextLine(viewId) } doReturn viewMock
     }
     private val view = TitleDash.enview(hostMock, viewId)
@@ -48,8 +48,8 @@ class TitleDashTest {
     @Test
     fun latitudes() {
         val test = view.latitudes.test()
-        latitudeSubject.onNext(DashLatitude(100))
-        test.assertValue(DashLatitude(100))
+        latitudeSubject.onNext(Dash.Latitude(100))
+        test.assertValue(Dash.Latitude(100))
     }
 
     @Test

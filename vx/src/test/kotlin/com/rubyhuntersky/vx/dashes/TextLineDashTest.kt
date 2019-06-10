@@ -3,8 +3,7 @@ package com.rubyhuntersky.vx.dashes
 import com.nhaarman.mockitokotlin2.doReturn
 import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.verify
-import com.rubyhuntersky.vx.DashView
-import com.rubyhuntersky.vx.ViewHost
+import com.rubyhuntersky.vx.Dash
 import com.rubyhuntersky.vx.ViewId
 import org.junit.Assert
 import org.junit.Test
@@ -12,8 +11,8 @@ import org.junit.Test
 class TextLineDashTest {
 
     private val id = ViewId()
-    private val viewMock = mock<DashView<TextLineSight, Nothing>>()
-    private val hostMock = mock<ViewHost> {
+    private val viewMock = mock<Dash.View<TextLineSight, Nothing>>()
+    private val hostMock = mock<Dash.ViewHost> {
         on { addTextLine(id) } doReturn viewMock
     }
 

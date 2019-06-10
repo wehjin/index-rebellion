@@ -15,7 +15,7 @@ sealed class Gap {
 
 operator fun <Sight : Any, Event : Any> Dash<Sight, Event>.plus(gap: Gap): Dash<Sight, Event> =
     object : Dash<Sight, Event> {
-        override fun enview(viewHost: ViewHost, id: ViewId): Dash.View<Sight, Event> =
+        override fun enview(viewHost: Dash.ViewHost, id: ViewId): Dash.View<Sight, Event> =
             object : Dash.View<Sight, Event> {
                 private val view = this@plus.enview(viewHost, id.extend(0))
                 private val heights = view.latitudes.map { it.height + (gap as Gap.TitleBody).dips }

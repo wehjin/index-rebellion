@@ -17,7 +17,7 @@ class ViewBackedDashView<V, C : Any, E : Any>(
     frameLayout: FrameLayout,
     id: ViewId,
     private val adapter: Adapter<V, C, E>
-) : DashView<C, E> where V : View, V : ViewBackedDashView.BackingView<E> {
+) : Dash.View<C, E> where V : View, V : ViewBackedDashView.BackingView<E> {
 
     interface BackingView<E : Any> {
         var onAttached: (() -> Unit)?
