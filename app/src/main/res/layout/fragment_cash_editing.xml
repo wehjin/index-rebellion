@@ -6,7 +6,7 @@
     android:padding="24dp"
     android:theme="@style/AppTheme">
 
-    <com.rubyhuntersky.indexrebellion.presenters.cashediting.ScreenView
+    <com.rubyhuntersky.vx.android.ScreenView
         android:id="@+id/screenView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

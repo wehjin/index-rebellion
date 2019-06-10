@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import android.widget.FrameLayout
 import com.rubyhuntersky.vx.*
 import com.rubyhuntersky.vx.additions.toSizeAnchor
+import com.rubyhuntersky.vx.android.toPixels
 import io.reactivex.Observable
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.rxkotlin.addTo

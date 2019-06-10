@@ -3,6 +3,7 @@ package com.rubyhuntersky.indexrebellion.presenters.cashediting
 import android.content.Context
 import android.util.AttributeSet
 import android.widget.TextView
+import com.rubyhuntersky.vx.android.toDip
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.subjects.BehaviorSubject

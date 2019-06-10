@@ -11,6 +11,7 @@ import android.view.ViewGroup
 import android.widget.FrameLayout
 import android.widget.LinearLayout
 import com.rubyhuntersky.indexrebellion.R
+import com.rubyhuntersky.vx.android.toDip
 import com.rubyhuntersky.vx.dashes.Icon
 import com.rubyhuntersky.vx.dashes.InputSight
 import com.rubyhuntersky.vx.dashes.InputEvent
