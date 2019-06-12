@@ -8,8 +8,8 @@ import android.widget.FrameLayout
 import com.rubyhuntersky.vx.*
 import com.rubyhuntersky.vx.dash.additions.toSizeAnchor
 import com.rubyhuntersky.vx.android.toPixels
-import com.rubyhuntersky.vx.bounds.HBound
-import com.rubyhuntersky.vx.bounds.VBound
+import com.rubyhuntersky.vx.bound.HBound
+import com.rubyhuntersky.vx.bound.VBound
 import com.rubyhuntersky.vx.dash.Dash
 import io.reactivex.Observable
 import io.reactivex.disposables.CompositeDisposable

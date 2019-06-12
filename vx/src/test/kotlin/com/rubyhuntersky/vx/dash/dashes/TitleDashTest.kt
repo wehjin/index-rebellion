@@ -6,7 +6,7 @@ import com.nhaarman.mockitokotlin2.verify
 import com.rubyhuntersky.vx.Anchor
 import com.rubyhuntersky.vx.TextStyle
 import com.rubyhuntersky.vx.dash.Dash
-import com.rubyhuntersky.vx.bounds.HBound
+import com.rubyhuntersky.vx.bound.HBound
 import com.rubyhuntersky.vx.ViewId
 import io.reactivex.subjects.PublishSubject
 import org.junit.Test

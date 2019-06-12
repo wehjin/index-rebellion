@@ -1,6 +1,6 @@
 package com.rubyhuntersky.vx
 
-import com.rubyhuntersky.vx.bounds.HBound
+import com.rubyhuntersky.vx.bound.HBound
 import com.rubyhuntersky.vx.dash.Dash
 import io.reactivex.Observable
 

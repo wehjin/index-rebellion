@@ -10,7 +10,7 @@ import com.rubyhuntersky.indexrebellion.presenters.cashediting.ViewBackedDashVie
 import com.rubyhuntersky.vx.Anchor
 import com.rubyhuntersky.vx.TextStyle
 import com.rubyhuntersky.vx.ViewId
-import com.rubyhuntersky.vx.bounds.HBound
+import com.rubyhuntersky.vx.bound.HBound
 import com.rubyhuntersky.vx.dash.Dash
 import com.rubyhuntersky.vx.dash.dashes.InputEvent
 import com.rubyhuntersky.vx.dash.dashes.InputSight

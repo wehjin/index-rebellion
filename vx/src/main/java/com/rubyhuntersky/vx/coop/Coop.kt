@@ -2,7 +2,8 @@ package com.rubyhuntersky.vx.coop
 
 import com.rubyhuntersky.vx.TextStyle
 import com.rubyhuntersky.vx.ViewId
-import com.rubyhuntersky.vx.bounds.BiBound
+import com.rubyhuntersky.vx.bound.BiBound
+import com.rubyhuntersky.vx.orbit.BiOrbit
 import io.reactivex.Observable
 
 interface Coop<Sight : Any, Event : Any> {
@@ -11,7 +12,7 @@ interface Coop<Sight : Any, Event : Any> {
 
     interface ViewHost {
 
-        fun addSingleTextLineView(textStyle: TextStyle, id: ViewId): View<String, Nothing>
+        fun addSingleTextLineView(textStyle: TextStyle, orbit: BiOrbit, id: ViewId): View<String, Nothing>
     }
 
     interface View<Sight : Any, Event : Any> {
