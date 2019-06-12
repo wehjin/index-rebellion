@@ -1,8 +1,8 @@
 package com.rubyhuntersky.vx.dash
 
 import com.rubyhuntersky.vx.Anchor
-import com.rubyhuntersky.vx.HBound
 import com.rubyhuntersky.vx.ViewId
+import com.rubyhuntersky.vx.bounds.HBound
 import com.rubyhuntersky.vx.dash.dashes.InputEvent
 import com.rubyhuntersky.vx.dash.dashes.InputSight
 import com.rubyhuntersky.vx.dash.dashes.TextLineSight
@@ -41,3 +41,4 @@ interface Dash<Sight : Any, Event : Any> {
             }
         }
 }
+

@@ -1,5 +1,8 @@
 package com.rubyhuntersky.vx
 
+import com.rubyhuntersky.vx.bounds.HBound
+import com.rubyhuntersky.vx.bounds.VBound
+
 data class Anchor(val position: Int, val placement: Float) {
 
     fun toVBound(size: Int) = VBound(toBound(size))

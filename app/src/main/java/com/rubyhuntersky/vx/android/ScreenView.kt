@@ -8,13 +8,13 @@ import com.rubyhuntersky.indexrebellion.presenters.cashediting.BackingViewInputL
 import com.rubyhuntersky.indexrebellion.presenters.cashediting.BackingViewTextView
 import com.rubyhuntersky.indexrebellion.presenters.cashediting.ViewBackedDashView
 import com.rubyhuntersky.vx.Anchor
-import com.rubyhuntersky.vx.dash.Dash
-import com.rubyhuntersky.vx.HBound
+import com.rubyhuntersky.vx.TextStyle
 import com.rubyhuntersky.vx.ViewId
+import com.rubyhuntersky.vx.bounds.HBound
+import com.rubyhuntersky.vx.dash.Dash
 import com.rubyhuntersky.vx.dash.dashes.InputEvent
 import com.rubyhuntersky.vx.dash.dashes.InputSight
 import com.rubyhuntersky.vx.dash.dashes.TextLineSight
-import com.rubyhuntersky.vx.dash.dashes.TextStyle
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.rxkotlin.addTo
 import io.reactivex.subjects.BehaviorSubject
@@ -92,11 +92,13 @@ class ScreenView
                     view: BackingViewTextView,
                     content: TextLineSight
                 ) {
-                    when (content.style) {
-                        TextStyle.Highlight5 -> view.setTextAppearance(R.style.TextAppearance_MaterialComponents_Headline5)
-                        TextStyle.Highlight6 -> view.setTextAppearance(R.style.TextAppearance_MaterialComponents_Headline6)
-                        TextStyle.Subtitle1 -> view.setTextAppearance(R.style.TextAppearance_MaterialComponents_Subtitle1)
+                    val resId = when (content.style) {
+                        TextStyle.Highlight5 -> R.style.TextAppearance_MaterialComponents_Headline5
+                        TextStyle.Highlight6 -> R.style.TextAppearance_MaterialComponents_Headline6
+                        TextStyle.Subtitle1 -> R.style.TextAppearance_MaterialComponents_Subtitle1
+                        TextStyle.Body1 -> R.style.TextAppearance_MaterialComponents_Body1
                     }
+                    view.setTextAppearance(resId)
                     view.text = content.text
                 }
             })

@@ -4,9 +4,10 @@ import com.nhaarman.mockitokotlin2.doReturn
 import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.verify
 import com.rubyhuntersky.vx.*
+import com.rubyhuntersky.vx.bounds.HBound
 import com.rubyhuntersky.vx.dash.Dash
 import com.rubyhuntersky.vx.dash.dashes.TextLineSight
-import com.rubyhuntersky.vx.dash.dashes.TextStyle
+import com.rubyhuntersky.vx.TextStyle
 import com.rubyhuntersky.vx.dash.dashes.TitleDash
 import io.reactivex.subjects.PublishSubject
 import org.junit.Test

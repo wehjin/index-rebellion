@@ -1,5 +1,6 @@
 package com.rubyhuntersky.vx.dash.dashes
 
+import com.rubyhuntersky.vx.TextStyle
 import com.rubyhuntersky.vx.dash.Dash
 import com.rubyhuntersky.vx.transform
 

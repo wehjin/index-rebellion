@@ -3,7 +3,7 @@ package com.rubyhuntersky.vx.dash.additions
 import com.rubyhuntersky.vx.dash.Dash
 import com.rubyhuntersky.vx.dash.dashes.TextLineDash
 import com.rubyhuntersky.vx.dash.dashes.TextLineSight
-import com.rubyhuntersky.vx.dash.dashes.TextStyle
+import com.rubyhuntersky.vx.TextStyle
 import com.rubyhuntersky.vx.dash.dashes.TitleDash
 import com.rubyhuntersky.vx.transform
 

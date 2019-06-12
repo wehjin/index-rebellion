@@ -1,17 +1,8 @@
 package com.rubyhuntersky.vx
 
+import com.rubyhuntersky.vx.bounds.HBound
 import com.rubyhuntersky.vx.dash.Dash
 import io.reactivex.Observable
-
-data class HBound(val start: Int, val end: Int) {
-    constructor(pair: Pair<Int, Int>) : this(pair.first, pair.second)
-
-    fun startZero(): HBound = HBound(0, end - start)
-}
-
-data class ViewId(val markers: List<Int> = emptyList()) {
-    fun extend(marker: Int): ViewId = ViewId(markers.toMutableList().also { it.add(marker) })
-}
 
 fun <CoreC : Any, EdgeC : Any, Ev : Any> Dash<CoreC, Ev>.transform(transformer: (EdgeC) -> CoreC): Dash<EdgeC, Ev> {
     return object : Dash<EdgeC, Ev> {
@@ -28,9 +19,5 @@ fun <CoreC : Any, EdgeC : Any, Ev : Any> Dash.View<CoreC, Ev>.transform(transfor
         override fun setSight(sight: EdgeC) = this@transform.setSight(transformer(sight))
         override val events: Observable<Ev> get() = this@transform.events.map { it }
     }
-}
-
-data class VBound(val ceiling: Int, val floor: Int) {
-    constructor(pair: Pair<Int, Int>) : this(pair.first, pair.second)
 }
 
