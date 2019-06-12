@@ -8,12 +8,12 @@ import com.rubyhuntersky.indexrebellion.data.cash.CashAmount
 import com.rubyhuntersky.indexrebellion.interactions.cashediting.Action
 import com.rubyhuntersky.indexrebellion.interactions.cashediting.Vision
 import com.rubyhuntersky.indexrebellion.vxandroid.InteractionBottomSheetDialogFragment
-import com.rubyhuntersky.vx.Dash
+import com.rubyhuntersky.vx.dash.Dash
 import com.rubyhuntersky.vx.ViewId
-import com.rubyhuntersky.vx.additions.Bottom
-import com.rubyhuntersky.vx.additions.Gap
-import com.rubyhuntersky.vx.additions.plus
-import com.rubyhuntersky.vx.dashes.*
+import com.rubyhuntersky.vx.dash.additions.Bottom
+import com.rubyhuntersky.vx.dash.additions.Gap
+import com.rubyhuntersky.vx.dash.additions.plus
+import com.rubyhuntersky.vx.dash.dashes.*
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.rxkotlin.addTo
 import kotlinx.android.synthetic.main.fragment_cash_editing.*

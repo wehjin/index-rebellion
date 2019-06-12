@@ -1,10 +1,10 @@
-package com.rubyhuntersky.vx.dashes
+package com.rubyhuntersky.vx.dash.dashes
 
 import com.nhaarman.mockitokotlin2.doReturn
 import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.verify
 import com.rubyhuntersky.vx.Anchor
-import com.rubyhuntersky.vx.Dash
+import com.rubyhuntersky.vx.dash.Dash
 import com.rubyhuntersky.vx.HBound
 import com.rubyhuntersky.vx.ViewId
 import io.reactivex.subjects.PublishSubject

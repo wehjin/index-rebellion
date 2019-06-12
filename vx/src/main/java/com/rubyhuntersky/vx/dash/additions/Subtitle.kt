@@ -1,10 +1,10 @@
-package com.rubyhuntersky.vx.additions
+package com.rubyhuntersky.vx.dash.additions
 
-import com.rubyhuntersky.vx.Dash
-import com.rubyhuntersky.vx.dashes.TextLineDash
-import com.rubyhuntersky.vx.dashes.TextLineSight
-import com.rubyhuntersky.vx.dashes.TextStyle
-import com.rubyhuntersky.vx.dashes.TitleDash
+import com.rubyhuntersky.vx.dash.Dash
+import com.rubyhuntersky.vx.dash.dashes.TextLineDash
+import com.rubyhuntersky.vx.dash.dashes.TextLineSight
+import com.rubyhuntersky.vx.dash.dashes.TextStyle
+import com.rubyhuntersky.vx.dash.dashes.TitleDash
 import com.rubyhuntersky.vx.transform
 
 operator fun TitleDash.plus(@Suppress("UNUSED_PARAMETER") subtitle: Subtitle): Dash<TitleSubtitleSight, Nothing> =

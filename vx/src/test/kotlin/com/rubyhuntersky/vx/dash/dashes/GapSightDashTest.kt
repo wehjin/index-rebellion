@@ -1,7 +1,7 @@
-package com.rubyhuntersky.vx.dashes
+package com.rubyhuntersky.vx.dash.dashes
 
 import com.nhaarman.mockitokotlin2.mock
-import com.rubyhuntersky.vx.Dash
+import com.rubyhuntersky.vx.dash.Dash
 import com.rubyhuntersky.vx.ViewId
 import org.junit.Test
 

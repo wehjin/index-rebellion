@@ -1,6 +1,7 @@
-package com.rubyhuntersky.vx.dashes
+package com.rubyhuntersky.vx.dash.dashes
 
 import com.rubyhuntersky.vx.*
+import com.rubyhuntersky.vx.dash.Dash
 import io.reactivex.Observable
 import io.reactivex.subjects.BehaviorSubject
 

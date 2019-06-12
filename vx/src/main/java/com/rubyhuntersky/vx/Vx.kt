@@ -1,5 +1,6 @@
 package com.rubyhuntersky.vx
 
+import com.rubyhuntersky.vx.dash.Dash
 import io.reactivex.Observable
 
 data class HBound(val start: Int, val end: Int) {

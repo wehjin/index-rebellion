@@ -1,6 +1,7 @@
-package com.rubyhuntersky.vx.additions
+package com.rubyhuntersky.vx.dash.additions
 
 import com.rubyhuntersky.vx.*
+import com.rubyhuntersky.vx.dash.Dash
 import io.reactivex.Observable
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.rxkotlin.addTo

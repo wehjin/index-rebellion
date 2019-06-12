@@ -1,6 +1,6 @@
-package com.rubyhuntersky.vx.dashes
+package com.rubyhuntersky.vx.dash.dashes
 
-import com.rubyhuntersky.vx.Dash
+import com.rubyhuntersky.vx.dash.Dash
 import com.rubyhuntersky.vx.transform
 
 object TitleDash : Dash<String, Nothing>
