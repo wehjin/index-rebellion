@@ -1,4 +1,4 @@
-package com.rubyhuntersky.vx.dash.additions
+package com.rubyhuntersky.vx.tower.additions
 
 import com.rubyhuntersky.vx.Anchor
 import io.reactivex.functions.BiFunction

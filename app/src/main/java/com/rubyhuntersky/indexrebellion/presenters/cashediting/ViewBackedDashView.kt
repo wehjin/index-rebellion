@@ -6,11 +6,11 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.FrameLayout
 import com.rubyhuntersky.vx.*
-import com.rubyhuntersky.vx.dash.additions.toSizeAnchor
+import com.rubyhuntersky.vx.tower.additions.toSizeAnchor
 import com.rubyhuntersky.vx.android.toPixels
 import com.rubyhuntersky.vx.bound.HBound
 import com.rubyhuntersky.vx.bound.VBound
-import com.rubyhuntersky.vx.dash.Dash
+import com.rubyhuntersky.vx.tower.Tower
 import io.reactivex.Observable
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.rxkotlin.addTo
@@ -20,7 +20,7 @@ class ViewBackedDashView<V, C : Any, E : Any>(
     frameLayout: FrameLayout,
     id: ViewId,
     private val adapter: Adapter<V, C, E>
-) : Dash.View<C, E> where V : View, V : ViewBackedDashView.BackingView<E> {
+) : Tower.View<C, E> where V : View, V : ViewBackedDashView.BackingView<E> {
 
     interface BackingView<E : Any> {
         var onAttached: (() -> Unit)?
@@ -80,8 +80,8 @@ class ViewBackedDashView<V, C : Any, E : Any>(
             }
     }
 
-    override val latitudes: Observable<Dash.Latitude>
-        get() = view.heights.map { Dash.Latitude(it) }
+    override val latitudes: Observable<Tower.Latitude>
+        get() = view.heights.map { Tower.Latitude(it) }
 
     override fun setAnchor(anchor: Anchor) {
         Log.d(view.tag.toString(), "Set anchor $anchor")

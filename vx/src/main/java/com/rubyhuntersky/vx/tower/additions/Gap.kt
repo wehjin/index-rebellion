@@ -1,8 +1,8 @@
-package com.rubyhuntersky.vx.dash.additions
+package com.rubyhuntersky.vx.tower.additions
 
 import com.rubyhuntersky.vx.*
 import com.rubyhuntersky.vx.bound.HBound
-import com.rubyhuntersky.vx.dash.Dash
+import com.rubyhuntersky.vx.tower.Tower
 import io.reactivex.Observable
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.rxkotlin.addTo
@@ -15,10 +15,10 @@ sealed class Gap {
     }
 }
 
-operator fun <Sight : Any, Event : Any> Dash<Sight, Event>.plus(gap: Gap): Dash<Sight, Event> =
-    object : Dash<Sight, Event> {
-        override fun enview(viewHost: Dash.ViewHost, id: ViewId): Dash.View<Sight, Event> =
-            object : Dash.View<Sight, Event> {
+operator fun <Sight : Any, Event : Any> Tower<Sight, Event>.plus(gap: Gap): Tower<Sight, Event> =
+    object : Tower<Sight, Event> {
+        override fun enview(viewHost: Tower.ViewHost, id: ViewId): Tower.View<Sight, Event> =
+            object : Tower.View<Sight, Event> {
                 private val view = this@plus.enview(viewHost, id.extend(0))
                 private val heights = view.latitudes.map { it.height + (gap as Gap.TitleBody).dips }
                 private val anchorBehavior = BehaviorSubject.createDefault(Anchor(0, 0f))
@@ -34,7 +34,7 @@ operator fun <Sight : Any, Event : Any> Dash<Sight, Event>.plus(gap: Gap): Dash<
                 }
 
                 override fun setHBound(hbound: HBound) = view.setHBound(hbound)
-                override val latitudes: Observable<Dash.Latitude> get() = heights.map { Dash.Latitude(it) }
+                override val latitudes: Observable<Tower.Latitude> get() = heights.map { Tower.Latitude(it) }
                 override fun setAnchor(anchor: Anchor) = anchorBehavior.onNext(anchor)
                 override fun setSight(sight: Sight) = view.setSight(sight)
                 override val events: Observable<Event> get() = view.events

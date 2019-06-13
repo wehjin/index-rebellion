@@ -11,10 +11,10 @@ import com.rubyhuntersky.vx.Anchor
 import com.rubyhuntersky.vx.TextStyle
 import com.rubyhuntersky.vx.ViewId
 import com.rubyhuntersky.vx.bound.HBound
-import com.rubyhuntersky.vx.dash.Dash
-import com.rubyhuntersky.vx.dash.dashes.InputEvent
-import com.rubyhuntersky.vx.dash.dashes.InputSight
-import com.rubyhuntersky.vx.dash.dashes.TextLineSight
+import com.rubyhuntersky.vx.tower.Tower
+import com.rubyhuntersky.vx.tower.towers.InputEvent
+import com.rubyhuntersky.vx.tower.towers.InputSight
+import com.rubyhuntersky.vx.tower.towers.TextLineSight
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.rxkotlin.addTo
 import io.reactivex.subjects.BehaviorSubject
@@ -25,37 +25,40 @@ class ScreenView
     attrs: AttributeSet? = null,
     defStyleAttr: Int = 0,
     defStyleRes: Int = 0
-) : FrameLayout(context, attrs, defStyleAttr, defStyleRes), Dash.ViewHost {
+) : FrameLayout(context, attrs, defStyleAttr, defStyleRes), Tower.ViewHost {
 
-    fun <C : Any, E : Any> render(dashView: Dash.View<C, E>) {
-        this.renderedDashView = dashView
-        updateDashViewFromHBounds(renderedDashView, isAttachedToWindow)
+    fun <C : Any, E : Any> render(towerView: Tower.View<C, E>) {
+        this.renderedTowerView = towerView
+        updateDashViewFromHBounds(renderedTowerView, isAttachedToWindow)
     }
 
-    private var renderedDashView: Dash.View<*, *>? = null
+    private var renderedTowerView: Tower.View<*, *>? = null
 
-    private fun <C : Any, E : Any> updateDashViewFromHBounds(dashView: Dash.View<C, E>?, isAttachedToWindow: Boolean) {
-        dashViewHBoundUpdates.clear()
-        if (dashView != null && isAttachedToWindow) {
-            dashView.setAnchor(Anchor(0, 0f))
+    private fun <C : Any, E : Any> updateDashViewFromHBounds(
+        towerView: Tower.View<C, E>?,
+        isAttachedToWindow: Boolean
+    ) {
+        viewHBoundUpdates.clear()
+        if (towerView != null && isAttachedToWindow) {
+            towerView.setAnchor(Anchor(0, 0f))
             hboundBehavior.distinctUntilChanged()
                 .subscribe {
-                    dashView.setHBound(it.startZero())
+                    towerView.setHBound(it.startZero())
                 }
-                .addTo(dashViewHBoundUpdates)
+                .addTo(viewHBoundUpdates)
         }
     }
 
-    private val dashViewHBoundUpdates = CompositeDisposable()
+    private val viewHBoundUpdates = CompositeDisposable()
     private val hboundBehavior: BehaviorSubject<HBound> = BehaviorSubject.create()
 
     override fun onAttachedToWindow() {
         super.onAttachedToWindow()
-        updateDashViewFromHBounds(renderedDashView, true)
+        updateDashViewFromHBounds(renderedTowerView, true)
     }
 
     override fun onDetachedFromWindow() {
-        updateDashViewFromHBounds(renderedDashView, false)
+        updateDashViewFromHBounds(renderedTowerView, false)
         super.onDetachedFromWindow()
     }
 
@@ -64,7 +67,7 @@ class ScreenView
         hboundBehavior.onNext(HBound(toDip(left), toDip(left + w)))
     }
 
-    override fun addInput(id: ViewId): Dash.View<InputSight, InputEvent> =
+    override fun addInput(id: ViewId): Tower.View<InputSight, InputEvent> =
         ViewBackedDashView(
             frameLayout = this@ScreenView,
             id = id,
@@ -79,7 +82,7 @@ class ScreenView
             }
         )
 
-    override fun addTextLine(id: ViewId): Dash.View<TextLineSight, Nothing> =
+    override fun addTextLine(id: ViewId): Tower.View<TextLineSight, Nothing> =
         ViewBackedDashView(
             frameLayout = this@ScreenView,
             id = id,

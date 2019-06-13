@@ -1,25 +1,25 @@
-package com.rubyhuntersky.vx.dash.dashes
+package com.rubyhuntersky.vx.tower.towers
 
 import com.nhaarman.mockitokotlin2.doReturn
 import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.verify
-import com.rubyhuntersky.vx.dash.Dash
 import com.rubyhuntersky.vx.ViewId
+import com.rubyhuntersky.vx.tower.Tower
 import org.junit.Assert
 import org.junit.Test
 
-class TextLineDashTest {
+class TextLineTowerTest {
 
     private val id = ViewId()
-    private val viewMock = mock<Dash.View<TextLineSight, Nothing>>()
-    private val hostMock = mock<Dash.ViewHost> {
+    private val viewMock = mock<Tower.View<TextLineSight, Nothing>>()
+    private val hostMock = mock<Tower.ViewHost> {
         on { addTextLine(id) } doReturn viewMock
     }
 
     @Test
     fun envisionPassesIdAndReturnsHostView() {
-        val dash = TextLineDash()
-        val view = dash.enview(hostMock, id)
+        val tower = TextLineTower()
+        val view = tower.enview(hostMock, id)
         verify(hostMock).addTextLine(id)
         Assert.assertEquals(viewMock, view)
     }

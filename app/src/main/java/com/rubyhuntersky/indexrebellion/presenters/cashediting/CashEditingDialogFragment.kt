@@ -7,13 +7,13 @@ import com.rubyhuntersky.indexrebellion.R
 import com.rubyhuntersky.indexrebellion.data.cash.CashAmount
 import com.rubyhuntersky.indexrebellion.interactions.cashediting.Action
 import com.rubyhuntersky.indexrebellion.interactions.cashediting.Vision
-import com.rubyhuntersky.vx.android.InteractionBottomSheetDialogFragment
-import com.rubyhuntersky.vx.dash.Dash
 import com.rubyhuntersky.vx.ViewId
-import com.rubyhuntersky.vx.dash.additions.Bottom
-import com.rubyhuntersky.vx.dash.additions.Gap
-import com.rubyhuntersky.vx.dash.additions.plus
-import com.rubyhuntersky.vx.dash.dashes.*
+import com.rubyhuntersky.vx.android.InteractionBottomSheetDialogFragment
+import com.rubyhuntersky.vx.tower.Tower
+import com.rubyhuntersky.vx.tower.additions.Bottom
+import com.rubyhuntersky.vx.tower.additions.Gap
+import com.rubyhuntersky.vx.tower.additions.plus
+import com.rubyhuntersky.vx.tower.towers.*
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.rxkotlin.addTo
 import kotlinx.android.synthetic.main.fragment_cash_editing.*
@@ -32,16 +32,16 @@ class CashEditingDialogFragment : InteractionBottomSheetDialogFragment<Vision, A
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        val dash =
-            TitleDash.neverEvent<InputEvent>() +
+        val tower =
+            TitleTower.neverEvent<InputEvent>() +
                     Gap.TitleBody +
-                    Bottom(InputDash, FundingEditor::toPair)
+                    Bottom(InputTower, FundingEditor::toPair)
 
-        dashView = dash.enview(view.screenView, ViewId())
+        towerView = tower.enview(view.screenView, ViewId())
             .also {
                 view.screenView.render(it)
             }
-        dashView.events
+        towerView.events
             .subscribe {
                 sendAction(Action.SetEdit((it as InputEvent.TextChange).text))
             }
@@ -53,7 +53,7 @@ class CashEditingDialogFragment : InteractionBottomSheetDialogFragment<Vision, A
     }
 
     private val composite = CompositeDisposable()
-    private lateinit var dashView: Dash.View<FundingEditor, InputEvent>
+    private lateinit var towerView: Tower.View<FundingEditor, InputEvent>
 
     override fun onDestroyView() {
         composite.clear()
@@ -83,7 +83,7 @@ class CashEditingDialogFragment : InteractionBottomSheetDialogFragment<Vision, A
                 icon = Icon.ResId(R.drawable.ic_attach_money_black_24dp)
             )
         )
-        dashView.setSight(content)
+        towerView.setSight(content)
         saveButton.isEnabled = vision.canSave
     }
 

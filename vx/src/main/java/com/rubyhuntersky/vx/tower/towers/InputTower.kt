@@ -1,6 +1,6 @@
-package com.rubyhuntersky.vx.dash.dashes
+package com.rubyhuntersky.vx.tower.towers
 
-import com.rubyhuntersky.vx.dash.Dash
+import com.rubyhuntersky.vx.tower.Tower
 import com.rubyhuntersky.vx.ViewId
 
 data class InputSight(
@@ -18,7 +18,7 @@ sealed class InputEvent {
     data class TextChange(val text: String) : InputEvent()
 }
 
-object InputDash :
-    Dash<InputSight, InputEvent> {
-    override fun enview(viewHost: Dash.ViewHost, id: ViewId): Dash.View<InputSight, InputEvent> = viewHost.addInput(id)
+object InputTower :
+    Tower<InputSight, InputEvent> {
+    override fun enview(viewHost: Tower.ViewHost, id: ViewId): Tower.View<InputSight, InputEvent> = viewHost.addInput(id)
 }
