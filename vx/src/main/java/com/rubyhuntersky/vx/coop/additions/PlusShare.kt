@@ -42,3 +42,4 @@ operator fun <Sight : Any, Event : Any> Coop<Sight, Event>.plus(share: Share<Sig
         }
     }
 }
+
