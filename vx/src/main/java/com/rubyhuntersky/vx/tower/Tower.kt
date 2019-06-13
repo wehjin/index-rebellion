@@ -5,7 +5,7 @@ import com.rubyhuntersky.vx.ViewId
 import com.rubyhuntersky.vx.bound.HBound
 import com.rubyhuntersky.vx.tower.towers.InputEvent
 import com.rubyhuntersky.vx.tower.towers.InputSight
-import com.rubyhuntersky.vx.tower.towers.TextLineSight
+import com.rubyhuntersky.vx.tower.towers.textwrap.TextWrap
 import io.reactivex.Observable
 
 interface Tower<Sight : Any, Event : Any> {
@@ -13,7 +13,7 @@ interface Tower<Sight : Any, Event : Any> {
     fun enview(viewHost: ViewHost, id: ViewId): View<Sight, Event>
 
     interface ViewHost {
-        fun addTextLine(id: ViewId): View<TextLineSight, Nothing>
+        fun addTextWrap(id: ViewId): View<TextWrap, Nothing>
         fun addInput(id: ViewId): View<InputSight, InputEvent>
     }
 

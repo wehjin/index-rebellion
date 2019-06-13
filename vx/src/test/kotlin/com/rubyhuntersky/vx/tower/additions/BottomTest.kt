@@ -8,7 +8,7 @@ import com.rubyhuntersky.vx.TextStyle
 import com.rubyhuntersky.vx.ViewId
 import com.rubyhuntersky.vx.bound.HBound
 import com.rubyhuntersky.vx.tower.Tower
-import com.rubyhuntersky.vx.tower.towers.TextLineSight
+import com.rubyhuntersky.vx.tower.towers.textwrap.TextWrap
 import com.rubyhuntersky.vx.tower.towers.TitleTower
 import io.reactivex.subjects.PublishSubject
 import org.junit.Test
@@ -18,21 +18,21 @@ class BottomTest {
 
     private val latitudeSubjectA = PublishSubject.create<Tower.Latitude>()
     private val eventSubjectA = PublishSubject.create<Nothing>()
-    private val viewMockA = mock<Tower.View<TextLineSight, Nothing>> {
+    private val viewMockA = mock<Tower.View<TextWrap, Nothing>> {
         on { latitudes } doReturn latitudeSubjectA
         on { events } doReturn eventSubjectA
     }
 
     private val latitudeSubjectB = PublishSubject.create<Tower.Latitude>()
     private val eventSubjectB = PublishSubject.create<Nothing>()
-    private val viewMockB = mock<Tower.View<TextLineSight, Nothing>> {
+    private val viewMockB = mock<Tower.View<TextWrap, Nothing>> {
         on { latitudes } doReturn latitudeSubjectB
         on { events } doReturn eventSubjectB
     }
 
     private val hostMock = mock<Tower.ViewHost> {
-        on { addTextLine(ViewId().extend(0)) } doReturn viewMockA
-        on { addTextLine(ViewId().extend(1)) } doReturn viewMockB
+        on { addTextWrap(ViewId().extend(0)) } doReturn viewMockA
+        on { addTextWrap(ViewId().extend(1)) } doReturn viewMockB
     }
     private val tower = TitleTower + Bottom(TitleTower) { sight: Pair<String, String> -> sight }
     private val view = tower.enview(hostMock, viewId)
@@ -41,13 +41,13 @@ class BottomTest {
     fun setSight() {
         view.setSight(Pair("Hello", "World"))
         verify(viewMockA).setSight(
-            TextLineSight(
+            TextWrap(
                 "Hello",
                 TextStyle.Highlight5
             )
         )
         verify(viewMockB).setSight(
-            TextLineSight(
+            TextWrap(
                 "World",
                 TextStyle.Highlight5
             )
