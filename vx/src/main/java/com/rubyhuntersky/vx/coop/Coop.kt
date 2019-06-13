@@ -17,8 +17,8 @@ interface Coop<Sight : Any, Event : Any> {
     interface View<Sight : Any, Event : Any> {
 
         val events: Observable<Event>
-        fun setBound(bound: BiBound)
         fun setSight(sight: Sight)
+        fun setBound(bound: BiBound)
     }
 }
 

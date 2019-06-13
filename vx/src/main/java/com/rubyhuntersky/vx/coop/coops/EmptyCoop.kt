@@ -9,8 +9,8 @@ object EmptyCoop : Coop<Unit, Nothing> {
 
     object EmptyCoopView : Coop.View<Unit, Nothing> {
         override val events: Observable<Nothing> = Observable.never()
-        override fun setBound(bound: BiBound) = Unit
         override fun setSight(sight: Unit) = Unit
+        override fun setBound(bound: BiBound) = Unit
     }
 
     override fun enview(viewHost: Coop.ViewHost, id: ViewId): Coop.View<Unit, Nothing> =

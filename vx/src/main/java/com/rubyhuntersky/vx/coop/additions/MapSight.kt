@@ -13,8 +13,8 @@ operator fun <CoreSight : Any, Event : Any, EdgeSight : Any> Coop<CoreSight, Eve
             val coreView = coreCoop.enview(viewHost, id)
             return object : Coop.View<EdgeSight, Event> {
                 override val events: Observable<Event> get() = coreView.events
-                override fun setBound(bound: BiBound) = coreView.setBound(bound)
                 override fun setSight(sight: EdgeSight) = coreView.setSight(edgeToCoreSight(sight))
+                override fun setBound(bound: BiBound) = coreView.setBound(bound)
             }
         }
     }

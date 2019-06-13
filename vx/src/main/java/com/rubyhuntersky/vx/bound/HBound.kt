@@ -5,9 +5,12 @@ import com.rubyhuntersky.vx.coop.additions.Span
 data class HBound(val start: Int, val end: Int) {
     constructor(pair: Pair<Int, Int>) : this(pair.first, pair.second)
 
-    fun startZero(): HBound = HBound(0, end - start)
+    val width: Int
+        get() = end - start
 
-    fun splitEnd(span: Span): Pair<HBound, HBound> = split(end - span.realize(end - start))
-    fun splitStart(span: Span): Pair<HBound, HBound> = split(start + span.realize(end - start))
+    fun startZero(): HBound = HBound(0, width)
+
+    fun splitEnd(span: Span): Pair<HBound, HBound> = split(end - span.realize(width))
+    fun splitStart(span: Span): Pair<HBound, HBound> = split(start + span.realize(width))
     private fun split(middle: Int): Pair<HBound, HBound> = Pair(HBound(start, middle), HBound(middle, end))
 }
