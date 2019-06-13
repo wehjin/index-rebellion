@@ -10,7 +10,7 @@ import com.rubyhuntersky.vx.orbit.BiOrbit
 import org.junit.Assert.assertEquals
 import org.junit.Test
 
-class PlusMarginKtTest {
+class CoopPlusMarginKtTest {
 
     @Test
     fun plusMargin() {

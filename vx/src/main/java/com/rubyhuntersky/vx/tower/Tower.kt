@@ -5,7 +5,7 @@ import com.rubyhuntersky.vx.ViewId
 import com.rubyhuntersky.vx.bound.HBound
 import com.rubyhuntersky.vx.tower.towers.InputEvent
 import com.rubyhuntersky.vx.tower.towers.InputSight
-import com.rubyhuntersky.vx.tower.towers.textwrap.TextWrap
+import com.rubyhuntersky.vx.tower.towers.textwrap.TextWrapSight
 import io.reactivex.Observable
 
 interface Tower<Sight : Any, Event : Any> {
@@ -13,16 +13,16 @@ interface Tower<Sight : Any, Event : Any> {
     fun enview(viewHost: ViewHost, id: ViewId): View<Sight, Event>
 
     interface ViewHost {
-        fun addTextWrap(id: ViewId): View<TextWrap, Nothing>
+        fun addTextWrap(id: ViewId): View<TextWrapSight, Nothing>
         fun addInput(id: ViewId): View<InputSight, InputEvent>
     }
 
     interface View<Sight : Any, Event : Any> {
+        val events: Observable<Event>
+        fun setSight(sight: Sight)
         fun setHBound(hbound: HBound)
         val latitudes: Observable<Latitude>
         fun setAnchor(anchor: Anchor)
-        fun setSight(sight: Sight)
-        val events: Observable<Event>
     }
 
     data class Latitude(val height: Int)

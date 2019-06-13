@@ -15,18 +15,10 @@ operator fun <Sight : Any, Event : Any> Tower<Sight, Event>.plus(margin: Margin)
             return object : Tower.View<Sight, Event> {
                 override val events: Observable<Event> get() = coreView.events
                 override fun setSight(sight: Sight) = coreView.setSight(sight)
-                override fun setHBound(hbound: HBound) {
-                    TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-                }
-
-                override val latitudes: Observable<Tower.Latitude>
-                    get() = TODO("not implemented") //To change initializer of created properties use File | Settings | File Templates.
-
-                override fun setAnchor(anchor: Anchor) {
-                    TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-                }
+                override fun setHBound(hbound: HBound) = coreView.setHBound(hbound.withMargin(margin))
+                override val latitudes: Observable<Tower.Latitude> get() = coreView.latitudes
+                override fun setAnchor(anchor: Anchor) = coreView.setAnchor(anchor)
             }
         }
     }
 }
-
