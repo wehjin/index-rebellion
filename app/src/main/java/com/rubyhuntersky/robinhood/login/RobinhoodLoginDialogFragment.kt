@@ -7,9 +7,9 @@ import android.view.View
 import com.rubyhuntersky.indexrebellion.R
 import com.rubyhuntersky.indexrebellion.common.views.SimpleTextWatcher
 import com.rubyhuntersky.indexrebellion.common.views.updateText
-import com.rubyhuntersky.indexrebellion.vxandroid.Renderer
-import com.rubyhuntersky.indexrebellion.vxandroid.RendererBottomSheetDialogFragment
-import com.rubyhuntersky.indexrebellion.vxandroid.UpdateResult
+import com.rubyhuntersky.vx.android.Renderer
+import com.rubyhuntersky.vx.android.RendererBottomSheetDialogFragment
+import com.rubyhuntersky.vx.android.UpdateResult
 import kotlinx.android.synthetic.main.view_robinhoodlogin.view.*
 
 data class RendererData(

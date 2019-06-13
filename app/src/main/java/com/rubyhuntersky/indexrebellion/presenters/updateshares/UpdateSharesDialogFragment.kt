@@ -7,7 +7,7 @@ import com.rubyhuntersky.indexrebellion.R
 import com.rubyhuntersky.indexrebellion.data.assets.PriceSample
 import com.rubyhuntersky.indexrebellion.data.assets.ShareCount
 import com.rubyhuntersky.indexrebellion.interactions.updateshares.*
-import com.rubyhuntersky.indexrebellion.vxandroid.InteractionBottomSheetDialogFragment
+import com.rubyhuntersky.vx.android.InteractionBottomSheetDialogFragment
 import kotlinx.android.synthetic.main.view_update_share_count.*
 import java.util.*
 

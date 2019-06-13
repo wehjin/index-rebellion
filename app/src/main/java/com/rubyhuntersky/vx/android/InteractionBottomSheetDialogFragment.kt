@@ -1,4 +1,4 @@
-package com.rubyhuntersky.indexrebellion.vxandroid
+package com.rubyhuntersky.vx.android
 
 import android.content.DialogInterface
 import android.os.Bundle

@@ -1,4 +1,4 @@
-package com.rubyhuntersky.indexrebellion.vxandroid
+package com.rubyhuntersky.vx.android
 
 abstract class RendererBottomSheetDialogFragment<V : Any, A : Any, Data : Any>(
     private val renderer: Renderer<V, A, Data>

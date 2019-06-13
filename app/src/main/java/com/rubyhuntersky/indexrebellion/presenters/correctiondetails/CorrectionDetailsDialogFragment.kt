@@ -4,7 +4,7 @@ import com.rubyhuntersky.indexrebellion.R
 import com.rubyhuntersky.indexrebellion.data.cash.CashAmount
 import com.rubyhuntersky.indexrebellion.interactions.correctiondetails.Action
 import com.rubyhuntersky.indexrebellion.interactions.correctiondetails.Vision
-import com.rubyhuntersky.indexrebellion.vxandroid.InteractionBottomSheetDialogFragment
+import com.rubyhuntersky.vx.android.InteractionBottomSheetDialogFragment
 import kotlinx.android.synthetic.main.view_correction_details.*
 
 

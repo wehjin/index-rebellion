@@ -1,4 +1,4 @@
-package com.rubyhuntersky.indexrebellion.vxandroid
+package com.rubyhuntersky.vx.android
 
 import android.support.annotation.LayoutRes
 import android.view.View

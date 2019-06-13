@@ -1,4 +1,4 @@
-package com.rubyhuntersky.indexrebellion.vxandroid
+package com.rubyhuntersky.vx.android
 
 sealed class UpdateResult<out Data> {
     abstract val data: Data
