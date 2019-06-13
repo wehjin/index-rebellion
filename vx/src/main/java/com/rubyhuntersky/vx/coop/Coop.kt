@@ -21,3 +21,4 @@ interface Coop<Sight : Any, Event : Any> {
         fun setSight(sight: Sight)
     }
 }
+
