@@ -20,4 +20,3 @@ fun <CoreC : Any, EdgeC : Any, Ev : Any> Tower.View<CoreC, Ev>.transform(transfo
         override val events: Observable<Ev> get() = this@transform.events.map { it }
     }
 }
-

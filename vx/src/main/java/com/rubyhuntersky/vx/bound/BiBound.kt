@@ -1,7 +1,7 @@
 package com.rubyhuntersky.vx.bound
 
 import com.rubyhuntersky.vx.coop.additions.Span
-import com.rubyhuntersky.vx.coop.additions.margin.BiMargin
+import com.rubyhuntersky.vx.margin.BiMargin
 
 data class BiBound(val hBound: HBound, val vBound: VBound) {
 
@@ -28,13 +28,6 @@ data class BiBound(val hBound: HBound, val vBound: VBound) {
         return Pair(copy(vBound = ceilingBound), copy(vBound = floorBound))
     }
 
-    fun withMargin(margin: BiMargin): BiBound {
-        val width = width
-        val startIndent = margin.startSpan?.realize(width) ?: 0
-        val endIndent = margin.endSpan?.realize(width) ?: 0
-        val height = height
-        val ceilingIndent = margin.ceilingSpan?.realize(height) ?: 0
-        val floorIndent = margin.floorSpan?.realize(height) ?: 0
-        return BiBound(start + startIndent, end - endIndent, ceiling + ceilingIndent, floor - floorIndent)
-    }
+    fun withMargin(margin: BiMargin): BiBound =
+        BiBound(hBound.withMargin(margin.hMargin), vBound.withMargin(margin.vMargin))
 }

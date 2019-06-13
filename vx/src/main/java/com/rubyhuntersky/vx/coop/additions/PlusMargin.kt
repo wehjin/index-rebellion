@@ -3,7 +3,7 @@ package com.rubyhuntersky.vx.coop.additions
 import com.rubyhuntersky.vx.ViewId
 import com.rubyhuntersky.vx.bound.BiBound
 import com.rubyhuntersky.vx.coop.Coop
-import com.rubyhuntersky.vx.coop.additions.margin.BiMargin
+import com.rubyhuntersky.vx.margin.BiMargin
 import io.reactivex.Observable
 
 operator fun <Sight : Any, Event : Any> Coop<Sight, Event>.plus(margin: BiMargin): Coop<Sight, Event> {
