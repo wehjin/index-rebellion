@@ -16,13 +16,14 @@ class TestTowerViewHost : Tower.ViewHost {
         abstract val id: ViewId
         abstract val bound: HBound?
         abstract val anchor: Anchor?
+        abstract val sight: Any?
         val latitudes: BehaviorSubject<Tower.Latitude> = BehaviorSubject.create()
 
         data class TextWrap(
             override val id: ViewId,
             override var bound: HBound?,
             override var anchor: Anchor?,
-            var sight: TextWrapSight?
+            override var sight: TextWrapSight?
         ) : Item()
     }
 

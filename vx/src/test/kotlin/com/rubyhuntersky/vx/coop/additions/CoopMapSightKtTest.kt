@@ -12,16 +12,13 @@ import org.junit.Test
 class CoopMapSightKtTest {
 
     @Test
-    fun testMapping() {
+    fun mapSight() {
         val viewHost = TestCoopViewHost()
         val coop = SingleTextLineCoop(TextStyle.Body1, BiOrbit.StartCenterLit) / { int: Int -> int.toString() }
         with(coop.enview(viewHost, ViewId())) {
             setSight(42)
             setBound(BiBound(0, 100, 0, 100))
         }
-        assertEquals(
-            listOf("42"),
-            viewHost.items.map { (it as TestCoopViewHost.Item.SingleTextLine).sight!! }
-        )
+        assertEquals("42", viewHost.items.first().sight)
     }
 }

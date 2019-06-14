@@ -13,11 +13,12 @@ class TestCoopViewHost : Coop.ViewHost {
 
         abstract val id: ViewId
         abstract val bound: BiBound?
+        abstract val sight: Any?
 
         data class SingleTextLine(
             override val id: ViewId,
             override var bound: BiBound?,
-            var sight: String?,
+            override var sight: String?,
             val textStyle: TextStyle,
             var orbit: BiOrbit
         ) : Item()

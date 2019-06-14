@@ -32,7 +32,7 @@ class PlusShareKtTest {
         )
         assertEquals(
             listOf("Hello", "Hello"),
-            viewHost.items.map { (it as TestCoopViewHost.Item.SingleTextLine).sight }
+            viewHost.items.map { it.sight }
         )
     }
 
@@ -55,7 +55,7 @@ class PlusShareKtTest {
         )
         assertEquals(
             listOf("Hello", "Hello"),
-            viewHost.items.map { (it as TestCoopViewHost.Item.SingleTextLine).sight }
+            viewHost.items.map { it.sight }
         )
     }
 
@@ -78,7 +78,7 @@ class PlusShareKtTest {
         )
         assertEquals(
             listOf("Hello", "Hello"),
-            viewHost.items.map { (it as TestCoopViewHost.Item.SingleTextLine).sight }
+            viewHost.items.map { it.sight }
         )
     }
 
@@ -101,7 +101,7 @@ class PlusShareKtTest {
         )
         assertEquals(
             listOf("Hello", "Hello"),
-            viewHost.items.map { (it as TestCoopViewHost.Item.SingleTextLine).sight }
+            viewHost.items.map { it.sight }
         )
     }
 }

@@ -7,10 +7,10 @@ import io.reactivex.Observable
 
 
 operator fun <CoreSight : Any, Event : Any, EdgeSight : Any> Coop<CoreSight, Event>.div(edgeToCoreSight: (EdgeSight) -> CoreSight): Coop<EdgeSight, Event> {
-    val coreCoop = this
+    val core = this
     return object : Coop<EdgeSight, Event> {
         override fun enview(viewHost: Coop.ViewHost, id: ViewId): Coop.View<EdgeSight, Event> {
-            val coreView = coreCoop.enview(viewHost, id)
+            val coreView = core.enview(viewHost, id)
             return object : Coop.View<EdgeSight, Event> {
                 override val events: Observable<Event> get() = coreView.events
                 override fun setSight(sight: EdgeSight) = coreView.setSight(edgeToCoreSight(sight))
