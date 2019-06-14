@@ -45,7 +45,8 @@ class MyApplication : Application() {
     @UnstableDefault
     override fun onCreate() {
         super.onCreate()
-        standardMarginSpan = Span.Absolute(resources.getDimensionPixelSize(R.dimen.standard_margin_size))
+        standardMarginSize = resources.getDimensionPixelSize(R.dimen.standard_margin_size)
+        standardMarginSpan = Span.Absolute(standardMarginSize)
 
         StockMarket.network = SharedHttpNetwork
 
@@ -119,6 +120,7 @@ class MyApplication : Application() {
     companion object {
         lateinit var accessBook: Book<Access>
         lateinit var rebellionBook: RebellionBook
+        var standardMarginSize: Int = 0
         lateinit var standardMarginSpan: Span
         val rbhApi = RbhApi.SHARED
     }

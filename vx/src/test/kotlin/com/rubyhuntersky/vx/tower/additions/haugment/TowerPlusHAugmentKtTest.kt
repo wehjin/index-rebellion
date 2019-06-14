@@ -30,5 +30,6 @@ class TowerPlusHAugmentKtTest {
         assertEquals(sight, item.sight)
         assertEquals(HBound(0, 1000), item.bound)
         view.latitudes.test().assertValue(Tower.Latitude(120))
+        assertEquals(10, item.anchor!!.position)
     }
 }

@@ -1,6 +1,7 @@
 package com.rubyhuntersky.vx.android
 
 import android.content.Context
+import android.graphics.Color
 import android.widget.FrameLayout
 import com.rubyhuntersky.indexrebellion.R
 import com.rubyhuntersky.indexrebellion.presenters.cashediting.BackingViewInputLayout
@@ -20,6 +21,10 @@ import io.reactivex.subjects.BehaviorSubject
 
 class TowerAndroidView<Sight : Any, Event : Any>(context: Context, tower: Tower<Sight, Event>, id: ViewId = ViewId()) :
     FrameLayout(context, null, 0, 0), Tower.ViewHost {
+
+    init {
+        setBackgroundColor(Color.LTGRAY)
+    }
 
     private val hboundUpdates = CompositeDisposable()
     private val hboundBehavior: BehaviorSubject<HBound> = BehaviorSubject.create()
