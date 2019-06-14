@@ -7,10 +7,10 @@ import com.rubyhuntersky.indexrebellion.R
 import com.rubyhuntersky.indexrebellion.presenters.cashediting.BackingViewInputLayout
 import com.rubyhuntersky.indexrebellion.presenters.cashediting.BackingViewTextView
 import com.rubyhuntersky.indexrebellion.presenters.cashediting.ViewBackedDashView
-import com.rubyhuntersky.vx.Anchor
-import com.rubyhuntersky.vx.TextStyle
-import com.rubyhuntersky.vx.ViewId
-import com.rubyhuntersky.vx.bound.HBound
+import com.rubyhuntersky.vx.common.Anchor
+import com.rubyhuntersky.vx.common.TextStyle
+import com.rubyhuntersky.vx.common.ViewId
+import com.rubyhuntersky.vx.common.bound.HBound
 import com.rubyhuntersky.vx.tower.Tower
 import com.rubyhuntersky.vx.tower.towers.InputEvent
 import com.rubyhuntersky.vx.tower.towers.InputSight

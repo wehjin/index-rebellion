@@ -7,7 +7,7 @@ import com.rubyhuntersky.indexrebellion.R
 import com.rubyhuntersky.indexrebellion.data.cash.CashAmount
 import com.rubyhuntersky.indexrebellion.interactions.cashediting.Action
 import com.rubyhuntersky.indexrebellion.interactions.cashediting.Vision
-import com.rubyhuntersky.vx.ViewId
+import com.rubyhuntersky.vx.common.ViewId
 import com.rubyhuntersky.vx.android.InteractionBottomSheetDialogFragment
 import com.rubyhuntersky.vx.tower.Tower
 import com.rubyhuntersky.vx.tower.additions.Bottom

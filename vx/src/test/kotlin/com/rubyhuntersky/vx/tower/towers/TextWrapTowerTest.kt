@@ -3,7 +3,7 @@ package com.rubyhuntersky.vx.tower.towers
 import com.nhaarman.mockitokotlin2.doReturn
 import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.verify
-import com.rubyhuntersky.vx.ViewId
+import com.rubyhuntersky.vx.common.ViewId
 import com.rubyhuntersky.vx.tower.Tower
 import com.rubyhuntersky.vx.tower.towers.textwrap.TextWrapSight
 import com.rubyhuntersky.vx.tower.towers.textwrap.TextWrapTower

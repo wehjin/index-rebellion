@@ -1,4 +1,4 @@
-package com.rubyhuntersky.vx
+package com.rubyhuntersky.vx.common
 
 import org.junit.Assert.assertEquals
 import org.junit.Test

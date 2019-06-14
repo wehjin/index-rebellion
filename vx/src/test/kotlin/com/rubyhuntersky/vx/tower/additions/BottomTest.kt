@@ -3,13 +3,13 @@ package com.rubyhuntersky.vx.tower.additions
 import com.nhaarman.mockitokotlin2.doReturn
 import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.verify
-import com.rubyhuntersky.vx.Anchor
-import com.rubyhuntersky.vx.TextStyle
-import com.rubyhuntersky.vx.ViewId
-import com.rubyhuntersky.vx.bound.HBound
+import com.rubyhuntersky.vx.common.Anchor
+import com.rubyhuntersky.vx.common.TextStyle
+import com.rubyhuntersky.vx.common.ViewId
+import com.rubyhuntersky.vx.common.bound.HBound
 import com.rubyhuntersky.vx.tower.Tower
-import com.rubyhuntersky.vx.tower.towers.textwrap.TextWrapSight
 import com.rubyhuntersky.vx.tower.towers.TitleTower
+import com.rubyhuntersky.vx.tower.towers.textwrap.TextWrapSight
 import io.reactivex.subjects.PublishSubject
 import org.junit.Test
 

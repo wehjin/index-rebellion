@@ -1,9 +1,9 @@
 package com.rubyhuntersky.vx.coop.coops
 
-import com.rubyhuntersky.vx.TextStyle
-import com.rubyhuntersky.vx.ViewId
+import com.rubyhuntersky.vx.common.TextStyle
+import com.rubyhuntersky.vx.common.ViewId
 import com.rubyhuntersky.vx.coop.Coop
-import com.rubyhuntersky.vx.orbit.BiOrbit
+import com.rubyhuntersky.vx.common.orbit.BiOrbit
 
 class SingleTextLineCoop(
     private val textStyle: TextStyle,

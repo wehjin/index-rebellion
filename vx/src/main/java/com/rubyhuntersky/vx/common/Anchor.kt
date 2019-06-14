@@ -1,7 +1,7 @@
-package com.rubyhuntersky.vx
+package com.rubyhuntersky.vx.common
 
-import com.rubyhuntersky.vx.bound.HBound
-import com.rubyhuntersky.vx.bound.VBound
+import com.rubyhuntersky.vx.common.bound.HBound
+import com.rubyhuntersky.vx.common.bound.VBound
 
 data class Anchor(val position: Int, val placement: Float) {
 

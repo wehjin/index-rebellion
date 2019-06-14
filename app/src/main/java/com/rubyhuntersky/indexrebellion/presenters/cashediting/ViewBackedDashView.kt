@@ -5,12 +5,13 @@ import android.util.Log
 import android.view.View
 import android.view.ViewGroup
 import android.widget.FrameLayout
-import com.rubyhuntersky.vx.*
-import com.rubyhuntersky.vx.tower.additions.toSizeAnchor
 import com.rubyhuntersky.vx.android.toPixels
-import com.rubyhuntersky.vx.bound.HBound
-import com.rubyhuntersky.vx.bound.VBound
+import com.rubyhuntersky.vx.common.Anchor
+import com.rubyhuntersky.vx.common.ViewId
+import com.rubyhuntersky.vx.common.bound.HBound
+import com.rubyhuntersky.vx.common.bound.VBound
 import com.rubyhuntersky.vx.tower.Tower
+import com.rubyhuntersky.vx.tower.additions.toSizeAnchor
 import io.reactivex.Observable
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.rxkotlin.addTo

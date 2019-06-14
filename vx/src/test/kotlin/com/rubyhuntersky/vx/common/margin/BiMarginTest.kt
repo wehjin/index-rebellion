@@ -1,5 +1,6 @@
-package com.rubyhuntersky.vx.margin
+package com.rubyhuntersky.vx.common.margin
 
+import com.rubyhuntersky.vx.common.margin.BiMargin
 import com.rubyhuntersky.vx.coop.additions.Span
 import org.junit.Assert.assertEquals
 import org.junit.Test

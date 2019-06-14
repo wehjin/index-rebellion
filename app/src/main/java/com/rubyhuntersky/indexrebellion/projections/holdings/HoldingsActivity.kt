@@ -3,9 +3,9 @@ package com.rubyhuntersky.indexrebellion.projections.holdings
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import com.rubyhuntersky.indexrebellion.common.MyApplication.Companion.standardMarginSpan
-import com.rubyhuntersky.vx.TextStyle
+import com.rubyhuntersky.vx.common.TextStyle
 import com.rubyhuntersky.vx.android.TowerAndroidViewHolder
-import com.rubyhuntersky.vx.margin.Margin
+import com.rubyhuntersky.vx.common.margin.Margin
 import com.rubyhuntersky.vx.tower.additions.mapSight
 import com.rubyhuntersky.vx.tower.additions.plus
 import com.rubyhuntersky.vx.tower.towers.textwrap.TextWrapSight

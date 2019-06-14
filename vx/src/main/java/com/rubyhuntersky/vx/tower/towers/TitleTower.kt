@@ -1,6 +1,6 @@
 package com.rubyhuntersky.vx.tower.towers
 
-import com.rubyhuntersky.vx.TextStyle
+import com.rubyhuntersky.vx.common.TextStyle
 import com.rubyhuntersky.vx.tower.Tower
 import com.rubyhuntersky.vx.tower.towers.textwrap.TextWrapSight
 import com.rubyhuntersky.vx.tower.towers.textwrap.TextWrapTower

@@ -1,7 +1,7 @@
 package com.rubyhuntersky.vx.tower.additions
 
-import com.rubyhuntersky.vx.TextStyle
-import com.rubyhuntersky.vx.ViewId
+import com.rubyhuntersky.vx.common.TextStyle
+import com.rubyhuntersky.vx.common.ViewId
 import com.rubyhuntersky.vx.tower.tools.TestTowerViewHost
 import com.rubyhuntersky.vx.tower.towers.textwrap.TextWrapSight
 import com.rubyhuntersky.vx.tower.towers.textwrap.TextWrapTower

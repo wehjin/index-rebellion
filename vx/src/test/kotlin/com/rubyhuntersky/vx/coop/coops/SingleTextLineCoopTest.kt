@@ -1,12 +1,12 @@
 package com.rubyhuntersky.vx.coop.coops
 
-import com.rubyhuntersky.vx.TextStyle
-import com.rubyhuntersky.vx.ViewId
-import com.rubyhuntersky.vx.bound.BiBound
-import com.rubyhuntersky.vx.bound.HBound
-import com.rubyhuntersky.vx.bound.VBound
+import com.rubyhuntersky.vx.common.TextStyle
+import com.rubyhuntersky.vx.common.ViewId
+import com.rubyhuntersky.vx.common.bound.BiBound
+import com.rubyhuntersky.vx.common.bound.HBound
+import com.rubyhuntersky.vx.common.bound.VBound
 import com.rubyhuntersky.vx.coop.tools.TestCoopViewHost
-import com.rubyhuntersky.vx.orbit.BiOrbit
+import com.rubyhuntersky.vx.common.orbit.BiOrbit
 import org.junit.Assert.assertEquals
 import org.junit.Test
 

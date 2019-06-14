@@ -1,10 +1,10 @@
 package com.rubyhuntersky.vx.coop.tools
 
-import com.rubyhuntersky.vx.TextStyle
-import com.rubyhuntersky.vx.ViewId
-import com.rubyhuntersky.vx.bound.BiBound
+import com.rubyhuntersky.vx.common.TextStyle
+import com.rubyhuntersky.vx.common.ViewId
+import com.rubyhuntersky.vx.common.bound.BiBound
 import com.rubyhuntersky.vx.coop.Coop
-import com.rubyhuntersky.vx.orbit.BiOrbit
+import com.rubyhuntersky.vx.common.orbit.BiOrbit
 import io.reactivex.Observable
 
 class TestCoopViewHost : Coop.ViewHost {

@@ -1,4 +1,4 @@
-package com.rubyhuntersky.vx.margin
+package com.rubyhuntersky.vx.common.margin
 
 import com.rubyhuntersky.vx.coop.additions.Span
 

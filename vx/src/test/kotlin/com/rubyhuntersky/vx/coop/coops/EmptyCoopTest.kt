@@ -1,7 +1,7 @@
 package com.rubyhuntersky.vx.coop.coops
 
-import com.rubyhuntersky.vx.ViewId
-import com.rubyhuntersky.vx.bound.BiBound
+import com.rubyhuntersky.vx.common.ViewId
+import com.rubyhuntersky.vx.common.bound.BiBound
 import com.rubyhuntersky.vx.coop.tools.TestCoopViewHost
 import org.junit.Assert
 import org.junit.Test

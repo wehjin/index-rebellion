@@ -1,7 +1,7 @@
 package com.rubyhuntersky.vx.tower.towers
 
 import com.rubyhuntersky.vx.tower.Tower
-import com.rubyhuntersky.vx.ViewId
+import com.rubyhuntersky.vx.common.ViewId
 
 data class InputSight(
     val text: String,

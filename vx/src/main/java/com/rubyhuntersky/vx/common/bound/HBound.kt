@@ -1,7 +1,7 @@
-package com.rubyhuntersky.vx.bound
+package com.rubyhuntersky.vx.common.bound
 
 import com.rubyhuntersky.vx.coop.additions.Span
-import com.rubyhuntersky.vx.margin.Margin
+import com.rubyhuntersky.vx.common.margin.Margin
 
 data class HBound(val start: Int, val end: Int) {
     constructor(pair: Pair<Int, Int>) : this(pair.first, pair.second)

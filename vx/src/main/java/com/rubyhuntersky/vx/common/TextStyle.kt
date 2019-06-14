@@ -1,4 +1,4 @@
-package com.rubyhuntersky.vx
+package com.rubyhuntersky.vx.common
 
 enum class TextStyle {
     Highlight5,

@@ -1,8 +1,8 @@
 package com.rubyhuntersky.vx.tower
 
-import com.rubyhuntersky.vx.Anchor
-import com.rubyhuntersky.vx.ViewId
-import com.rubyhuntersky.vx.bound.HBound
+import com.rubyhuntersky.vx.common.Anchor
+import com.rubyhuntersky.vx.common.ViewId
+import com.rubyhuntersky.vx.common.bound.HBound
 import com.rubyhuntersky.vx.tower.towers.InputEvent
 import com.rubyhuntersky.vx.tower.towers.InputSight
 import com.rubyhuntersky.vx.tower.towers.textwrap.TextWrapSight

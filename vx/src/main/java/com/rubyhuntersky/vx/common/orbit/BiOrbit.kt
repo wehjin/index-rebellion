@@ -1,4 +1,4 @@
-package com.rubyhuntersky.vx.orbit
+package com.rubyhuntersky.vx.common.orbit
 
 sealed class BiOrbit {
 

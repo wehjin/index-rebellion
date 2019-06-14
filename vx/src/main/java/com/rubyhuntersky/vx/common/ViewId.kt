@@ -1,4 +1,4 @@
-package com.rubyhuntersky.vx
+package com.rubyhuntersky.vx.common
 
 data class ViewId(val markers: List<Int> = emptyList()) {
     fun extend(marker: Int): ViewId =
