@@ -6,7 +6,7 @@ import com.rubyhuntersky.vx.coop.Coop
 import io.reactivex.Observable
 
 
-operator fun <CoreSight : Any, Event : Any, EdgeSight : Any> Coop<CoreSight, Event>.div(edgeToCoreSight: (EdgeSight) -> CoreSight): Coop<EdgeSight, Event> {
+fun <CoreSight : Any, Event : Any, EdgeSight : Any> Coop<CoreSight, Event>.mapSight(edgeToCoreSight: (EdgeSight) -> CoreSight): Coop<EdgeSight, Event> {
     val core = this
     return object : Coop<EdgeSight, Event> {
         override fun enview(viewHost: Coop.ViewHost, id: ViewId): Coop.View<EdgeSight, Event> {

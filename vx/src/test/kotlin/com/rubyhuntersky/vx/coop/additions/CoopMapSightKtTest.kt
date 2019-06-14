@@ -14,7 +14,7 @@ class CoopMapSightKtTest {
     @Test
     fun mapSight() {
         val viewHost = TestCoopViewHost()
-        val coop = SingleTextLineCoop(TextStyle.Body1, BiOrbit.StartCenterLit) / { int: Int -> int.toString() }
+        val coop = SingleTextLineCoop(TextStyle.Body1, BiOrbit.StartCenterLit).mapSight { int: Int -> int.toString() }
         with(coop.enview(viewHost, ViewId())) {
             setSight(42)
             setBound(BiBound(0, 100, 0, 100))

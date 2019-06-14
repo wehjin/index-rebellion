@@ -6,7 +6,7 @@ import com.rubyhuntersky.vx.bound.HBound
 import com.rubyhuntersky.vx.tower.Tower
 import io.reactivex.Observable
 
-operator fun <CoreSight : Any, Event : Any, EdgeSight : Any> Tower<CoreSight, Event>.div(edgeToCoreSight: (EdgeSight) -> CoreSight): Tower<EdgeSight, Event> {
+fun <CoreSight : Any, Event : Any, EdgeSight : Any> Tower<CoreSight, Event>.mapSight(edgeToCoreSight: (EdgeSight) -> CoreSight): Tower<EdgeSight, Event> {
     val core = this
     return object : Tower<EdgeSight, Event> {
         override fun enview(viewHost: Tower.ViewHost, id: ViewId): Tower.View<EdgeSight, Event> {

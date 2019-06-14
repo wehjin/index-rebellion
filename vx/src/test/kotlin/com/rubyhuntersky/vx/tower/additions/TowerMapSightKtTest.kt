@@ -13,7 +13,7 @@ class TowerMapSightKtTest {
     @Test
     fun mapSight() {
         val viewHost = TestTowerViewHost()
-        val tower = TextWrapTower() / { text: String -> TextWrapSight(text, TextStyle.Highlight5) }
+        val tower = TextWrapTower().mapSight { text: String -> TextWrapSight(text, TextStyle.Highlight5) }
         with(tower.enview(viewHost, ViewId())) {
             setSight("Hello")
         }
