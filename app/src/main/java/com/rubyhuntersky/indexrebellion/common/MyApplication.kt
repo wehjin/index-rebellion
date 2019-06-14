@@ -3,6 +3,7 @@ package com.rubyhuntersky.indexrebellion.common
 import android.app.Application
 import android.support.v4.app.FragmentActivity
 import com.rubyhuntersky.indexrebellion.BuildConfig
+import com.rubyhuntersky.indexrebellion.R
 import com.rubyhuntersky.indexrebellion.books.SharedRebellionBook
 import com.rubyhuntersky.indexrebellion.interactions.books.RebellionBook
 import com.rubyhuntersky.indexrebellion.interactions.cashediting.Action
@@ -29,6 +30,7 @@ import com.rubyhuntersky.robinhood.login.RobinhoodLoginDialogFragment
 import com.rubyhuntersky.robinhood.login.enableRobinhoodLogin
 import com.rubyhuntersky.stockcatalog.StockMarket
 import com.rubyhuntersky.storage.PreferencesBook
+import com.rubyhuntersky.vx.coop.additions.Span
 import kotlinx.serialization.UnstableDefault
 import com.rubyhuntersky.indexrebellion.interactions.correctiondetails.Action as CorrectionDetailsAction
 import com.rubyhuntersky.indexrebellion.interactions.correctiondetails.Culture as CorrectionDetailsCulture
@@ -43,6 +45,7 @@ class MyApplication : Application() {
     @UnstableDefault
     override fun onCreate() {
         super.onCreate()
+        standardMarginSpan = Span.Absolute(resources.getDimensionPixelSize(R.dimen.standard_margin_size))
 
         StockMarket.network = SharedHttpNetwork
 
@@ -116,6 +119,7 @@ class MyApplication : Application() {
     companion object {
         lateinit var accessBook: Book<Access>
         lateinit var rebellionBook: RebellionBook
+        lateinit var standardMarginSpan: Span
         val rbhApi = RbhApi.SHARED
     }
 }
