@@ -7,13 +7,13 @@ import com.rubyhuntersky.vx.tower.Tower
 import io.reactivex.Observable
 import kotlin.random.Random
 
-class EmptyTower<Sight : Any, Event : Any> : Tower<Sight, Event> {
+class EmptyTower<Sight : Any, Event : Any>(height: Int = 0) : Tower<Sight, Event> {
 
     private val towerView = object : Tower.View<Sight, Event> {
         override val events: Observable<Event> get() = Observable.never()
         override fun setSight(sight: Sight) = Unit
         override fun setHBound(hbound: HBound) = Unit
-        override val latitudes: Observable<Tower.Latitude> get() = Observable.just(Tower.Latitude(0))
+        override val latitudes: Observable<Tower.Latitude> get() = Observable.just(Tower.Latitude(height))
         override fun setAnchor(anchor: Anchor) = Unit
     }
 

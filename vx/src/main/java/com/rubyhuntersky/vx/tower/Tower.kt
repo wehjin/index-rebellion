@@ -25,7 +25,9 @@ interface Tower<Sight : Any, Event : Any> {
         fun setAnchor(anchor: Anchor)
     }
 
-    data class Latitude(val height: Int)
+    data class Latitude(val height: Int) {
+        operator fun plus(other: Latitude) = Latitude(height + other.height)
+    }
 
     fun <NeverE : Any> neverEvent(): Tower<Sight, NeverE> =
         object : Tower<Sight, NeverE> {
