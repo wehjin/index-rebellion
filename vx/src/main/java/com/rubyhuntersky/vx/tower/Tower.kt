@@ -17,7 +17,7 @@ interface Tower<Sight : Any, Event : Any> {
         fun addInput(id: ViewId): View<InputSight, InputEvent>
     }
 
-    interface View<Sight : Any, Event : Any> {
+    interface View<in Sight : Any, Event : Any> {
         val events: Observable<Event>
         fun setSight(sight: Sight)
         fun setHBound(hbound: HBound)

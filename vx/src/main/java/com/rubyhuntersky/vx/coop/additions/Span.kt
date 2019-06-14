@@ -11,4 +11,8 @@ sealed class Span {
     data class Relative(val fraction: Float) : Span() {
         override fun realize(length: Int): Int = (length * fraction).toInt()
     }
+
+    object None : Span() {
+        override fun realize(length: Int): Int = 0
+    }
 }

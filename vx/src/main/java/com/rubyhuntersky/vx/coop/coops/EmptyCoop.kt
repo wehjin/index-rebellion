@@ -13,6 +13,5 @@ object EmptyCoop : Coop<Unit, Nothing> {
         override fun setBound(bound: BiBound) = Unit
     }
 
-    override fun enview(viewHost: Coop.ViewHost, id: ViewId): Coop.View<Unit, Nothing> =
-        EmptyCoopView
+    override fun enview(viewHost: Coop.ViewHost, id: ViewId): Coop.View<Unit, Nothing> = EmptyCoopView
 }

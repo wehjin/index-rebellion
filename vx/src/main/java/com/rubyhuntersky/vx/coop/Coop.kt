@@ -14,8 +14,7 @@ interface Coop<Sight : Any, Event : Any> {
         fun addSingleTextLineView(textStyle: TextStyle, orbit: BiOrbit, id: ViewId): View<String, Nothing>
     }
 
-    interface View<Sight : Any, Event : Any> {
-
+    interface View<in Sight : Any, Event : Any> {
         val events: Observable<Event>
         fun setSight(sight: Sight)
         fun setBound(bound: BiBound)
