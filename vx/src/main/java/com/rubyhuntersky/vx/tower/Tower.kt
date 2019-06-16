@@ -43,4 +43,3 @@ interface Tower<Sight : Any, Event : Any> {
             }
         }
 }
-

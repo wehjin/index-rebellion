@@ -9,13 +9,13 @@ import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.rxkotlin.addTo
 import io.reactivex.subjects.BehaviorSubject
 
-operator fun <Sight : Any, Event : Any> Tower<Sight, Event>.plus(hAugment: HAugment<Sight, Event>): Tower<Sight, Event> {
+fun <Sight : Any, Event : Any> Tower<Sight, Event>.plusAugment(augment: HAugment<Sight, Event>): Tower<Sight, Event> {
     val core = this
     return object : Tower<Sight, Event> {
         override fun enview(viewHost: Tower.ViewHost, id: ViewId): Tower.View<Sight, Event> =
             object : Tower.View<Sight, Event> {
                 private val views =
-                    listOf(hAugment.ceilingTower, core, hAugment.floorTower)
+                    listOf(augment.ceilingTower, core, augment.floorTower)
                         .mapIndexed { index, tower ->
                             tower.enview(viewHost, id.extend(index))
                         }
@@ -65,3 +65,10 @@ operator fun <Sight : Any, Event : Any> Tower<Sight, Event>.plus(hAugment: HAugm
             }
     }
 }
+
+
+operator fun <Sight : Any, Event : Any> Tower<Sight, Event>.plus(augment: HAugment<Sight, Event>): Tower<Sight, Event> =
+    this.plusAugment(augment)
+
+fun <Sight : Any, Event : Any> Tower<Sight, Event>.extendFloor(floorTower: Tower<Sight, Event>): Tower<Sight, Event> =
+    this + HAugment.Floor(floorTower)
