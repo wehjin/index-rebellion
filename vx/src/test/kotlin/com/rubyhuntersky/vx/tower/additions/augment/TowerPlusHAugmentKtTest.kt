@@ -4,7 +4,7 @@ import com.rubyhuntersky.vx.common.Anchor
 import com.rubyhuntersky.vx.common.TextStyle
 import com.rubyhuntersky.vx.common.ViewId
 import com.rubyhuntersky.vx.common.bound.HBound
-import com.rubyhuntersky.vx.tower.Tower
+import com.rubyhuntersky.vx.common.Latitude
 import com.rubyhuntersky.vx.tower.tools.TestTowerViewHost
 import com.rubyhuntersky.vx.tower.towers.EmptyTower
 import com.rubyhuntersky.vx.tower.towers.textwrap.TextWrapSight
@@ -27,10 +27,10 @@ class TowerPlusHAugmentKtTest {
         }
 
         val item = viewHost.items.first()
-        item.latitudes.onNext(Tower.Latitude(100))
+        item.latitudes.onNext(Latitude(100))
         assertEquals(sight, item.sight)
         assertEquals(HBound(0, 1000), item.bound)
-        view.latitudes.test().assertValue(Tower.Latitude(120))
+        view.latitudes.test().assertValue(Latitude(120))
         assertEquals(10, item.anchor!!.position)
     }
 }

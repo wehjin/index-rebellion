@@ -3,6 +3,7 @@ package com.rubyhuntersky.vx.tower.additions.augment
 import com.rubyhuntersky.vx.common.Anchor
 import com.rubyhuntersky.vx.common.ViewId
 import com.rubyhuntersky.vx.common.bound.HBound
+import com.rubyhuntersky.vx.common.Latitude
 import com.rubyhuntersky.vx.tower.Tower
 import io.reactivex.Observable
 import io.reactivex.disposables.CompositeDisposable
@@ -19,26 +20,22 @@ fun <Sight : Any, Event : Any> Tower<Sight, Event>.plusAugment(augment: HAugment
                         .mapIndexed { index, tower ->
                             tower.enview(viewHost, id.extend(index))
                         }
-                private val fullLatitudes = BehaviorSubject.createDefault(Tower.Latitude(0))
-                private val subviewLatitudes = views.map { Tower.Latitude(0) }.toMutableList()
+                private val fullLatitudes = BehaviorSubject.createDefault(Latitude(0))
+                private val subviewLatitudes = views.map { Latitude(0) }.toMutableList()
                 private val subviewLatitudeChangeWatchers = CompositeDisposable()
-                private var activeAnchor: Anchor? = null
+                private var edgeAnchor: Anchor? = null
 
-                private fun updateSubviewAnchors(): Tower.Latitude {
-                    val fullLatitude = subviewLatitudes.fold(Tower.Latitude(0), Tower.Latitude::plus)
-                    activeAnchor?.let { activeAnchor ->
-                        val position0 = activeAnchor.position
-                        val position1 = position0 + subviewLatitudes[0].height
-                        val position2 = position1 + subviewLatitudes[1].height
-                        val positions = listOf(position0, position1, position2)
-                        positions.forEachIndexed { index, position ->
-                            val height = subviewLatitudes[index].height
-                            val placement = if (height == 0) {
-                                0f
-                            } else {
-                                activeAnchor.placement * fullLatitude.height.toFloat() / height.toFloat()
-                            }
-                            views[index].setAnchor(Anchor(position, placement))
+                private fun updateSubviewAnchors(): Latitude {
+                    val fullLatitude = subviewLatitudes.fold(Latitude(0), Latitude::plus)
+                    edgeAnchor?.let { edgeAnchor ->
+                        val offset0 = 0
+                        val offset1 = offset0 + subviewLatitudes[0].height
+                        val offset2 = offset1 + subviewLatitudes[1].height
+                        val coreOffsets = listOf(offset0, offset1, offset2)
+                        coreOffsets.forEachIndexed { index, coreOffset ->
+                            val coreHeight = subviewLatitudes[index].height
+                            val coreAnchor = edgeAnchor.edgeToCore(fullLatitude.height, coreHeight, coreOffset)
+                            views[index].setAnchor(coreAnchor)
                         }
                     }
                     return fullLatitude
@@ -57,9 +54,9 @@ fun <Sight : Any, Event : Any> Tower<Sight, Event>.plusAugment(augment: HAugment
                 override val events: Observable<Event> get() = Observable.merge(views.map { it.events })
                 override fun setSight(sight: Sight) = views.forEach { it.setSight(sight) }
                 override fun setHBound(hbound: HBound) = views.forEach { it.setHBound(hbound) }
-                override val latitudes: Observable<Tower.Latitude> = fullLatitudes.distinctUntilChanged()
+                override val latitudes: Observable<Latitude> = fullLatitudes.distinctUntilChanged()
                 override fun setAnchor(anchor: Anchor) {
-                    activeAnchor = anchor
+                    edgeAnchor = anchor
                     updateSubviewAnchors()
                 }
             }

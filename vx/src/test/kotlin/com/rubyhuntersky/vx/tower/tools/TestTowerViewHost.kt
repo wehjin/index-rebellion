@@ -1,6 +1,7 @@
 package com.rubyhuntersky.vx.tower.tools
 
 import com.rubyhuntersky.vx.common.Anchor
+import com.rubyhuntersky.vx.common.Latitude
 import com.rubyhuntersky.vx.common.ViewId
 import com.rubyhuntersky.vx.common.bound.HBound
 import com.rubyhuntersky.vx.tower.Tower
@@ -17,7 +18,7 @@ class TestTowerViewHost : Tower.ViewHost {
         abstract val bound: HBound?
         abstract val anchor: Anchor?
         abstract val sight: Any?
-        val latitudes: BehaviorSubject<Tower.Latitude> = BehaviorSubject.create()
+        val latitudes: BehaviorSubject<Latitude> = BehaviorSubject.create()
 
         data class TextWrap(
             override val id: ViewId,
@@ -45,7 +46,7 @@ class TestTowerViewHost : Tower.ViewHost {
                 item.bound = hbound
             }
 
-            override val latitudes: Observable<Tower.Latitude>
+            override val latitudes: Observable<Latitude>
                 get() = item.latitudes
 
             override fun setAnchor(anchor: Anchor) {

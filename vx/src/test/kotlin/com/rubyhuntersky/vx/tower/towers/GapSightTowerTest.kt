@@ -1,8 +1,8 @@
 package com.rubyhuntersky.vx.tower.towers
 
 import com.nhaarman.mockitokotlin2.mock
-import com.rubyhuntersky.vx.tower.Tower
 import com.rubyhuntersky.vx.common.ViewId
+import com.rubyhuntersky.vx.common.Latitude
 import org.junit.Test
 
 class GapSightTowerTest {
@@ -12,6 +12,6 @@ class GapSightTowerTest {
     @Test
     fun latitudeMatchesGapPixelsCount() {
         view.setSight(GapSight.Pixels(32))
-        view.latitudes.test().assertValue(Tower.Latitude(32))
+        view.latitudes.test().assertValue(Latitude(32))
     }
 }

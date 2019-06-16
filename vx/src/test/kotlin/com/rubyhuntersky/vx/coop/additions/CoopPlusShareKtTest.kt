@@ -9,7 +9,7 @@ import com.rubyhuntersky.vx.common.orbit.BiOrbit
 import org.junit.Assert.assertEquals
 import org.junit.Test
 
-class PlusShareKtTest {
+class CoopPlusShareKtTest {
 
     private val viewHost = TestCoopViewHost()
 

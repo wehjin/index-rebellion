@@ -1,6 +1,7 @@
 package com.rubyhuntersky.vx.tower.additions
 
 import com.rubyhuntersky.vx.common.Anchor
+import com.rubyhuntersky.vx.common.Latitude
 import com.rubyhuntersky.vx.common.ViewId
 import com.rubyhuntersky.vx.common.bound.HBound
 import com.rubyhuntersky.vx.tower.Tower
@@ -35,7 +36,9 @@ operator fun <Sight : Any, Event : Any> Tower<Sight, Event>.plus(gap: Gap): Towe
                 }
 
                 override fun setHBound(hbound: HBound) = view.setHBound(hbound)
-                override val latitudes: Observable<Tower.Latitude> get() = heights.map { Tower.Latitude(it) }
+                override val latitudes: Observable<Latitude>
+                    get() = heights.map { Latitude(it) }
+
                 override fun setAnchor(anchor: Anchor) = anchorBehavior.onNext(anchor)
                 override fun setSight(sight: Sight) = view.setSight(sight)
                 override val events: Observable<Event> get() = view.events

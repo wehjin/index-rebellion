@@ -6,7 +6,7 @@ import com.rubyhuntersky.vx.common.ViewId
 import com.rubyhuntersky.vx.common.bound.HBound
 import com.rubyhuntersky.vx.common.margin.Margin
 import com.rubyhuntersky.vx.coop.additions.Span
-import com.rubyhuntersky.vx.tower.Tower
+import com.rubyhuntersky.vx.common.Latitude
 import com.rubyhuntersky.vx.tower.additions.margin.plus
 import com.rubyhuntersky.vx.tower.tools.TestTowerViewHost
 import com.rubyhuntersky.vx.tower.towers.textwrap.TextWrapSight
@@ -37,7 +37,7 @@ class TowerPlusMarginKtTest {
         val item = viewHost.items.first() as TestTowerViewHost.Item.TextWrap
         assertEquals(sight, item.sight)
         view.latitudes.map { it.height }.test().let {
-            item.latitudes.onNext(Tower.Latitude(100))
+            item.latitudes.onNext(Latitude(100))
             it.assertValue(100)
         }
         assertEquals(1, item.bound!!.start)

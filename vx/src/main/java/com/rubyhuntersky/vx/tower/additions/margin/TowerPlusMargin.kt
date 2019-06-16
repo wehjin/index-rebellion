@@ -4,6 +4,7 @@ import com.rubyhuntersky.vx.common.Anchor
 import com.rubyhuntersky.vx.common.ViewId
 import com.rubyhuntersky.vx.common.bound.HBound
 import com.rubyhuntersky.vx.common.margin.Margin
+import com.rubyhuntersky.vx.common.Latitude
 import com.rubyhuntersky.vx.tower.Tower
 import io.reactivex.Observable
 
@@ -19,7 +20,7 @@ fun <Sight : Any, Event : Any> Tower<Sight, Event>.plusMargin(margin: Margin): T
                 override val events: Observable<Event> get() = coreView.events
                 override fun setSight(sight: Sight) = coreView.setSight(sight)
                 override fun setHBound(hbound: HBound) = coreView.setHBound(hbound.withMargin(margin))
-                override val latitudes: Observable<Tower.Latitude> get() = coreView.latitudes
+                override val latitudes: Observable<Latitude> get() = coreView.latitudes
                 override fun setAnchor(anchor: Anchor) = coreView.setAnchor(anchor)
             }
         }

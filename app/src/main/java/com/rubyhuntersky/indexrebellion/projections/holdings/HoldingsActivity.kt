@@ -7,6 +7,7 @@ import com.rubyhuntersky.indexrebellion.common.MyApplication.Companion.standardM
 import com.rubyhuntersky.vx.android.TowerAndroidViewHolder
 import com.rubyhuntersky.vx.common.TextStyle
 import com.rubyhuntersky.vx.common.margin.Margin
+import com.rubyhuntersky.vx.coop.additions.Span
 import com.rubyhuntersky.vx.tower.Tower
 import com.rubyhuntersky.vx.tower.additions.TitleSubtitleSight
 import com.rubyhuntersky.vx.tower.additions.TitleSubtitleTower
@@ -15,6 +16,7 @@ import com.rubyhuntersky.vx.tower.additions.mapSight
 import com.rubyhuntersky.vx.tower.additions.margin.plusMargin
 import com.rubyhuntersky.vx.tower.additions.pad.HPad
 import com.rubyhuntersky.vx.tower.additions.pad.plusPad
+import com.rubyhuntersky.vx.tower.additions.shareEnd
 import com.rubyhuntersky.vx.tower.towers.textwrap.TextWrapSight
 import com.rubyhuntersky.vx.tower.towers.textwrap.TextWrapTower
 import java.math.BigDecimal
@@ -61,7 +63,8 @@ class HoldingsActivity : AppCompatActivity() {
             .mapSight { holding: Holding ->
                 TitleSubtitleSight(holding.name, holding.custodians.joinToString(", "))
             }
-            .extendFloor(
+            .shareEnd(
+                Span.Relative(0.5f),
                 TitleSubtitleTower
                     .mapSight { holding: Holding ->
                         TitleSubtitleSight(

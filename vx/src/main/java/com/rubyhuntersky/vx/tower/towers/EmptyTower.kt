@@ -1,6 +1,7 @@
 package com.rubyhuntersky.vx.tower.towers
 
 import com.rubyhuntersky.vx.common.Anchor
+import com.rubyhuntersky.vx.common.Latitude
 import com.rubyhuntersky.vx.common.ViewId
 import com.rubyhuntersky.vx.common.bound.HBound
 import com.rubyhuntersky.vx.tower.Tower
@@ -13,7 +14,9 @@ class EmptyTower<Sight : Any, Event : Any>(height: Int = 0) : Tower<Sight, Event
         override val events: Observable<Event> get() = Observable.never()
         override fun setSight(sight: Sight) = Unit
         override fun setHBound(hbound: HBound) = Unit
-        override val latitudes: Observable<Tower.Latitude> get() = Observable.just(Tower.Latitude(height))
+        override val latitudes: Observable<Latitude>
+            get() = Observable.just(Latitude(height))
+
         override fun setAnchor(anchor: Anchor) = Unit
     }
 

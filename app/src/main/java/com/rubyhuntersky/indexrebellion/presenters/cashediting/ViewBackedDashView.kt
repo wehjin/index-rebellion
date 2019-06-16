@@ -10,6 +10,7 @@ import com.rubyhuntersky.vx.common.Anchor
 import com.rubyhuntersky.vx.common.ViewId
 import com.rubyhuntersky.vx.common.bound.HBound
 import com.rubyhuntersky.vx.common.bound.VBound
+import com.rubyhuntersky.vx.common.Latitude
 import com.rubyhuntersky.vx.tower.Tower
 import com.rubyhuntersky.vx.tower.additions.toSizeAnchor
 import io.reactivex.Observable
@@ -81,8 +82,8 @@ class ViewBackedDashView<V, C : Any, E : Any>(
             }
     }
 
-    override val latitudes: Observable<Tower.Latitude>
-        get() = view.heights.map { Tower.Latitude(it) }
+    override val latitudes: Observable<Latitude>
+        get() = view.heights.map { Latitude(it) }
 
     override fun setAnchor(anchor: Anchor) {
         Log.d(view.tag.toString(), "Set anchor $anchor")

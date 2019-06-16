@@ -7,6 +7,7 @@ import com.rubyhuntersky.vx.common.Anchor
 import com.rubyhuntersky.vx.common.TextStyle
 import com.rubyhuntersky.vx.common.ViewId
 import com.rubyhuntersky.vx.common.bound.HBound
+import com.rubyhuntersky.vx.common.Latitude
 import com.rubyhuntersky.vx.tower.Tower
 import com.rubyhuntersky.vx.tower.towers.TitleTower
 import com.rubyhuntersky.vx.tower.towers.textwrap.TextWrapSight
@@ -16,14 +17,14 @@ import org.junit.Test
 class BottomTest {
     private val viewId = ViewId()
 
-    private val latitudeSubjectA = PublishSubject.create<Tower.Latitude>()
+    private val latitudeSubjectA = PublishSubject.create<Latitude>()
     private val eventSubjectA = PublishSubject.create<Nothing>()
     private val viewMockA = mock<Tower.View<TextWrapSight, Nothing>> {
         on { latitudes } doReturn latitudeSubjectA
         on { events } doReturn eventSubjectA
     }
 
-    private val latitudeSubjectB = PublishSubject.create<Tower.Latitude>()
+    private val latitudeSubjectB = PublishSubject.create<Latitude>()
     private val eventSubjectB = PublishSubject.create<Nothing>()
     private val viewMockB = mock<Tower.View<TextWrapSight, Nothing>> {
         on { latitudes } doReturn latitudeSubjectB
@@ -64,8 +65,8 @@ class BottomTest {
 
     @Test
     fun setAnchor() {
-        latitudeSubjectA.onNext(Tower.Latitude(75))
-        latitudeSubjectB.onNext(Tower.Latitude(25))
+        latitudeSubjectA.onNext(Latitude(75))
+        latitudeSubjectB.onNext(Latitude(25))
         view.setAnchor(Anchor(0, 0f))
         verify(viewMockA).setAnchor(Anchor(0, 0f))
         verify(viewMockB).setAnchor(Anchor(100, 1f))
@@ -75,9 +76,9 @@ class BottomTest {
     @Test
     fun latitudes() {
         val test = view.latitudes.test()
-        latitudeSubjectA.onNext(Tower.Latitude(100))
-        latitudeSubjectB.onNext(Tower.Latitude(5))
-        test.assertValue(Tower.Latitude(105))
+        latitudeSubjectA.onNext(Latitude(100))
+        latitudeSubjectB.onNext(Latitude(5))
+        test.assertValue(Latitude(105))
     }
 
     @Test
