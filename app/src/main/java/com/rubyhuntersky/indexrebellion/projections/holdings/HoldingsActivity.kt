@@ -7,10 +7,10 @@ import com.rubyhuntersky.indexrebellion.common.MyApplication.Companion.standardM
 import com.rubyhuntersky.vx.android.TowerAndroidViewHolder
 import com.rubyhuntersky.vx.common.TextStyle
 import com.rubyhuntersky.vx.common.margin.Margin
-import com.rubyhuntersky.vx.tower.additions.haugment.HAugment
-import com.rubyhuntersky.vx.tower.additions.haugment.plus
 import com.rubyhuntersky.vx.tower.additions.mapSight
-import com.rubyhuntersky.vx.tower.additions.plus
+import com.rubyhuntersky.vx.tower.additions.margin.plusMargin
+import com.rubyhuntersky.vx.tower.additions.pad.HPad
+import com.rubyhuntersky.vx.tower.additions.pad.plusPad
 import com.rubyhuntersky.vx.tower.towers.textwrap.TextWrapSight
 import com.rubyhuntersky.vx.tower.towers.textwrap.TextWrapTower
 
@@ -18,8 +18,8 @@ class HoldingsActivity : AppCompatActivity() {
 
     private val tower = TextWrapTower()
         .mapSight { text: String -> TextWrapSight(text, TextStyle.Highlight5) }
-        .plus(Margin.Uniform(standardMarginSpan))
-        .plus(HAugment.Uniform(standardMarginSize))
+        .plusMargin(Margin.Uniform(standardMarginSpan))
+        .plusPad(HPad.Uniform(standardMarginSize))
 
     private val towerAndroidViewHolder = TowerAndroidViewHolder(tower)
 

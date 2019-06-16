@@ -1,4 +1,4 @@
-package com.rubyhuntersky.vx.tower.additions.haugment
+package com.rubyhuntersky.vx.tower.additions.augment
 
 import com.rubyhuntersky.vx.common.Anchor
 import com.rubyhuntersky.vx.common.TextStyle
@@ -6,6 +6,7 @@ import com.rubyhuntersky.vx.common.ViewId
 import com.rubyhuntersky.vx.common.bound.HBound
 import com.rubyhuntersky.vx.tower.Tower
 import com.rubyhuntersky.vx.tower.tools.TestTowerViewHost
+import com.rubyhuntersky.vx.tower.towers.EmptyTower
 import com.rubyhuntersky.vx.tower.towers.textwrap.TextWrapSight
 import com.rubyhuntersky.vx.tower.towers.textwrap.TextWrapTower
 import org.junit.Assert.assertEquals
@@ -16,7 +17,7 @@ class TowerPlusHAugmentKtTest {
     @Test
     fun plusHAugment() {
         val sight = TextWrapSight("Hello", TextStyle.Body1)
-        val tower = TextWrapTower().plus(HAugment.Uniform(10))
+        val tower = TextWrapTower().plus(HAugment.Uniform(EmptyTower(10)))
         val viewHost = TestTowerViewHost()
         val view = tower.enview(viewHost, ViewId())
         with(view) {

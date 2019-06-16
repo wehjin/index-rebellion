@@ -1,4 +1,4 @@
-package com.rubyhuntersky.vx.tower.additions.haugment
+package com.rubyhuntersky.vx.tower.additions.augment
 
 import com.rubyhuntersky.vx.common.Anchor
 import com.rubyhuntersky.vx.common.ViewId
@@ -24,7 +24,7 @@ operator fun <Sight : Any, Event : Any> Tower<Sight, Event>.plus(hAugment: HAugm
                 private val subviewLatitudeChangeWatchers = CompositeDisposable()
                 private var activeAnchor: Anchor? = null
 
-                fun updateSubviewAnchors(): Tower.Latitude {
+                private fun updateSubviewAnchors(): Tower.Latitude {
                     val fullLatitude = subviewLatitudes.fold(Tower.Latitude(0), Tower.Latitude::plus)
                     activeAnchor?.let { activeAnchor ->
                         val position0 = activeAnchor.position
@@ -48,9 +48,7 @@ operator fun <Sight : Any, Event : Any> Tower<Sight, Event>.plus(hAugment: HAugm
                     views.forEachIndexed { index, view ->
                         view.latitudes.subscribe { latitude ->
                             subviewLatitudes[index] = latitude
-                            println("SUBVIEW LATITUDES: $subviewLatitudes")
                             val fullLatitude = updateSubviewAnchors()
-                            println("FULL LATITUDE: $fullLatitude")
                             fullLatitudes.onNext(fullLatitude)
                         }.addTo(subviewLatitudeChangeWatchers)
                     }

@@ -7,6 +7,7 @@ import com.rubyhuntersky.vx.common.bound.HBound
 import com.rubyhuntersky.vx.common.margin.Margin
 import com.rubyhuntersky.vx.coop.additions.Span
 import com.rubyhuntersky.vx.tower.Tower
+import com.rubyhuntersky.vx.tower.additions.margin.plus
 import com.rubyhuntersky.vx.tower.tools.TestTowerViewHost
 import com.rubyhuntersky.vx.tower.towers.textwrap.TextWrapSight
 import com.rubyhuntersky.vx.tower.towers.textwrap.TextWrapTower

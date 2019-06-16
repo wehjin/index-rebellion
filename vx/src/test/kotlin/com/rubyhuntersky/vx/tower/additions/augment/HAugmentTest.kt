@@ -1,4 +1,4 @@
-package com.rubyhuntersky.vx.tower.additions.haugment
+package com.rubyhuntersky.vx.tower.additions.augment
 
 import com.rubyhuntersky.vx.tower.towers.EmptyTower
 import com.rubyhuntersky.vx.tower.towers.textwrap.TextWrapSight
@@ -20,7 +20,7 @@ class HAugmentTest {
     }
 
     @Test
-    fun individualTowers() {
+    fun individual() {
         with(HAugment.Individual(tower1, tower2)) {
             assertEquals(tower1, ceilingTower)
             assertEquals(tower2, floorTower)
@@ -28,15 +28,7 @@ class HAugmentTest {
     }
 
     @Test
-    fun individualHeights() {
-        with(HAugment.Individual<Unit, Nothing>(100, 50)) {
-            assertEquals(tower1, ceilingTower)
-            assertEquals(tower2, floorTower)
-        }
-    }
-
-    @Test
-    fun ceilingTower() {
+    fun ceiling() {
         with(HAugment.Ceiling(tower1)) {
             assertEquals(tower1, ceilingTower)
             assertEquals(emptyTower, floorTower)
@@ -44,26 +36,10 @@ class HAugmentTest {
     }
 
     @Test
-    fun ceilingHeight() {
-        with(HAugment.Ceiling<Unit, Nothing>(100)) {
-            assertEquals(tower1, ceilingTower)
-            assertEquals(emptyTower, floorTower)
-        }
-    }
-
-    @Test
-    fun floorTower() {
+    fun floor() {
         with(HAugment.Floor(tower1)) {
             assertEquals(emptyTower, ceilingTower)
             assertEquals(tower2, floorTower)
-        }
-    }
-
-    @Test
-    fun floorHeight() {
-        with(HAugment.Floor<Unit, Nothing>(100)) {
-            assertEquals(emptyTower, ceilingTower)
-            assertEquals(tower1, floorTower)
         }
     }
 

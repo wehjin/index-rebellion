@@ -1,4 +1,4 @@
-package com.rubyhuntersky.vx.tower.additions
+package com.rubyhuntersky.vx.tower.additions.margin
 
 import com.rubyhuntersky.vx.common.Anchor
 import com.rubyhuntersky.vx.common.ViewId
@@ -7,7 +7,10 @@ import com.rubyhuntersky.vx.common.margin.Margin
 import com.rubyhuntersky.vx.tower.Tower
 import io.reactivex.Observable
 
-operator fun <Sight : Any, Event : Any> Tower<Sight, Event>.plus(margin: Margin): Tower<Sight, Event> {
+operator fun <Sight : Any, Event : Any> Tower<Sight, Event>.plus(margin: Margin): Tower<Sight, Event> =
+    this.plusMargin(margin)
+
+fun <Sight : Any, Event : Any> Tower<Sight, Event>.plusMargin(margin: Margin): Tower<Sight, Event> {
     val core = this
     return object : Tower<Sight, Event> {
         override fun enview(viewHost: Tower.ViewHost, id: ViewId): Tower.View<Sight, Event> {
