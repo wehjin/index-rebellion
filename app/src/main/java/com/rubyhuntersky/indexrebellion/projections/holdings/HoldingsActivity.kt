@@ -59,7 +59,7 @@ class HoldingsActivity : AppCompatActivity() {
     private val holdingTower: Tower<Holding, Nothing> =
         TitleSubtitleTower
             .mapSight { holding: Holding ->
-                TitleSubtitleSight(holding.name, holding.custodians.joinToString(","))
+                TitleSubtitleSight(holding.name, holding.custodians.joinToString(", "))
             }
             .extendFloor(
                 TitleSubtitleTower
