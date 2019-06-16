@@ -11,6 +11,7 @@ import io.reactivex.functions.BiFunction
 import io.reactivex.rxkotlin.addTo
 import io.reactivex.subjects.BehaviorSubject
 
+@Deprecated(message = "Use plusAugment")
 data class Bottom<A : Any, B : Any, C : Any, Ev : Any>(
     val tower: Tower<B, Ev>,
     val onSight: (C) -> Pair<A, B>
