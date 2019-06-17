@@ -20,7 +20,7 @@ class TestTowerViewHost : Tower.ViewHost {
         abstract val sight: Any?
         val latitudes: BehaviorSubject<Latitude> = BehaviorSubject.create()
 
-        data class TextWrap(
+        data class TestTextWrap(
             override val id: ViewId,
             override var bound: HBound?,
             override var anchor: Anchor?,
@@ -30,7 +30,7 @@ class TestTowerViewHost : Tower.ViewHost {
 
     override fun addTextWrap(id: ViewId): Tower.View<TextWrapSight, Nothing> {
 
-        val item = Item.TextWrap(id, null, null, null)
+        val item = Item.TestTextWrap(id, null, null, null)
             .also { item ->
                 items.removeIf { it.id == id }
                 items.add(item)

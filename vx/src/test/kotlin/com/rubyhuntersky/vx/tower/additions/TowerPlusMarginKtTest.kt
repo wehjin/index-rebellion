@@ -34,7 +34,7 @@ class TowerPlusMarginKtTest {
             setAnchor(Anchor(0, 0.0f))
         }
 
-        val item = viewHost.items.first() as TestTowerViewHost.Item.TextWrap
+        val item = viewHost.items.first() as TestTowerViewHost.Item.TestTextWrap
         assertEquals(sight, item.sight)
         view.latitudes.map { it.height }.test().let {
             item.latitudes.onNext(Latitude(100))
