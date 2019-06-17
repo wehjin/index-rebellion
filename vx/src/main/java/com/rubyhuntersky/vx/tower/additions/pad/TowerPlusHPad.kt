@@ -10,9 +10,9 @@ import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.rxkotlin.addTo
 import io.reactivex.subjects.BehaviorSubject
 
-operator fun <Sight : Any, Event : Any> Tower<Sight, Event>.plus(pad: HPad): Tower<Sight, Event> = this.plusPad(pad)
+operator fun <Sight : Any, Event : Any> Tower<Sight, Event>.plus(pad: HPad): Tower<Sight, Event> = this.plusHPad(pad)
 
-fun <Sight : Any, Event : Any> Tower<Sight, Event>.plusPad(pad: HPad): Tower<Sight, Event> {
+fun <Sight : Any, Event : Any> Tower<Sight, Event>.plusHPad(pad: HPad): Tower<Sight, Event> {
     val core = this
     return object : Tower<Sight, Event> {
         override fun enview(viewHost: Tower.ViewHost, id: ViewId): Tower.View<Sight, Event> =

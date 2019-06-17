@@ -9,9 +9,9 @@ import com.rubyhuntersky.vx.tower.Tower
 import io.reactivex.Observable
 
 operator fun <Sight : Any, Event : Any> Tower<Sight, Event>.plus(margin: Margin): Tower<Sight, Event> =
-    this.plusMargin(margin)
+    this.plusVMargin(margin)
 
-fun <Sight : Any, Event : Any> Tower<Sight, Event>.plusMargin(margin: Margin): Tower<Sight, Event> {
+fun <Sight : Any, Event : Any> Tower<Sight, Event>.plusVMargin(margin: Margin): Tower<Sight, Event> {
     val core = this
     return object : Tower<Sight, Event> {
         override fun enview(viewHost: Tower.ViewHost, id: ViewId): Tower.View<Sight, Event> {

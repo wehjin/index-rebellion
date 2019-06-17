@@ -14,9 +14,9 @@ import com.rubyhuntersky.vx.tower.additions.TitleSubtitleSight
 import com.rubyhuntersky.vx.tower.additions.TitleSubtitleTower
 import com.rubyhuntersky.vx.tower.additions.augment.extendFloor
 import com.rubyhuntersky.vx.tower.additions.mapSight
-import com.rubyhuntersky.vx.tower.additions.margin.plusMargin
+import com.rubyhuntersky.vx.tower.additions.margin.plusVMargin
 import com.rubyhuntersky.vx.tower.additions.pad.HPad
-import com.rubyhuntersky.vx.tower.additions.pad.plusPad
+import com.rubyhuntersky.vx.tower.additions.pad.plusHPad
 import com.rubyhuntersky.vx.tower.additions.shareEnd
 import com.rubyhuntersky.vx.tower.towers.detailsubdetail.DetailSubdetailSight
 import com.rubyhuntersky.vx.tower.towers.detailsubdetail.DetailSubdetailTower
@@ -58,8 +58,8 @@ class HoldingsActivity : AppCompatActivity() {
             .mapSight { page: Page ->
                 WrapTextSight(page.balance, TextStyle.Highlight5, Orbit.Center)
             }
-            .plusMargin(standardMargin)
-            .plusPad(HPad.Uniform(standardMarginSize))
+            .plusVMargin(standardMargin)
+            .plusHPad(HPad.Uniform(standardMarginSize))
 
     private val holdingTower: Tower<Holding, Nothing> =
         TitleSubtitleTower
@@ -76,7 +76,7 @@ class HoldingsActivity : AppCompatActivity() {
                         )
                     }
             )
-            .plusMargin(standardMargin)
+            .plusVMargin(standardMargin)
 
     private val pageTower: Tower<Page, Nothing> =
         balanceTower
