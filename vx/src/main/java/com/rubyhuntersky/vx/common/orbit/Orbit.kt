@@ -30,5 +30,8 @@ sealed class Orbit {
         override val swing: Float = 0.0f
     }
 
-    class Custom(override val pole: Float, override val swing: Float) : Orbit()
+    class Custom(
+        override val pole: Float,
+        override val swing: Float
+    ) : Orbit()
 }

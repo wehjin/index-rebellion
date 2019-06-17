@@ -1,28 +1,31 @@
 package com.rubyhuntersky.vx.tower.towers
 
-import com.nhaarman.mockitokotlin2.doReturn
-import com.nhaarman.mockitokotlin2.mock
-import com.nhaarman.mockitokotlin2.verify
+import com.rubyhuntersky.vx.common.Anchor
 import com.rubyhuntersky.vx.common.ViewId
-import com.rubyhuntersky.vx.tower.Tower
+import com.rubyhuntersky.vx.common.bound.HBound
+import com.rubyhuntersky.vx.tower.tools.TestTowerViewHost
 import com.rubyhuntersky.vx.tower.towers.textwrap.WrapTextSight
 import com.rubyhuntersky.vx.tower.towers.textwrap.WrapTextTower
-import org.junit.Assert
+import org.junit.Assert.assertEquals
 import org.junit.Test
 
 class WrapTextTowerTest {
 
     private val id = ViewId()
-    private val viewMock = mock<Tower.View<WrapTextSight, Nothing>>()
-    private val hostMock = mock<Tower.ViewHost> {
-        on { addTextWrap(id) } doReturn viewMock
-    }
+    private val viewHost = TestTowerViewHost()
 
     @Test
     fun envisionPassesIdAndReturnsHostView() {
-        val tower = WrapTextTower()
-        val view = tower.enview(hostMock, id)
-        verify(hostMock).addTextWrap(id)
-        Assert.assertEquals(viewMock, view)
+        WrapTextTower()
+            .enview(viewHost, id)
+            .also {
+                it.setSight(
+                    WrapTextSight("Hello")
+                )
+                it.setHBound(HBound(0, 100))
+                it.setAnchor(Anchor())
+            }
+        val item = viewHost.items.first()
+        assertEquals(id, item.id)
     }
 }

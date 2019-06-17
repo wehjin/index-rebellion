@@ -3,7 +3,10 @@ package com.rubyhuntersky.vx.common
 import com.rubyhuntersky.vx.common.bound.HBound
 import com.rubyhuntersky.vx.common.bound.VBound
 
-data class Anchor(val position: Int, val placement: Float) {
+data class Anchor(
+    val position: Int = 0,
+    val placement: Float = 0.0f
+) {
 
     fun toVBound(size: Int) = VBound(toBound(size))
     fun toHBound(size: Int) = HBound(toBound(size))
