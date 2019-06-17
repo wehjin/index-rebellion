@@ -7,6 +7,7 @@ import com.rubyhuntersky.indexrebellion.common.MyApplication.Companion.standardM
 import com.rubyhuntersky.vx.android.TowerAndroidViewHolder
 import com.rubyhuntersky.vx.common.TextStyle
 import com.rubyhuntersky.vx.common.margin.Margin
+import com.rubyhuntersky.vx.common.orbit.Orbit
 import com.rubyhuntersky.vx.coop.additions.Span
 import com.rubyhuntersky.vx.tower.Tower
 import com.rubyhuntersky.vx.tower.additions.TitleSubtitleSight
@@ -55,7 +56,7 @@ class HoldingsActivity : AppCompatActivity() {
     private val balanceTower =
         WrapTextTower()
             .mapSight { page: Page ->
-                WrapTextSight(page.balance, TextStyle.Highlight5)
+                WrapTextSight(page.balance, TextStyle.Highlight5, Orbit.Center)
             }
             .plusMargin(standardMargin)
             .plusPad(HPad.Uniform(standardMarginSize))
