@@ -5,8 +5,8 @@ import com.rubyhuntersky.vx.tower.Tower
 import com.rubyhuntersky.vx.tower.additions.augment.HAugment
 import com.rubyhuntersky.vx.tower.additions.augment.plusAugment
 import com.rubyhuntersky.vx.tower.towers.TitleTower
-import com.rubyhuntersky.vx.tower.towers.textwrap.TextWrapSight
-import com.rubyhuntersky.vx.tower.towers.textwrap.TextWrapTower
+import com.rubyhuntersky.vx.tower.towers.textwrap.WrapTextSight
+import com.rubyhuntersky.vx.tower.towers.textwrap.WrapTextTower
 
 object TitleSubtitleTower : Tower<TitleSubtitleSight, Nothing>
 by TitleAtopSubtitleTower
@@ -18,10 +18,10 @@ by TitleAtopSubtitleTower
     )
 
 private object TitleAtopSubtitleTower : Tower<String, Nothing>
-by TextWrapTower().mapSight({ TextWrapSight(it, TextStyle.Highlight6) })
+by WrapTextTower().mapSight({ WrapTextSight(it, TextStyle.Highlight6) })
 
 private object SubtitleBelowTitleTower : Tower<String, Nothing>
-by TextWrapTower().mapSight({ TextWrapSight(it, TextStyle.Subtitle1) })
+by WrapTextTower().mapSight({ WrapTextSight(it, TextStyle.Subtitle1) })
 
 // TODO: Remove everything below here
 @Deprecated(message = "Replace with TitleSubtitle")

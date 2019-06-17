@@ -14,7 +14,7 @@ import com.rubyhuntersky.vx.common.bound.HBound
 import com.rubyhuntersky.vx.tower.Tower
 import com.rubyhuntersky.vx.tower.towers.InputEvent
 import com.rubyhuntersky.vx.tower.towers.InputSight
-import com.rubyhuntersky.vx.tower.towers.textwrap.TextWrapSight
+import com.rubyhuntersky.vx.tower.towers.textwrap.WrapTextSight
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.rxkotlin.addTo
 import io.reactivex.subjects.BehaviorSubject
@@ -82,18 +82,18 @@ class ScreenView
             }
         )
 
-    override fun addTextWrap(id: ViewId): Tower.View<TextWrapSight, Nothing> =
+    override fun addTextWrap(id: ViewId): Tower.View<WrapTextSight, Nothing> =
         ViewBackedDashView(
             frameLayout = this@ScreenView,
             id = id,
             adapter = object :
-                ViewBackedDashView.Adapter<BackingViewTextView, TextWrapSight, Nothing> {
+                ViewBackedDashView.Adapter<BackingViewTextView, WrapTextSight, Nothing> {
                 override fun buildView(context: Context): BackingViewTextView =
                     BackingViewTextView(context)
 
                 override fun renderView(
                     view: BackingViewTextView,
-                    content: TextWrapSight
+                    content: WrapTextSight
                 ) {
                     val resId = when (content.style) {
                         TextStyle.Highlight5 -> R.style.TextAppearance_MaterialComponents_Headline5

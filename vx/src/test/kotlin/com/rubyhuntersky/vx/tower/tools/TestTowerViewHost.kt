@@ -7,7 +7,7 @@ import com.rubyhuntersky.vx.common.bound.HBound
 import com.rubyhuntersky.vx.tower.Tower
 import com.rubyhuntersky.vx.tower.towers.InputEvent
 import com.rubyhuntersky.vx.tower.towers.InputSight
-import com.rubyhuntersky.vx.tower.towers.textwrap.TextWrapSight
+import com.rubyhuntersky.vx.tower.towers.textwrap.WrapTextSight
 import io.reactivex.Observable
 import io.reactivex.subjects.BehaviorSubject
 
@@ -20,25 +20,25 @@ class TestTowerViewHost : Tower.ViewHost {
         abstract val sight: Any?
         val latitudes: BehaviorSubject<Latitude> = BehaviorSubject.create()
 
-        data class TestTextWrap(
+        data class TestWrapText(
             override val id: ViewId,
             override var bound: HBound?,
             override var anchor: Anchor?,
-            override var sight: TextWrapSight?
+            override var sight: WrapTextSight?
         ) : Item()
     }
 
-    override fun addTextWrap(id: ViewId): Tower.View<TextWrapSight, Nothing> {
+    override fun addTextWrap(id: ViewId): Tower.View<WrapTextSight, Nothing> {
 
-        val item = Item.TestTextWrap(id, null, null, null)
+        val item = Item.TestWrapText(id, null, null, null)
             .also { item ->
                 items.removeIf { it.id == id }
                 items.add(item)
             }
 
-        return object : Tower.View<TextWrapSight, Nothing> {
+        return object : Tower.View<WrapTextSight, Nothing> {
             override val events: Observable<Nothing> = Observable.never()
-            override fun setSight(sight: TextWrapSight) {
+            override fun setSight(sight: WrapTextSight) {
                 item.sight = sight
             }
 

@@ -9,7 +9,7 @@ import com.rubyhuntersky.vx.common.ViewId
 import com.rubyhuntersky.vx.common.bound.HBound
 import com.rubyhuntersky.vx.common.Latitude
 import com.rubyhuntersky.vx.tower.Tower
-import com.rubyhuntersky.vx.tower.towers.textwrap.TextWrapSight
+import com.rubyhuntersky.vx.tower.towers.textwrap.WrapTextSight
 import io.reactivex.subjects.PublishSubject
 import org.junit.Test
 
@@ -18,7 +18,7 @@ class TitleTowerTest {
     private val viewId = ViewId()
     private val latitudeSubject = PublishSubject.create<Latitude>()
     private val eventSubject = PublishSubject.create<Nothing>()
-    private val viewMock = mock<Tower.View<TextWrapSight, Nothing>> {
+    private val viewMock = mock<Tower.View<WrapTextSight, Nothing>> {
         on { latitudes } doReturn latitudeSubject
         on { events } doReturn eventSubject
     }
@@ -31,7 +31,7 @@ class TitleTowerTest {
     fun setSight() {
         view.setSight("Hello")
         verify(viewMock).setSight(
-            TextWrapSight(
+            WrapTextSight(
                 "Hello",
                 TextStyle.Highlight5
             )

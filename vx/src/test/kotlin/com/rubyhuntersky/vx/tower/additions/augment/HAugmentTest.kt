@@ -1,7 +1,7 @@
 package com.rubyhuntersky.vx.tower.additions.augment
 
 import com.rubyhuntersky.vx.tower.towers.EmptyTower
-import com.rubyhuntersky.vx.tower.towers.textwrap.TextWrapSight
+import com.rubyhuntersky.vx.tower.towers.textwrap.WrapTextSight
 import org.junit.Assert.assertEquals
 import org.junit.Test
 
@@ -45,7 +45,7 @@ class HAugmentTest {
 
     @Test
     fun none() {
-        with(HAugment.None<TextWrapSight, Nothing>()) {
+        with(HAugment.None<WrapTextSight, Nothing>()) {
             assertEquals(emptyTower, ceilingTower)
             assertEquals(emptyTower, floorTower)
         }

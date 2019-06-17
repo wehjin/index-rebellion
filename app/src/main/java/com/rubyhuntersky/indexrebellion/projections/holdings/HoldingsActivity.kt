@@ -17,8 +17,8 @@ import com.rubyhuntersky.vx.tower.additions.margin.plusMargin
 import com.rubyhuntersky.vx.tower.additions.pad.HPad
 import com.rubyhuntersky.vx.tower.additions.pad.plusPad
 import com.rubyhuntersky.vx.tower.additions.shareEnd
-import com.rubyhuntersky.vx.tower.towers.textwrap.TextWrapSight
-import com.rubyhuntersky.vx.tower.towers.textwrap.TextWrapTower
+import com.rubyhuntersky.vx.tower.towers.textwrap.WrapTextSight
+import com.rubyhuntersky.vx.tower.towers.textwrap.WrapTextTower
 import java.math.BigDecimal
 
 class HoldingsActivity : AppCompatActivity() {
@@ -51,9 +51,9 @@ class HoldingsActivity : AppCompatActivity() {
 
     private val standardMargin = Margin.Uniform(standardMarginSpan)
     private val balanceTower =
-        TextWrapTower()
+        WrapTextTower()
             .mapSight { page: Page ->
-                TextWrapSight(page.balance, TextStyle.Highlight5)
+                WrapTextSight(page.balance, TextStyle.Highlight5)
             }
             .plusMargin(standardMargin)
             .plusPad(HPad.Uniform(standardMarginSize))
