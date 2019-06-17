@@ -2,15 +2,16 @@ package com.rubyhuntersky.indexrebellion.presenters.cashediting
 
 import android.content.Context
 import android.util.Log
+import android.view.Gravity
 import android.view.View
 import android.view.ViewGroup
 import android.widget.FrameLayout
 import com.rubyhuntersky.vx.android.toPixels
 import com.rubyhuntersky.vx.common.Anchor
+import com.rubyhuntersky.vx.common.Latitude
 import com.rubyhuntersky.vx.common.ViewId
 import com.rubyhuntersky.vx.common.bound.HBound
 import com.rubyhuntersky.vx.common.bound.VBound
-import com.rubyhuntersky.vx.common.Latitude
 import com.rubyhuntersky.vx.tower.Tower
 import com.rubyhuntersky.vx.tower.additions.toSizeAnchor
 import io.reactivex.Observable
@@ -18,11 +19,11 @@ import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.rxkotlin.addTo
 import io.reactivex.subjects.BehaviorSubject
 
-class ViewBackedDashView<V, C : Any, E : Any>(
-    frameLayout: FrameLayout,
+class ViewBackedTowerView<V, C : Any, E : Any>(
     id: ViewId,
+    private val frameLayout: FrameLayout,
     private val adapter: Adapter<V, C, E>
-) : Tower.View<C, E> where V : View, V : ViewBackedDashView.BackingView<E> {
+) : Tower.View<C, E> where V : View, V : ViewBackedTowerView.BackingView<E> {
 
     interface BackingView<E : Any> {
         var onAttached: (() -> Unit)?
@@ -33,7 +34,7 @@ class ViewBackedDashView<V, C : Any, E : Any>(
 
     interface Adapter<V, C : Any, E : Any> where V : View, V : BackingView<E> {
         fun buildView(context: Context): V
-        fun renderView(view: V, content: C)
+        fun renderView(view: V, sight: C)
     }
 
     private val view = (frameLayout.findViewWithTag(id)
@@ -77,8 +78,10 @@ class ViewBackedDashView<V, C : Any, E : Any>(
         Log.d(view.tag.toString(), "Set hbound $hbound")
         view.layoutParams = (view.layoutParams as FrameLayout.LayoutParams)
             .apply {
+                gravity = Gravity.END
                 marginStart = view.toPixels(hbound.start).toInt()
                 width = view.toPixels(hbound.end - hbound.start).toInt()
+                marginEnd = frameLayout.width - view.toPixels(hbound.end).toInt()
             }
     }
 

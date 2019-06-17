@@ -20,5 +20,5 @@ sealed class InputEvent {
 
 object InputTower :
     Tower<InputSight, InputEvent> {
-    override fun enview(viewHost: Tower.ViewHost, id: ViewId): Tower.View<InputSight, InputEvent> = viewHost.addInput(id)
+    override fun enview(viewHost: Tower.ViewHost, id: ViewId): Tower.View<InputSight, InputEvent> = viewHost.addInputView(id)
 }

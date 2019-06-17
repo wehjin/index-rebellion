@@ -17,6 +17,8 @@ import com.rubyhuntersky.vx.tower.additions.margin.plusMargin
 import com.rubyhuntersky.vx.tower.additions.pad.HPad
 import com.rubyhuntersky.vx.tower.additions.pad.plusPad
 import com.rubyhuntersky.vx.tower.additions.shareEnd
+import com.rubyhuntersky.vx.tower.towers.detailsubdetail.DetailSubdetailSight
+import com.rubyhuntersky.vx.tower.towers.detailsubdetail.DetailSubdetailTower
 import com.rubyhuntersky.vx.tower.towers.textwrap.WrapTextSight
 import com.rubyhuntersky.vx.tower.towers.textwrap.WrapTextTower
 import java.math.BigDecimal
@@ -65,9 +67,9 @@ class HoldingsActivity : AppCompatActivity() {
             }
             .shareEnd(
                 Span.Relative(0.5f),
-                TitleSubtitleTower
+                DetailSubdetailTower
                     .mapSight { holding: Holding ->
-                        TitleSubtitleSight(
+                        DetailSubdetailSight(
                             "${holding.count.toEngineeringString()} ${holding.symbol}",
                             "$${holding.value.toEngineeringString()}"
                         )

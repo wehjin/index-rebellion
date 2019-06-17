@@ -23,7 +23,7 @@ class TitleTowerTest {
         on { events } doReturn eventSubject
     }
     private val hostMock = mock<Tower.ViewHost> {
-        on { addTextWrap(viewId) } doReturn viewMock
+        on { addTextWrapView(viewId) } doReturn viewMock
     }
     private val view = TitleTower.enview(hostMock, viewId)
 

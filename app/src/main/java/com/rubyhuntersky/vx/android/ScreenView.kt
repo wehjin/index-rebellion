@@ -6,7 +6,7 @@ import android.widget.FrameLayout
 import com.rubyhuntersky.indexrebellion.R
 import com.rubyhuntersky.indexrebellion.presenters.cashediting.BackingViewInputLayout
 import com.rubyhuntersky.indexrebellion.presenters.cashediting.BackingViewTextView
-import com.rubyhuntersky.indexrebellion.presenters.cashediting.ViewBackedDashView
+import com.rubyhuntersky.indexrebellion.presenters.cashediting.ViewBackedTowerView
 import com.rubyhuntersky.vx.common.Anchor
 import com.rubyhuntersky.vx.common.TextStyle
 import com.rubyhuntersky.vx.common.ViewId
@@ -19,6 +19,7 @@ import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.rxkotlin.addTo
 import io.reactivex.subjects.BehaviorSubject
 
+@Deprecated(message = "Use TowerAndroidView")
 class ScreenView
 @JvmOverloads constructor(
     context: Context,
@@ -67,34 +68,31 @@ class ScreenView
         hboundBehavior.onNext(HBound(toDip(left), toDip(left + w)))
     }
 
-    override fun addInput(id: ViewId): Tower.View<InputSight, InputEvent> =
-        ViewBackedDashView(
+    override fun addInputView(id: ViewId): Tower.View<InputSight, InputEvent> =
+        ViewBackedTowerView(
             frameLayout = this@ScreenView,
             id = id,
-            adapter = object : ViewBackedDashView.Adapter<BackingViewInputLayout, InputSight, InputEvent> {
+            adapter = object : ViewBackedTowerView.Adapter<BackingViewInputLayout, InputSight, InputEvent> {
                 override fun buildView(context: Context): BackingViewInputLayout {
                     return BackingViewInputLayout(context, null)
                 }
 
-                override fun renderView(view: BackingViewInputLayout, content: InputSight) {
-                    view.render(content)
+                override fun renderView(view: BackingViewInputLayout, sight: InputSight) {
+                    view.render(sight)
                 }
             }
         )
 
-    override fun addTextWrap(id: ViewId): Tower.View<WrapTextSight, Nothing> =
-        ViewBackedDashView(
+    override fun addTextWrapView(id: ViewId): Tower.View<WrapTextSight, Nothing> =
+        ViewBackedTowerView(
             frameLayout = this@ScreenView,
             id = id,
             adapter = object :
-                ViewBackedDashView.Adapter<BackingViewTextView, WrapTextSight, Nothing> {
-                override fun buildView(context: Context): BackingViewTextView =
-                    BackingViewTextView(context)
+                ViewBackedTowerView.Adapter<BackingViewTextView, WrapTextSight, Nothing> {
 
-                override fun renderView(
-                    view: BackingViewTextView,
-                    content: WrapTextSight
-                ) {
+                override fun buildView(context: Context): BackingViewTextView = BackingViewTextView(context)
+
+                override fun renderView(view: BackingViewTextView, content: WrapTextSight) {
                     val resId = when (content.style) {
                         TextStyle.Highlight5 -> R.style.TextAppearance_MaterialComponents_Headline5
                         TextStyle.Highlight6 -> R.style.TextAppearance_MaterialComponents_Headline6

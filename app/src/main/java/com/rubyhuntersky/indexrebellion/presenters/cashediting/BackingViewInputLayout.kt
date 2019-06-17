@@ -27,7 +27,7 @@ class BackingViewInputLayout
     attrs: AttributeSet? = null,
     defStyleAttr: Int = 0,
     defStyleRes: Int = 0
-) : FrameLayout(context, attrs, defStyleAttr, defStyleRes), ViewBackedDashView.BackingView<InputEvent> {
+) : FrameLayout(context, attrs, defStyleAttr, defStyleRes), ViewBackedTowerView.BackingView<InputEvent> {
 
     private var layout: TextInputLayout
 

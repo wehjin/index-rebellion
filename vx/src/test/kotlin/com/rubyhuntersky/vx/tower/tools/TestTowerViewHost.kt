@@ -28,7 +28,7 @@ class TestTowerViewHost : Tower.ViewHost {
         ) : Item()
     }
 
-    override fun addTextWrap(id: ViewId): Tower.View<WrapTextSight, Nothing> {
+    override fun addTextWrapView(id: ViewId): Tower.View<WrapTextSight, Nothing> {
 
         val item = Item.TestWrapText(id, null, null, null)
             .also { item ->
@@ -57,7 +57,7 @@ class TestTowerViewHost : Tower.ViewHost {
 
     val items = mutableListOf<Item>()
 
-    override fun addInput(id: ViewId): Tower.View<InputSight, InputEvent> {
+    override fun addInputView(id: ViewId): Tower.View<InputSight, InputEvent> {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 }

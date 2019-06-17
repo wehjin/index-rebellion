@@ -2,15 +2,17 @@ package com.rubyhuntersky.vx.android
 
 import android.content.Context
 import android.graphics.Color
+import android.view.View
 import android.widget.FrameLayout
 import com.rubyhuntersky.indexrebellion.R
 import com.rubyhuntersky.indexrebellion.presenters.cashediting.BackingViewInputLayout
 import com.rubyhuntersky.indexrebellion.presenters.cashediting.BackingViewTextView
-import com.rubyhuntersky.indexrebellion.presenters.cashediting.ViewBackedDashView
+import com.rubyhuntersky.indexrebellion.presenters.cashediting.ViewBackedTowerView
 import com.rubyhuntersky.vx.common.Anchor
 import com.rubyhuntersky.vx.common.TextStyle
 import com.rubyhuntersky.vx.common.ViewId
 import com.rubyhuntersky.vx.common.bound.HBound
+import com.rubyhuntersky.vx.common.orbit.Orbit
 import com.rubyhuntersky.vx.tower.Tower
 import com.rubyhuntersky.vx.tower.towers.InputEvent
 import com.rubyhuntersky.vx.tower.towers.InputSight
@@ -64,42 +66,47 @@ class TowerAndroidView<Sight : Any, Event : Any>(context: Context, tower: Tower<
         hboundBehavior.onNext(HBound(toDip(left), toDip(left + w)))
     }
 
-    override fun addInput(id: ViewId): Tower.View<InputSight, InputEvent> =
-        ViewBackedDashView(
+    override fun addInputView(id: ViewId): Tower.View<InputSight, InputEvent> =
+        ViewBackedTowerView(
             frameLayout = this@TowerAndroidView,
             id = id,
-            adapter = object : ViewBackedDashView.Adapter<BackingViewInputLayout, InputSight, InputEvent> {
+            adapter = object : ViewBackedTowerView.Adapter<BackingViewInputLayout, InputSight, InputEvent> {
                 override fun buildView(context: Context): BackingViewInputLayout {
                     return BackingViewInputLayout(context, null)
                 }
 
-                override fun renderView(view: BackingViewInputLayout, content: InputSight) {
-                    view.render(content)
+                override fun renderView(view: BackingViewInputLayout, sight: InputSight) {
+                    view.render(sight)
                 }
             }
         )
 
-    override fun addTextWrap(id: ViewId): Tower.View<WrapTextSight, Nothing> =
-        ViewBackedDashView(
+    override fun addTextWrapView(id: ViewId): Tower.View<WrapTextSight, Nothing> {
+        return ViewBackedTowerView(
             frameLayout = this@TowerAndroidView,
             id = id,
-            adapter = object :
-                ViewBackedDashView.Adapter<BackingViewTextView, WrapTextSight, Nothing> {
-                override fun buildView(context: Context): BackingViewTextView =
-                    BackingViewTextView(context)
+            adapter = object : ViewBackedTowerView.Adapter<BackingViewTextView, WrapTextSight, Nothing> {
 
-                override fun renderView(
-                    view: BackingViewTextView,
-                    content: WrapTextSight
-                ) {
-                    val resId = when (content.style) {
+                override fun buildView(context: Context): BackingViewTextView = BackingViewTextView(context)
+
+                override fun renderView(view: BackingViewTextView, sight: WrapTextSight) {
+                    val resId = when (sight.style) {
                         TextStyle.Highlight5 -> R.style.TextAppearance_MaterialComponents_Headline5
                         TextStyle.Highlight6 -> R.style.TextAppearance_MaterialComponents_Headline6
                         TextStyle.Subtitle1 -> R.style.TextAppearance_MaterialComponents_Subtitle1
                         TextStyle.Body1 -> R.style.TextAppearance_MaterialComponents_Body1
                     }
                     view.setTextAppearance(resId)
-                    view.text = content.text
+                    view.textAlignment = when (sight.orbit) {
+                        Orbit.HeadLit -> View.TEXT_ALIGNMENT_TEXT_START
+                        Orbit.TailLit -> View.TEXT_ALIGNMENT_TEXT_END
+                        Orbit.Center -> View.TEXT_ALIGNMENT_CENTER
+                        Orbit.HeadDim -> View.TEXT_ALIGNMENT_VIEW_START
+                        Orbit.TailDim -> View.TEXT_ALIGNMENT_VIEW_END
+                        is Orbit.Custom -> View.TEXT_ALIGNMENT_CENTER
+                    }
+                    view.text = sight.text
                 }
             })
+    }
 }
