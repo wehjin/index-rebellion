@@ -92,15 +92,19 @@ class ScreenView
 
                 override fun buildView(context: Context): BackingViewTextView = BackingViewTextView(context)
 
-                override fun renderView(view: BackingViewTextView, content: WrapTextSight) {
-                    val resId = when (content.style) {
+                override fun renderView(view: BackingViewTextView, sight: WrapTextSight) {
+                    val resId = when (sight.style) {
                         TextStyle.Highlight5 -> R.style.TextAppearance_MaterialComponents_Headline5
                         TextStyle.Highlight6 -> R.style.TextAppearance_MaterialComponents_Headline6
                         TextStyle.Subtitle1 -> R.style.TextAppearance_MaterialComponents_Subtitle1
                         TextStyle.Body1 -> R.style.TextAppearance_MaterialComponents_Body1
                     }
                     view.setTextAppearance(resId)
-                    view.text = content.text
+                    view.text = sight.text
                 }
             })
+
+    override fun drop(id: ViewId) {
+        error("Not implemented, use TowerAndroidView")
+    }
 }

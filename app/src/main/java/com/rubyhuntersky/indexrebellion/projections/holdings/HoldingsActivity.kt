@@ -17,6 +17,7 @@ import com.rubyhuntersky.vx.tower.additions.mapSight
 import com.rubyhuntersky.vx.tower.additions.margin.plusVMargin
 import com.rubyhuntersky.vx.tower.additions.pad.HPad
 import com.rubyhuntersky.vx.tower.additions.pad.plusHPad
+import com.rubyhuntersky.vx.tower.additions.replicate.replicate
 import com.rubyhuntersky.vx.tower.additions.shareEnd
 import com.rubyhuntersky.vx.tower.towers.detailsubdetail.DetailSubdetailSight
 import com.rubyhuntersky.vx.tower.towers.detailsubdetail.DetailSubdetailTower
@@ -54,7 +55,6 @@ class HoldingsActivity : AppCompatActivity() {
         }
     }
 
-
     private val pageContentView = TowerContentView(pageTower)
 
     companion object {
@@ -84,12 +84,13 @@ class HoldingsActivity : AppCompatActivity() {
                         }
                 )
                 .plusVMargin(standardUniformMargin)
+                .plusHPad(HPad.Uniform(standardMarginSize))
 
         private val pageTower: Tower<PageSight, Nothing> = balanceTower
             .extendFloor(
-                holdingTower.mapSight { page: PageSight ->
-                    page.holdings.first()
-                }
+                holdingTower.replicate()
+                    .mapSight { page: PageSight -> page.holdings }
+                    .neverEvent()
             )
     }
 }

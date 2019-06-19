@@ -66,20 +66,20 @@ class TowerAndroidView<Sight : Any, Event : Any>(context: Context, tower: Tower<
         hboundBehavior.onNext(HBound(toDip(left), toDip(left + w)))
     }
 
-    override fun addInputView(id: ViewId): Tower.View<InputSight, InputEvent> =
-        ViewBackedTowerView(
+    override fun addInputView(id: ViewId): Tower.View<InputSight, InputEvent> {
+        return ViewBackedTowerView(
             frameLayout = this@TowerAndroidView,
             id = id,
             adapter = object : ViewBackedTowerView.Adapter<BackingViewInputLayout, InputSight, InputEvent> {
-                override fun buildView(context: Context): BackingViewInputLayout {
-                    return BackingViewInputLayout(context, null)
-                }
+
+                override fun buildView(context: Context): BackingViewInputLayout = BackingViewInputLayout(context, null)
 
                 override fun renderView(view: BackingViewInputLayout, sight: InputSight) {
                     view.render(sight)
                 }
             }
         )
+    }
 
     override fun addTextWrapView(id: ViewId): Tower.View<WrapTextSight, Nothing> {
         return ViewBackedTowerView(
@@ -108,5 +108,12 @@ class TowerAndroidView<Sight : Any, Event : Any>(context: Context, tower: Tower<
                     view.text = sight.text
                 }
             })
+    }
+
+    override fun drop(id: ViewId) {
+        (0 until childCount)
+            .map(this::getChildAt)
+            .filter { ViewBackedTowerView.isViewInGroup(it, id) }
+            .forEach(this::removeView)
     }
 }

@@ -60,5 +60,9 @@ class TestTowerViewHost : Tower.ViewHost {
     override fun addInputView(id: ViewId): Tower.View<InputSight, InputEvent> {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
+
+    override fun drop(id: ViewId) {
+        items.removeAll { it.id.isDescendentOf(id) }
+    }
 }
 

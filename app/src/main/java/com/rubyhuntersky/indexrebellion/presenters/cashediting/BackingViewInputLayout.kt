@@ -13,8 +13,8 @@ import android.widget.LinearLayout
 import com.rubyhuntersky.indexrebellion.R
 import com.rubyhuntersky.vx.android.toDip
 import com.rubyhuntersky.vx.tower.towers.Icon
-import com.rubyhuntersky.vx.tower.towers.InputSight
 import com.rubyhuntersky.vx.tower.towers.InputEvent
+import com.rubyhuntersky.vx.tower.towers.InputSight
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.subjects.BehaviorSubject

@@ -11,8 +11,11 @@ import kotlin.random.Random
 class EmptyTower<Sight : Any, Event : Any>(height: Int = 0) : Tower<Sight, Event> {
 
     private val towerView = object : Tower.View<Sight, Event> {
-        override val events: Observable<Event> get() = Observable.never()
+
         override fun setSight(sight: Sight) = Unit
+        override val events: Observable<Event>
+            get() = Observable.never()
+
         override fun setHBound(hbound: HBound) = Unit
         override val latitudes: Observable<Latitude>
             get() = Observable.just(Latitude(height))

@@ -99,4 +99,10 @@ class ViewBackedTowerView<V, C : Any, E : Any>(
     }
 
     override val events: Observable<E> get() = view.events
+
+    companion object {
+        fun isViewInGroup(view: View, groupId: ViewId): Boolean {
+            return (view.tag as? ViewId)?.isDescendentOf(groupId) ?: false
+        }
+    }
 }
