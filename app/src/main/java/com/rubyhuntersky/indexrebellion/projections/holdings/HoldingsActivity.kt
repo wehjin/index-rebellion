@@ -32,9 +32,16 @@ class HoldingsActivity : AppCompatActivity() {
             HoldingSight(
                 name = "Tesla, Inc.",
                 custodians = listOf("Etrade", "Robinhood"),
-                count = BigDecimal(10),
+                count = BigDecimal.valueOf(10),
                 symbol = "TSLA",
-                value = BigDecimal(4200)
+                value = BigDecimal.valueOf(4200)
+            ),
+            HoldingSight(
+                name = "Square, Inc.",
+                custodians = listOf("Sovereign"),
+                count = BigDecimal.valueOf(100),
+                symbol = "SQ",
+                value = BigDecimal.valueOf(10000)
             )
         )
     )
