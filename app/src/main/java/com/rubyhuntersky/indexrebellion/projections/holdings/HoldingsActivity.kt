@@ -66,7 +66,7 @@ class HoldingsActivity : AppCompatActivity() {
                     WrapTextSight(page.balance, TextStyle.Highlight5, Orbit.Center)
                 }
                 .plusVMargin(standardUniformMargin)
-                .plusHPad(HPad.Uniform(standardMarginSize))
+                .plusHPad(HPad.Individual(standardMarginSize * 3 / 2, standardMarginSize / 2))
 
         private val holdingTower: Tower<HoldingSight, Nothing> =
             TitleSubtitleTower
