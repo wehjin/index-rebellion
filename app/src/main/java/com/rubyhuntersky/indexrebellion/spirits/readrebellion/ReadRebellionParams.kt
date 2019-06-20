@@ -1,3 +1,0 @@
-package com.rubyhuntersky.indexrebellion.spirits.readrebellion
-
-object ReadRebellionParams
