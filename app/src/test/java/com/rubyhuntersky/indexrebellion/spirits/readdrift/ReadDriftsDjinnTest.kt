@@ -12,7 +12,7 @@ import org.junit.Test
 import java.math.BigDecimal
 import java.util.*
 
-class ReadDriftDjinnTest {
+class ReadDriftsDjinnTest {
 
     private val now = Date()
     private val tsla = InstrumentId("TSLA", InstrumentType.StockExchange)
@@ -33,7 +33,7 @@ class ReadDriftDjinnTest {
     @Test
     fun main() {
         val book = BehaviorBook(drift0)
-        val test = ReadDriftDjinn(book).toObservable(ReadDrift).test()
+        val test = ReadDriftsDjinn(book).toObservable(ReadDrifts).test()
         book.write(drift1)
         book.write(drift2)
         test.assertValues(drift0, drift1, drift2)

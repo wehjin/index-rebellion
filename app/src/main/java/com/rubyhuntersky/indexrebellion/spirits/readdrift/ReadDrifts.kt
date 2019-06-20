@@ -1,3 +1,3 @@
 package com.rubyhuntersky.indexrebellion.spirits.readdrift
 
-object ReadDrift
+object ReadDrifts

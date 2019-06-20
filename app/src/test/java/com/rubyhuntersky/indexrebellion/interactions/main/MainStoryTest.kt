@@ -35,7 +35,7 @@ class MainStoryTest {
         return MainStory()
             .also { story ->
                 with(Edge()) {
-                    enableMainStory(lamp)
+                    MainStory.addSpiritsToLamp(lamp)
                     addInteraction(story)
                 }
                 story.sendAction(Action.Start(rebellionBook, mainPortals))

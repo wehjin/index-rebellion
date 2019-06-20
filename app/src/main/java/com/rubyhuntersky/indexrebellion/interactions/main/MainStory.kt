@@ -15,18 +15,20 @@ import com.rubyhuntersky.stockcatalog.StockMarket
 import com.rubyhuntersky.indexrebellion.interactions.correctiondetails.Action as CorrectionDetailsAction
 import com.rubyhuntersky.indexrebellion.interactions.correctiondetails.Culture as CorrectionDetailsCulture
 
-const val MAIN_INTERACTION_TAG = "MainInteraction"
+class MainStory : Interaction<Vision, Action>
+by Story(::start, ::isEnding, ::revise, TAG) {
+    companion object {
+        const val TAG = "MainInteraction"
 
-fun enableMainStory(lamp: Lamp) {
-    with(lamp) {
-        add(ReadReportsDjinn)
-        add(FetchStockMarketSamplesGenie)
-        add(UpdateRebellionPricesGenie)
+        fun addSpiritsToLamp(lamp: Lamp) {
+            with(lamp) {
+                add(ReadReportsDjinn)
+                add(FetchStockMarketSamplesGenie)
+                add(UpdateRebellionPricesGenie)
+            }
+        }
     }
 }
-
-class MainStory : Interaction<Vision, Action>
-by Story(::start, ::isEnding, ::revise, MAIN_INTERACTION_TAG)
 
 sealed class Vision {
 
@@ -142,7 +144,7 @@ fun revise(vision: Vision, action: Action, edge: Edge): Revision<Vision, Action>
             Revision(newVision, wish)
         }
         vision is Vision.Viewing && action is Action.ReceiveError -> {
-            Log.e(MAIN_INTERACTION_TAG, action.error.localizedMessage, action.error)
+            Log.e(MainStory.TAG, action.error.localizedMessage, action.error)
             val newVision = Vision.Viewing(vision.rebellionReport, false, vision.portals, vision.rebellionBook)
             Revision(newVision)
         }

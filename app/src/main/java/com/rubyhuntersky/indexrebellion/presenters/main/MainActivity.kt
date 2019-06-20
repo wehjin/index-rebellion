@@ -12,7 +12,7 @@ import com.rubyhuntersky.indexrebellion.common.MyApplication.Companion.accessBoo
 import com.rubyhuntersky.indexrebellion.common.MyApplication.Companion.rbhApi
 import com.rubyhuntersky.indexrebellion.common.MyApplication.Companion.rebellionBook
 import com.rubyhuntersky.indexrebellion.interactions.main.Action
-import com.rubyhuntersky.indexrebellion.interactions.main.MAIN_INTERACTION_TAG
+import com.rubyhuntersky.indexrebellion.interactions.main.MainStory
 import com.rubyhuntersky.indexrebellion.interactions.main.Vision
 import com.rubyhuntersky.indexrebellion.interactions.refreshholdings.RefreshHoldingsStory
 import com.rubyhuntersky.interaction.android.AndroidEdge
@@ -21,13 +21,12 @@ import com.rubyhuntersky.interaction.core.PendingInteractions
 import kotlinx.android.synthetic.main.activity_main_viewing.*
 import kotlinx.android.synthetic.main.view_funding.*
 import java.text.SimpleDateFormat
-import com.rubyhuntersky.indexrebellion.interactions.cashediting.Action as CashEditingAction
 import com.rubyhuntersky.indexrebellion.interactions.refreshholdings.Action as RefreshHoldingsAction
 import com.rubyhuntersky.indexrebellion.interactions.refreshholdings.Vision as RefreshHoldingsVision
 
 class MainActivity : NamedInteractionActivity<Vision, Action>() {
 
-    override val name: String = MAIN_INTERACTION_TAG
+    override val name: String = MainStory.TAG
 
     private fun refreshHoldings() {
         val interaction = RefreshHoldingsStory()

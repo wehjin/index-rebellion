@@ -4,11 +4,13 @@ import android.app.Application
 import android.support.v4.app.FragmentActivity
 import com.rubyhuntersky.indexrebellion.BuildConfig
 import com.rubyhuntersky.indexrebellion.books.SharedRebellionBook
+import com.rubyhuntersky.indexrebellion.data.techtonic.DEFAULT_DRIFT
 import com.rubyhuntersky.indexrebellion.interactions.books.RebellionBook
-import com.rubyhuntersky.indexrebellion.interactions.cashediting.Action
 import com.rubyhuntersky.indexrebellion.interactions.correctiondetails.CORRECTION_DETAILS
 import com.rubyhuntersky.indexrebellion.interactions.correctiondetails.enableCorrectionDetails
-import com.rubyhuntersky.indexrebellion.interactions.main.*
+import com.rubyhuntersky.indexrebellion.interactions.holdings.HoldingsStory
+import com.rubyhuntersky.indexrebellion.interactions.main.MainPortals
+import com.rubyhuntersky.indexrebellion.interactions.main.MainStory
 import com.rubyhuntersky.indexrebellion.interactions.refreshholdings.Access
 import com.rubyhuntersky.indexrebellion.interactions.refreshholdings.enableRefreshHoldings
 import com.rubyhuntersky.indexrebellion.interactions.updateshares.UPDATE_SHARES
@@ -20,6 +22,7 @@ import com.rubyhuntersky.indexrebellion.presenters.main.MainActivity
 import com.rubyhuntersky.indexrebellion.presenters.updateshares.UpdateSharesDialogFragment
 import com.rubyhuntersky.interaction.android.AndroidEdge
 import com.rubyhuntersky.interaction.android.ProjectionSource
+import com.rubyhuntersky.interaction.core.BehaviorBook
 import com.rubyhuntersky.interaction.core.Book
 import com.rubyhuntersky.interaction.core.Interaction
 import com.rubyhuntersky.interaction.core.Portal
@@ -31,13 +34,9 @@ import com.rubyhuntersky.stockcatalog.StockMarket
 import com.rubyhuntersky.storage.PreferencesBook
 import com.rubyhuntersky.vx.coop.additions.Span
 import kotlinx.serialization.UnstableDefault
-import com.rubyhuntersky.indexrebellion.interactions.correctiondetails.Action as CorrectionDetailsAction
-import com.rubyhuntersky.indexrebellion.interactions.correctiondetails.Culture as CorrectionDetailsCulture
+import com.rubyhuntersky.indexrebellion.interactions.cashediting.Action as CashEditingAction
+import com.rubyhuntersky.indexrebellion.interactions.holdings.Action as HoldingsAction
 import com.rubyhuntersky.indexrebellion.interactions.main.Action as MainAction
-import com.rubyhuntersky.indexrebellion.interactions.refreshholdings.Action as RefreshHoldingsAction
-import com.rubyhuntersky.indexrebellion.interactions.updateshares.Action as UpdateSharesAction
-import com.rubyhuntersky.robinhood.login.Action as RobinhoodLoginAction
-import com.rubyhuntersky.robinhood.login.Services as RobinhoodLoginServices
 
 class MyApplication : Application() {
 
@@ -55,13 +54,18 @@ class MyApplication : Application() {
         with(edge.lamp) {
             enableCorrectionDetails(this)
             enableRefreshHoldings(this)
-            enableMainStory(this)
             enableRobinhoodLogin(this)
+            MainStory.addSpiritsToLamp(this)
+            HoldingsStory.addSpiritsToLamp(this, BehaviorBook(DEFAULT_DRIFT))
         }
 
-        AndroidEdge += MainStory().also { story ->
-            edge.addInteraction(story)
+        HoldingsStory().also {
+            edge.addInteraction(it)
+            it.sendAction((HoldingsAction.Init))
+        }
 
+        MainStory().also { story ->
+            edge.addInteraction(story)
             // TODO Replace portals with edge calls
             story.sendAction(MainAction.Start(
                 rebellionBook = rebellionBook,
@@ -69,7 +73,7 @@ class MyApplication : Application() {
                     constituentSearchPortal = ConstituentSearchPortal { MainActivity.currentActivity()!! },
                     cashEditingPortal = object : Portal<Unit> {
                         override fun jump(carry: Unit) {
-                            SharedCashEditingInteraction.sendAction(Action.Load)
+                            SharedCashEditingInteraction.sendAction(CashEditingAction.Load)
                             MainActivity.currentActivity()?.supportFragmentManager?.let {
                                 CashEditingDialogFragment.newInstance().show(it, "cash_editing")
                             }
