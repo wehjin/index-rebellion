@@ -24,7 +24,7 @@ class ReadDriftsDjinnTest {
             )
         )
         .replaceHolding(
-            SpecificHolding(tsla, Custodian.None, BigDecimal.valueOf(3), now)
+            SpecificHolding(tsla, Custodian.Wallet, BigDecimal.valueOf(3), now)
         )
     private val drift2 = drift1.replaceHolding(
         SpecificHolding(tsla, Custodian.Robinhood, BigDecimal.valueOf(5), now)

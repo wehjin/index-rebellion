@@ -2,8 +2,11 @@ package com.rubyhuntersky.indexrebellion.projections.holdings
 
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
+import com.rubyhuntersky.indexrebellion.common.MyApplication.Companion.DRIFT
 import com.rubyhuntersky.indexrebellion.common.MyApplication.Companion.standardMarginSize
 import com.rubyhuntersky.indexrebellion.common.MyApplication.Companion.standardMarginSpan
+import com.rubyhuntersky.indexrebellion.data.techtonic.Drift
+import com.rubyhuntersky.indexrebellion.data.techtonic.vault.Custodian
 import com.rubyhuntersky.vx.android.TowerContentView
 import com.rubyhuntersky.vx.common.TextStyle
 import com.rubyhuntersky.vx.common.margin.Margin
@@ -23,20 +26,19 @@ import com.rubyhuntersky.vx.tower.towers.detailsubdetail.DetailSubdetailSight
 import com.rubyhuntersky.vx.tower.towers.detailsubdetail.DetailSubdetailTower
 import com.rubyhuntersky.vx.tower.towers.textwrap.WrapTextSight
 import com.rubyhuntersky.vx.tower.towers.textwrap.WrapTextTower
-import java.math.BigDecimal
 
 class HoldingsActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        pageContentView.setInActivity(this@HoldingsActivity)
+        driftContentView.setInActivity(this@HoldingsActivity)
     }
 
-    private val pageContentView = TowerContentView(pageTower)
+    private val driftContentView = TowerContentView(driftTower)
 
     override fun onStart() {
         super.onStart()
-        pageContentView.setSight(PAGE)
+        driftContentView.setSight(DRIFT)
     }
 
     companion object {
@@ -75,24 +77,19 @@ class HoldingsActivity : AppCompatActivity() {
                     .neverEvent()
             )
 
-        private val PAGE = PageSight(
-            balance = "0,00",
-            holdings = listOf(
-                HoldingSight(
-                    name = "Tesla, Inc.",
-                    custodians = listOf("Etrade", "Robinhood"),
-                    count = BigDecimal.valueOf(10),
-                    symbol = "TSLA",
-                    value = BigDecimal.valueOf(4200)
-                ),
-                HoldingSight(
-                    name = "Square, Inc.",
-                    custodians = listOf("Sovereign"),
-                    count = BigDecimal.valueOf(100),
-                    symbol = "SQ",
-                    value = BigDecimal.valueOf(10000)
-                )
+        private val driftTower = pageTower.mapSight { drift: Drift ->
+            PageSight(
+                balance = "0,00",
+                holdings = drift.generalHoldings.map {
+                    HoldingSight(
+                        name = drift.market.findSample(it.instrumentId)!!.instrumentName,
+                        custodians = it.custodians.map(Custodian::toString),
+                        count = it.size,
+                        symbol = it.instrumentId.symbol,
+                        value = it.cashValue!!.value
+                    )
+                }
             )
-        )
+        }
     }
 }

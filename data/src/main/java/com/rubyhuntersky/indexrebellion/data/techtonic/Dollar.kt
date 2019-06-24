@@ -26,7 +26,7 @@ val ZERO_DOLLAR_HOLDING_LAST_MODIFIED: Date = Calendar.getInstance().let { it.se
 
 val ZERO_DOLLAR_HOLDING = SpecificHolding(
     instrumentId = DOLLAR_ID,
-    custodian = Custodian.None,
+    custodian = Custodian.Wallet,
     size = BigDecimal.ZERO,
     lastModified = ZERO_DOLLAR_HOLDING_LAST_MODIFIED
 )

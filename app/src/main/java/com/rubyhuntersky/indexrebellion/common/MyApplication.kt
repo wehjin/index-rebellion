@@ -48,10 +48,6 @@ import com.rubyhuntersky.indexrebellion.interactions.main.Action as MainAction
 
 class MyApplication : Application() {
 
-    private val tslaId = InstrumentId("TSLA", InstrumentType.StockExchange)
-    private val sqId = InstrumentId("SQ", InstrumentType.StockExchange)
-    private val farPast = Date(0)
-
     @UnstableDefault
     override fun onCreate() {
         super.onCreate()
@@ -62,13 +58,7 @@ class MyApplication : Application() {
             Access(BuildConfig.ROBINHOOD_USERNAME, BuildConfig.ROBINHOOD_TOKEN)
         }
         rebellionBook = SharedRebellionBook.also { it.open(this) }
-        val driftBook = BehaviorBook(
-            DEFAULT_DRIFT
-                .replaceSample(InstrumentSample(tslaId, "Tesla, Inc.", CashAmount(42), CashAmount(420000000), farPast))
-                .replaceSample(InstrumentSample(sqId, "Square, Inc.", CashAmount(64), CashAmount(64000000), farPast))
-                .replaceHolding(SpecificHolding(tslaId, Custodian.Robinhood, BigDecimal.valueOf(10), farPast))
-                .replaceHolding(SpecificHolding(sqId, Custodian.Etrade, BigDecimal.valueOf(100), farPast))
-        )
+        val driftBook = BehaviorBook(DRIFT)
 
         val edge = AndroidEdge
         with(edge.lamp) {
@@ -145,5 +135,34 @@ class MyApplication : Application() {
 
         lateinit var accessBook: Book<Access>
         lateinit var rebellionBook: RebellionBook
+
+        private val tslaId = InstrumentId("TSLA", InstrumentType.StockExchange)
+        private val sqId = InstrumentId("SQ", InstrumentType.StockExchange)
+        private val farPast = Date(0)
+        val DRIFT = DEFAULT_DRIFT
+            .replaceSample(
+                InstrumentSample(
+                    tslaId, "Tesla, Inc.", CashAmount(42), CashAmount(420000000),
+                    farPast
+                )
+            )
+            .replaceSample(
+                InstrumentSample(
+                    sqId, "Square, Inc.", CashAmount(64), CashAmount(64000000),
+                    farPast
+                )
+            )
+            .replaceHolding(
+                SpecificHolding(
+                    tslaId, Custodian.Robinhood, BigDecimal.valueOf(10),
+                    farPast
+                )
+            )
+            .replaceHolding(
+                SpecificHolding(
+                    sqId, Custodian.Etrade, BigDecimal.valueOf(100),
+                    farPast
+                )
+            )
     }
 }
