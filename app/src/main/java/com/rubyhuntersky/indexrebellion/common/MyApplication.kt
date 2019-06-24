@@ -136,32 +136,32 @@ class MyApplication : Application() {
         lateinit var accessBook: Book<Access>
         lateinit var rebellionBook: RebellionBook
 
-        private val tslaId = InstrumentId("TSLA", InstrumentType.StockExchange)
-        private val sqId = InstrumentId("SQ", InstrumentType.StockExchange)
-        private val farPast = Date(0)
-        val DRIFT = DEFAULT_DRIFT
+        private val TSLA_ID = InstrumentId("TSLA", InstrumentType.StockExchange)
+        private val SQ_ID = InstrumentId("SQ", InstrumentType.StockExchange)
+        private val FAR_PAST = Date(0)
+        private val DRIFT = DEFAULT_DRIFT
             .replaceSample(
                 InstrumentSample(
-                    tslaId, "Tesla, Inc.", CashAmount(42), CashAmount(420000000),
-                    farPast
+                    TSLA_ID, "Tesla, Inc.", CashAmount(42), CashAmount(420000000),
+                    FAR_PAST
                 )
             )
             .replaceSample(
                 InstrumentSample(
-                    sqId, "Square, Inc.", CashAmount(64), CashAmount(64000000),
-                    farPast
+                    SQ_ID, "Square, Inc.", CashAmount(64), CashAmount(64000000),
+                    FAR_PAST
                 )
             )
             .replaceHolding(
                 SpecificHolding(
-                    tslaId, Custodian.Robinhood, BigDecimal.valueOf(10),
-                    farPast
+                    TSLA_ID, Custodian.Robinhood, BigDecimal.valueOf(10),
+                    FAR_PAST
                 )
             )
             .replaceHolding(
                 SpecificHolding(
-                    sqId, Custodian.Etrade, BigDecimal.valueOf(100),
-                    farPast
+                    SQ_ID, Custodian.Etrade, BigDecimal.valueOf(100),
+                    FAR_PAST
                 )
             )
     }

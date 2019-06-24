@@ -2,82 +2,27 @@ package com.rubyhuntersky.indexrebellion.projections.holdings
 
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
-import com.rubyhuntersky.indexrebellion.common.MyApplication.Companion.DRIFT
-import com.rubyhuntersky.indexrebellion.common.MyApplication.Companion.standardMarginSize
-import com.rubyhuntersky.indexrebellion.common.MyApplication.Companion.standardMarginSpan
 import com.rubyhuntersky.indexrebellion.data.techtonic.Drift
 import com.rubyhuntersky.indexrebellion.data.techtonic.vault.Custodian
+import com.rubyhuntersky.indexrebellion.interactions.holdings.Action
+import com.rubyhuntersky.indexrebellion.interactions.holdings.HoldingsStory
+import com.rubyhuntersky.indexrebellion.interactions.holdings.Vision
+import com.rubyhuntersky.indexrebellion.projections.holdings.towers.PageTower
+import com.rubyhuntersky.interaction.android.ActivityInteraction
 import com.rubyhuntersky.vx.android.TowerContentView
-import com.rubyhuntersky.vx.common.TextStyle
-import com.rubyhuntersky.vx.common.margin.Margin
-import com.rubyhuntersky.vx.common.orbit.Orbit
-import com.rubyhuntersky.vx.coop.additions.Span
-import com.rubyhuntersky.vx.tower.Tower
-import com.rubyhuntersky.vx.tower.additions.TitleSubtitleSight
-import com.rubyhuntersky.vx.tower.additions.TitleSubtitleTower
-import com.rubyhuntersky.vx.tower.additions.augment.extendFloor
 import com.rubyhuntersky.vx.tower.additions.mapSight
-import com.rubyhuntersky.vx.tower.additions.margin.plusVMargin
-import com.rubyhuntersky.vx.tower.additions.pad.HPad
-import com.rubyhuntersky.vx.tower.additions.pad.plusHPad
-import com.rubyhuntersky.vx.tower.additions.replicate.replicate
-import com.rubyhuntersky.vx.tower.additions.shareEnd
-import com.rubyhuntersky.vx.tower.towers.detailsubdetail.DetailSubdetailSight
-import com.rubyhuntersky.vx.tower.towers.detailsubdetail.DetailSubdetailTower
-import com.rubyhuntersky.vx.tower.towers.textwrap.WrapTextSight
-import com.rubyhuntersky.vx.tower.towers.textwrap.WrapTextTower
 
 class HoldingsActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        driftContentView.setInActivity(this@HoldingsActivity)
+        towerContentView.setInActivity(this@HoldingsActivity)
+        activityInteraction = ActivityInteraction(this, HoldingsStory.TAG, this::renderVision)
+        lifecycle.addObserver(activityInteraction)
     }
 
-    private val driftContentView = TowerContentView(driftTower)
-
-    override fun onStart() {
-        super.onStart()
-        driftContentView.setSight(DRIFT)
-    }
-
-    companion object {
-        private val standardUniformMargin = Margin.Uniform(standardMarginSpan)
-
-        private val balanceTower =
-            WrapTextTower()
-                .mapSight { page: PageSight ->
-                    WrapTextSight(page.balance, TextStyle.Highlight5, Orbit.Center)
-                }
-                .plusVMargin(standardUniformMargin)
-                .plusHPad(HPad.Individual(standardMarginSize * 3 / 2, standardMarginSize / 2))
-
-        private val holdingTower: Tower<HoldingSight, Nothing> =
-            TitleSubtitleTower
-                .mapSight { holding: HoldingSight ->
-                    TitleSubtitleSight(holding.name, holding.custodians.joinToString(", "))
-                }
-                .shareEnd(
-                    Span.Relative(0.5f),
-                    DetailSubdetailTower
-                        .mapSight { holding: HoldingSight ->
-                            DetailSubdetailSight(
-                                "${holding.count.toEngineeringString()} ${holding.symbol}",
-                                "$${holding.value.toEngineeringString()}"
-                            )
-                        }
-                )
-                .plusVMargin(standardUniformMargin)
-                .plusHPad(HPad.Uniform(standardMarginSize))
-
-        private val pageTower: Tower<PageSight, Nothing> = balanceTower
-            .extendFloor(
-                holdingTower.replicate()
-                    .mapSight { page: PageSight -> page.holdings }
-                    .neverEvent()
-            )
-
-        private val driftTower = pageTower.mapSight { drift: Drift ->
+    private val towerContentView = TowerContentView(
+        tower = PageTower.mapSight { drift: Drift ->
             PageSight(
                 balance = "0,00",
                 holdings = drift.generalHoldings.map {
@@ -90,6 +35,13 @@ class HoldingsActivity : AppCompatActivity() {
                     )
                 }
             )
+        })
+
+    private lateinit var activityInteraction: ActivityInteraction<Vision, Action>
+
+    private fun renderVision(vision: Vision) {
+        when (vision) {
+            is Vision.Viewing -> towerContentView.setSight(vision.drift)
         }
     }
 }
