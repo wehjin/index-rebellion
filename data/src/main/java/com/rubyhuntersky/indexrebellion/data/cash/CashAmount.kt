@@ -19,7 +19,11 @@ data class CashAmount(
         false
     }
 
-    override fun hashCode(): Int = value.toDouble().hashCode()
+    override fun hashCode(): Int {
+        val d = value.toDouble()
+        val s = d.toString()  // Convert to String because Android doesn't include Double.hashcode until platform 24
+        return s.hashCode()
+    }
 
     operator fun compareTo(other: CashAmount): Int = value.compareTo(other.value)
     operator fun plus(increment: CashAmount): CashAmount =

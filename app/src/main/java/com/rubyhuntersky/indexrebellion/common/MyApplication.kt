@@ -4,7 +4,13 @@ import android.app.Application
 import android.support.v4.app.FragmentActivity
 import com.rubyhuntersky.indexrebellion.BuildConfig
 import com.rubyhuntersky.indexrebellion.books.SharedRebellionBook
+import com.rubyhuntersky.indexrebellion.data.cash.CashAmount
 import com.rubyhuntersky.indexrebellion.data.techtonic.DEFAULT_DRIFT
+import com.rubyhuntersky.indexrebellion.data.techtonic.instrument.InstrumentId
+import com.rubyhuntersky.indexrebellion.data.techtonic.instrument.InstrumentType
+import com.rubyhuntersky.indexrebellion.data.techtonic.market.InstrumentSample
+import com.rubyhuntersky.indexrebellion.data.techtonic.vault.Custodian
+import com.rubyhuntersky.indexrebellion.data.techtonic.vault.SpecificHolding
 import com.rubyhuntersky.indexrebellion.interactions.books.RebellionBook
 import com.rubyhuntersky.indexrebellion.interactions.correctiondetails.CORRECTION_DETAILS
 import com.rubyhuntersky.indexrebellion.interactions.correctiondetails.enableCorrectionDetails
@@ -34,21 +40,35 @@ import com.rubyhuntersky.stockcatalog.StockMarket
 import com.rubyhuntersky.storage.PreferencesBook
 import com.rubyhuntersky.vx.coop.additions.Span
 import kotlinx.serialization.UnstableDefault
+import java.math.BigDecimal
+import java.util.*
 import com.rubyhuntersky.indexrebellion.interactions.cashediting.Action as CashEditingAction
 import com.rubyhuntersky.indexrebellion.interactions.holdings.Action as HoldingsAction
 import com.rubyhuntersky.indexrebellion.interactions.main.Action as MainAction
 
 class MyApplication : Application() {
 
+    private val tslaId = InstrumentId("TSLA", InstrumentType.StockExchange)
+    private val sqId = InstrumentId("SQ", InstrumentType.StockExchange)
+    private val farPast = Date(0)
+
     @UnstableDefault
     override fun onCreate() {
         super.onCreate()
         StockMarket.network = SharedHttpNetwork
 
+        // Books
         accessBook = PreferencesBook(this, "AccessBook", Access.serializer()) {
             Access(BuildConfig.ROBINHOOD_USERNAME, BuildConfig.ROBINHOOD_TOKEN)
         }
         rebellionBook = SharedRebellionBook.also { it.open(this) }
+        val driftBook = BehaviorBook(
+            DEFAULT_DRIFT
+                .replaceSample(InstrumentSample(tslaId, "Tesla, Inc.", CashAmount(42), CashAmount(420000000), farPast))
+                .replaceSample(InstrumentSample(sqId, "Square, Inc.", CashAmount(64), CashAmount(64000000), farPast))
+                .replaceHolding(SpecificHolding(tslaId, Custodian.Robinhood, BigDecimal.valueOf(10), farPast))
+                .replaceHolding(SpecificHolding(sqId, Custodian.Etrade, BigDecimal.valueOf(100), farPast))
+        )
 
         val edge = AndroidEdge
         with(edge.lamp) {
@@ -56,13 +76,14 @@ class MyApplication : Application() {
             enableRefreshHoldings(this)
             enableRobinhoodLogin(this)
             MainStory.addSpiritsToLamp(this)
-            HoldingsStory.addSpiritsToLamp(this, BehaviorBook(DEFAULT_DRIFT))
+            HoldingsStory.addSpiritsToLamp(this, driftBook)
         }
 
-        HoldingsStory().also {
-            edge.addInteraction(it)
-            it.sendAction((HoldingsAction.Init))
-        }
+        HoldingsStory()
+            .also {
+                edge.addInteraction(it)
+                it.sendAction((HoldingsAction.Init))
+            }
 
         MainStory().also { story ->
             edge.addInteraction(story)
