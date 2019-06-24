@@ -27,35 +27,17 @@ import java.math.BigDecimal
 
 class HoldingsActivity : AppCompatActivity() {
 
-    private val page = PageSight(
-        balance = "0,00",
-        holdings = listOf(
-            HoldingSight(
-                name = "Tesla, Inc.",
-                custodians = listOf("Etrade", "Robinhood"),
-                count = BigDecimal.valueOf(10),
-                symbol = "TSLA",
-                value = BigDecimal.valueOf(4200)
-            ),
-            HoldingSight(
-                name = "Square, Inc.",
-                custodians = listOf("Sovereign"),
-                count = BigDecimal.valueOf(100),
-                symbol = "SQ",
-                value = BigDecimal.valueOf(10000)
-            )
-        )
-    )
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        with(pageContentView) {
-            setInActivity(this@HoldingsActivity)
-            setSight(page)
-        }
+        pageContentView.setInActivity(this@HoldingsActivity)
     }
 
     private val pageContentView = TowerContentView(pageTower)
+
+    override fun onStart() {
+        super.onStart()
+        pageContentView.setSight(PAGE)
+    }
 
     companion object {
         private val standardUniformMargin = Margin.Uniform(standardMarginSpan)
@@ -92,5 +74,25 @@ class HoldingsActivity : AppCompatActivity() {
                     .mapSight { page: PageSight -> page.holdings }
                     .neverEvent()
             )
+
+        private val PAGE = PageSight(
+            balance = "0,00",
+            holdings = listOf(
+                HoldingSight(
+                    name = "Tesla, Inc.",
+                    custodians = listOf("Etrade", "Robinhood"),
+                    count = BigDecimal.valueOf(10),
+                    symbol = "TSLA",
+                    value = BigDecimal.valueOf(4200)
+                ),
+                HoldingSight(
+                    name = "Square, Inc.",
+                    custodians = listOf("Sovereign"),
+                    count = BigDecimal.valueOf(100),
+                    symbol = "SQ",
+                    value = BigDecimal.valueOf(10000)
+                )
+            )
+        )
     }
 }

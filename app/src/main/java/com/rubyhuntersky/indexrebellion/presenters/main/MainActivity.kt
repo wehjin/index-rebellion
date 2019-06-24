@@ -24,10 +24,9 @@ import java.text.SimpleDateFormat
 import com.rubyhuntersky.indexrebellion.interactions.refreshholdings.Action as RefreshHoldingsAction
 import com.rubyhuntersky.indexrebellion.interactions.refreshholdings.Vision as RefreshHoldingsVision
 
-class MainActivity : NamedInteractionActivity<Vision, Action>() {
-
-    override val name: String = MainStory.TAG
-
+class MainActivity : NamedInteractionActivity<Vision, Action>(
+    interactionName = MAIN_STORY_TAG
+) {
     private fun refreshHoldings() {
         val interaction = RefreshHoldingsStory()
             .also {
@@ -44,7 +43,7 @@ class MainActivity : NamedInteractionActivity<Vision, Action>() {
             runOnUiThread {
                 when (vision) {
                     is RefreshHoldingsVision.NewHoldings -> {
-                        Log.d(name, "New holdings: ${vision.newHoldings}")
+                        Log.d(MAIN_STORY_TAG, "New holdings: ${vision.newHoldings}")
                         Toast.makeText(this, "Updated holdings", Toast.LENGTH_SHORT).show()
                     }
                     is RefreshHoldingsVision.Error -> presentError(vision.error)
@@ -57,12 +56,12 @@ class MainActivity : NamedInteractionActivity<Vision, Action>() {
     private val pendingInteractions = PendingInteractions()
 
     private fun presentError(error: Throwable) {
-        Log.e(name, error.localizedMessage, error)
+        Log.e(MAIN_STORY_TAG, error.localizedMessage, error)
         Toast.makeText(this, error.localizedMessage, Toast.LENGTH_LONG).show()
     }
 
     override fun renderVision(vision: Vision) {
-        Log.d(name, "VISION: $vision")
+        Log.d(MAIN_STORY_TAG, "VISION: $vision")
         when (vision) {
             is Vision.Loading -> setContentView(R.id.mainLoading, R.layout.activity_main_loading)
             is Vision.Viewing -> {
@@ -71,19 +70,18 @@ class MainActivity : NamedInteractionActivity<Vision, Action>() {
                 val report = vision.rebellionReport
                 supportActionBar!!.title = getString(R.string.funding)
                 FundingViewHolder(fundingView)
-                    .render(report.funding, onNewInvestmentClick = {
-                        interaction.sendAction(Action.OpenCashEditor)
-                    })
+                    .render(
+                        report.funding,
+                        onNewInvestmentClick = { sendAction(Action.OpenCashEditor) }
+                    )
                 timestampTextView.text = SimpleDateFormat.getDateTimeInstance().format(report.refreshDate)
-                correctionsAddButton.setOnClickListener { interaction.sendAction(Action.FindConstituent) }
+                correctionsAddButton.setOnClickListener { sendAction(Action.FindConstituent) }
                 ConclusionViewHolder(correctionsRecyclerView).render(
                     refreshDate = report.refreshDate,
                     conclusion = report.conclusion,
-                    onCorrectionDetailsClick = { interaction.sendAction(Action.OpenCorrectionDetails(it)) }
+                    onCorrectionDetailsClick = { sendAction(Action.OpenCorrectionDetails(it)) }
                 )
-                correctionsSwipeToRefresh.setOnRefreshListener {
-                    interaction.sendAction(Action.Refresh)
-                }
+                correctionsSwipeToRefresh.setOnRefreshListener { sendAction(Action.Refresh) }
                 if (!vision.isRefreshing) {
                     correctionsSwipeToRefresh.isRefreshing = false
                 }
@@ -128,5 +126,7 @@ class MainActivity : NamedInteractionActivity<Vision, Action>() {
         fun currentActivity(): MainActivity? {
             return mainActivity
         }
+
+        private const val MAIN_STORY_TAG: String = MainStory.TAG
     }
 }
