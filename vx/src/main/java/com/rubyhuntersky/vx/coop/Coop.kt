@@ -12,6 +12,7 @@ interface Coop<Sight : Any, Event : Any> {
 
     interface ViewHost {
         fun addSingleTextLineView(textStyle: TextStyle, orbit: BiOrbit, id: ViewId): View<String, Nothing>
+        fun drop(id: ViewId)
     }
 
     interface View<in Sight : Any, Event : Any> {

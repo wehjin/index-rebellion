@@ -17,9 +17,9 @@ class CoopPlusShareKtTest {
     fun testPlusShareHEnd() {
         val coop = SingleTextLineCoop(TextStyle.Body1, BiOrbit.StartCenterLit) +
                 Share(
+                    type = ShareType.HEnd,
                     span = Span.Relative(0.25f),
-                    coop = SingleTextLineCoop(TextStyle.Body1, BiOrbit.EndCenterLit),
-                    type = ShareType.HEnd
+                    coop = SingleTextLineCoop(TextStyle.Body1, BiOrbit.EndCenterLit)
                 )
         with(coop.enview(viewHost, ViewId())) {
             setSight("Hello")
@@ -40,9 +40,9 @@ class CoopPlusShareKtTest {
     fun testPlusShareHStart() {
         val coop = SingleTextLineCoop(TextStyle.Body1, BiOrbit.StartCenterLit) +
                 Share(
+                    type = ShareType.HStart,
                     span = Span.Relative(0.25f),
-                    coop = SingleTextLineCoop(TextStyle.Body1, BiOrbit.EndCenterLit),
-                    type = ShareType.HStart
+                    coop = SingleTextLineCoop(TextStyle.Body1, BiOrbit.EndCenterLit)
                 )
         with(coop.enview(viewHost, ViewId())) {
             setSight("Hello")
@@ -63,9 +63,9 @@ class CoopPlusShareKtTest {
     fun testPlusShareVFloor() {
         val coop = SingleTextLineCoop(TextStyle.Body1, BiOrbit.StartCenterLit) +
                 Share(
+                    type = ShareType.VFloor,
                     span = Span.Relative(0.25f),
-                    coop = SingleTextLineCoop(TextStyle.Body1, BiOrbit.EndCenterLit),
-                    type = ShareType.VFloor
+                    coop = SingleTextLineCoop(TextStyle.Body1, BiOrbit.EndCenterLit)
                 )
         with(coop.enview(viewHost, ViewId())) {
             setSight("Hello")
@@ -86,9 +86,9 @@ class CoopPlusShareKtTest {
     fun testPlusShareVCeiling() {
         val coop = SingleTextLineCoop(TextStyle.Body1, BiOrbit.StartCenterLit) +
                 Share(
+                    type = ShareType.VCeiling,
                     span = Span.Relative(0.25f),
-                    coop = SingleTextLineCoop(TextStyle.Body1, BiOrbit.EndCenterLit),
-                    type = ShareType.VCeiling
+                    coop = SingleTextLineCoop(TextStyle.Body1, BiOrbit.EndCenterLit)
                 )
         with(coop.enview(viewHost, ViewId())) {
             setSight("Hello")

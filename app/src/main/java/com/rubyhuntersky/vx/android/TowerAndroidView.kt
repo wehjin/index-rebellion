@@ -7,7 +7,6 @@ import android.widget.FrameLayout
 import com.rubyhuntersky.indexrebellion.R
 import com.rubyhuntersky.indexrebellion.presenters.cashediting.BackingViewInputLayout
 import com.rubyhuntersky.indexrebellion.presenters.cashediting.BackingViewTextView
-import com.rubyhuntersky.indexrebellion.presenters.cashediting.ViewBackedTowerView
 import com.rubyhuntersky.vx.common.Anchor
 import com.rubyhuntersky.vx.common.TextStyle
 import com.rubyhuntersky.vx.common.ViewId
@@ -70,7 +69,8 @@ class TowerAndroidView<Sight : Any, Event : Any>(context: Context, tower: Tower<
         return ViewBackedTowerView(
             frameLayout = this@TowerAndroidView,
             id = id,
-            adapter = object : ViewBackedTowerView.Adapter<BackingViewInputLayout, InputSight, InputEvent> {
+            adapter = object :
+                ViewBackedTowerView.Adapter<BackingViewInputLayout, InputSight, InputEvent> {
 
                 override fun buildView(context: Context): BackingViewInputLayout = BackingViewInputLayout(context, null)
 
@@ -85,7 +85,8 @@ class TowerAndroidView<Sight : Any, Event : Any>(context: Context, tower: Tower<
         return ViewBackedTowerView(
             frameLayout = this@TowerAndroidView,
             id = id,
-            adapter = object : ViewBackedTowerView.Adapter<BackingViewTextView, WrapTextSight, Nothing> {
+            adapter = object :
+                ViewBackedTowerView.Adapter<BackingViewTextView, WrapTextSight, Nothing> {
 
                 override fun buildView(context: Context): BackingViewTextView = BackingViewTextView(context)
 
