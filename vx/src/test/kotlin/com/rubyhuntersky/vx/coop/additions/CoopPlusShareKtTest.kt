@@ -3,7 +3,7 @@ package com.rubyhuntersky.vx.coop.additions
 import com.rubyhuntersky.vx.common.TextStyle
 import com.rubyhuntersky.vx.common.ViewId
 import com.rubyhuntersky.vx.common.bound.BiBound
-import com.rubyhuntersky.vx.coop.coops.SingleTextLineCoop
+import com.rubyhuntersky.vx.coop.coops.FitTextCoop
 import com.rubyhuntersky.vx.coop.tools.TestCoopViewHost
 import com.rubyhuntersky.vx.common.orbit.BiOrbit
 import org.junit.Assert.assertEquals
@@ -15,11 +15,11 @@ class CoopPlusShareKtTest {
 
     @Test
     fun testPlusShareHEnd() {
-        val coop = SingleTextLineCoop(TextStyle.Body1, BiOrbit.StartCenterLit) +
+        val coop = FitTextCoop(TextStyle.Body1, BiOrbit.StartCenterLit) +
                 Share(
                     type = ShareType.HEnd,
                     span = Span.Relative(0.25f),
-                    coop = SingleTextLineCoop(TextStyle.Body1, BiOrbit.EndCenterLit)
+                    coop = FitTextCoop(TextStyle.Body1, BiOrbit.EndCenterLit)
                 )
         with(coop.enview(viewHost, ViewId())) {
             setSight("Hello")
@@ -38,11 +38,11 @@ class CoopPlusShareKtTest {
 
     @Test
     fun testPlusShareHStart() {
-        val coop = SingleTextLineCoop(TextStyle.Body1, BiOrbit.StartCenterLit) +
+        val coop = FitTextCoop(TextStyle.Body1, BiOrbit.StartCenterLit) +
                 Share(
                     type = ShareType.HStart,
                     span = Span.Relative(0.25f),
-                    coop = SingleTextLineCoop(TextStyle.Body1, BiOrbit.EndCenterLit)
+                    coop = FitTextCoop(TextStyle.Body1, BiOrbit.EndCenterLit)
                 )
         with(coop.enview(viewHost, ViewId())) {
             setSight("Hello")
@@ -61,11 +61,11 @@ class CoopPlusShareKtTest {
 
     @Test
     fun testPlusShareVFloor() {
-        val coop = SingleTextLineCoop(TextStyle.Body1, BiOrbit.StartCenterLit) +
+        val coop = FitTextCoop(TextStyle.Body1, BiOrbit.StartCenterLit) +
                 Share(
                     type = ShareType.VFloor,
                     span = Span.Relative(0.25f),
-                    coop = SingleTextLineCoop(TextStyle.Body1, BiOrbit.EndCenterLit)
+                    coop = FitTextCoop(TextStyle.Body1, BiOrbit.EndCenterLit)
                 )
         with(coop.enview(viewHost, ViewId())) {
             setSight("Hello")
@@ -84,11 +84,11 @@ class CoopPlusShareKtTest {
 
     @Test
     fun testPlusShareVCeiling() {
-        val coop = SingleTextLineCoop(TextStyle.Body1, BiOrbit.StartCenterLit) +
+        val coop = FitTextCoop(TextStyle.Body1, BiOrbit.StartCenterLit) +
                 Share(
                     type = ShareType.VCeiling,
                     span = Span.Relative(0.25f),
-                    coop = SingleTextLineCoop(TextStyle.Body1, BiOrbit.EndCenterLit)
+                    coop = FitTextCoop(TextStyle.Body1, BiOrbit.EndCenterLit)
                 )
         with(coop.enview(viewHost, ViewId())) {
             setSight("Hello")

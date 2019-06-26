@@ -10,7 +10,7 @@ import com.rubyhuntersky.vx.common.orbit.BiOrbit
 import org.junit.Assert.assertEquals
 import org.junit.Test
 
-class SingleTextLineCoopTest {
+class FitTextCoopTest {
 
     private val viewHost = TestCoopViewHost()
     private val frameBound = BiBound(HBound(0, 10), VBound(0, 20))
@@ -21,13 +21,13 @@ class SingleTextLineCoopTest {
 
     @Test
     fun testBoundSightStyle() {
-        val coop = SingleTextLineCoop(textStyle, orbit)
+        val coop = FitTextCoop(textStyle, orbit)
         with(coop.enview(viewHost, id)) {
             setBound(frameBound)
             setSight(text)
         }
         assertEquals(
-            TestCoopViewHost.Item.SingleTextLine(id, frameBound, text, textStyle, orbit),
+            TestCoopViewHost.Item.TestFitText(id, frameBound, text, textStyle, orbit),
             viewHost.items.first()
         )
     }

@@ -17,7 +17,7 @@ import com.rubyhuntersky.vx.common.margin.BiMargin
 import com.rubyhuntersky.vx.common.orbit.BiOrbit
 import com.rubyhuntersky.vx.coop.Coop
 import com.rubyhuntersky.vx.coop.additions.*
-import com.rubyhuntersky.vx.coop.coops.SingleTextLineCoop
+import com.rubyhuntersky.vx.coop.coops.FitTextCoop
 import com.rubyhuntersky.vx.tower.additions.mapSight
 
 class DriftActivity : AppCompatActivity() {
@@ -58,17 +58,17 @@ class DriftActivity : AppCompatActivity() {
     companion object {
 
         private val holdingsButtonCoop: Coop<Vision.Viewing, Nothing> =
-            SingleTextLineCoop(TextStyle.Highlight5, BiOrbit.Center).mapSight { "Holdings" }
+            FitTextCoop(TextStyle.Highlight5, BiOrbit.Center).mapSight { "Holdings" }
 
         private val adjustmentButtonCoop: Coop<Vision.Viewing, Nothing> =
-            SingleTextLineCoop(TextStyle.Highlight5, BiOrbit.Center).mapSight { "Adjustments" }
+            FitTextCoop(TextStyle.Highlight5, BiOrbit.Center).mapSight { "Adjustments" }
 
         private val controlCoop: Coop<Vision.Viewing, Nothing> = holdingsButtonCoop.plus(
             Share(ShareType.HEnd, Span.Relative(0.5f), adjustmentButtonCoop)
         )
 
         private val contentCoop: Coop<Vision.Viewing, Nothing> =
-            SingleTextLineCoop(TextStyle.Body1, BiOrbit.StartCenterLit)
+            FitTextCoop(TextStyle.Body1, BiOrbit.StartCenterLit)
                 .plus(BiMargin.Uniform(standardMarginSpan))
                 .mapSight { it.drift.generalHoldings.toString() }
 

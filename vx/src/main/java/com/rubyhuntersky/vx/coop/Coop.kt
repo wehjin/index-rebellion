@@ -11,7 +11,7 @@ interface Coop<Sight : Any, Event : Any> {
     fun enview(viewHost: ViewHost, id: ViewId): View<Sight, Event>
 
     interface ViewHost {
-        fun addSingleTextLineView(textStyle: TextStyle, orbit: BiOrbit, id: ViewId): View<String, Nothing>
+        fun addFitTextView(textStyle: TextStyle, orbit: BiOrbit, id: ViewId): View<String, Nothing>
         fun drop(id: ViewId)
     }
 

@@ -28,7 +28,7 @@ class TestTowerViewHost : Tower.ViewHost {
         ) : Item()
     }
 
-    override fun addTextWrapView(id: ViewId): Tower.View<WrapTextSight, Nothing> {
+    override fun addWrapTextView(id: ViewId): Tower.View<WrapTextSight, Nothing> {
 
         val item = Item.TestWrapText(id, null, null, null)
             .also { item ->

@@ -58,7 +58,7 @@ class CoopAndroidView<Sight : Any, Event : Any>(context: Context, coop: Coop<Sig
         boundBehavior.onNext(BiBound(toDip(left), toDip(left + w), toDip(top), toDip(top + h)))
     }
 
-    override fun addSingleTextLineView(textStyle: TextStyle, orbit: BiOrbit, id: ViewId): Coop.View<String, Nothing> =
+    override fun addFitTextView(textStyle: TextStyle, orbit: BiOrbit, id: ViewId): Coop.View<String, Nothing> =
         ViewBackedCoopView(
             frameLayout = this@CoopAndroidView,
             id = id,

@@ -3,8 +3,8 @@ package com.rubyhuntersky.vx.coop.tools
 import com.rubyhuntersky.vx.common.TextStyle
 import com.rubyhuntersky.vx.common.ViewId
 import com.rubyhuntersky.vx.common.bound.BiBound
-import com.rubyhuntersky.vx.coop.Coop
 import com.rubyhuntersky.vx.common.orbit.BiOrbit
+import com.rubyhuntersky.vx.coop.Coop
 import io.reactivex.Observable
 
 class TestCoopViewHost : Coop.ViewHost {
@@ -15,7 +15,7 @@ class TestCoopViewHost : Coop.ViewHost {
         abstract val bound: BiBound?
         abstract val sight: Any?
 
-        data class SingleTextLine(
+        data class TestFitText(
             override val id: ViewId,
             override var bound: BiBound?,
             override var sight: String?,
@@ -27,9 +27,9 @@ class TestCoopViewHost : Coop.ViewHost {
 
     val items = mutableListOf<Item>()
 
-    override fun addSingleTextLineView(textStyle: TextStyle, orbit: BiOrbit, id: ViewId): Coop.View<String, Nothing> {
+    override fun addFitTextView(textStyle: TextStyle, orbit: BiOrbit, id: ViewId): Coop.View<String, Nothing> {
 
-        val item = Item.SingleTextLine(id, null, null, textStyle, orbit)
+        val item = Item.TestFitText(id, null, null, textStyle, orbit)
             .also { item ->
                 items.removeIf { it.id == id }
                 items.add(item)
@@ -46,6 +46,10 @@ class TestCoopViewHost : Coop.ViewHost {
                 item.sight = sight
             }
         }
+    }
+
+    override fun drop(id: ViewId) {
+        items.removeAll { it.id.isDescendentOf(id) }
     }
 }
 

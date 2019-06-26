@@ -83,7 +83,7 @@ class ScreenView
             }
         )
 
-    override fun addTextWrapView(id: ViewId): Tower.View<WrapTextSight, Nothing> =
+    override fun addWrapTextView(id: ViewId): Tower.View<WrapTextSight, Nothing> =
         ViewBackedTowerView(
             frameLayout = this@ScreenView,
             id = id,

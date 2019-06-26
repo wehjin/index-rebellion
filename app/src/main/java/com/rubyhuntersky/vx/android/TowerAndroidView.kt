@@ -81,7 +81,7 @@ class TowerAndroidView<Sight : Any, Event : Any>(context: Context, tower: Tower<
         )
     }
 
-    override fun addTextWrapView(id: ViewId): Tower.View<WrapTextSight, Nothing> {
+    override fun addWrapTextView(id: ViewId): Tower.View<WrapTextSight, Nothing> {
         return ViewBackedTowerView(
             frameLayout = this@TowerAndroidView,
             id = id,

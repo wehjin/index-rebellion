@@ -16,7 +16,7 @@ interface Tower<Sight : Any, Event : Any> {
     fun enview(viewHost: ViewHost, id: ViewId): View<Sight, Event>
 
     interface ViewHost {
-        fun addTextWrapView(id: ViewId): View<WrapTextSight, Nothing>
+        fun addWrapTextView(id: ViewId): View<WrapTextSight, Nothing>
         fun addInputView(id: ViewId): View<InputSight, InputEvent>
         fun drop(id: ViewId)
     }

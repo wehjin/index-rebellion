@@ -32,8 +32,8 @@ class BottomTest {
     }
 
     private val hostMock = mock<Tower.ViewHost> {
-        on { addTextWrapView(ViewId().extend(0)) } doReturn viewMockA
-        on { addTextWrapView(ViewId().extend(1)) } doReturn viewMockB
+        on { addWrapTextView(ViewId().extend(0)) } doReturn viewMockA
+        on { addWrapTextView(ViewId().extend(1)) } doReturn viewMockB
     }
     private val tower = TitleTower + Bottom(TitleTower) { sight: Pair<String, String> -> sight }
     private val view = tower.enview(hostMock, viewId)
