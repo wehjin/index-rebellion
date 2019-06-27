@@ -26,7 +26,7 @@ class CoopPlusMarginKtTest {
             setSight("PlusMargin")
             setBound(BiBound(0, 100, 0, 200))
         }
-        val bound = viewHost.items.first().bound!!
+        val bound = viewHost.items.first().maybeBound!!
         assertEquals(1, bound.start)
         assertEquals(98, bound.end)
         assertEquals(3, bound.ceiling)

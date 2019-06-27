@@ -1,4 +1,4 @@
-package com.rubyhuntersky.indexrebellion.presenters.cashediting
+package com.rubyhuntersky.vx.android.backingviews
 
 import android.content.Context
 import android.support.design.widget.TextInputLayout
@@ -11,7 +11,7 @@ import android.view.ViewGroup
 import android.widget.FrameLayout
 import android.widget.LinearLayout
 import com.rubyhuntersky.indexrebellion.R
-import com.rubyhuntersky.vx.android.ViewBackedTowerView
+import com.rubyhuntersky.vx.android.tower.ViewBackedTowerView
 import com.rubyhuntersky.vx.android.toDip
 import com.rubyhuntersky.vx.tower.towers.Icon
 import com.rubyhuntersky.vx.tower.towers.InputEvent
@@ -22,7 +22,7 @@ import io.reactivex.subjects.BehaviorSubject
 import io.reactivex.subjects.PublishSubject
 import kotlinx.android.synthetic.main.view_input.view.*
 
-class BackingViewInputLayout
+class BackingInputLayout
 @JvmOverloads constructor(
     context: Context,
     attrs: AttributeSet? = null,

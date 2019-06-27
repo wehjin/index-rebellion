@@ -16,9 +16,6 @@ class EmptyCoopTest {
             setSight(Unit)
             setBound(BiBound(0, 100, 0, 100))
         }
-        Assert.assertEquals(
-            emptyList<TestCoopViewHost.Item>(),
-            viewHost.items
-        )
+        Assert.assertEquals(0, viewHost.items.size)
     }
 }

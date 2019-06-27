@@ -1,4 +1,4 @@
-package com.rubyhuntersky.vx.android
+package com.rubyhuntersky.vx.android.coop
 
 import android.content.Context
 import android.util.Log
@@ -6,16 +6,17 @@ import android.view.Gravity
 import android.view.View
 import android.view.ViewGroup
 import android.widget.FrameLayout
+import com.rubyhuntersky.vx.android.toPixels
 import com.rubyhuntersky.vx.common.ViewId
 import com.rubyhuntersky.vx.common.bound.BiBound
 import com.rubyhuntersky.vx.coop.Coop
 import io.reactivex.Observable
 
-class ViewBackedCoopView<V, C : Any, E : Any>(
+class ViewBackedCoopView<V, Sight : Any, Event : Any>(
     id: ViewId,
     private val frameLayout: FrameLayout,
-    private val adapter: Adapter<V, C, E>
-) : Coop.View<C, E> where V : View, V : ViewBackedCoopView.BackingView<E> {
+    private val adapter: Adapter<V, Sight, Event>
+) : Coop.View<Sight, Event> where V : View, V : ViewBackedCoopView.BackingView<Event> {
 
     interface BackingView<E : Any> {
         val events: Observable<E>
@@ -49,12 +50,12 @@ class ViewBackedCoopView<V, C : Any, E : Any>(
             }
     }
 
-    override fun setSight(sight: C) {
+    override fun setSight(sight: Sight) {
         Log.d(view.tag.toString(), "Set content $sight")
         adapter.renderView(view, sight)
     }
 
-    override val events: Observable<E> get() = view.events
+    override val events: Observable<Event> get() = view.events
 
     companion object {
         fun isViewInGroup(view: View, groupId: ViewId): Boolean {

@@ -4,8 +4,9 @@ import android.content.Context
 import android.util.AttributeSet
 import android.widget.FrameLayout
 import com.rubyhuntersky.indexrebellion.R
-import com.rubyhuntersky.indexrebellion.presenters.cashediting.BackingViewInputLayout
-import com.rubyhuntersky.indexrebellion.presenters.cashediting.BackingViewTextView
+import com.rubyhuntersky.vx.android.backingviews.BackingInputLayout
+import com.rubyhuntersky.vx.android.backingviews.BackingTextView
+import com.rubyhuntersky.vx.android.tower.ViewBackedTowerView
 import com.rubyhuntersky.vx.common.Anchor
 import com.rubyhuntersky.vx.common.TextStyle
 import com.rubyhuntersky.vx.common.ViewId
@@ -72,12 +73,12 @@ class ScreenView
             frameLayout = this@ScreenView,
             id = id,
             adapter = object :
-                ViewBackedTowerView.Adapter<BackingViewInputLayout, InputSight, InputEvent> {
-                override fun buildView(context: Context): BackingViewInputLayout {
-                    return BackingViewInputLayout(context, null)
+                ViewBackedTowerView.Adapter<BackingInputLayout, InputSight, InputEvent> {
+                override fun buildView(context: Context): BackingInputLayout {
+                    return BackingInputLayout(context, null)
                 }
 
-                override fun renderView(view: BackingViewInputLayout, sight: InputSight) {
+                override fun renderView(view: BackingInputLayout, sight: InputSight) {
                     view.render(sight)
                 }
             }
@@ -88,11 +89,12 @@ class ScreenView
             frameLayout = this@ScreenView,
             id = id,
             adapter = object :
-                ViewBackedTowerView.Adapter<BackingViewTextView, WrapTextSight, Nothing> {
+                ViewBackedTowerView.Adapter<BackingTextView, WrapTextSight, Nothing> {
 
-                override fun buildView(context: Context): BackingViewTextView = BackingViewTextView(context)
+                override fun buildView(context: Context): BackingTextView =
+                    BackingTextView(context)
 
-                override fun renderView(view: BackingViewTextView, sight: WrapTextSight) {
+                override fun renderView(view: BackingTextView, sight: WrapTextSight) {
                     val resId = when (sight.style) {
                         TextStyle.Highlight5 -> R.style.TextAppearance_MaterialComponents_Headline5
                         TextStyle.Highlight6 -> R.style.TextAppearance_MaterialComponents_Headline6

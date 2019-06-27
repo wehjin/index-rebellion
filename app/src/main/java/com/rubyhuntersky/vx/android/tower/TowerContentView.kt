@@ -1,4 +1,4 @@
-package com.rubyhuntersky.vx.android
+package com.rubyhuntersky.vx.android.tower
 
 import android.app.Activity
 import com.rubyhuntersky.vx.tower.Tower

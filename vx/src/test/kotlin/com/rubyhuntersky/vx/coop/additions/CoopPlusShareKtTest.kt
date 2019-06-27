@@ -28,11 +28,11 @@ class CoopPlusShareKtTest {
 
         assertEquals(
             setOf(BiBound(0, 75, 0, 100), BiBound(75, 100, 0, 100)),
-            viewHost.items.map { it.bound }.toSet()
+            viewHost.items.map { it.maybeBound }.toSet()
         )
         assertEquals(
             listOf("Hello", "Hello"),
-            viewHost.items.map { it.sight }
+            viewHost.items.map { it.maybeSight }
         )
     }
 
@@ -51,11 +51,11 @@ class CoopPlusShareKtTest {
 
         assertEquals(
             setOf(BiBound(0, 25, 0, 100), BiBound(25, 100, 0, 100)),
-            viewHost.items.map { it.bound }.toSet()
+            viewHost.items.map { it.maybeBound }.toSet()
         )
         assertEquals(
             listOf("Hello", "Hello"),
-            viewHost.items.map { it.sight }
+            viewHost.items.map { it.maybeSight }
         )
     }
 
@@ -74,11 +74,11 @@ class CoopPlusShareKtTest {
 
         assertEquals(
             setOf(BiBound(0, 100, 0, 75), BiBound(0, 100, 75, 100)),
-            viewHost.items.map { it.bound }.toSet()
+            viewHost.items.map { it.maybeBound }.toSet()
         )
         assertEquals(
             listOf("Hello", "Hello"),
-            viewHost.items.map { it.sight }
+            viewHost.items.map { it.maybeSight }
         )
     }
 
@@ -97,11 +97,11 @@ class CoopPlusShareKtTest {
 
         assertEquals(
             setOf(BiBound(0, 100, 0, 25), BiBound(0, 100, 25, 100)),
-            viewHost.items.map { it.bound }.toSet()
+            viewHost.items.map { it.maybeBound }.toSet()
         )
         assertEquals(
             listOf("Hello", "Hello"),
-            viewHost.items.map { it.sight }
+            viewHost.items.map { it.maybeSight }
         )
     }
 }

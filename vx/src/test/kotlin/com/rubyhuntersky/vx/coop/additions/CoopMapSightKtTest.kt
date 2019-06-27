@@ -19,6 +19,6 @@ class CoopMapSightKtTest {
             setSight(42)
             setBound(BiBound(0, 100, 0, 100))
         }
-        assertEquals("42", viewHost.items.first().sight)
+        assertEquals("42", viewHost.items.first().maybeSight)
     }
 }

@@ -5,8 +5,8 @@ import com.rubyhuntersky.vx.common.ViewId
 import com.rubyhuntersky.vx.common.bound.BiBound
 import com.rubyhuntersky.vx.common.bound.HBound
 import com.rubyhuntersky.vx.common.bound.VBound
-import com.rubyhuntersky.vx.coop.tools.TestCoopViewHost
 import com.rubyhuntersky.vx.common.orbit.BiOrbit
+import com.rubyhuntersky.vx.coop.tools.TestCoopViewHost
 import org.junit.Assert.assertEquals
 import org.junit.Test
 
@@ -26,10 +26,16 @@ class FitTextCoopTest {
             setBound(frameBound)
             setSight(text)
         }
-        assertEquals(
-            TestCoopViewHost.Item.TestFitText(id, frameBound, text, textStyle, orbit),
-            viewHost.items.first()
-        )
+        when (val item = viewHost.items.first()) {
+            is TestCoopViewHost.Item.FITTEXT -> {
+                assertEquals(frameBound, item.maybeBound)
+                assertEquals(text, item.maybeSight)
+                assertEquals(id, item.id)
+                assertEquals(textStyle, item.textStyle)
+                assertEquals(orbit, item.orbit)
+            }
+            else -> error("Not FITTEXT")
+        }
     }
 }
 
