@@ -15,7 +15,6 @@ import com.rubyhuntersky.vx.android.coop.CoopContentView
 import com.rubyhuntersky.vx.coop.Coop
 import com.rubyhuntersky.vx.coop.additions.mapSight
 import com.rubyhuntersky.vx.tower.additions.augment.extendCeiling
-import com.rubyhuntersky.vx.tower.additions.augment.extendFloor
 import com.rubyhuntersky.vx.tower.additions.inCoop
 import com.rubyhuntersky.vx.tower.additions.mapSight
 
@@ -56,13 +55,10 @@ class DriftActivity : AppCompatActivity() {
                 )
             }
 
-        private val holdingsSectionTower = holdingsContentTower.extendCeiling(Standard.LabelTower("Holdings"))
-
-        private val adjustmentsSectionTower = Standard.BodyTower()
-            .mapSight { drift: Drift -> drift.plan.toString() }
-            .extendCeiling(Standard.LabelTower("Adjustments"))
-
-        private val pageTower = holdingsSectionTower.extendFloor(adjustmentsSectionTower)
+        private val pageTower = Standard.SectionTower(
+            Pair("Holdings", holdingsContentTower),
+            Pair("Adjustments", Standard.BodyTower().mapSight { drift: Drift -> drift.plan.toString() })
+        )
 
         private val pageCoop: Coop<Vision.Viewing, Nothing> = pageTower.inCoop().mapSight(Vision.Viewing::drift)
     }
