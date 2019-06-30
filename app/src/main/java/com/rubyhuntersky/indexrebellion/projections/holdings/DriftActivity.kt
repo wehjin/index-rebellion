@@ -57,7 +57,7 @@ class DriftActivity : AppCompatActivity() {
 
         private val pageTower = Standard.SectionTower(
             Pair("Holdings", holdingsContentTower),
-            Pair("Adjustments", Standard.BodyTower().mapSight { drift: Drift -> drift.plan.toString() })
+            Pair("Adjustments", Standard.BodyTower().mapSight { drift: Drift -> drift.plateAdjustments.toString() })
         )
 
         private val pageCoop: Coop<Vision.Viewing, Nothing> = pageTower.inCoop().mapSight(Vision.Viewing::drift)

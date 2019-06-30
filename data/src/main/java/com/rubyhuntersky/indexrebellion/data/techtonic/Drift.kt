@@ -3,6 +3,8 @@ package com.rubyhuntersky.indexrebellion.data.techtonic
 import com.rubyhuntersky.indexrebellion.data.techtonic.market.InstrumentSample
 import com.rubyhuntersky.indexrebellion.data.techtonic.market.Market
 import com.rubyhuntersky.indexrebellion.data.techtonic.plan.Plan
+import com.rubyhuntersky.indexrebellion.data.techtonic.plating.Plate
+import com.rubyhuntersky.indexrebellion.data.techtonic.plating.PlateAdjustment
 import com.rubyhuntersky.indexrebellion.data.techtonic.plating.Plating
 import com.rubyhuntersky.indexrebellion.data.techtonic.vault.SpecificHolding
 import com.rubyhuntersky.indexrebellion.data.techtonic.vault.Vault
@@ -19,24 +21,31 @@ data class Drift(
     val plating: Plating
 ) {
 
-    val generalHoldings: Set<GeneralHolding>
-            by lazy {
-                vault.specificHoldings
-                    .groupBy { it.instrumentId }
-                    .map { entry ->
-                        val instrumentId = entry.key
-                        val sample = market.findSample(instrumentId)
-                        val specificHoldings = entry.value
-                        val size = specificHoldings.map { it.size }.fold(BigDecimal.ZERO, BigDecimal::plus)
-                        val custodians = specificHoldings.map { it.custodian }.toSet()
-                        val instrumentName = sample?.instrumentName
-                        val cashValue = sample?.sharePrice?.times(size.toDouble())
-                        val sampleModified = sample?.sampleDate ?: Date(0)
-                        val lastModified = specificHoldings.map { it.lastModified }.fold(sampleModified, Date::later)
-                        GeneralHolding(instrumentId, size, custodians, instrumentName, cashValue, lastModified)
-                    }
-                    .toSet()
+    val generalHoldings: Set<GeneralHolding> by lazy {
+        vault.specificHoldings
+            .groupBy { it.instrumentId }
+            .map { entry ->
+                val instrumentId = entry.key
+                val sample = market.findSample(instrumentId)
+                val specificHoldings = entry.value
+                val size = specificHoldings.map { it.size }.fold(BigDecimal.ZERO, BigDecimal::plus)
+                val custodians = specificHoldings.map { it.custodian }.toSet()
+                val instrumentName = sample?.instrumentName
+                val cashValue = sample?.sharePrice?.times(size.toDouble())
+                val sampleModified = sample?.sampleDate ?: Date(0)
+                val lastModified = specificHoldings.map { it.lastModified }.fold(sampleModified, Date::later)
+                GeneralHolding(instrumentId, size, custodians, instrumentName, cashValue, lastModified)
             }
+            .toSet()
+    }
+
+    val plateAdjustments: Set<PlateAdjustment> by lazy {
+        Plate.values()
+            .map {
+                PlateAdjustment(it)
+            }
+            .toSet()
+    }
 
     fun replaceSample(sample: InstrumentSample): Drift {
         return copy(market = market.replaceSample(sample))
