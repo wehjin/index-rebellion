@@ -59,7 +59,7 @@ class TestCoopViewHost : Coop.ViewHost {
     ): Coop.View<Sight, Event> = Item.TOWER(id, tower, BehaviorSubject.create()).also(this::addItem).asView()
 
     override fun drop(id: ViewId) {
-        items.removeAll { it.id.isDescendentOf(id) }
+        items.removeAll { it.id.isEqualOrExtends(id) }
     }
 }
 

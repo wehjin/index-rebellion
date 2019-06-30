@@ -102,7 +102,7 @@ class ViewBackedTowerView<V, C : Any, E : Any>(
 
     companion object {
         fun isViewInGroup(view: View, groupId: ViewId): Boolean {
-            return (view.tag as? ViewId)?.isDescendentOf(groupId) ?: false
+            return (view.tag as? ViewId)?.isEqualOrExtends(groupId) ?: false
         }
     }
 }

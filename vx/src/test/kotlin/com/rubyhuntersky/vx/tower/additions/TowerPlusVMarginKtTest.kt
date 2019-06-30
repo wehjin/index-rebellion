@@ -7,14 +7,13 @@ import com.rubyhuntersky.vx.common.bound.HBound
 import com.rubyhuntersky.vx.common.margin.Margin
 import com.rubyhuntersky.vx.coop.additions.Span
 import com.rubyhuntersky.vx.common.Latitude
-import com.rubyhuntersky.vx.tower.additions.margin.plus
 import com.rubyhuntersky.vx.tower.tools.TestTowerViewHost
 import com.rubyhuntersky.vx.tower.towers.textwrap.WrapTextSight
 import com.rubyhuntersky.vx.tower.towers.textwrap.WrapTextTower
 import org.junit.Assert.assertEquals
 import org.junit.Test
 
-class TowerPlusMarginKtTest {
+class TowerPlusVMarginKtTest {
 
     @Test
     fun plusMargin() {

@@ -1,15 +1,12 @@
-package com.rubyhuntersky.vx.tower.additions.margin
+package com.rubyhuntersky.vx.tower.additions
 
 import com.rubyhuntersky.vx.common.Anchor
+import com.rubyhuntersky.vx.common.Latitude
 import com.rubyhuntersky.vx.common.ViewId
 import com.rubyhuntersky.vx.common.bound.HBound
 import com.rubyhuntersky.vx.common.margin.Margin
-import com.rubyhuntersky.vx.common.Latitude
 import com.rubyhuntersky.vx.tower.Tower
 import io.reactivex.Observable
-
-operator fun <Sight : Any, Event : Any> Tower<Sight, Event>.plus(margin: Margin): Tower<Sight, Event> =
-    this.plusVMargin(margin)
 
 fun <Sight : Any, Event : Any> Tower<Sight, Event>.plusVMargin(margin: Margin): Tower<Sight, Event> {
     val core = this

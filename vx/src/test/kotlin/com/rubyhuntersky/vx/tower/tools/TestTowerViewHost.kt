@@ -62,7 +62,7 @@ class TestTowerViewHost : Tower.ViewHost {
     }
 
     override fun drop(id: ViewId) {
-        items.removeAll { it.id.isDescendentOf(id) }
+        items.removeAll { it.id.isEqualOrExtends(id) }
     }
 }
 

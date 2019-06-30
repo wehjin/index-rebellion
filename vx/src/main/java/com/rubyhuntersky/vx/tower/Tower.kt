@@ -4,6 +4,10 @@ import com.rubyhuntersky.vx.common.Anchor
 import com.rubyhuntersky.vx.common.Latitude
 import com.rubyhuntersky.vx.common.ViewId
 import com.rubyhuntersky.vx.common.bound.HBound
+import com.rubyhuntersky.vx.common.margin.Margin
+import com.rubyhuntersky.vx.tower.additions.augment.HAugment
+import com.rubyhuntersky.vx.tower.additions.augment.plusAugment
+import com.rubyhuntersky.vx.tower.additions.plusVMargin
 import com.rubyhuntersky.vx.tower.towers.InputEvent
 import com.rubyhuntersky.vx.tower.towers.InputSight
 import com.rubyhuntersky.vx.tower.towers.NeverTower
@@ -30,4 +34,7 @@ interface Tower<Sight : Any, Event : Any> {
     }
 
     fun <NeverE : Any> neverEvent(): Tower<Sight, NeverE> = NeverTower(this)
+
+    operator fun plus(margin: Margin): Tower<Sight, Event> = plusVMargin(margin)
+    operator fun plus(augment: HAugment<Sight, Event>) = plusAugment(augment)
 }

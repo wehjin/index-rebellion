@@ -1,14 +1,20 @@
 package com.rubyhuntersky.vx.tower.additions.augment
 
 import com.rubyhuntersky.vx.common.Anchor
+import com.rubyhuntersky.vx.common.Latitude
 import com.rubyhuntersky.vx.common.ViewId
 import com.rubyhuntersky.vx.common.bound.HBound
-import com.rubyhuntersky.vx.common.Latitude
 import com.rubyhuntersky.vx.tower.Tower
 import io.reactivex.Observable
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.rxkotlin.addTo
 import io.reactivex.subjects.BehaviorSubject
+
+fun <Sight : Any, Event : Any> Tower<Sight, Event>.extendFloor(tower: Tower<Sight, Event>) =
+    plusAugment(HAugment.Floor(tower))
+
+fun <Sight : Any, Event : Any> Tower<Sight, Event>.extendCeiling(tower: Tower<Sight, Event>) =
+    plusAugment(HAugment.Ceiling(tower))
 
 fun <Sight : Any, Event : Any> Tower<Sight, Event>.plusAugment(augment: HAugment<Sight, Event>): Tower<Sight, Event> {
     val core = this
@@ -62,10 +68,3 @@ fun <Sight : Any, Event : Any> Tower<Sight, Event>.plusAugment(augment: HAugment
             }
     }
 }
-
-
-operator fun <Sight : Any, Event : Any> Tower<Sight, Event>.plus(augment: HAugment<Sight, Event>): Tower<Sight, Event> =
-    this.plusAugment(augment)
-
-fun <Sight : Any, Event : Any> Tower<Sight, Event>.extendFloor(floorTower: Tower<Sight, Event>): Tower<Sight, Event> =
-    this + HAugment.Floor(floorTower)

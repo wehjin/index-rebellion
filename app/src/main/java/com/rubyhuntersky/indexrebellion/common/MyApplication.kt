@@ -38,7 +38,6 @@ import com.rubyhuntersky.robinhood.login.RobinhoodLoginDialogFragment
 import com.rubyhuntersky.robinhood.login.enableRobinhoodLogin
 import com.rubyhuntersky.stockcatalog.StockMarket
 import com.rubyhuntersky.storage.PreferencesBook
-import com.rubyhuntersky.vx.coop.additions.Span
 import kotlinx.serialization.UnstableDefault
 import java.math.BigDecimal
 import java.util.*
@@ -129,8 +128,6 @@ class MyApplication : Application() {
     }
 
     companion object {
-        const val standardMarginSize: Int = 16
-        val standardMarginSpan = Span.Absolute(standardMarginSize)
         val rbhApi = RbhApi.SHARED
 
         lateinit var accessBook: Book<Access>
