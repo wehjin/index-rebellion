@@ -2,6 +2,7 @@ package com.rubyhuntersky.indexrebellion.data.techtonic.plating
 
 import com.rubyhuntersky.indexrebellion.data.cash.CashAmount
 import com.rubyhuntersky.indexrebellion.data.techtonic.instrument.InstrumentId
+import java.math.BigDecimal
 
 @Suppress("EqualsOrHashCode")
 data class PlateAdjustment(
@@ -11,6 +12,13 @@ data class PlateAdjustment(
     val vaultValue: CashAmount,
     val instruments: Set<InstrumentId>
 ) {
+
+    val portionDelta: Double by lazy { plannedPortion - realPortion }
+
+    val valueDelta: Double by lazy { (BigDecimal(portionDelta) * vaultValue.value).toDouble() }
+
+    val realValue: CashAmount by lazy { vaultValue * realPortion }
+
     override fun hashCode(): Int {
         var result = plate.hashCode()
         result = 31 * result + plannedPortion.toString().hashCode()

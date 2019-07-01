@@ -3,7 +3,7 @@ package com.rubyhuntersky.indexrebellion.data
 import kotlin.math.absoluteValue
 import kotlin.math.roundToLong
 
-fun Double.toStatString(): String {
+fun Double.toStatString(suffix: String? = null): String {
 
     var thousandsMultiplier = 0
     var value = this.absoluteValue
@@ -32,5 +32,6 @@ fun Double.toStatString(): String {
         else -> "e$thousandsMultiplier"
     }
 
-    return "$valueString$multiplierString"
+    val tail = suffix?.let { " $it" } ?: ""
+    return "$valueString$multiplierString$tail"
 }

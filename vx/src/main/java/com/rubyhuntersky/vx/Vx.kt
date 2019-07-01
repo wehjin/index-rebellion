@@ -1,11 +1,12 @@
 package com.rubyhuntersky.vx
 
 import com.rubyhuntersky.vx.common.Anchor
+import com.rubyhuntersky.vx.common.Latitude
 import com.rubyhuntersky.vx.common.ViewId
 import com.rubyhuntersky.vx.common.bound.HBound
-import com.rubyhuntersky.vx.common.Latitude
 import com.rubyhuntersky.vx.tower.Tower
 import io.reactivex.Observable
+import java.text.DecimalFormat
 
 fun <CoreC : Any, EdgeC : Any, Ev : Any> Tower<CoreC, Ev>.transform(transformer: (EdgeC) -> CoreC): Tower<EdgeC, Ev> {
     return object : Tower<EdgeC, Ev> {
@@ -23,3 +24,7 @@ fun <CoreC : Any, EdgeC : Any, Ev : Any> Tower.View<CoreC, Ev>.transform(transfo
         override val events: Observable<Ev> get() = this@transform.events.map { it }
     }
 }
+
+fun Double.toPercent(): String = percent.format(this)
+
+private val percent = DecimalFormat("##.##%")

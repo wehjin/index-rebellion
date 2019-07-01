@@ -48,7 +48,7 @@ data class CashAmount(
 
     operator fun div(divisor: CashAmount): Double = value.divide(divisor.value, 50, BigDecimal.ROUND_HALF_UP).toDouble()
 
-    fun toStatString() = toDouble().toStatString()
+    fun toStatString(suffix: String? = null) = toDouble().toStatString(suffix)
     fun toDouble(): Double = value.toDouble()
     fun toPortion(aggregate: CashAmount): Double = value.toPortion(aggregate.value)
 
