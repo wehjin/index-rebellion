@@ -1,22 +1,22 @@
 package com.rubyhuntersky.indexrebellion.data.techtonic.plating
 
+import com.rubyhuntersky.indexrebellion.data.cash.CashAmount
+import com.rubyhuntersky.indexrebellion.data.techtonic.instrument.InstrumentId
+
+@Suppress("EqualsOrHashCode")
 data class PlateAdjustment(
     val plate: Plate,
-    val plannedPortion: Double
+    val plannedPortion: Double,
+    val realPortion: Double,
+    val vaultValue: CashAmount,
+    val instruments: Set<InstrumentId>
 ) {
-    override fun equals(other: Any?): Boolean {
-        if (this === other) return true
-        if (other !is PlateAdjustment) return false
-
-        if (plate != other.plate) return false
-        if (plannedPortion != other.plannedPortion) return false
-
-        return true
-    }
-
     override fun hashCode(): Int {
         var result = plate.hashCode()
-        result = 31 * result + plannedPortion.toString().hashCode() // Double.toString() available starting in API 24
+        result = 31 * result + plannedPortion.toString().hashCode()
+        result = 31 * result + realPortion.toString().hashCode()
+        result = 31 * result + vaultValue.hashCode()
+        result = 31 * result + instruments.hashCode()
         return result
     }
 }

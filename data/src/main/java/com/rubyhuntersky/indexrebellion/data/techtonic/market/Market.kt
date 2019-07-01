@@ -1,5 +1,6 @@
 package com.rubyhuntersky.indexrebellion.data.techtonic.market
 
+import com.rubyhuntersky.indexrebellion.data.cash.CashAmount
 import com.rubyhuntersky.indexrebellion.data.techtonic.instrument.InstrumentId
 import kotlinx.serialization.Serializable
 
@@ -17,13 +18,9 @@ data class Market(
                 instrumentSamples.associateBy { it.instrumentId }
             }
 
-    fun contains(instrumentId: InstrumentId): Boolean {
-        return ids.contains(instrumentId)
-    }
-
-    fun findSample(instrumentId: InstrumentId): InstrumentSample? {
-        return byId[instrumentId]
-    }
+    fun contains(instrumentId: InstrumentId): Boolean = ids.contains(instrumentId)
+    fun findSample(instrumentId: InstrumentId): InstrumentSample? = byId[instrumentId]
+    fun findSharePrice(instrumentId: InstrumentId): CashAmount? = findSample(instrumentId)?.sharePrice
 
     fun replaceSample(sample: InstrumentSample): Market {
         return copy(

@@ -1,11 +1,17 @@
 package com.rubyhuntersky.indexrebellion.data.techtonic.vault
 
+import com.rubyhuntersky.indexrebellion.data.cash.CashAmount
+import com.rubyhuntersky.indexrebellion.data.techtonic.instrument.InstrumentId
+import com.rubyhuntersky.indexrebellion.data.techtonic.market.Market
+import com.rubyhuntersky.indexrebellion.data.techtonic.plating.Plate
+import com.rubyhuntersky.indexrebellion.data.techtonic.plating.Plating
 import kotlinx.serialization.Serializable
 
 @Serializable
 data class Vault(
     val specificHoldings: Set<SpecificHolding>
 ) {
+
     fun replaceHolding(holding: SpecificHolding): Vault {
         val newHoldings = specificHoldings
             .toMutableSet()
@@ -15,4 +21,31 @@ data class Vault(
             }
         return copy(specificHoldings = newHoldings)
     }
+
+    fun toValueAndPortions(plating: Plating, market: Market): Pair<CashAmount, Map<Plate, Double>> {
+        val plateValues = specificHoldings.fold(
+            initial = mutableMapOf<Plate, CashAmount>(),
+            operation = { plateValues, holding ->
+                val plate = plating.findPlate(holding.instrumentId)
+                val sharePrice = market.findSharePrice(holding.instrumentId)!!
+                val holdingValue = sharePrice * holding.size
+                plateValues.also {
+                    it[plate] = (it[plate] ?: CashAmount.ZERO) + holdingValue
+                }
+            }
+        )
+        val aggregateValue = plateValues.values.fold(CashAmount.ZERO, CashAmount::plus)
+        val portions = plateValues.mapValues { it.value.toPortion(aggregateValue) }
+        return Pair(aggregateValue, portions)
+    }
+
+    fun toInstrumentsByPlate(plating: Plating): Map<Plate, Set<InstrumentId>> = specificHoldings.fold(
+        initial = mutableMapOf(),
+        operation = { instruments, holding ->
+            val plate = plating.findPlate(holding.instrumentId)
+            instruments.also {
+                it[plate] = (it[plate] ?: emptySet()).plus(holding.instrumentId)
+            }
+        }
+    )
 }

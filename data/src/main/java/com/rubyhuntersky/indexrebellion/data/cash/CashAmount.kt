@@ -1,6 +1,7 @@
 package com.rubyhuntersky.indexrebellion.data.cash
 
 import com.rubyhuntersky.indexrebellion.data.common.BigDecimalSerializer
+import com.rubyhuntersky.indexrebellion.data.techtonic.toPortion
 import com.rubyhuntersky.indexrebellion.data.toStatString
 import kotlinx.serialization.Serializable
 import java.math.BigDecimal
@@ -42,13 +43,14 @@ data class CashAmount(
     operator fun minus(rhs: CashAmount): CashAmount =
         CashAmount((value - rhs.value))
 
-    operator fun times(multiplier: Double): CashAmount =
-        CashAmount(value * BigDecimal.valueOf(multiplier))
+    operator fun times(multiplier: Double): CashAmount = CashAmount(value * BigDecimal.valueOf(multiplier))
+    operator fun times(multiplier: BigDecimal): CashAmount = CashAmount(value * multiplier)
 
     operator fun div(divisor: CashAmount): Double = value.divide(divisor.value, 50, BigDecimal.ROUND_HALF_UP).toDouble()
 
     fun toStatString() = toDouble().toStatString()
     fun toDouble(): Double = value.toDouble()
+    fun toPortion(aggregate: CashAmount): Double = value.toPortion(aggregate.value)
 
     companion object {
         val ZERO = CashAmount(BigDecimal.ZERO)

@@ -40,8 +40,17 @@ data class Drift(
     }
 
     val plateAdjustments: Set<PlateAdjustment> by lazy {
+        val (vaultValue, vaultPortions) = vault.toValueAndPortions(plating, market)
+        val vaultInstrumentsByPlate = vault.toInstrumentsByPlate(plating)
         Plate.values()
-            .map { PlateAdjustment(plate = it, plannedPortion = plan.portion(it)) }
+            .map { plate ->
+                val plannedPortion = plan.portion(plate)
+                val realPortion = vaultPortions[plate] ?: 0.0
+                val platingInstruments = plating.findInstrumentIds(plate)
+                val vaultInstruments = vaultInstrumentsByPlate[plate] ?: emptySet()
+                val instrumentIds = platingInstruments + vaultInstruments
+                PlateAdjustment(plate, plannedPortion, realPortion, vaultValue, instrumentIds)
+            }
             .toSet()
     }
 
