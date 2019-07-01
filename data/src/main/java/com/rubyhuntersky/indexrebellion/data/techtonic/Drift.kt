@@ -41,9 +41,7 @@ data class Drift(
 
     val plateAdjustments: Set<PlateAdjustment> by lazy {
         Plate.values()
-            .map {
-                PlateAdjustment(it)
-            }
+            .map { PlateAdjustment(plate = it, plannedPortion = plan.portion(it)) }
             .toSet()
     }
 
