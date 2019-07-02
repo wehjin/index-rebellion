@@ -1,14 +1,14 @@
-package com.rubyhuntersky.indexrebellion.interactions.holdings
+package com.rubyhuntersky.indexrebellion.interactions.viewdrift
 
 import com.rubyhuntersky.indexrebellion.data.techtonic.Drift
 import com.rubyhuntersky.indexrebellion.spirits.readdrift.ReadDriftsDjinn
 import com.rubyhuntersky.interaction.core.*
 import com.rubyhuntersky.interaction.core.wish.Lamp
 
-class HoldingsStory : Interaction<Vision, Action>
+class ViewDriftStory : Interaction<Vision, Action>
 by Story(::start, ::isEnding, ::revise, TAG) {
     companion object {
-        const val TAG = "HoldingsStory"
+        const val TAG = "ViewDriftStory"
 
         fun addSpiritsToLamp(lamp: Lamp, driftBook: Book<Drift>) {
             with(lamp) {
@@ -41,5 +41,5 @@ private fun revise(vision: Vision, action: Action, edge: Edge): Revision<Vision,
         vision is Vision.Reading && action is Action.Load -> Revision(
             Vision.Viewing(action.drift)
         )
-        else -> error("${HoldingsStory.TAG}: Invalid revision parameters - $vision, $action")
+        else -> error("${ViewDriftStory.TAG}: Invalid revision parameters - $vision, $action")
     }

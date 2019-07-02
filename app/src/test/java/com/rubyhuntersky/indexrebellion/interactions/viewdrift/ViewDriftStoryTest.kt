@@ -1,18 +1,18 @@
-package com.rubyhuntersky.indexrebellion.interactions.holdings
+package com.rubyhuntersky.indexrebellion.interactions.viewdrift
 
 import com.rubyhuntersky.indexrebellion.data.techtonic.DEFAULT_DRIFT
 import com.rubyhuntersky.interaction.core.BehaviorBook
 import com.rubyhuntersky.interaction.core.Edge
 import org.junit.Test
 
-class HoldingsStoryTest {
+class ViewDriftStoryTest {
 
     @Test
     fun initChangesVisionFromIdleToReadingAndViewing() {
         val edge = Edge().also {
-            HoldingsStory.addSpiritsToLamp(it.lamp, BehaviorBook(DEFAULT_DRIFT))
+            ViewDriftStory.addSpiritsToLamp(it.lamp, BehaviorBook(DEFAULT_DRIFT))
         }
-        val story = HoldingsStory().also {
+        val story = ViewDriftStory().also {
             edge.addInteraction(it)
         }
         val test = story.visions.test()

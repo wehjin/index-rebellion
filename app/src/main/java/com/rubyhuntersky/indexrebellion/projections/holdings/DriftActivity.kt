@@ -7,9 +7,9 @@ import com.rubyhuntersky.indexrebellion.data.techtonic.plating.Plate
 import com.rubyhuntersky.indexrebellion.data.techtonic.plating.PlateAdjustment
 import com.rubyhuntersky.indexrebellion.data.techtonic.vault.Custodian
 import com.rubyhuntersky.indexrebellion.data.toStatString
-import com.rubyhuntersky.indexrebellion.interactions.holdings.Action
-import com.rubyhuntersky.indexrebellion.interactions.holdings.HoldingsStory
-import com.rubyhuntersky.indexrebellion.interactions.holdings.Vision
+import com.rubyhuntersky.indexrebellion.interactions.viewdrift.Action
+import com.rubyhuntersky.indexrebellion.interactions.viewdrift.ViewDriftStory
+import com.rubyhuntersky.indexrebellion.interactions.viewdrift.Vision
 import com.rubyhuntersky.indexrebellion.projections.Standard
 import com.rubyhuntersky.indexrebellion.projections.holdings.towers.BalanceTower
 import com.rubyhuntersky.indexrebellion.projections.holdings.towers.MultiHoldingTower
@@ -29,7 +29,7 @@ class DriftActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         coopContentView.setInActivity(this@DriftActivity)
-        activityInteraction = ActivityInteraction(this, HoldingsStory.TAG, this::renderVision)
+        activityInteraction = ActivityInteraction(this, ViewDriftStory.TAG, this::renderVision)
         lifecycle.addObserver(activityInteraction)
     }
 

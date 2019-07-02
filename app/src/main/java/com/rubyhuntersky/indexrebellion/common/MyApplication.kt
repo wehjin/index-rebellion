@@ -14,7 +14,7 @@ import com.rubyhuntersky.indexrebellion.data.techtonic.vault.SpecificHolding
 import com.rubyhuntersky.indexrebellion.interactions.books.RebellionBook
 import com.rubyhuntersky.indexrebellion.interactions.correctiondetails.CORRECTION_DETAILS
 import com.rubyhuntersky.indexrebellion.interactions.correctiondetails.enableCorrectionDetails
-import com.rubyhuntersky.indexrebellion.interactions.holdings.HoldingsStory
+import com.rubyhuntersky.indexrebellion.interactions.viewdrift.ViewDriftStory
 import com.rubyhuntersky.indexrebellion.interactions.main.MainPortals
 import com.rubyhuntersky.indexrebellion.interactions.main.MainStory
 import com.rubyhuntersky.indexrebellion.interactions.refreshholdings.Access
@@ -42,7 +42,7 @@ import kotlinx.serialization.UnstableDefault
 import java.math.BigDecimal
 import java.util.*
 import com.rubyhuntersky.indexrebellion.interactions.cashediting.Action as CashEditingAction
-import com.rubyhuntersky.indexrebellion.interactions.holdings.Action as HoldingsAction
+import com.rubyhuntersky.indexrebellion.interactions.viewdrift.Action as HoldingsAction
 import com.rubyhuntersky.indexrebellion.interactions.main.Action as MainAction
 
 class MyApplication : Application() {
@@ -65,10 +65,10 @@ class MyApplication : Application() {
             enableRefreshHoldings(this)
             enableRobinhoodLogin(this)
             MainStory.addSpiritsToLamp(this)
-            HoldingsStory.addSpiritsToLamp(this, driftBook)
+            ViewDriftStory.addSpiritsToLamp(this, driftBook)
         }
 
-        HoldingsStory()
+        ViewDriftStory()
             .also {
                 edge.addInteraction(it)
                 it.sendAction((HoldingsAction.Init))
