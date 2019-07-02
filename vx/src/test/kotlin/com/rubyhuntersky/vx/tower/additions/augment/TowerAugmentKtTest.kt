@@ -12,7 +12,7 @@ import com.rubyhuntersky.vx.tower.towers.textwrap.WrapTextTower
 import org.junit.Assert.assertEquals
 import org.junit.Test
 
-class TowerPlusHAugmentKtTest {
+class TowerAugmentKtTest {
 
     @Test
     fun plusHAugment() {

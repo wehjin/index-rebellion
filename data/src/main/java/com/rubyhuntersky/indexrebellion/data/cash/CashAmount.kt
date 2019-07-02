@@ -51,6 +51,7 @@ data class CashAmount(
     fun toStatString(suffix: String? = null) = toDouble().toStatString(suffix)
     fun toDouble(): Double = value.toDouble()
     fun toPortion(aggregate: CashAmount): Double = value.toPortion(aggregate.value)
+    fun toDollarStat(): String = "$${toStatString()}"
 
     companion object {
         val ZERO = CashAmount(BigDecimal.ZERO)

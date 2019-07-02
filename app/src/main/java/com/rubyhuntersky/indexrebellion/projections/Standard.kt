@@ -22,27 +22,26 @@ object Standard {
     val uniformMargin = Margin.Uniform(marginSpan)
     val uniformPad = HPad.Uniform(marginSize)
 
+    class TitleTower : Tower<String, Nothing> by WrapTextTower()
+        .mapSight({ WrapTextSight(it, TextStyle.Highlight5) })
+
+    class SubtitleTower : Tower<String, Nothing> by WrapTextTower()
+        .mapSight({ WrapTextSight(it, TextStyle.Subtitle1) })
+
     class LabelTower<Sight : Any, Event : Any>(label: String) : Tower<Sight, Event> by WrapTextTower()
         .plusVMargin(uniformMargin)
         .neverEvent<Event>()
-        .mapSight({
-            WrapTextSight(
-                label,
-                TextStyle.Highlight5,
-                Orbit.Center
-            )
-        })
+        .mapSight({ WrapTextSight(label, TextStyle.Highlight5, Orbit.Center) })
 
-    class BodyTower : Tower<String, Nothing> by WrapTextTower()
-        .plusVMargin(uniformMargin)
-        .plusHPad(uniformPad)
-        .mapSight({
-            WrapTextSight(
-                it,
-                TextStyle.Body1,
-                Orbit.HeadLit
-            )
+    class BodyTower(pad: Boolean = true) : Tower<String, Nothing> by WrapTextTower()
+        .let({
+            if (pad) {
+                it.plusVMargin(uniformMargin).plusHPad(uniformPad)
+            } else {
+                it
+            }
         })
+        .mapSight({ WrapTextSight(it, TextStyle.Body1, Orbit.HeadLit) })
 
     class SectionTower<Sight : Any, Event : Any>(
         vararg sections: Pair<String, Tower<Sight, Event>>

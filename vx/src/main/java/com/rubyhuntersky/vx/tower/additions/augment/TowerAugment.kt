@@ -13,6 +13,9 @@ import io.reactivex.subjects.BehaviorSubject
 fun <Sight : Any, Event : Any> Tower<Sight, Event>.extendFloor(tower: Tower<Sight, Event>) =
     plusAugment(HAugment.Floor(tower))
 
+fun <Sight : Any, Event : Any> Tower<Sight, Event>.extendFloors(vararg floors: Tower<Sight, Event>) =
+    floors.fold(this, Tower<Sight, Event>::extendFloor)
+
 fun <Sight : Any, Event : Any> Tower<Sight, Event>.extendCeiling(tower: Tower<Sight, Event>) =
     plusAugment(HAugment.Ceiling(tower))
 

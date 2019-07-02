@@ -3,7 +3,6 @@ package com.rubyhuntersky.indexrebellion.projections.holdings
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import com.rubyhuntersky.indexrebellion.data.techtonic.Drift
-import com.rubyhuntersky.indexrebellion.data.techtonic.plating.Plate
 import com.rubyhuntersky.indexrebellion.data.techtonic.plating.PlateAdjustment
 import com.rubyhuntersky.indexrebellion.data.techtonic.vault.Custodian
 import com.rubyhuntersky.indexrebellion.data.toStatString
@@ -13,6 +12,7 @@ import com.rubyhuntersky.indexrebellion.interactions.viewdrift.Vision
 import com.rubyhuntersky.indexrebellion.projections.Standard
 import com.rubyhuntersky.indexrebellion.projections.holdings.towers.BalanceTower
 import com.rubyhuntersky.indexrebellion.projections.holdings.towers.MultiHoldingTower
+import com.rubyhuntersky.indexrebellion.toLabel
 import com.rubyhuntersky.interaction.android.ActivityInteraction
 import com.rubyhuntersky.vx.android.coop.CoopContentView
 import com.rubyhuntersky.vx.coop.Coop
@@ -84,18 +84,7 @@ class DriftActivity : AppCompatActivity() {
             return "$real $separator $planned"
         }
 
-        private fun PlateAdjustment.toName(): String {
-            val label = when (plate) {
-                Plate.Unknown -> "Unassigned"
-                Plate.Fiat -> "Cash"
-                Plate.BlockChain -> "Crypto"
-                Plate.Debt -> "Debt"
-                Plate.GlobalEquity -> "Global Stocks"
-                Plate.ZonalEquity -> "Zonal Stocks"
-                Plate.LocalEquity -> "Local Stocks"
-            }
-            return "$label $${realValue.toStatString()}"
-        }
+        private fun PlateAdjustment.toName(): String = "${plate.toLabel()} ${realValue.toDollarStat()}"
 
         private val adjustmentsContentTower =
             adjustmentTower.replicate().neverEvent<Nothing>().mapSight { drift: Drift ->

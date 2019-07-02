@@ -2,16 +2,18 @@ package com.rubyhuntersky.indexrebellion.projections.holdings
 
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
-import com.rubyhuntersky.indexrebellion.data.techtonic.GeneralHolding
 import com.rubyhuntersky.indexrebellion.interactions.viewholding.Action
 import com.rubyhuntersky.indexrebellion.interactions.viewholding.ViewHoldingStory
 import com.rubyhuntersky.indexrebellion.interactions.viewholding.Vision
 import com.rubyhuntersky.indexrebellion.projections.Standard
+import com.rubyhuntersky.indexrebellion.toLabel
 import com.rubyhuntersky.interaction.android.ActivityInteraction
 import com.rubyhuntersky.vx.android.coop.CoopContentView
-import com.rubyhuntersky.vx.coop.additions.mapSight
+import com.rubyhuntersky.vx.tower.additions.augment.extendFloors
 import com.rubyhuntersky.vx.tower.additions.inCoop
 import com.rubyhuntersky.vx.tower.additions.mapSight
+import com.rubyhuntersky.vx.tower.additions.pad.plusHPad
+import com.rubyhuntersky.vx.tower.additions.plusVMargin
 
 class ViewHoldingActivity : AppCompatActivity() {
 
@@ -22,7 +24,7 @@ class ViewHoldingActivity : AppCompatActivity() {
         lifecycle.addObserver(activityInteraction)
     }
 
-    private val coopContentView = CoopContentView(pageTower.inCoop().mapSight(Vision.Viewing::holding))
+    private val coopContentView = CoopContentView(pageTower.inCoop())
     private lateinit var activityInteraction: ActivityInteraction<Vision, Action>
 
     private fun renderVision(vision: Vision) {
@@ -33,8 +35,20 @@ class ViewHoldingActivity : AppCompatActivity() {
 
     companion object {
 
-        private val pageTower = Standard.BodyTower().mapSight { holding: GeneralHolding ->
-            holding.toString()
-        }
+        private val pageTower =
+            Standard.TitleTower()
+                .mapSight { viewing: Vision.Viewing ->
+                    viewing.holding.instrumentName ?: viewing.holding.instrumentId.symbol
+                }
+                .extendFloors(
+                    Standard.SubtitleTower().mapSight { viewing: Vision.Viewing -> "${viewing.holding.size} shares" },
+                    Standard.SubtitleTower().mapSight { viewing: Vision.Viewing ->
+                        viewing.holding.cashValue?.toDollarStat() ?: "Unknown value"
+                    },
+                    Standard.SubtitleTower().mapSight { viewing: Vision.Viewing -> viewing.plate.toLabel() },
+                    Standard.BodyTower().mapSight { "[ Reclassify ]" }
+                )
+                .plusHPad(Standard.uniformPad)
+                .plusVMargin(Standard.uniformMargin)
     }
 }
