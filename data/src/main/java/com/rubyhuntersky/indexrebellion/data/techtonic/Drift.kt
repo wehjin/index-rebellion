@@ -1,5 +1,6 @@
 package com.rubyhuntersky.indexrebellion.data.techtonic
 
+import com.rubyhuntersky.indexrebellion.data.techtonic.instrument.InstrumentId
 import com.rubyhuntersky.indexrebellion.data.techtonic.market.InstrumentSample
 import com.rubyhuntersky.indexrebellion.data.techtonic.market.Market
 import com.rubyhuntersky.indexrebellion.data.techtonic.plan.Plan
@@ -53,6 +54,9 @@ data class Drift(
             }
             .toSet()
     }
+
+    fun findHolding(instrumentId: InstrumentId): GeneralHolding? =
+        generalHoldings.firstOrNull { it.instrumentId == instrumentId }
 
     fun replaceSample(sample: InstrumentSample): Drift {
         return copy(market = market.replaceSample(sample))

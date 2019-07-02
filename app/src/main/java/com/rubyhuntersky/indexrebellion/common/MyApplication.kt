@@ -14,18 +14,20 @@ import com.rubyhuntersky.indexrebellion.data.techtonic.vault.SpecificHolding
 import com.rubyhuntersky.indexrebellion.interactions.books.RebellionBook
 import com.rubyhuntersky.indexrebellion.interactions.correctiondetails.CORRECTION_DETAILS
 import com.rubyhuntersky.indexrebellion.interactions.correctiondetails.enableCorrectionDetails
-import com.rubyhuntersky.indexrebellion.interactions.viewdrift.ViewDriftStory
 import com.rubyhuntersky.indexrebellion.interactions.main.MainPortals
 import com.rubyhuntersky.indexrebellion.interactions.main.MainStory
 import com.rubyhuntersky.indexrebellion.interactions.refreshholdings.Access
 import com.rubyhuntersky.indexrebellion.interactions.refreshholdings.enableRefreshHoldings
 import com.rubyhuntersky.indexrebellion.interactions.updateshares.UPDATE_SHARES
+import com.rubyhuntersky.indexrebellion.interactions.viewdrift.ViewDriftStory
+import com.rubyhuntersky.indexrebellion.interactions.viewholding.ViewHoldingStory
 import com.rubyhuntersky.indexrebellion.presenters.cashediting.CashEditingDialogFragment
 import com.rubyhuntersky.indexrebellion.presenters.cashediting.SharedCashEditingInteraction
 import com.rubyhuntersky.indexrebellion.presenters.constituentsearch.ConstituentSearchPortal
 import com.rubyhuntersky.indexrebellion.presenters.correctiondetails.CorrectionDetailsDialogFragment
 import com.rubyhuntersky.indexrebellion.presenters.main.MainActivity
 import com.rubyhuntersky.indexrebellion.presenters.updateshares.UpdateSharesDialogFragment
+import com.rubyhuntersky.indexrebellion.spirits.readdrift.ReadDriftsDjinn
 import com.rubyhuntersky.interaction.android.AndroidEdge
 import com.rubyhuntersky.interaction.android.ProjectionSource
 import com.rubyhuntersky.interaction.core.BehaviorBook
@@ -42,8 +44,9 @@ import kotlinx.serialization.UnstableDefault
 import java.math.BigDecimal
 import java.util.*
 import com.rubyhuntersky.indexrebellion.interactions.cashediting.Action as CashEditingAction
-import com.rubyhuntersky.indexrebellion.interactions.viewdrift.Action as HoldingsAction
 import com.rubyhuntersky.indexrebellion.interactions.main.Action as MainAction
+import com.rubyhuntersky.indexrebellion.interactions.viewdrift.Action as ViewdriftAction
+import com.rubyhuntersky.indexrebellion.interactions.viewholding.Action as ViewholdingAction
 
 class MyApplication : Application() {
 
@@ -65,13 +68,19 @@ class MyApplication : Application() {
             enableRefreshHoldings(this)
             enableRobinhoodLogin(this)
             MainStory.addSpiritsToLamp(this)
-            ViewDriftStory.addSpiritsToLamp(this, driftBook)
+            add(ReadDriftsDjinn(driftBook))
         }
 
         ViewDriftStory()
             .also {
                 edge.addInteraction(it)
-                it.sendAction((HoldingsAction.Init))
+                it.sendAction((ViewdriftAction.Init))
+            }
+
+        ViewHoldingStory()
+            .also {
+                edge.addInteraction(it)
+                it.sendAction(ViewholdingAction.Init(InstrumentId("TSLA", InstrumentType.StockExchange)))
             }
 
         MainStory().also { story ->
