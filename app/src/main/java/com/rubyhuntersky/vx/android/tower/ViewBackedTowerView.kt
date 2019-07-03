@@ -19,11 +19,11 @@ import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.rxkotlin.addTo
 import io.reactivex.subjects.BehaviorSubject
 
-class ViewBackedTowerView<V, C : Any, E : Any>(
+class ViewBackedTowerView<V, Sight : Any, Event : Any>(
     id: ViewId,
     private val frameLayout: FrameLayout,
-    private val adapter: Adapter<V, C, E>
-) : Tower.View<C, E> where V : View, V : ViewBackedTowerView.BackingView<E> {
+    private val adapter: Adapter<V, Sight, Event>
+) : Tower.View<Sight, Event> where V : View, V : ViewBackedTowerView.BackingView<Event> {
 
     interface BackingView<E : Any> {
         var onAttached: (() -> Unit)?
@@ -32,9 +32,9 @@ class ViewBackedTowerView<V, C : Any, E : Any>(
         val events: Observable<E>
     }
 
-    interface Adapter<V, C : Any, E : Any> where V : View, V : BackingView<E> {
+    interface Adapter<V, Sight : Any, Event : Any> where V : View, V : BackingView<Event> {
         fun buildView(context: Context): V
-        fun renderView(view: V, sight: C)
+        fun renderView(view: V, sight: Sight)
     }
 
     private val view = (frameLayout.findViewWithTag(id)
@@ -93,12 +93,12 @@ class ViewBackedTowerView<V, C : Any, E : Any>(
         anchorBehavior.onNext(anchor)
     }
 
-    override fun setSight(sight: C) {
+    override fun setSight(sight: Sight) {
         Log.d(view.tag.toString(), "Set content $sight")
         adapter.renderView(view, sight)
     }
 
-    override val events: Observable<E> get() = view.events
+    override val events: Observable<Event> get() = view.events
 
     companion object {
         fun isViewInGroup(view: View, groupId: ViewId): Boolean {

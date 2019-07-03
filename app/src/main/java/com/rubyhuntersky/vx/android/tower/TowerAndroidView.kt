@@ -2,9 +2,11 @@ package com.rubyhuntersky.vx.android.tower
 
 import android.content.Context
 import android.graphics.Color
+import android.view.ContextThemeWrapper
 import android.view.View
 import android.widget.FrameLayout
 import com.rubyhuntersky.indexrebellion.R
+import com.rubyhuntersky.vx.android.backingviews.BackingButton
 import com.rubyhuntersky.vx.android.backingviews.BackingInputLayout
 import com.rubyhuntersky.vx.android.backingviews.BackingTextView
 import com.rubyhuntersky.vx.android.toDip
@@ -70,13 +72,11 @@ class TowerAndroidView<Sight : Any, Event : Any>(context: Context, tower: Tower<
 
     override fun addInputView(id: ViewId): Tower.View<InputSight, InputEvent> {
         return ViewBackedTowerView(
+            id,
             frameLayout = this@TowerAndroidView,
-            id = id,
-            adapter = object :
-                ViewBackedTowerView.Adapter<BackingInputLayout, InputSight, InputEvent> {
+            adapter = object : ViewBackedTowerView.Adapter<BackingInputLayout, InputSight, InputEvent> {
 
-                override fun buildView(context: Context): BackingInputLayout =
-                    BackingInputLayout(context, null)
+                override fun buildView(context: Context) = BackingInputLayout(context, null)
 
                 override fun renderView(view: BackingInputLayout, sight: InputSight) {
                     view.render(sight)
@@ -87,13 +87,11 @@ class TowerAndroidView<Sight : Any, Event : Any>(context: Context, tower: Tower<
 
     override fun addWrapTextView(id: ViewId): Tower.View<WrapTextSight, Nothing> {
         return ViewBackedTowerView(
+            id,
             frameLayout = this@TowerAndroidView,
-            id = id,
-            adapter = object :
-                ViewBackedTowerView.Adapter<BackingTextView, WrapTextSight, Nothing> {
+            adapter = object : ViewBackedTowerView.Adapter<BackingTextView, WrapTextSight, Nothing> {
 
-                override fun buildView(context: Context): BackingTextView =
-                    BackingTextView(context)
+                override fun buildView(context: Context) = BackingTextView(context)
 
                 override fun renderView(view: BackingTextView, sight: WrapTextSight) {
                     val resId = when (sight.style) {
@@ -117,7 +115,21 @@ class TowerAndroidView<Sight : Any, Event : Any>(context: Context, tower: Tower<
     }
 
     override fun addClickView(id: ViewId): Tower.View<ClickSight, ClickEvent> {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        return ViewBackedTowerView(
+            id,
+            frameLayout = this@TowerAndroidView,
+            adapter = object : ViewBackedTowerView.Adapter<BackingButton, ClickSight, ClickEvent> {
+
+                override fun buildView(context: Context): BackingButton {
+                    val themedContext = ContextThemeWrapper(context, android.R.style.Widget_Material_Button)
+                    return BackingButton(themedContext)
+                }
+
+                override fun renderView(view: BackingButton, sight: ClickSight) {
+                    view.text = sight.label
+                }
+            }
+        )
     }
 
     override fun drop(id: ViewId) {

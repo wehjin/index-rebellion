@@ -14,6 +14,8 @@ import com.rubyhuntersky.vx.tower.additions.inCoop
 import com.rubyhuntersky.vx.tower.additions.mapSight
 import com.rubyhuntersky.vx.tower.additions.pad.plusHPad
 import com.rubyhuntersky.vx.tower.additions.plusVMargin
+import com.rubyhuntersky.vx.tower.towers.click.ClickSight
+import com.rubyhuntersky.vx.tower.towers.click.ClickTower
 
 class ViewHoldingActivity : AppCompatActivity() {
 
@@ -46,7 +48,7 @@ class ViewHoldingActivity : AppCompatActivity() {
                         viewing.holding.cashValue?.toDollarStat() ?: "Unknown value"
                     },
                     Standard.SubtitleTower().mapSight { viewing: Vision.Viewing -> viewing.plate.toLabel() },
-                    Standard.BodyTower().mapSight { "[ Reclassify ]" }
+                    ClickTower().neverEvent<Nothing>().mapSight { ClickSight("Reclassify") }
                 )
                 .plusHPad(Standard.uniformPad)
                 .plusVMargin(Standard.uniformMargin)
