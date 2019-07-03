@@ -28,6 +28,7 @@ import com.rubyhuntersky.indexrebellion.presenters.correctiondetails.CorrectionD
 import com.rubyhuntersky.indexrebellion.presenters.main.MainActivity
 import com.rubyhuntersky.indexrebellion.presenters.updateshares.UpdateSharesDialogFragment
 import com.rubyhuntersky.indexrebellion.spirits.readdrift.ReadDriftsDjinn
+import com.rubyhuntersky.indexrebellion.spirits.showtoast.ShowToastGenie
 import com.rubyhuntersky.interaction.android.AndroidEdge
 import com.rubyhuntersky.interaction.android.ProjectionSource
 import com.rubyhuntersky.interaction.core.BehaviorBook
@@ -64,6 +65,7 @@ class MyApplication : Application() {
 
         val edge = AndroidEdge
         with(edge.lamp) {
+            add(ShowToastGenie(this@MyApplication))
             enableCorrectionDetails(this)
             enableRefreshHoldings(this)
             enableRobinhoodLogin(this)
