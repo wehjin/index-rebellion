@@ -14,6 +14,8 @@ import com.rubyhuntersky.vx.common.bound.HBound
 import com.rubyhuntersky.vx.tower.Tower
 import com.rubyhuntersky.vx.tower.towers.InputEvent
 import com.rubyhuntersky.vx.tower.towers.InputSight
+import com.rubyhuntersky.vx.tower.towers.click.ClickEvent
+import com.rubyhuntersky.vx.tower.towers.click.ClickSight
 import com.rubyhuntersky.vx.tower.towers.wraptext.WrapTextSight
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.rxkotlin.addTo
@@ -105,6 +107,10 @@ class ScreenView
                     view.text = sight.text
                 }
             })
+
+    override fun addClickView(id: ViewId): Tower.View<ClickSight, ClickEvent> {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
 
     override fun drop(id: ViewId) {
         error("Not implemented, use TowerAndroidView")

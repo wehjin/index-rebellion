@@ -11,6 +11,8 @@ import com.rubyhuntersky.vx.tower.additions.plusVMargin
 import com.rubyhuntersky.vx.tower.towers.InputEvent
 import com.rubyhuntersky.vx.tower.towers.InputSight
 import com.rubyhuntersky.vx.tower.towers.NeverTower
+import com.rubyhuntersky.vx.tower.towers.click.ClickEvent
+import com.rubyhuntersky.vx.tower.towers.click.ClickSight
 import com.rubyhuntersky.vx.tower.towers.wraptext.WrapTextSight
 import io.reactivex.Observable
 
@@ -22,6 +24,7 @@ interface Tower<Sight : Any, Event : Any> {
     interface ViewHost {
         fun addWrapTextView(id: ViewId): View<WrapTextSight, Nothing>
         fun addInputView(id: ViewId): View<InputSight, InputEvent>
+        fun addClickView(id: ViewId): View<ClickSight, ClickEvent>
         fun drop(id: ViewId)
     }
 
