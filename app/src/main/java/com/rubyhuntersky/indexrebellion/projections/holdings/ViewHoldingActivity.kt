@@ -3,7 +3,7 @@ package com.rubyhuntersky.indexrebellion.projections.holdings
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import com.rubyhuntersky.indexrebellion.interactions.viewholding.Action
-import com.rubyhuntersky.indexrebellion.interactions.viewholding.ViewHoldingStory
+import com.rubyhuntersky.indexrebellion.interactions.viewholding.VIEW_HOLDING_STORY
 import com.rubyhuntersky.indexrebellion.interactions.viewholding.Vision
 import com.rubyhuntersky.indexrebellion.projections.Standard
 import com.rubyhuntersky.indexrebellion.toLabel
@@ -20,7 +20,7 @@ class ViewHoldingActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         coopContentView.setInActivity(this@ViewHoldingActivity)
-        activityInteraction = ActivityInteraction(this, ViewHoldingStory.TAG, this::renderVision)
+        activityInteraction = ActivityInteraction(this, VIEW_HOLDING_STORY, this::renderVision)
         lifecycle.addObserver(activityInteraction)
     }
 

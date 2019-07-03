@@ -13,11 +13,9 @@ import com.rubyhuntersky.interaction.core.wish.Wish
 import com.rubyhuntersky.interaction.core.wish.WishKind
 
 class ViewHoldingStory : Interaction<Vision, Action>
-by Story(::start, ::isEnding, ::revise, TAG) {
-    companion object {
-        const val TAG = "ViewHoldingStory"
-    }
-}
+by Story(::start, ::isEnding, ::revise, VIEW_HOLDING_STORY)
+
+const val VIEW_HOLDING_STORY = "ViewHoldingStory"
 
 sealed class Vision {
     object Idle : Vision()
@@ -58,6 +56,6 @@ private fun revise(vision: Vision, action: Action): Revision<Vision, Action> {
             Revision(vision, showToast)
         }
         action is Action.Ignore -> Revision(vision)
-        else -> error("${ViewHoldingStory.TAG}: Invalid revision parameters - $vision, $action")
+        else -> error("$VIEW_HOLDING_STORY: Invalid revision parameters - $vision, $action")
     }
 }
