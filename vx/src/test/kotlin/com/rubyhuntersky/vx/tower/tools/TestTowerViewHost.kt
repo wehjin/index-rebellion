@@ -7,7 +7,7 @@ import com.rubyhuntersky.vx.common.bound.HBound
 import com.rubyhuntersky.vx.tower.Tower
 import com.rubyhuntersky.vx.tower.towers.InputEvent
 import com.rubyhuntersky.vx.tower.towers.InputSight
-import com.rubyhuntersky.vx.tower.towers.textwrap.WrapTextSight
+import com.rubyhuntersky.vx.tower.towers.wraptext.WrapTextSight
 import io.reactivex.Observable
 import io.reactivex.subjects.BehaviorSubject
 

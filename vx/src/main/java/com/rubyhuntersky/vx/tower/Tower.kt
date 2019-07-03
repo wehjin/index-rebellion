@@ -11,7 +11,7 @@ import com.rubyhuntersky.vx.tower.additions.plusVMargin
 import com.rubyhuntersky.vx.tower.towers.InputEvent
 import com.rubyhuntersky.vx.tower.towers.InputSight
 import com.rubyhuntersky.vx.tower.towers.NeverTower
-import com.rubyhuntersky.vx.tower.towers.textwrap.WrapTextSight
+import com.rubyhuntersky.vx.tower.towers.wraptext.WrapTextSight
 import io.reactivex.Observable
 
 

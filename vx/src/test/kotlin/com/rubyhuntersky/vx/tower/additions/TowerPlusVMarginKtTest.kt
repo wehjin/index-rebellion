@@ -8,8 +8,8 @@ import com.rubyhuntersky.vx.common.margin.Margin
 import com.rubyhuntersky.vx.coop.additions.Span
 import com.rubyhuntersky.vx.common.Latitude
 import com.rubyhuntersky.vx.tower.tools.TestTowerViewHost
-import com.rubyhuntersky.vx.tower.towers.textwrap.WrapTextSight
-import com.rubyhuntersky.vx.tower.towers.textwrap.WrapTextTower
+import com.rubyhuntersky.vx.tower.towers.wraptext.WrapTextSight
+import com.rubyhuntersky.vx.tower.towers.wraptext.WrapTextTower
 import org.junit.Assert.assertEquals
 import org.junit.Test
 

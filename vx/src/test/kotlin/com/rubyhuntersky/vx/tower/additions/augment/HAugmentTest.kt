@@ -1,7 +1,7 @@
 package com.rubyhuntersky.vx.tower.additions.augment
 
 import com.rubyhuntersky.vx.tower.towers.EmptyTower
-import com.rubyhuntersky.vx.tower.towers.textwrap.WrapTextSight
+import com.rubyhuntersky.vx.tower.towers.wraptext.WrapTextSight
 import org.junit.Assert.assertEquals
 import org.junit.Test
 

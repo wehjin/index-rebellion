@@ -3,8 +3,8 @@ package com.rubyhuntersky.vx.tower.additions
 import com.rubyhuntersky.vx.common.TextStyle
 import com.rubyhuntersky.vx.common.ViewId
 import com.rubyhuntersky.vx.tower.tools.TestTowerViewHost
-import com.rubyhuntersky.vx.tower.towers.textwrap.WrapTextSight
-import com.rubyhuntersky.vx.tower.towers.textwrap.WrapTextTower
+import com.rubyhuntersky.vx.tower.towers.wraptext.WrapTextSight
+import com.rubyhuntersky.vx.tower.towers.wraptext.WrapTextTower
 import org.junit.Assert.assertEquals
 import org.junit.Test
 

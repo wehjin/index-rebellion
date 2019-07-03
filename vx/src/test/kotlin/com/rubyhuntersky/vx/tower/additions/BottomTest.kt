@@ -10,7 +10,7 @@ import com.rubyhuntersky.vx.common.bound.HBound
 import com.rubyhuntersky.vx.common.Latitude
 import com.rubyhuntersky.vx.tower.Tower
 import com.rubyhuntersky.vx.tower.towers.TitleTower
-import com.rubyhuntersky.vx.tower.towers.textwrap.WrapTextSight
+import com.rubyhuntersky.vx.tower.towers.wraptext.WrapTextSight
 import io.reactivex.subjects.PublishSubject
 import org.junit.Test
 

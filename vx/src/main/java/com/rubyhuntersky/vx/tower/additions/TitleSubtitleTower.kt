@@ -5,8 +5,8 @@ import com.rubyhuntersky.vx.tower.Tower
 import com.rubyhuntersky.vx.tower.additions.augment.HAugment
 import com.rubyhuntersky.vx.tower.additions.augment.plusAugment
 import com.rubyhuntersky.vx.tower.towers.TitleTower
-import com.rubyhuntersky.vx.tower.towers.textwrap.WrapTextSight
-import com.rubyhuntersky.vx.tower.towers.textwrap.WrapTextTower
+import com.rubyhuntersky.vx.tower.towers.wraptext.WrapTextSight
+import com.rubyhuntersky.vx.tower.towers.wraptext.WrapTextTower
 
 object TitleSubtitleTower : Tower<TitleSubtitleSight, Nothing>
 by TitleAtopSubtitleTower

@@ -7,7 +7,7 @@ import com.rubyhuntersky.vx.common.bound.HBound
 import com.rubyhuntersky.vx.common.bound.VBound
 import com.rubyhuntersky.vx.coop.additions.Span
 import com.rubyhuntersky.vx.tower.tools.TestTowerViewHost
-import com.rubyhuntersky.vx.tower.towers.textwrap.WrapTextTower
+import com.rubyhuntersky.vx.tower.towers.wraptext.WrapTextTower
 import org.junit.Assert.assertEquals
 import org.junit.Test
 

@@ -1,4 +1,4 @@
-package com.rubyhuntersky.vx.tower.towers.textwrap
+package com.rubyhuntersky.vx.tower.towers.wraptext
 
 import com.rubyhuntersky.vx.common.ViewId
 import com.rubyhuntersky.vx.tower.Tower

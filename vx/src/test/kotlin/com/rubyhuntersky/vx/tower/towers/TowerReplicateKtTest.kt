@@ -7,8 +7,8 @@ import com.rubyhuntersky.vx.common.bound.HBound
 import com.rubyhuntersky.vx.tower.additions.replicate.replicate
 import com.rubyhuntersky.vx.tower.tools.TestTowerViewHost
 import com.rubyhuntersky.vx.tower.tools.TestTowerViewHost.Item
-import com.rubyhuntersky.vx.tower.towers.textwrap.WrapTextSight
-import com.rubyhuntersky.vx.tower.towers.textwrap.WrapTextTower
+import com.rubyhuntersky.vx.tower.towers.wraptext.WrapTextSight
+import com.rubyhuntersky.vx.tower.towers.wraptext.WrapTextTower
 import org.junit.Assert.assertEquals
 import org.junit.Test
 

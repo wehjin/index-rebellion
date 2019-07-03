@@ -12,8 +12,8 @@ import com.rubyhuntersky.vx.tower.additions.pad.HPad
 import com.rubyhuntersky.vx.tower.additions.pad.plusHPad
 import com.rubyhuntersky.vx.tower.additions.plusVMargin
 import com.rubyhuntersky.vx.tower.towers.EmptyTower
-import com.rubyhuntersky.vx.tower.towers.textwrap.WrapTextSight
-import com.rubyhuntersky.vx.tower.towers.textwrap.WrapTextTower
+import com.rubyhuntersky.vx.tower.towers.wraptext.WrapTextSight
+import com.rubyhuntersky.vx.tower.towers.wraptext.WrapTextTower
 
 object Standard {
 
