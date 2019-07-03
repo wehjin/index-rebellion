@@ -21,6 +21,7 @@ import com.rubyhuntersky.vx.tower.towers.InputSight
 import com.rubyhuntersky.vx.tower.towers.click.ClickEvent
 import com.rubyhuntersky.vx.tower.towers.click.ClickSight
 import com.rubyhuntersky.vx.tower.towers.wraptext.WrapTextSight
+import io.reactivex.Observable
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.rxkotlin.addTo
 import io.reactivex.subjects.BehaviorSubject
@@ -38,6 +39,9 @@ class TowerAndroidView<Sight : Any, Event : Any>(context: Context, tower: Tower<
         .also {
             restartHBoundUpdates(it, isAttachedToWindow)
         }
+
+    val events: Observable<Event>
+        get() = activeTowerView.events
 
     fun setSight(sight: Sight) {
         activeTowerView.setSight(sight)

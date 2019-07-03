@@ -60,7 +60,9 @@ fun <Sight : Any, Event : Any> Tower<Sight, Event>.plusAugment(augment: HAugment
                     }
                 }
 
-                override val events: Observable<Event> get() = Observable.merge(views.map { it.events })
+                override val events: Observable<Event>
+                    get() = Observable.merge(views.map { it.events })
+
                 override fun setSight(sight: Sight) = views.forEach { it.setSight(sight) }
                 override fun setHBound(hbound: HBound) = views.forEach { it.setHBound(hbound) }
                 override val latitudes: Observable<Latitude> = fullLatitudes.distinctUntilChanged()

@@ -16,11 +16,14 @@ import com.rubyhuntersky.vx.common.orbit.BiOrbit
 import com.rubyhuntersky.vx.common.orbit.Orbit
 import com.rubyhuntersky.vx.coop.Coop
 import com.rubyhuntersky.vx.tower.Tower
+import io.reactivex.Observable
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.rxkotlin.addTo
 import io.reactivex.subjects.BehaviorSubject
 
-class CoopAndroidView<Sight : Any, Event : Any>(context: Context, coop: Coop<Sight, Event>, id: ViewId = ViewId()) :
+class CoopAndroidView<Sight : Any, Event : Any>(
+    context: Context, coop: Coop<Sight, Event>, id: ViewId = ViewId()
+) :
     FrameLayout(context, null, 0, 0),
     Coop.ViewHost {
 
@@ -30,9 +33,13 @@ class CoopAndroidView<Sight : Any, Event : Any>(context: Context, coop: Coop<Sig
 
     private val boundUpdates = CompositeDisposable()
     private val boundBehavior: BehaviorSubject<BiBound> = BehaviorSubject.create()
-    private val activeCoopView: Coop.View<Sight, Event> = coop.enview(this, id).also {
-        restartBoundUpdates(it, isAttachedToWindow)
-    }
+    private val activeCoopView: Coop.View<Sight, Event> = coop.enview(this, id)
+        .also {
+            restartBoundUpdates(it, isAttachedToWindow)
+        }
+
+    val events: Observable<Event>
+        get() = activeCoopView.events
 
     fun setSight(sight: Sight) {
         activeCoopView.setSight(sight)
@@ -68,10 +75,9 @@ class CoopAndroidView<Sight : Any, Event : Any>(context: Context, coop: Coop<Sig
     ): Coop.View<Sight, Event> = ViewBackedCoopView(
         id,
         frameLayout = this@CoopAndroidView,
-        adapter = object :
-            ViewBackedCoopView.Adapter<BackingScrollView<Sight, Event>, Sight, Event> {
+        adapter = object : ViewBackedCoopView.Adapter<BackingScrollView<Sight, Event>, Sight, Event> {
 
-            override fun buildView(context: Context): BackingScrollView<Sight, Event> =
+            override fun buildView(context: Context) =
                 BackingScrollView<Sight, Event>(context).also { it.enview(tower, id.extend(0)) }
 
             override fun renderView(view: BackingScrollView<Sight, Event>, sight: Sight) = view.setSight(sight)
