@@ -4,8 +4,8 @@ import android.content.Context
 import android.util.AttributeSet
 import android.widget.TextView
 import com.rubyhuntersky.vx.android.coop.ViewBackedCoopView
-import com.rubyhuntersky.vx.android.tower.ViewBackedTowerView
 import com.rubyhuntersky.vx.android.toDip
+import com.rubyhuntersky.vx.android.tower.ViewBackedTowerView
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.subjects.BehaviorSubject

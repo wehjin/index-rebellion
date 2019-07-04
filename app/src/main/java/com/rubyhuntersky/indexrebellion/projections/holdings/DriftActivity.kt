@@ -11,7 +11,7 @@ import com.rubyhuntersky.indexrebellion.interactions.viewdrift.ViewDriftStory
 import com.rubyhuntersky.indexrebellion.interactions.viewdrift.Vision
 import com.rubyhuntersky.indexrebellion.projections.Standard
 import com.rubyhuntersky.indexrebellion.projections.holdings.towers.BalanceTower
-import com.rubyhuntersky.indexrebellion.projections.holdings.towers.MultiHoldingTower
+import com.rubyhuntersky.indexrebellion.projections.holdings.towers.HoldingTower
 import com.rubyhuntersky.indexrebellion.toLabel
 import com.rubyhuntersky.interaction.android.ActivityInteraction
 import com.rubyhuntersky.vx.android.coop.CoopContentView
@@ -22,6 +22,7 @@ import com.rubyhuntersky.vx.tower.additions.augment.extendCeiling
 import com.rubyhuntersky.vx.tower.additions.inCoop
 import com.rubyhuntersky.vx.tower.additions.mapSight
 import com.rubyhuntersky.vx.tower.additions.replicate.replicate
+import com.rubyhuntersky.vx.tower.towers.click.plusClicks
 import kotlin.math.absoluteValue
 
 class DriftActivity : AppCompatActivity() {
@@ -45,7 +46,13 @@ class DriftActivity : AppCompatActivity() {
 
     companion object {
 
-        private val holdingsContentTower = MultiHoldingTower.extendCeiling(BalanceTower).mapSight { drift: Drift ->
+        private val multiHoldingTower = HoldingTower
+            .plusClicks()
+            .replicate()
+            .mapSight { page: PageSight -> page.holdings }
+            .neverEvent<Nothing>()
+
+        private val holdingsContentTower = multiHoldingTower.extendCeiling(BalanceTower).mapSight { drift: Drift ->
             PageSight(
                 balance = "0,00",
                 holdings = drift.generalHoldings.map {

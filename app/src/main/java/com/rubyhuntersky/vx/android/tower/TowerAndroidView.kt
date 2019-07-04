@@ -7,10 +7,12 @@ import android.view.View
 import android.widget.FrameLayout
 import com.rubyhuntersky.indexrebellion.R
 import com.rubyhuntersky.vx.android.backingviews.BackingButton
+import com.rubyhuntersky.vx.android.backingviews.BackingClickableView
 import com.rubyhuntersky.vx.android.backingviews.BackingInputLayout
 import com.rubyhuntersky.vx.android.backingviews.BackingTextView
 import com.rubyhuntersky.vx.android.toDip
 import com.rubyhuntersky.vx.common.Anchor
+import com.rubyhuntersky.vx.common.Latitude
 import com.rubyhuntersky.vx.common.TextStyle
 import com.rubyhuntersky.vx.common.ViewId
 import com.rubyhuntersky.vx.common.bound.HBound
@@ -47,6 +49,9 @@ class TowerAndroidView<Sight : Any, Event : Any>(context: Context, tower: Tower<
         activeTowerView.setSight(sight)
     }
 
+    val latitudes: Observable<Latitude>
+        get() = activeTowerView.latitudes
+
     private fun <C : Any, E : Any> restartHBoundUpdates(towerView: Tower.View<C, E>?, isAttachedToWindow: Boolean) {
         hboundUpdates.clear()
         if (towerView != null && isAttachedToWindow) {
@@ -74,27 +79,26 @@ class TowerAndroidView<Sight : Any, Event : Any>(context: Context, tower: Tower<
         hboundBehavior.onNext(HBound(toDip(left), toDip(left + w)))
     }
 
-    override fun addInputView(id: ViewId): Tower.View<InputSight, InputEvent> {
+    override fun addInputView(
+        id: ViewId
+    ): Tower.View<InputSight, InputEvent> {
         return ViewBackedTowerView(
             id,
             frameLayout = this@TowerAndroidView,
             adapter = object : ViewBackedTowerView.Adapter<BackingInputLayout, InputSight, InputEvent> {
-
                 override fun buildView(context: Context) = BackingInputLayout(context, null)
-
-                override fun renderView(view: BackingInputLayout, sight: InputSight) {
-                    view.render(sight)
-                }
+                override fun renderView(view: BackingInputLayout, sight: InputSight) = view.render(sight)
             }
         )
     }
 
-    override fun addWrapTextView(id: ViewId): Tower.View<WrapTextSight, Nothing> {
+    override fun addWrapTextView(
+        id: ViewId
+    ): Tower.View<WrapTextSight, Nothing> {
         return ViewBackedTowerView(
             id,
             frameLayout = this@TowerAndroidView,
             adapter = object : ViewBackedTowerView.Adapter<BackingTextView, WrapTextSight, Nothing> {
-
                 override fun buildView(context: Context) = BackingTextView(context)
 
                 override fun renderView(view: BackingTextView, sight: WrapTextSight) {
@@ -118,12 +122,13 @@ class TowerAndroidView<Sight : Any, Event : Any>(context: Context, tower: Tower<
             })
     }
 
-    override fun addClickView(id: ViewId): Tower.View<ClickSight, ClickEvent> {
+    override fun addClickView(
+        id: ViewId
+    ): Tower.View<ClickSight, ClickEvent> {
         return ViewBackedTowerView(
             id,
             frameLayout = this@TowerAndroidView,
             adapter = object : ViewBackedTowerView.Adapter<BackingButton, ClickSight, ClickEvent> {
-
                 override fun buildView(context: Context): BackingButton {
                     val themedContext = ContextThemeWrapper(context, android.R.style.Widget_Material_Button)
                     return BackingButton(themedContext)
@@ -132,6 +137,23 @@ class TowerAndroidView<Sight : Any, Event : Any>(context: Context, tower: Tower<
                 override fun renderView(view: BackingButton, sight: ClickSight) {
                     view.text = sight.label
                 }
+            }
+        )
+    }
+
+    override fun <Sight : Any> addClickOverlayView(
+        tower: Tower<Sight, Nothing>,
+        id: ViewId
+    ): Tower.View<Sight, ClickEvent> {
+        return ViewBackedTowerView(
+            id,
+            frameLayout = this@TowerAndroidView,
+            adapter = object : ViewBackedTowerView.Adapter<BackingClickableView<Sight>, Sight, ClickEvent> {
+                override fun buildView(context: Context): BackingClickableView<Sight> {
+                    return BackingClickableView<Sight>(context).also { it.enview(tower, id.extend(0)) }
+                }
+
+                override fun renderView(view: BackingClickableView<Sight>, sight: Sight) = view.setSight(sight)
             }
         )
     }

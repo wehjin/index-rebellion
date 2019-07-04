@@ -112,6 +112,13 @@ class ScreenView
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
+    override fun <Sight : Any> addClickOverlayView(
+        tower: Tower<Sight, Nothing>,
+        id: ViewId
+    ): Tower.View<Sight, ClickEvent> {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
+
     override fun drop(id: ViewId) {
         error("Not implemented, use TowerAndroidView")
     }

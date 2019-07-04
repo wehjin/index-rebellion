@@ -4,7 +4,6 @@ import android.content.Context
 import android.util.Log
 import android.view.Gravity
 import android.view.View
-import android.view.ViewGroup
 import android.widget.FrameLayout
 import com.rubyhuntersky.vx.android.toPixels
 import com.rubyhuntersky.vx.common.Anchor
@@ -43,7 +42,7 @@ class ViewBackedTowerView<V, Sight : Any, Event : Any>(
                 it.tag = id
                 frameLayout.addView(
                     it,
-                    FrameLayout.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT)
+                    FrameLayout.LayoutParams(0, FrameLayout.LayoutParams.WRAP_CONTENT)
                 )
             })
 
