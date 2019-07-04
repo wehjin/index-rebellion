@@ -42,7 +42,10 @@ class ViewBackedTowerView<V, Sight : Any, Event : Any>(
                 it.tag = id
                 frameLayout.addView(
                     it,
-                    FrameLayout.LayoutParams(0, FrameLayout.LayoutParams.WRAP_CONTENT)
+                    FrameLayout.LayoutParams(
+                        FrameLayout.LayoutParams.MATCH_PARENT,
+                        FrameLayout.LayoutParams.WRAP_CONTENT
+                    )
                 )
             })
 
@@ -79,8 +82,7 @@ class ViewBackedTowerView<V, Sight : Any, Event : Any>(
             .apply {
                 gravity = Gravity.END
                 marginStart = view.toPixels(hbound.start).toInt()
-                width = view.toPixels(hbound.end - hbound.start).toInt()
-                marginEnd = frameLayout.width - view.toPixels(hbound.end).toInt()
+                marginEnd = frameLayout.width - (marginStart + view.toPixels(hbound.width).toInt())
             }
     }
 
