@@ -9,6 +9,7 @@ import com.rubyhuntersky.indexrebellion.data.cash.CashEquivalent
 import com.rubyhuntersky.indexrebellion.data.index.Constituent
 import com.rubyhuntersky.indexrebellion.data.index.Index
 import com.rubyhuntersky.indexrebellion.data.index.MarketWeight
+import kotlinx.serialization.UnstableDefault
 import kotlinx.serialization.json.Json
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertNotNull
@@ -49,6 +50,7 @@ class RebellionTest {
         assertEquals(CashEquivalent.Amount(CashAmount(11)), rebellion.fullInvestment)
     }
 
+    @UnstableDefault
     @Test
     fun serializable() {
         val rebellion = Rebellion().withConstituent(AssetSymbol("TWLO"), MarketWeight.TEN)

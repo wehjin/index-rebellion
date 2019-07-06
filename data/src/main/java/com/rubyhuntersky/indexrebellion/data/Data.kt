@@ -3,7 +3,8 @@ package com.rubyhuntersky.indexrebellion.data
 import kotlin.math.absoluteValue
 import kotlin.math.roundToLong
 
-fun Double.toStatString(suffix: String? = null): String {
+fun Double.toStatString(): String = this.toStatString(null)
+fun Double.toStatString(suffix: String?): String {
 
     var thousandsMultiplier = 0
     var value = this.absoluteValue

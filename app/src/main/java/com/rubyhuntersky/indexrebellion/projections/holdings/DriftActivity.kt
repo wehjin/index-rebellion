@@ -30,7 +30,7 @@ class DriftActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         coopContentView.setInActivity(this@DriftActivity)
-        activityInteraction = ActivityInteraction(this, ViewDriftStory.TAG, this::renderVision)
+        activityInteraction = ActivityInteraction(this, ViewDriftStory.groupId, this::renderVision)
         lifecycle.addObserver(activityInteraction)
     }
 

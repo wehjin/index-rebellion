@@ -57,7 +57,7 @@ class ViewBackedTowerView<V, Sight : Any, Event : Any>(
                 anchorBehavior.distinctUntilChanged(),
                 toSizeAnchor
             ).subscribe { sizeAnchor ->
-                Log.d(view.tag.toString(), "onSizeAnchor $sizeAnchor")
+                Log.v(view.tag.toString(), "onSizeAnchor $sizeAnchor")
                 setVBound(sizeAnchor.anchor.toVBound(sizeAnchor.size))
             }.addTo(composite)
         }
@@ -69,7 +69,7 @@ class ViewBackedTowerView<V, Sight : Any, Event : Any>(
     private val anchorBehavior = BehaviorSubject.create<Anchor>()
 
     private fun setVBound(vbound: VBound) {
-        Log.d(view.tag.toString(), "Set vbound $vbound")
+        Log.v(view.tag.toString(), "Set vbound $vbound")
         view.layoutParams = (view.layoutParams as FrameLayout.LayoutParams)
             .apply {
                 topMargin = view.toPixels(vbound.ceiling).toInt()
@@ -77,7 +77,7 @@ class ViewBackedTowerView<V, Sight : Any, Event : Any>(
     }
 
     override fun setHBound(hbound: HBound) {
-        Log.d(view.tag.toString(), "Set hbound $hbound")
+        Log.v(view.tag.toString(), "Set hbound $hbound")
         view.layoutParams = (view.layoutParams as FrameLayout.LayoutParams)
             .apply {
                 gravity = Gravity.END
@@ -90,12 +90,12 @@ class ViewBackedTowerView<V, Sight : Any, Event : Any>(
         get() = view.heights.map { Latitude(it) }
 
     override fun setAnchor(anchor: Anchor) {
-        Log.d(view.tag.toString(), "Set anchor $anchor")
+        Log.v(view.tag.toString(), "Set anchor $anchor")
         anchorBehavior.onNext(anchor)
     }
 
     override fun setSight(sight: Sight) {
-        Log.d(view.tag.toString(), "Set content $sight")
+        Log.v(view.tag.toString(), "Set content $sight")
         adapter.renderView(view, sight)
     }
 
