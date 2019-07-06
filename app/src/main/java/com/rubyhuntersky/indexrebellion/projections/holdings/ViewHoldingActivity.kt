@@ -1,13 +1,18 @@
 package com.rubyhuntersky.indexrebellion.projections.holdings
 
+import android.content.Intent
 import android.os.Bundle
+import android.support.v4.app.FragmentActivity
 import android.support.v7.app.AppCompatActivity
 import com.rubyhuntersky.indexrebellion.interactions.viewholding.Action
 import com.rubyhuntersky.indexrebellion.interactions.viewholding.VIEW_HOLDING_STORY
+import com.rubyhuntersky.indexrebellion.interactions.viewholding.ViewHoldingStory
 import com.rubyhuntersky.indexrebellion.interactions.viewholding.Vision
 import com.rubyhuntersky.indexrebellion.projections.Standard
 import com.rubyhuntersky.indexrebellion.toLabel
 import com.rubyhuntersky.interaction.android.ActivityInteraction
+import com.rubyhuntersky.interaction.android.ProjectionSource
+import com.rubyhuntersky.interaction.core.Interaction
 import com.rubyhuntersky.vx.android.coop.CoopContentView
 import com.rubyhuntersky.vx.tower.additions.augment.extendFloors
 import com.rubyhuntersky.vx.tower.additions.handleEvent
@@ -58,4 +63,22 @@ class ViewHoldingActivity : AppCompatActivity() {
             .plusVMargin(Standard.uniformMargin)
 
     private val coopContentView = CoopContentView(pageTower.inCoop())
+
+    companion object : ProjectionSource {
+
+        private const val INTERACTION_KEY = "interactionKey"
+
+        override val group: String
+            get() = ViewHoldingStory.groupId
+
+        override fun <V, A> startProjection(
+            fragmentActivity: FragmentActivity,
+            interaction: Interaction<V, A>,
+            key: Long
+        ) {
+            fragmentActivity.startActivity(
+                Intent(fragmentActivity, ViewHoldingActivity::class.java).apply { putExtra(INTERACTION_KEY, key) }
+            )
+        }
+    }
 }
