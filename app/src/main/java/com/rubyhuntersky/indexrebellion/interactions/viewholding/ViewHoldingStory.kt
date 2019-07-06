@@ -41,7 +41,6 @@ sealed class Action {
 }
 
 private fun revise(vision: Vision, action: Action): Revision<Vision, Action> {
-    println("$VIEW_HOLDING_STORY ACTION: $action VISION: $vision")
     return when {
         vision is Vision.Idle && action is Action.Init -> Revision(
             Vision.Reading(action.instrumentId),

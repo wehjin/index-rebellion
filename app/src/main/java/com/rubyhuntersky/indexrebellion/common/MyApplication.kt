@@ -2,6 +2,7 @@ package com.rubyhuntersky.indexrebellion.common
 
 import android.app.Application
 import android.support.v4.app.FragmentActivity
+import android.util.Log
 import com.rubyhuntersky.indexrebellion.BuildConfig
 import com.rubyhuntersky.indexrebellion.books.SharedRebellionBook
 import com.rubyhuntersky.indexrebellion.data.cash.CashAmount
@@ -20,6 +21,7 @@ import com.rubyhuntersky.indexrebellion.interactions.refreshholdings.Access
 import com.rubyhuntersky.indexrebellion.interactions.refreshholdings.enableRefreshHoldings
 import com.rubyhuntersky.indexrebellion.interactions.updateshares.UPDATE_SHARES
 import com.rubyhuntersky.indexrebellion.interactions.viewdrift.ViewDriftStory
+import com.rubyhuntersky.indexrebellion.interactions.viewholding.VIEW_HOLDING_STORY
 import com.rubyhuntersky.indexrebellion.interactions.viewholding.ViewHoldingStory
 import com.rubyhuntersky.indexrebellion.presenters.cashediting.CashEditingDialogFragment
 import com.rubyhuntersky.indexrebellion.presenters.cashediting.SharedCashEditingInteraction
@@ -41,6 +43,7 @@ import com.rubyhuntersky.robinhood.login.RobinhoodLoginDialogFragment
 import com.rubyhuntersky.robinhood.login.enableRobinhoodLogin
 import com.rubyhuntersky.stockcatalog.StockMarket
 import com.rubyhuntersky.storage.PreferencesBook
+import com.rubyhuntersky.vx.android.logChanges
 import kotlinx.serialization.UnstableDefault
 import java.math.BigDecimal
 import java.util.*
@@ -74,12 +77,14 @@ class MyApplication : Application() {
         }
 
         ViewDriftStory()
+            .logChanges(ViewDriftStory.groupId)
             .also {
                 edge.addInteraction(it)
                 it.sendAction((ViewdriftAction.Init))
             }
 
         ViewHoldingStory()
+            .logChanges(ViewHoldingStory.groupId)
             .also {
                 edge.addInteraction(it)
                 it.sendAction(ViewholdingAction.Init(InstrumentId("TSLA", InstrumentType.StockExchange)))
@@ -105,6 +110,15 @@ class MyApplication : Application() {
         }
 
         edge.addProjectionBuilder(
+            object : ProjectionSource {
+                override val group: String = ViewHoldingStory.groupId
+
+                override fun <V, A> startProjection(
+                    fragmentActivity: FragmentActivity, interaction: Interaction<V, A>, key: Long
+                ) {
+                    Log.d(VIEW_HOLDING_STORY, "TODO: Project")
+                }
+            },
             object : ProjectionSource {
                 override val group: String = ROBINHOOD_LOGIN
 

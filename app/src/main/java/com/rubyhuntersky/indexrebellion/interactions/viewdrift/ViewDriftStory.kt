@@ -9,6 +9,7 @@ import com.rubyhuntersky.interaction.core.Edge
 import com.rubyhuntersky.interaction.core.Interaction
 import com.rubyhuntersky.interaction.core.Revision
 import com.rubyhuntersky.interaction.core.Story
+import com.rubyhuntersky.vx.android.logChanges
 import com.rubyhuntersky.indexrebellion.interactions.viewholding.Action as ViewHoldingAction
 
 class ViewDriftStory : Interaction<Vision, Action> by Story(::start, ::isEnding, ::revise, VIEW_DRIFT_STORY) {
@@ -36,7 +37,6 @@ sealed class Action {
 }
 
 private fun revise(vision: Vision, action: Action, edge: Edge): Revision<Vision, Action> {
-    println("$VIEW_DRIFT_STORY ACTION: $action VISION: $vision")
     return when {
         vision is Vision.Idle && action is Action.Init -> Revision(
             Vision.Reading,
@@ -48,7 +48,7 @@ private fun revise(vision: Vision, action: Action, edge: Edge): Revision<Vision,
         vision is Vision.Viewing && action is Action.ViewHolding -> {
             val viewHolding = edge.wish(
                 name = "view-holding",
-                interaction = ViewHoldingStory(),
+                interaction = ViewHoldingStory().logChanges(ViewHoldingStory.groupId),
                 startAction = ViewHoldingAction.Init(action.instrumentId),
                 endVisionToAction = Action::Ignore
             )

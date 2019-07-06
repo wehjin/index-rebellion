@@ -122,38 +122,49 @@ class TowerAndroidView<Sight : Any, Event : Any>(context: Context, tower: Tower<
             })
     }
 
-    override fun addClickView(
-        id: ViewId
-    ): Tower.View<ClickSight, ClickEvent> {
+    override fun <ClickContext : Any> addClickView(id: ViewId): Tower.View<ClickSight<ClickContext>, ClickEvent<ClickContext>> {
         return ViewBackedTowerView(
             id,
             frameLayout = this@TowerAndroidView,
-            adapter = object : ViewBackedTowerView.Adapter<BackingButton, ClickSight, ClickEvent> {
-                override fun buildView(context: Context): BackingButton {
+            adapter = object :
+                ViewBackedTowerView.Adapter<BackingButton<ClickContext>, ClickSight<ClickContext>, ClickEvent<ClickContext>> {
+
+                override fun buildView(context: Context): BackingButton<ClickContext> {
                     val themedContext = ContextThemeWrapper(context, android.R.style.Widget_Material_Button)
                     return BackingButton(themedContext)
                 }
 
-                override fun renderView(view: BackingButton, sight: ClickSight) {
+                override fun renderView(view: BackingButton<ClickContext>, sight: ClickSight<ClickContext>) {
                     view.text = sight.label
+                    view.clickContext = sight.clickContext
                 }
             }
         )
     }
 
-    override fun <Sight : Any> addClickOverlayView(
+    override fun <Sight : Any, ClickContext : Any> addClickOverlayView(
         tower: Tower<Sight, Nothing>,
+        sightToClickContext: (Sight) -> ClickContext,
         id: ViewId
-    ): Tower.View<Sight, ClickEvent> {
+    ): Tower.View<Sight, ClickEvent<ClickContext>> {
         return ViewBackedTowerView(
             id,
             frameLayout = this@TowerAndroidView,
-            adapter = object : ViewBackedTowerView.Adapter<BackingClickableView<Sight>, Sight, ClickEvent> {
-                override fun buildView(context: Context): BackingClickableView<Sight> {
-                    return BackingClickableView<Sight>(context).also { it.enview(tower, id.extend(0)) }
-                }
+            adapter = object :
+                ViewBackedTowerView.Adapter<BackingClickableView<Sight, ClickContext>, Sight, ClickEvent<ClickContext>> {
 
-                override fun renderView(view: BackingClickableView<Sight>, sight: Sight) = view.setSight(sight)
+                override fun buildView(context: Context): BackingClickableView<Sight, ClickContext> =
+                    BackingClickableView<Sight, ClickContext>(context).also {
+                        it.enview(
+                            tower,
+                            id.extend(0),
+                            sightToClickContext
+                        )
+                    }
+
+                override fun renderView(view: BackingClickableView<Sight, ClickContext>, sight: Sight) {
+                    view.setSight(sight)
+                }
             }
         )
     }

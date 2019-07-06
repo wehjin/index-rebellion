@@ -1,8 +1,10 @@
 package com.rubyhuntersky.indexrebellion.projections.holdings
 
+import com.rubyhuntersky.indexrebellion.data.techtonic.instrument.InstrumentId
 import java.math.BigDecimal
 
 internal data class HoldingSight(
+    val instrumentId: InstrumentId,
     val name: String,
     val custodians: List<String>,
     val count: BigDecimal,

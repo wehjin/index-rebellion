@@ -7,6 +7,7 @@ import com.rubyhuntersky.vx.common.ViewId
 import com.rubyhuntersky.vx.common.bound.HBound
 import com.rubyhuntersky.vx.tower.Tower
 import com.rubyhuntersky.vx.tower.additions.augment.extendFloor
+import com.rubyhuntersky.vx.tower.additions.mapEvent
 import com.rubyhuntersky.vx.tower.additions.mapSight
 import com.rubyhuntersky.vx.tower.towers.EmptyTower
 import io.reactivex.Observable
@@ -26,27 +27,24 @@ class ReplicateTower<Sight : Any, Event : Any>(
             private val eventPublish: PublishSubject<Ranked<Event>> = PublishSubject.create()
             private val latitudeBehavior: BehaviorSubject<Latitude> = BehaviorSubject.createDefault(Latitude(0))
             private val eventLatitudeUpdates = CompositeDisposable()
-            private var fullView: Tower.View<List<Sight>, Event>? = null
+            private var fullView: Tower.View<List<Sight>, Ranked<Event>>? = null
             private var edgeHBound: HBound? = null
             private var edgeAnchor: Anchor? = null
 
             override fun setSight(sight: List<Sight>) {
                 dropFullView()
-                val fullTower: Tower<List<Sight>, Event> = (0 until sight.size)
+                val initial: Tower<List<Sight>, Ranked<Event>> = EmptyTower(0)
+                val fullTower: Tower<List<Sight>, Ranked<Event>> = (0 until sight.size)
                     .map { index -> itemTower.mapSight { list: List<Sight> -> list[index] } }
-                    .fold(EmptyTower(0), Tower<List<Sight>, Event>::extendFloor)
-                fullView = fullTower.enview(viewHost, id)
-                    .also { view ->
-                        view.events
-                            .subscribe { event ->
-                                eventPublish.onNext(Ranked(event, -1))
-                            }
-                            .addTo(eventLatitudeUpdates)
-                        view.latitudes
-                            .subscribe(latitudeBehavior::onNext)
-                            .addTo(eventLatitudeUpdates)
-                        view.setSight(sight)
-                    }
+                    .foldIndexed(initial, { index, acc, tower ->
+                        acc.extendFloor(tower.mapEvent { Ranked(it, index) })
+                    })
+
+                fullView = fullTower.enview(viewHost, id).apply {
+                    events.subscribe(eventPublish::onNext).addTo(eventLatitudeUpdates)
+                    latitudes.subscribe(latitudeBehavior::onNext).addTo(eventLatitudeUpdates)
+                    setSight(sight)
+                }
                 update()
             }
 

@@ -30,21 +30,21 @@ class TestTowerViewHost : Tower.ViewHost {
             override var sight: WrapTextSight? = null
         ) : Item()
 
-        data class TestClick(
+        data class TestClick<ClickContext : Any>(
             override val id: ViewId,
             override var bound: HBound? = null,
             override var anchor: Anchor? = null,
             override var sight: ClickSight? = null,
-            val events: PublishSubject<ClickEvent> = PublishSubject.create()
+            val events: PublishSubject<ClickEvent<ClickContext>> = PublishSubject.create()
         ) : Item()
 
-        data class TestClickOverlay<Sight : Any>(
+        data class TestClickOverlay<Sight : Any, ClickContext : Any>(
             val tower: Tower<Sight, Nothing>,
             override val id: ViewId,
             override var bound: HBound? = null,
             override var anchor: Anchor? = null,
             override var sight: Sight? = null,
-            val events: PublishSubject<ClickEvent> = PublishSubject.create()
+            val events: PublishSubject<ClickEvent<ClickContext>> = PublishSubject.create()
         ) : Item()
     }
 
@@ -87,12 +87,12 @@ class TestTowerViewHost : Tower.ViewHost {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
-    override fun addClickView(
+    override fun <ClickContext : Any> addClickView(
         id: ViewId
-    ): Tower.View<ClickSight, ClickEvent> {
-        val item = Item.TestClick(id).also(this::addItem)
-        return object : Tower.View<ClickSight, ClickEvent> {
-            override val events: Observable<ClickEvent>
+    ): Tower.View<ClickSight, ClickEvent<ClickContext>> {
+        val item = Item.TestClick<ClickContext>(id).also(this::addItem)
+        return object : Tower.View<ClickSight, ClickEvent<ClickContext>> {
+            override val events: Observable<ClickEvent<ClickContext>>
                 get() = item.events
 
             override fun setSight(sight: ClickSight) {
@@ -112,12 +112,14 @@ class TestTowerViewHost : Tower.ViewHost {
         }
     }
 
-    override fun <Sight : Any> addClickOverlayView(
-        tower: Tower<Sight, Nothing>, id: ViewId
-    ): Tower.View<Sight, ClickEvent> {
-        val item = Item.TestClickOverlay(tower, id)
-        return object : Tower.View<Sight, ClickEvent> {
-            override val events: Observable<ClickEvent>
+    override fun <Sight : Any, ClickContext : Any> addClickOverlayView(
+        tower: Tower<Sight, Nothing>,
+        sightToClickContext: (Sight) -> ClickContext,
+        id: ViewId
+    ): Tower.View<Sight, ClickEvent<ClickContext>> {
+        val item = Item.TestClickOverlay<Sight, ClickContext>(tower, id)
+        return object : Tower.View<Sight, ClickEvent<ClickContext>> {
+            override val events: Observable<ClickEvent<ClickContext>>
                 get() = item.events
 
             override fun setSight(sight: Sight) {

@@ -15,10 +15,12 @@ import com.rubyhuntersky.indexrebellion.projections.holdings.towers.HoldingTower
 import com.rubyhuntersky.indexrebellion.toLabel
 import com.rubyhuntersky.interaction.android.ActivityInteraction
 import com.rubyhuntersky.vx.android.coop.CoopContentView
+import com.rubyhuntersky.vx.android.logEvents
 import com.rubyhuntersky.vx.coop.Coop
 import com.rubyhuntersky.vx.coop.additions.mapSight
 import com.rubyhuntersky.vx.toPercent
 import com.rubyhuntersky.vx.tower.additions.augment.extendCeiling
+import com.rubyhuntersky.vx.tower.additions.handleEvent
 import com.rubyhuntersky.vx.tower.additions.inCoop
 import com.rubyhuntersky.vx.tower.additions.mapSight
 import com.rubyhuntersky.vx.tower.additions.replicate.replicate
@@ -34,6 +36,42 @@ class DriftActivity : AppCompatActivity() {
         lifecycle.addObserver(activityInteraction)
     }
 
+    private val multiHoldingTower = HoldingTower
+        .plusClicks(HoldingSight::instrumentId)
+        .replicate()
+        .mapSight { page: PageSight -> page.holdings }
+        .logEvents("NoEventPageSightMultiHoldingTower")
+        .handleEvent {
+            val action = Action.ViewHolding(instrumentId = it.value.context)
+            activityInteraction.sendAction(action)
+        }
+
+    private val holdingsContentTower = multiHoldingTower
+        .extendCeiling(BalanceTower)
+        .mapSight { drift: Drift ->
+            PageSight(
+                balance = "0,00",
+                holdings = drift.generalHoldings.map {
+                    HoldingSight(
+                        instrumentId = it.instrumentId,
+                        name = drift.market.findSample(it.instrumentId)!!.instrumentName,
+                        custodians = it.custodians.map(Custodian::toString),
+                        count = it.size,
+                        symbol = it.instrumentId.symbol,
+                        value = it.cashValue!!.value
+                    )
+                }
+            )
+        }
+        .logEvents("HoldingsContentTower")
+
+    private val pageTower = Standard.SectionTower(
+        Pair("Holdings", holdingsContentTower),
+        Pair("Adjustments", adjustmentsContentTower)
+    )
+
+    private val pageCoop: Coop<Vision.Viewing, Nothing> = pageTower.inCoop().mapSight(Vision.Viewing::drift)
+
     private val coopContentView = CoopContentView(pageCoop)
 
     private lateinit var activityInteraction: ActivityInteraction<Vision, Action>
@@ -45,27 +83,6 @@ class DriftActivity : AppCompatActivity() {
     }
 
     companion object {
-
-        private val multiHoldingTower = HoldingTower
-            .plusClicks()
-            .replicate()
-            .mapSight { page: PageSight -> page.holdings }
-            .neverEvent<Nothing>()
-
-        private val holdingsContentTower = multiHoldingTower.extendCeiling(BalanceTower).mapSight { drift: Drift ->
-            PageSight(
-                balance = "0,00",
-                holdings = drift.generalHoldings.map {
-                    HoldingSight(
-                        name = drift.market.findSample(it.instrumentId)!!.instrumentName,
-                        custodians = it.custodians.map(Custodian::toString),
-                        count = it.size,
-                        symbol = it.instrumentId.symbol,
-                        value = it.cashValue!!.value
-                    )
-                }
-            )
-        }
 
         private val adjustmentTower = Standard.BodyTower().mapSight { adjustment: PlateAdjustment ->
             val name = adjustment.toName()
@@ -97,12 +114,5 @@ class DriftActivity : AppCompatActivity() {
             adjustmentTower.replicate().neverEvent<Nothing>().mapSight { drift: Drift ->
                 drift.plateAdjustments.toList()
             }
-
-        private val pageTower = Standard.SectionTower(
-            Pair("Holdings", holdingsContentTower),
-            Pair("Adjustments", adjustmentsContentTower)
-        )
-
-        private val pageCoop: Coop<Vision.Viewing, Nothing> = pageTower.inCoop().mapSight(Vision.Viewing::drift)
     }
 }

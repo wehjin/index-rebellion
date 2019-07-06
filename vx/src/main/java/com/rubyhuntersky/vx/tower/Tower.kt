@@ -24,12 +24,14 @@ interface Tower<Sight : Any, Event : Any> {
     interface ViewHost {
         fun addWrapTextView(id: ViewId): View<WrapTextSight, Nothing>
         fun addInputView(id: ViewId): View<InputSight, InputEvent>
-        fun addClickView(id: ViewId): View<ClickSight, ClickEvent>
 
-        fun <Sight : Any> addClickOverlayView(
+        fun <ClickContext : Any> addClickView(id: ViewId): View<ClickSight<ClickContext>, ClickEvent<ClickContext>>
+
+        fun <Sight : Any, ClickContext : Any> addClickOverlayView(
             tower: Tower<Sight, Nothing>,
+            sightToClickContext: (Sight) -> ClickContext,
             id: ViewId
-        ): View<Sight, ClickEvent>
+        ): View<Sight, ClickEvent<ClickContext>>
 
         fun drop(id: ViewId)
     }

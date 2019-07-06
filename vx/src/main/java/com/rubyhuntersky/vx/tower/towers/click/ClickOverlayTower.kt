@@ -3,14 +3,16 @@ package com.rubyhuntersky.vx.tower.towers.click
 import com.rubyhuntersky.vx.common.ViewId
 import com.rubyhuntersky.vx.tower.Tower
 
-private class ClickOverlayTower<Sight : Any>(
-    private val core: Tower<Sight, Nothing>
-) : Tower<Sight, ClickEvent> {
+private class ClickOverlayTower<Sight : Any, ClickContext : Any>(
+    private val core: Tower<Sight, Nothing>,
+    private val sightToClickContext: (Sight) -> ClickContext
+) : Tower<Sight, ClickEvent<ClickContext>> {
 
     override fun enview(
         viewHost: Tower.ViewHost,
         id: ViewId
-    ): Tower.View<Sight, ClickEvent> = viewHost.addClickOverlayView(core, id)
+    ): Tower.View<Sight, ClickEvent<ClickContext>> = viewHost.addClickOverlayView(core, sightToClickContext, id)
 }
 
-fun <Sight : Any> Tower<Sight, Nothing>.plusClicks(): Tower<Sight, ClickEvent> = ClickOverlayTower(this)
+fun <Sight : Any, ClickContext : Any> Tower<Sight, Nothing>.plusClicks(sightToClickContext: (Sight) -> ClickContext):
+        Tower<Sight, ClickEvent<ClickContext>> = ClickOverlayTower(this, sightToClickContext)

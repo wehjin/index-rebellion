@@ -108,14 +108,15 @@ class ScreenView
                 }
             })
 
-    override fun addClickView(id: ViewId): Tower.View<ClickSight, ClickEvent> {
+    override fun <ClickContext : Any> addClickView(id: ViewId): Tower.View<ClickSight<ClickContext>, ClickEvent<ClickContext>> {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
-    override fun <Sight : Any> addClickOverlayView(
+    override fun <Sight : Any, ClickContext : Any> addClickOverlayView(
         tower: Tower<Sight, Nothing>,
+        sightToClickContext: (Sight) -> ClickContext,
         id: ViewId
-    ): Tower.View<Sight, ClickEvent> {
+    ): Tower.View<Sight, ClickEvent<ClickContext>> {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 

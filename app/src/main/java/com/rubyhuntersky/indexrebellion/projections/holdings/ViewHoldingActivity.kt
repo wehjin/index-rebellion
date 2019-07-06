@@ -50,8 +50,8 @@ class ViewHoldingActivity : AppCompatActivity() {
                     viewing.holding.cashValue?.toDollarStat() ?: "Unknown value"
                 },
                 Standard.SubtitleTower().mapSight { viewing: Vision.Viewing -> viewing.plate.toLabel() },
-                ClickTower()
-                    .mapSight { _: Vision.Viewing -> ClickSight("Reclassify") }
+                ClickTower<Unit>()
+                    .mapSight { _: Vision.Viewing -> ClickSight("Reclassify", Unit) }
                     .handleEvent { activityInteraction.sendAction(Action.Reclassify) }
             )
             .plusHPad(Standard.uniformPad)
