@@ -34,7 +34,7 @@ class TestTowerViewHost : Tower.ViewHost {
             override val id: ViewId,
             override var bound: HBound? = null,
             override var anchor: Anchor? = null,
-            override var sight: ClickSight? = null,
+            override var sight: ClickSight<ClickContext>? = null,
             val events: PublishSubject<ClickEvent<ClickContext>> = PublishSubject.create()
         ) : Item()
 
@@ -89,13 +89,13 @@ class TestTowerViewHost : Tower.ViewHost {
 
     override fun <ClickContext : Any> addClickView(
         id: ViewId
-    ): Tower.View<ClickSight, ClickEvent<ClickContext>> {
+    ): Tower.View<ClickSight<ClickContext>, ClickEvent<ClickContext>> {
         val item = Item.TestClick<ClickContext>(id).also(this::addItem)
-        return object : Tower.View<ClickSight, ClickEvent<ClickContext>> {
+        return object : Tower.View<ClickSight<ClickContext>, ClickEvent<ClickContext>> {
             override val events: Observable<ClickEvent<ClickContext>>
                 get() = item.events
 
-            override fun setSight(sight: ClickSight) {
+            override fun setSight(sight: ClickSight<ClickContext>) {
                 item.sight = sight
             }
 
