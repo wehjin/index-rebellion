@@ -1,5 +1,6 @@
 package com.rubyhuntersky.indexrebellion.presenters.updateshares
 
+import android.support.v4.app.FragmentActivity
 import android.text.Editable
 import android.text.TextWatcher
 import android.util.Log
@@ -7,6 +8,8 @@ import com.rubyhuntersky.indexrebellion.R
 import com.rubyhuntersky.indexrebellion.data.assets.PriceSample
 import com.rubyhuntersky.indexrebellion.data.assets.ShareCount
 import com.rubyhuntersky.indexrebellion.interactions.updateshares.*
+import com.rubyhuntersky.interaction.android.ProjectionSource
+import com.rubyhuntersky.interaction.core.Interaction
 import com.rubyhuntersky.vx.android.InteractionBottomSheetDialogFragment
 import kotlinx.android.synthetic.main.view_update_share_count.*
 import java.util.*
@@ -18,7 +21,7 @@ class UpdateSharesDialogFragment : InteractionBottomSheetDialogFragment<Vision, 
 ) {
 
     override fun render(vision: Vision) {
-        Log.d(UPDATE_SHARES, "VISION: $vision")
+        Log.d(UpdateSharesStory.groupId, "VISION: $vision")
         when (vision) {
             is Vision.Loading -> {
                 symbolTextView.text = getString(R.string.loading)
@@ -142,12 +145,13 @@ class UpdateSharesDialogFragment : InteractionBottomSheetDialogFragment<Vision, 
         override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) = Unit
     }
 
-    companion object {
+    companion object : ProjectionSource<Vision, Action> {
+        override val group: String = UpdateSharesStory.groupId
 
-        fun new(key: Long): UpdateSharesDialogFragment {
-            return UpdateSharesDialogFragment().also {
-                it.indirectInteractionKey = key
-            }
+        override fun startProjection(activity: FragmentActivity, interaction: Interaction<Vision, Action>, key: Long) {
+            UpdateSharesDialogFragment()
+                .apply { indirectInteractionKey = key }
+                .show(activity.supportFragmentManager, "${UpdateSharesStory.groupId}/Projection")
         }
     }
 }

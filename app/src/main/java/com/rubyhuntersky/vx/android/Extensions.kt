@@ -60,9 +60,7 @@ fun <Sight : Any, Event : Any> Tower<Sight, Event>.logEvents(tag: String): Tower
 }
 
 fun <Vision : Any, Action : Any> Interaction<Vision, Action>.logChanges(tag: String): Interaction<Vision, Action> {
-
     val core = this
-
     return object : Interaction<Vision, Action> {
 
         override val group: String
@@ -75,10 +73,10 @@ fun <Vision : Any, Action : Any> Interaction<Vision, Action>.logChanges(tag: Str
             }
 
         override val visions: Observable<Vision>
-            get() = core.visions.doOnNext { Log.i(tag, "NEW VISION: $it") }
+            get() = core.visions.doOnNext { println("$tag NEW VISION: $it") }
 
         override fun sendAction(action: Action) {
-            Log.i(tag, "ACTION: $action VISION: ${core.visions.blockingFirst()}")
+            println("$tag ACTION: $action VISION: ${core.visions.blockingFirst()}")
             core.sendAction(action)
         }
     }

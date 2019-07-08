@@ -13,13 +13,11 @@ class ViewDriftStoryTest {
 
     private val drift = Fixture.DRIFT
 
-    private val edge = Edge().also {
-        it.lamp.add(ReadDriftsDjinn(BehaviorBook(drift)))
-    }
+    private val edge = Edge()
+        .apply { lamp.add(ReadDriftsDjinn(BehaviorBook(drift))) }
 
-    private val story = ViewDriftStory().also {
-        edge.addInteraction(it)
-    }
+    private val story = ViewDriftStory()
+        .also { edge.addInteraction(it) }
 
     private val test = story.visions.test()
 

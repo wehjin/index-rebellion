@@ -6,22 +6,20 @@ import com.rubyhuntersky.indexrebellion.data.techtonic.instrument.InstrumentId
 import com.rubyhuntersky.indexrebellion.data.techtonic.plating.Plate
 import com.rubyhuntersky.indexrebellion.spirits.readdrift.ReadDriftsDjinn
 import com.rubyhuntersky.indexrebellion.spirits.showtoast.ShowToast
-import com.rubyhuntersky.interaction.InteractionCompanion
 import com.rubyhuntersky.interaction.core.Interaction
+import com.rubyhuntersky.interaction.core.InteractionCompanion
 import com.rubyhuntersky.interaction.core.Revision
 import com.rubyhuntersky.interaction.core.Story
 import com.rubyhuntersky.interaction.core.wish.Wish
 import com.rubyhuntersky.interaction.core.wish.WishKind
 
 class ViewHoldingStory : Interaction<Vision, Action>
-by Story(::start, ::isEnding, ::revise, VIEW_HOLDING_STORY) {
+by Story(::start, ::isEnding, ::revise, groupId) {
 
     companion object : InteractionCompanion<Vision, Action> {
-        override val groupId: String = VIEW_HOLDING_STORY
+        override val groupId: String = "ViewHoldingStory"
     }
 }
-
-const val VIEW_HOLDING_STORY = "ViewHoldingStory"
 
 sealed class Vision {
     object Idle : Vision()
@@ -62,6 +60,6 @@ private fun revise(vision: Vision, action: Action): Revision<Vision, Action> {
             Revision(vision, showToast)
         }
         action is Action.Ignore -> Revision(vision)
-        else -> error("$VIEW_HOLDING_STORY: Invalid revision parameters - $vision, $action")
+        else -> error("${ViewHoldingStory.groupId}: Invalid revision parameters - $vision, $action")
     }
 }

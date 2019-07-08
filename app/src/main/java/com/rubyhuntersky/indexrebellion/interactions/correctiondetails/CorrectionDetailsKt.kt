@@ -5,16 +5,10 @@ import com.rubyhuntersky.indexrebellion.common.MyApplication.Companion.rebellion
 import com.rubyhuntersky.indexrebellion.data.report.CorrectionDetails
 import com.rubyhuntersky.indexrebellion.interactions.books.CorrectionDetailsBook
 import com.rubyhuntersky.indexrebellion.interactions.updateshares.UpdateSharesStory
-import com.rubyhuntersky.interaction.core.Edge
-import com.rubyhuntersky.interaction.core.Interaction
-import com.rubyhuntersky.interaction.core.Revision
-import com.rubyhuntersky.interaction.core.Story
+import com.rubyhuntersky.interaction.core.*
 import com.rubyhuntersky.interaction.core.wish.Lamp
 import com.rubyhuntersky.interaction.core.wish.Wish
 import com.rubyhuntersky.indexrebellion.interactions.updateshares.Action as UpdateSharesAction
-import com.rubyhuntersky.interaction.core.SubjectInteractionAdapter as Adapter
-
-const val CORRECTION_DETAILS = "CorrectionDetails"
 
 fun enableCorrectionDetails(lamp: Lamp) {
     with(lamp) {
@@ -22,7 +16,13 @@ fun enableCorrectionDetails(lamp: Lamp) {
     }
 }
 
-class CorrectionDetailsStory : Interaction<Vision, Action> by Story(::start, ::isEnding, ::revise, CORRECTION_DETAILS)
+class CorrectionDetailsStory :
+    Interaction<Vision, Action> by Story(::start, ::isEnding, ::revise, groupId) {
+
+    companion object : InteractionCompanion<Vision, Action> {
+        override val groupId: String = "CorrectionDetails"
+    }
+}
 
 sealed class Vision {
     data class Loading(val culture: Culture?) : Vision()
@@ -40,7 +40,7 @@ sealed class Action {
     data class Load(val correctionDetails: CorrectionDetails) : Action()
     object UpdateShares : Action()
     object DeleteConstituent : Action()
-    object Cancel : Action()
+    data class Cancel(val reason: Any? = Unit) : Action()
 }
 
 fun revise(vision: Vision, action: Action, edge: Edge): Revision<Vision, Action> {
@@ -51,14 +51,18 @@ fun revise(vision: Vision, action: Action, edge: Edge): Revision<Vision, Action>
             val wish = ReadCorrectionDetailsDjinn.wish(
                 name = "read",
                 params = culture.correctionDetailsBook,
-                resultToAction = { Action.Load(it) },
-                errorToAction = { logError(it); Action.Cancel })
+                resultToAction = Action::Load,
+                errorToAction = Action::Cancel
+            )
             Revision(newVision, wish)
         }
         action is Action.Cancel -> {
             if (vision is Vision.Finished) {
                 Revision(vision as Vision)
             } else {
+                (action.reason as? Throwable)?.let {
+                    Log.e(CorrectionDetailsStory.groupId, it.localizedMessage, it)
+                }
                 val newVision = Vision.Finished as Vision
                 val wish = Wish.none<Action>("read")
                 Revision(newVision, wish)
@@ -78,7 +82,7 @@ fun revise(vision: Vision, action: Action, edge: Edge): Revision<Vision, Action>
                 name = "update-shares",
                 interaction = UpdateSharesStory(),
                 startAction = UpdateSharesAction.Start(rebellionBook, vision.details.assetSymbol),
-                endVisionToAction = { Action.Cancel as Action }
+                endVisionToAction = Action::Cancel
             )
             Revision(Vision.Finished, wish)
         }
@@ -90,4 +94,3 @@ fun revise(vision: Vision, action: Action, edge: Edge): Revision<Vision, Action>
     }
 }
 
-private fun logError(error: Throwable) = Log.e(CORRECTION_DETAILS, error.localizedMessage, error)

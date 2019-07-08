@@ -1,5 +1,6 @@
 package com.rubyhuntersky.robinhood.login
 
+import android.support.v4.app.FragmentActivity
 import android.text.Editable
 import android.text.TextWatcher
 import android.util.Log
@@ -7,6 +8,8 @@ import android.view.View
 import com.rubyhuntersky.indexrebellion.R
 import com.rubyhuntersky.indexrebellion.common.views.SimpleTextWatcher
 import com.rubyhuntersky.indexrebellion.common.views.updateText
+import com.rubyhuntersky.interaction.android.ProjectionSource
+import com.rubyhuntersky.interaction.core.Interaction
 import com.rubyhuntersky.vx.android.Renderer
 import com.rubyhuntersky.vx.android.RendererBottomSheetDialogFragment
 import com.rubyhuntersky.vx.android.UpdateResult
@@ -106,9 +109,13 @@ class RobinhoodLoginDialogFragment : RendererBottomSheetDialogFragment<Vision, A
         }
     }
 ) {
-    companion object {
-        fun new(interactionKey: Long) = RobinhoodLoginDialogFragment().also {
-            it.indirectInteractionKey = interactionKey
+    companion object : ProjectionSource<Vision, Action> {
+        override val group: String = ROBINHOOD_LOGIN
+
+        override fun startProjection(activity: FragmentActivity, interaction: Interaction<Vision, Action>, key: Long) {
+            RobinhoodLoginDialogFragment()
+                .apply { indirectInteractionKey = key }
+                .show(activity.supportFragmentManager, "$ROBINHOOD_LOGIN/Projection")
         }
     }
 }

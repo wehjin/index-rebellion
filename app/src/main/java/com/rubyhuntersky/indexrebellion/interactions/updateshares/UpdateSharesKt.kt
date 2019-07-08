@@ -5,16 +5,16 @@ import com.rubyhuntersky.indexrebellion.data.assets.AssetSymbol
 import com.rubyhuntersky.indexrebellion.data.assets.PriceSample
 import com.rubyhuntersky.indexrebellion.data.assets.ShareCount
 import com.rubyhuntersky.indexrebellion.data.cash.CashAmount
-import com.rubyhuntersky.interaction.core.Book
-import com.rubyhuntersky.interaction.core.Interaction
-import com.rubyhuntersky.interaction.core.Revision
-import com.rubyhuntersky.interaction.core.Story
+import com.rubyhuntersky.interaction.core.*
 import java.util.*
 
-const val UPDATE_SHARES = "UpdateShares"
+class UpdateSharesStory :
+    Interaction<Vision, Action> by Story(::start, ::isEnding, ::revise, groupId) {
 
-class UpdateSharesStory : Interaction<Vision, Action>
-by Story(::start, ::isEnding, ::revise, UPDATE_SHARES)
+    companion object : InteractionCompanion<Vision, Action> {
+        override val groupId: String = "UpdateShares"
+    }
+}
 
 sealed class Vision {
     object Loading : Vision()

@@ -9,6 +9,7 @@ import com.rubyhuntersky.indexrebellion.data.report.RebellionReport
 import com.rubyhuntersky.indexrebellion.interactions.books.CorrectionDetailsBook
 import com.rubyhuntersky.indexrebellion.interactions.books.RebellionBook
 import com.rubyhuntersky.indexrebellion.interactions.correctiondetails.CorrectionDetailsStory
+import com.rubyhuntersky.indexrebellion.interactions.main.MainStory.Companion.groupId
 import com.rubyhuntersky.interaction.core.*
 import com.rubyhuntersky.interaction.core.wish.Lamp
 import com.rubyhuntersky.stockcatalog.StockMarket
@@ -16,9 +17,10 @@ import com.rubyhuntersky.indexrebellion.interactions.correctiondetails.Action as
 import com.rubyhuntersky.indexrebellion.interactions.correctiondetails.Culture as CorrectionDetailsCulture
 
 class MainStory : Interaction<Vision, Action>
-by Story(::start, ::isEnding, ::revise, TAG) {
-    companion object {
-        const val TAG = "MainInteraction"
+by Story(::start, ::isEnding, ::revise, groupId) {
+
+    companion object : InteractionCompanion<Vision, Action> {
+        override val groupId: String = "MainInteraction"
 
         fun addSpiritsToLamp(lamp: Lamp) {
             with(lamp) {
@@ -59,7 +61,7 @@ sealed class Action {
     object Refresh : Action()
     data class ReceiveMarketSamples(val result: StockMarket.Result) : Action()
     data class ReceiveError(val error: Throwable) : Action()
-    object Ignore : Action()
+    data class Ignore(val ignore: Any?) : Action()
 }
 
 data class MainPortals(
@@ -73,8 +75,8 @@ fun revise(vision: Vision, action: Action, edge: Edge): Revision<Vision, Action>
             val reportsWish = ReadReportsDjinn.wish(
                 name = "rebellions",
                 params = action.rebellionBook,
-                resultToAction = { Action.SetReport(it) as Action },
-                errorToAction = { throw IllegalStateException() }
+                resultToAction = Action::SetReport,
+                errorToAction = { throw IllegalStateException(it) }
             )
             Revision(Vision.Loading(action.portals, action.rebellionBook), reportsWish)
         }
@@ -116,7 +118,7 @@ fun revise(vision: Vision, action: Action, edge: Edge): Revision<Vision, Action>
                         CorrectionDetailsBook(details, vision.rebellionBook)
                     )
                 ),
-                endVisionToAction = { Action.Ignore as Action }
+                endVisionToAction = Action::Ignore
             )
             Revision(vision, detailsWish)
         }
@@ -138,13 +140,13 @@ fun revise(vision: Vision, action: Action, edge: Edge): Revision<Vision, Action>
             val wish = UpdateRebellionPricesGenie.wish(
                 name = "update-prices",
                 params = UpdateRebellionPrices(rebellionBook, result),
-                resultToAction = { Action.Ignore },
+                resultToAction = Action::Ignore,
                 errorToAction = Action::ReceiveError
             )
             Revision(newVision, wish)
         }
         vision is Vision.Viewing && action is Action.ReceiveError -> {
-            Log.e(MainStory.TAG, action.error.localizedMessage, action.error)
+            Log.e(groupId, action.error.localizedMessage, action.error)
             val newVision = Vision.Viewing(vision.rebellionReport, false, vision.portals, vision.rebellionBook)
             Revision(newVision)
         }

@@ -4,21 +4,15 @@ import com.rubyhuntersky.indexrebellion.data.techtonic.Drift
 import com.rubyhuntersky.indexrebellion.data.techtonic.instrument.InstrumentId
 import com.rubyhuntersky.indexrebellion.interactions.viewholding.ViewHoldingStory
 import com.rubyhuntersky.indexrebellion.spirits.readdrift.ReadDriftsDjinn
-import com.rubyhuntersky.interaction.InteractionCompanion
-import com.rubyhuntersky.interaction.core.Edge
-import com.rubyhuntersky.interaction.core.Interaction
-import com.rubyhuntersky.interaction.core.Revision
-import com.rubyhuntersky.interaction.core.Story
+import com.rubyhuntersky.interaction.core.*
 import com.rubyhuntersky.vx.android.logChanges
 import com.rubyhuntersky.indexrebellion.interactions.viewholding.Action as ViewHoldingAction
 
-class ViewDriftStory : Interaction<Vision, Action> by Story(::start, ::isEnding, ::revise, VIEW_DRIFT_STORY) {
+class ViewDriftStory : Interaction<Vision, Action> by Story(::start, ::isEnding, ::revise, groupId) {
     companion object : InteractionCompanion<Vision, Action> {
-        override val groupId: String = VIEW_DRIFT_STORY
+        override val groupId: String = "ViewDriftStory"
     }
 }
-
-const val VIEW_DRIFT_STORY = "ViewDriftStory"
 
 sealed class Vision {
     object Idle : Vision()
@@ -33,7 +27,7 @@ sealed class Action {
     object Init : Action()
     data class Load(val drift: Drift) : Action()
     data class ViewHolding(val instrumentId: InstrumentId) : Action()
-    data class Ignore<out T>(val ignore: T) : Action()
+    data class Ignore(val ignore: Any?) : Action()
 }
 
 private fun revise(vision: Vision, action: Action, edge: Edge): Revision<Vision, Action> {
@@ -54,7 +48,7 @@ private fun revise(vision: Vision, action: Action, edge: Edge): Revision<Vision,
             )
             Revision(vision, viewHolding)
         }
-        action is Action.Ignore<*> -> Revision(vision)
-        else -> error("$VIEW_DRIFT_STORY: Invalid revision parameters - $vision, $action")
+        action is Action.Ignore -> Revision(vision)
+        else -> error("${ViewDriftStory.groupId}: Invalid revision parameters - $vision, $action")
     }
 }

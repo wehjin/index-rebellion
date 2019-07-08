@@ -1,7 +1,9 @@
 package com.rubyhuntersky.indexrebellion.presenters.main
 
+import android.os.Bundle
 import android.support.annotation.IdRes
 import android.support.annotation.LayoutRes
+import android.support.v7.app.AppCompatActivity
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
@@ -12,11 +14,12 @@ import com.rubyhuntersky.indexrebellion.common.MyApplication.Companion.accessBoo
 import com.rubyhuntersky.indexrebellion.common.MyApplication.Companion.rbhApi
 import com.rubyhuntersky.indexrebellion.common.MyApplication.Companion.rebellionBook
 import com.rubyhuntersky.indexrebellion.interactions.main.Action
-import com.rubyhuntersky.indexrebellion.interactions.main.MainStory
+import com.rubyhuntersky.indexrebellion.interactions.main.MainStory.Companion.groupId
 import com.rubyhuntersky.indexrebellion.interactions.main.Vision
 import com.rubyhuntersky.indexrebellion.interactions.refreshholdings.RefreshHoldingsStory
+import com.rubyhuntersky.interaction.android.ActivityInteraction
 import com.rubyhuntersky.interaction.android.AndroidEdge
-import com.rubyhuntersky.interaction.android.NamedInteractionActivity
+import com.rubyhuntersky.interaction.core.Edge
 import com.rubyhuntersky.interaction.core.PendingInteractions
 import kotlinx.android.synthetic.main.activity_main_viewing.*
 import kotlinx.android.synthetic.main.view_funding.*
@@ -24,9 +27,13 @@ import java.text.SimpleDateFormat
 import com.rubyhuntersky.indexrebellion.interactions.refreshholdings.Action as RefreshHoldingsAction
 import com.rubyhuntersky.indexrebellion.interactions.refreshholdings.Vision as RefreshHoldingsVision
 
-class MainActivity : NamedInteractionActivity<Vision, Action>(
-    interactionName = MAIN_STORY_TAG
-) {
+class MainActivity : AppCompatActivity() {
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        lifecycle.addObserver(ActivityInteraction(groupId, this, this::renderVision))
+    }
+
     private fun refreshHoldings() {
         val interaction = RefreshHoldingsStory()
             .also {
@@ -43,7 +50,7 @@ class MainActivity : NamedInteractionActivity<Vision, Action>(
             runOnUiThread {
                 when (vision) {
                     is RefreshHoldingsVision.NewHoldings -> {
-                        Log.d(MAIN_STORY_TAG, "New holdings: ${vision.newHoldings}")
+                        Log.d(groupId, "New holdings: ${vision.newHoldings}")
                         Toast.makeText(this, "Updated holdings", Toast.LENGTH_SHORT).show()
                     }
                     is RefreshHoldingsVision.Error -> presentError(vision.error)
@@ -56,12 +63,13 @@ class MainActivity : NamedInteractionActivity<Vision, Action>(
     private val pendingInteractions = PendingInteractions()
 
     private fun presentError(error: Throwable) {
-        Log.e(MAIN_STORY_TAG, error.localizedMessage, error)
+        Log.e(groupId, error.localizedMessage, error)
         Toast.makeText(this, error.localizedMessage, Toast.LENGTH_LONG).show()
     }
 
-    override fun renderVision(vision: Vision) {
-        Log.d(MAIN_STORY_TAG, "VISION: $vision")
+    @Suppress("UNUSED_PARAMETER")
+    private fun renderVision(vision: Vision, sendAction: (Action) -> Unit, edge: Edge) {
+        Log.d(groupId, "VISION: $vision")
         when (vision) {
             is Vision.Loading -> setContentView(R.id.mainLoading, R.layout.activity_main_loading)
             is Vision.Viewing -> {
@@ -90,9 +98,9 @@ class MainActivity : NamedInteractionActivity<Vision, Action>(
     }
 
     private fun setContentView(@IdRes viewId: Int, @LayoutRes layoutId: Int) {
-        if (findViewById<View>(viewId) == null) {
-            setContentView(layoutId)
-        }
+        findViewById<View>(viewId)?.let {
+            // Content view already exists
+        } ?: setContentView(layoutId)
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
@@ -126,7 +134,5 @@ class MainActivity : NamedInteractionActivity<Vision, Action>(
         fun currentActivity(): MainActivity? {
             return mainActivity
         }
-
-        private const val MAIN_STORY_TAG: String = MainStory.TAG
     }
 }

@@ -16,10 +16,13 @@ import com.rubyhuntersky.robinhood.login.Services
 import com.rubyhuntersky.robinhood.login.Action as RobinhoodLoginAction
 import com.rubyhuntersky.robinhood.login.Vision as RobinhoodLoginVision
 
-class RefreshHoldingsStory : Interaction<Vision, Action>
-by Story(::start, ::isEnding, ::revise, REFRESH_HOLDINGS)
+class RefreshHoldingsStory :
+    Interaction<Vision, Action> by Story(::start, ::isEnding, ::revise, groupId) {
 
-const val REFRESH_HOLDINGS = "RefreshHoldings"
+    companion object : InteractionCompanion<Vision, Action> {
+        override val groupId: String = "RefreshHoldings"
+    }
+}
 
 fun enableRefreshHoldings(lamp: Lamp) {
     with(lamp) {
@@ -45,51 +48,49 @@ sealed class Action {
     data class ReceiveResult(val result: RbhHoldingsResult) : Action()
 }
 
-private fun revise(vision: Vision, action: Action, edge: Edge): Revision<Vision, Action> {
-    return when {
-        action is Action.Start -> {
-            val api = action.api
-            val newVision = Vision.AwaitingResult(api, action.book)
-            val wish = FetchRbhHoldingsGenie.wish(
-                name = "holdings",
-                params = FetchRbhHoldings(api, action.token),
-                resultToAction = Action::ReceiveResult,
-                errorToAction = Action::ReceiveError
-            )
-            Revision(newVision, wish, Wish.none("update-access-token"))
-        }
-        vision is Vision.AwaitingResult && action is Action.ReceiveResult -> {
-            val newHoldings = action.result.toHoldings()
-            val newRebellion = vision.book.value.withHoldings(newHoldings)
-            vision.book.write(newRebellion)
-            val newVision = Vision.NewHoldings(newHoldings)
-            Revision(newVision)
-        }
-        vision is Vision.AwaitingResult && action is Action.ReceiveError -> {
-            when (action.throwable) {
-                is RbhError.Unauthorized -> {
-                    val loginWish = edge.wish(
-                        name = "update-access-token",
-                        interaction = RobinhoodLoginInteraction(),
-                        startAction = RobinhoodLoginAction.Start(Services(rbhApi, accessBook)),
-                        endVisionToAction = {
-                            val token = (it as RobinhoodLoginVision.Reporting).token
-                            if (token.isNotBlank()) {
-                                Action.Start(token, vision.api, vision.book)
-                            } else {
-                                Action.ReceiveError(action.throwable)
-                            }
+private fun revise(vision: Vision, action: Action, edge: Edge): Revision<Vision, Action> = when {
+    action is Action.Start -> {
+        val api = action.api
+        val newVision = Vision.AwaitingResult(api, action.book)
+        val wish = FetchRbhHoldingsGenie.wish(
+            name = "holdings",
+            params = FetchRbhHoldings(api, action.token),
+            resultToAction = Action::ReceiveResult,
+            errorToAction = Action::ReceiveError
+        )
+        Revision(newVision, wish, Wish.none("update-access-token"))
+    }
+    vision is Vision.AwaitingResult && action is Action.ReceiveResult -> {
+        val newHoldings = action.result.toHoldings()
+        val newRebellion = vision.book.value.withHoldings(newHoldings)
+        vision.book.write(newRebellion)
+        val newVision = Vision.NewHoldings(newHoldings)
+        Revision(newVision)
+    }
+    vision is Vision.AwaitingResult && action is Action.ReceiveError -> {
+        when (action.throwable) {
+            is RbhError.Unauthorized -> {
+                val loginWish = edge.wish(
+                    name = "update-access-token",
+                    interaction = RobinhoodLoginInteraction(),
+                    startAction = RobinhoodLoginAction.Start(Services(rbhApi, accessBook)),
+                    endVisionToAction = {
+                        val token = (it as RobinhoodLoginVision.Reporting).token
+                        if (token.isNotBlank()) {
+                            Action.Start(token, vision.api, vision.book)
+                        } else {
+                            Action.ReceiveError(action.throwable)
                         }
-                    )
-                    Revision(vision as Vision, loginWish)
-                }
-                else -> {
-                    val newVision = Vision.Error(action.throwable) as Vision
-                    Revision(newVision)
-                }
+                    }
+                )
+                Revision(vision as Vision, loginWish)
+            }
+            else -> {
+                val newVision = Vision.Error(action.throwable) as Vision
+                Revision(newVision)
             }
         }
-        else -> throw IllegalStateException("$vision denies $action")
     }
+    else -> throw IllegalStateException("$vision denies $action")
 }
 

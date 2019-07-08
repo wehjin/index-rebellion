@@ -14,6 +14,7 @@ import com.rubyhuntersky.indexrebellion.projections.holdings.towers.BalanceTower
 import com.rubyhuntersky.indexrebellion.projections.holdings.towers.HoldingTower
 import com.rubyhuntersky.indexrebellion.toLabel
 import com.rubyhuntersky.interaction.android.ActivityInteraction
+import com.rubyhuntersky.interaction.core.Edge
 import com.rubyhuntersky.vx.android.coop.CoopContentView
 import com.rubyhuntersky.vx.android.logEvents
 import com.rubyhuntersky.vx.coop.Coop
@@ -32,7 +33,7 @@ class DriftActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         coopContentView.setInActivity(this@DriftActivity)
-        activityInteraction = ActivityInteraction(this, ViewDriftStory.groupId, this::renderVision)
+        activityInteraction = ActivityInteraction(ViewDriftStory.groupId, this, this::renderVision)
         lifecycle.addObserver(activityInteraction)
     }
 
@@ -76,7 +77,8 @@ class DriftActivity : AppCompatActivity() {
 
     private lateinit var activityInteraction: ActivityInteraction<Vision, Action>
 
-    private fun renderVision(vision: Vision) {
+    @Suppress("UNUSED_PARAMETER")
+    private fun renderVision(vision: Vision, sendAction: (Action) -> Unit, edge: Edge) {
         when (vision) {
             is Vision.Viewing -> coopContentView.setSight(vision)
         }

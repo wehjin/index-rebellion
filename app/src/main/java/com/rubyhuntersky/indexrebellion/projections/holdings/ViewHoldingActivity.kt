@@ -5,13 +5,13 @@ import android.os.Bundle
 import android.support.v4.app.FragmentActivity
 import android.support.v7.app.AppCompatActivity
 import com.rubyhuntersky.indexrebellion.interactions.viewholding.Action
-import com.rubyhuntersky.indexrebellion.interactions.viewholding.VIEW_HOLDING_STORY
 import com.rubyhuntersky.indexrebellion.interactions.viewholding.ViewHoldingStory
 import com.rubyhuntersky.indexrebellion.interactions.viewholding.Vision
 import com.rubyhuntersky.indexrebellion.projections.Standard
 import com.rubyhuntersky.indexrebellion.toLabel
 import com.rubyhuntersky.interaction.android.ActivityInteraction
 import com.rubyhuntersky.interaction.android.ProjectionSource
+import com.rubyhuntersky.interaction.core.Edge
 import com.rubyhuntersky.interaction.core.Interaction
 import com.rubyhuntersky.vx.android.coop.CoopContentView
 import com.rubyhuntersky.vx.tower.additions.augment.extendFloors
@@ -28,7 +28,7 @@ class ViewHoldingActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        activityInteraction = ActivityInteraction(this, VIEW_HOLDING_STORY, this::renderVision)
+        activityInteraction = ActivityInteraction(ViewHoldingStory.groupId, this, this::renderVision)
         lifecycle.addObserver(activityInteraction)
         coopContentView.setInActivity(this@ViewHoldingActivity)
         eventUpdates = coopContentView.events.subscribe()
@@ -37,7 +37,8 @@ class ViewHoldingActivity : AppCompatActivity() {
     private lateinit var activityInteraction: ActivityInteraction<Vision, Action>
     private lateinit var eventUpdates: Disposable
 
-    private fun renderVision(vision: Vision) {
+    @Suppress("UNUSED_PARAMETER")
+    private fun renderVision(vision: Vision, sendAction: (Action) -> Unit, edge: Edge) {
         when (vision) {
             is Vision.Viewing -> coopContentView.setSight(vision)
         }
@@ -64,21 +65,14 @@ class ViewHoldingActivity : AppCompatActivity() {
 
     private val coopContentView = CoopContentView(pageTower.inCoop())
 
-    companion object : ProjectionSource {
+    companion object : ProjectionSource<Vision, Action> {
 
-        private const val INTERACTION_KEY = "interactionKey"
+        override val group: String = ViewHoldingStory.groupId
 
-        override val group: String
-            get() = ViewHoldingStory.groupId
-
-        override fun <V, A> startProjection(
-            fragmentActivity: FragmentActivity,
-            interaction: Interaction<V, A>,
-            key: Long
-        ) {
-            fragmentActivity.startActivity(
-                Intent(fragmentActivity, ViewHoldingActivity::class.java).apply { putExtra(INTERACTION_KEY, key) }
-            )
+        override fun startProjection(activity: FragmentActivity, interaction: Interaction<Vision, Action>, key: Long) {
+            Intent(activity, ViewHoldingActivity::class.java)
+                .also { ActivityInteraction.setInteractionSearchKey(it, key) }
+                .let { activity.startActivity(it) }
         }
     }
 }

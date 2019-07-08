@@ -1,7 +1,6 @@
 package com.rubyhuntersky.indexrebellion.common
 
 import android.app.Application
-import android.support.v4.app.FragmentActivity
 import com.rubyhuntersky.indexrebellion.BuildConfig
 import com.rubyhuntersky.indexrebellion.books.SharedRebellionBook
 import com.rubyhuntersky.indexrebellion.data.cash.CashAmount
@@ -12,13 +11,11 @@ import com.rubyhuntersky.indexrebellion.data.techtonic.market.InstrumentSample
 import com.rubyhuntersky.indexrebellion.data.techtonic.vault.Custodian
 import com.rubyhuntersky.indexrebellion.data.techtonic.vault.SpecificHolding
 import com.rubyhuntersky.indexrebellion.interactions.books.RebellionBook
-import com.rubyhuntersky.indexrebellion.interactions.correctiondetails.CORRECTION_DETAILS
 import com.rubyhuntersky.indexrebellion.interactions.correctiondetails.enableCorrectionDetails
 import com.rubyhuntersky.indexrebellion.interactions.main.MainPortals
 import com.rubyhuntersky.indexrebellion.interactions.main.MainStory
 import com.rubyhuntersky.indexrebellion.interactions.refreshholdings.Access
 import com.rubyhuntersky.indexrebellion.interactions.refreshholdings.enableRefreshHoldings
-import com.rubyhuntersky.indexrebellion.interactions.updateshares.UPDATE_SHARES
 import com.rubyhuntersky.indexrebellion.interactions.viewdrift.ViewDriftStory
 import com.rubyhuntersky.indexrebellion.interactions.viewholding.ViewHoldingStory
 import com.rubyhuntersky.indexrebellion.presenters.cashediting.CashEditingDialogFragment
@@ -31,13 +28,10 @@ import com.rubyhuntersky.indexrebellion.projections.holdings.ViewHoldingActivity
 import com.rubyhuntersky.indexrebellion.spirits.readdrift.ReadDriftsDjinn
 import com.rubyhuntersky.indexrebellion.spirits.showtoast.ShowToastGenie
 import com.rubyhuntersky.interaction.android.AndroidEdge
-import com.rubyhuntersky.interaction.android.ProjectionSource
 import com.rubyhuntersky.interaction.core.BehaviorBook
 import com.rubyhuntersky.interaction.core.Book
-import com.rubyhuntersky.interaction.core.Interaction
 import com.rubyhuntersky.interaction.core.Portal
 import com.rubyhuntersky.robinhood.api.RbhApi
-import com.rubyhuntersky.robinhood.login.ROBINHOOD_LOGIN
 import com.rubyhuntersky.robinhood.login.RobinhoodLoginDialogFragment
 import com.rubyhuntersky.robinhood.login.enableRobinhoodLogin
 import com.rubyhuntersky.stockcatalog.StockMarket
@@ -110,36 +104,9 @@ class MyApplication : Application() {
 
         edge.addProjectionBuilder(
             ViewHoldingActivity,
-            object : ProjectionSource {
-                override val group: String = ROBINHOOD_LOGIN
-
-                override fun <V, A> startProjection(
-                    fragmentActivity: FragmentActivity, interaction: Interaction<V, A>, key: Long
-                ) {
-                    RobinhoodLoginDialogFragment.new(key)
-                        .show(fragmentActivity.supportFragmentManager, "$ROBINHOOD_LOGIN/Projection")
-                }
-            },
-            object : ProjectionSource {
-                override val group: String = CORRECTION_DETAILS
-
-                override fun <V, A> startProjection(
-                    fragmentActivity: FragmentActivity, interaction: Interaction<V, A>, key: Long
-                ) {
-                    val dialogFragment = CorrectionDetailsDialogFragment.new(key)
-                    dialogFragment.show(fragmentActivity.supportFragmentManager, "$CORRECTION_DETAILS/Projection")
-                }
-            },
-            object : ProjectionSource {
-                override val group: String = UPDATE_SHARES
-
-                override fun <V, A> startProjection(
-                    fragmentActivity: FragmentActivity, interaction: Interaction<V, A>, key: Long
-                ) {
-                    val dialogFragment = UpdateSharesDialogFragment.new(key)
-                    dialogFragment.show(fragmentActivity.supportFragmentManager, "$UPDATE_SHARES/Projection")
-                }
-            }
+            RobinhoodLoginDialogFragment,
+            CorrectionDetailsDialogFragment,
+            UpdateSharesDialogFragment
         )
     }
 

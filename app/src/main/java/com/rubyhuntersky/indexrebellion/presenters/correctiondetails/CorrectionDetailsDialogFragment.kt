@@ -1,20 +1,21 @@
 package com.rubyhuntersky.indexrebellion.presenters.correctiondetails
 
+import android.support.v4.app.FragmentActivity
 import com.rubyhuntersky.indexrebellion.R
 import com.rubyhuntersky.indexrebellion.data.cash.CashAmount
 import com.rubyhuntersky.indexrebellion.interactions.correctiondetails.Action
+import com.rubyhuntersky.indexrebellion.interactions.correctiondetails.CorrectionDetailsStory
 import com.rubyhuntersky.indexrebellion.interactions.correctiondetails.Vision
+import com.rubyhuntersky.interaction.android.ProjectionSource
+import com.rubyhuntersky.interaction.core.Interaction
 import com.rubyhuntersky.vx.android.InteractionBottomSheetDialogFragment
 import kotlinx.android.synthetic.main.view_correction_details.*
-
 
 class CorrectionDetailsDialogFragment : InteractionBottomSheetDialogFragment<Vision, Action>(
     layoutRes = R.layout.view_correction_details,
     directInteraction = null
 ) {
-
-    override val dismissAction: Action?
-        get() = Action.Cancel
+    override val dismissAction: Action? = Action.Cancel()
 
     override fun render(vision: Vision) {
         when (vision) {
@@ -67,12 +68,13 @@ class CorrectionDetailsDialogFragment : InteractionBottomSheetDialogFragment<Vis
         }
     }
 
-    companion object {
+    companion object : ProjectionSource<Vision, Action> {
+        override val group: String = CorrectionDetailsStory.groupId
 
-        fun new(key: Long): CorrectionDetailsDialogFragment =
+        override fun startProjection(activity: FragmentActivity, interaction: Interaction<Vision, Action>, key: Long) {
             CorrectionDetailsDialogFragment()
-                .also {
-                    it.indirectInteractionKey = key
-                }
+                .apply { indirectInteractionKey = key }
+                .show(activity.supportFragmentManager, "${CorrectionDetailsStory.groupId}/Projection")
+        }
     }
 }
