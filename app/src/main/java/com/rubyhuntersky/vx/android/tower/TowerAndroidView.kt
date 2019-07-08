@@ -154,13 +154,8 @@ class TowerAndroidView<Sight : Any, Event : Any>(context: Context, tower: Tower<
                 ViewBackedTowerView.Adapter<BackingClickableView<Sight, ClickContext>, Sight, ClickEvent<ClickContext>> {
 
                 override fun buildView(context: Context): BackingClickableView<Sight, ClickContext> =
-                    BackingClickableView<Sight, ClickContext>(context).also {
-                        it.enview(
-                            tower,
-                            id.extend(0),
-                            sightToClickContext
-                        )
-                    }
+                    BackingClickableView<Sight, ClickContext>(context)
+                        .also { it.enview(tower, id.extend(0), sightToClickContext) }
 
                 override fun renderView(view: BackingClickableView<Sight, ClickContext>, sight: Sight) {
                     view.setSight(sight)

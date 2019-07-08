@@ -24,11 +24,10 @@ fun <Sight : Any, Event : Any> Tower<Sight, Event>.plusAugment(augment: HAugment
     return object : Tower<Sight, Event> {
         override fun enview(viewHost: Tower.ViewHost, id: ViewId): Tower.View<Sight, Event> =
             object : Tower.View<Sight, Event> {
-                private val views =
-                    listOf(augment.ceilingTower, core, augment.floorTower)
-                        .mapIndexed { index, tower ->
-                            tower.enview(viewHost, id.extend(index))
-                        }
+                
+                private val views = listOf(augment.ceilingTower, core, augment.floorTower)
+                    .mapIndexed { index, tower -> tower.enview(viewHost, id.extend(index)) }
+
                 private val fullLatitudes = BehaviorSubject.createDefault(Latitude(0))
                 private val subviewLatitudes = views.map { Latitude(0) }.toMutableList()
                 private val subviewLatitudeChangeWatchers = CompositeDisposable()

@@ -40,11 +40,12 @@ class ReplicateTower<Sight : Any, Event : Any>(
                         acc.extendFloor(tower.mapEvent { Ranked(it, index) })
                     })
 
-                fullView = fullTower.enview(viewHost, id).apply {
-                    events.subscribe(eventPublish::onNext).addTo(eventLatitudeUpdates)
-                    latitudes.subscribe(latitudeBehavior::onNext).addTo(eventLatitudeUpdates)
-                    setSight(sight)
-                }
+                fullView = fullTower.enview(viewHost, id)
+                    .apply {
+                        events.subscribe(eventPublish::onNext).addTo(eventLatitudeUpdates)
+                        latitudes.subscribe(latitudeBehavior::onNext).addTo(eventLatitudeUpdates)
+                        setSight(sight)
+                    }
                 update()
             }
 
@@ -55,14 +56,14 @@ class ReplicateTower<Sight : Any, Event : Any>(
             }
 
             private fun update() {
-                val view = fullView
+                val fullView = fullView
                 val hBound = edgeHBound
-                if (hBound != null && view != null) {
-                    view.setHBound(hBound)
+                if (hBound != null && fullView != null) {
+                    fullView.setHBound(hBound)
                 }
                 val anchor = edgeAnchor
-                if (anchor != null && view != null) {
-                    view.setAnchor(anchor)
+                if (anchor != null && fullView != null) {
+                    fullView.setAnchor(anchor)
                 }
             }
 

@@ -23,9 +23,7 @@ class BackingClickableView<Sight : Any, ClickContext : Any>
     FrameLayout(context, attrs, defStyleAttr, defStyleRes),
     ViewBackedTowerView.BackingView<ClickEvent<ClickContext>> {
 
-    fun enview(
-        tower: Tower<Sight, Nothing>, id: ViewId, sightToClickContext: (Sight) -> ClickContext
-    ) {
+    fun enview(tower: Tower<Sight, Nothing>, id: ViewId, sightToClickContext: (Sight) -> ClickContext) {
         removeAllViews()
         towerView = TowerAndroidView(context, tower, id)
             .apply {

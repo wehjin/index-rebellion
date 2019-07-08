@@ -16,13 +16,13 @@ import com.rubyhuntersky.indexrebellion.toLabel
 import com.rubyhuntersky.interaction.android.ActivityInteraction
 import com.rubyhuntersky.interaction.core.Edge
 import com.rubyhuntersky.vx.android.coop.CoopContentView
-import com.rubyhuntersky.vx.android.logEvents
 import com.rubyhuntersky.vx.coop.Coop
 import com.rubyhuntersky.vx.coop.additions.mapSight
 import com.rubyhuntersky.vx.toPercent
 import com.rubyhuntersky.vx.tower.additions.augment.extendCeiling
 import com.rubyhuntersky.vx.tower.additions.handleEvent
 import com.rubyhuntersky.vx.tower.additions.inCoop
+import com.rubyhuntersky.vx.tower.additions.logEvents
 import com.rubyhuntersky.vx.tower.additions.mapSight
 import com.rubyhuntersky.vx.tower.additions.replicate.replicate
 import com.rubyhuntersky.vx.tower.towers.click.plusClicks
@@ -41,7 +41,6 @@ class DriftActivity : AppCompatActivity() {
         .plusClicks(HoldingSight::instrumentId)
         .replicate()
         .mapSight { page: PageSight -> page.holdings }
-        .logEvents("NoEventPageSightMultiHoldingTower")
         .handleEvent {
             val action = Action.ViewHolding(instrumentId = it.value.context)
             activityInteraction.sendAction(action)
@@ -112,9 +111,9 @@ class DriftActivity : AppCompatActivity() {
 
         private fun PlateAdjustment.toName(): String = "${plate.toLabel()} ${realValue.toDollarStat()}"
 
-        private val adjustmentsContentTower =
-            adjustmentTower.replicate().neverEvent<Nothing>().mapSight { drift: Drift ->
-                drift.plateAdjustments.toList()
-            }
+        private val adjustmentsContentTower = adjustmentTower
+            .replicate()
+            .neverEvent<Nothing>()
+            .mapSight { drift: Drift -> drift.plateAdjustments.toList() }
     }
 }

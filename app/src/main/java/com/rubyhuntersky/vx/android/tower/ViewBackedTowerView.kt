@@ -36,10 +36,23 @@ class ViewBackedTowerView<V, Sight : Any, Event : Any>(
         fun renderView(view: V, sight: Sight)
     }
 
+    private val updates = CompositeDisposable()
+    private val anchorBehavior = BehaviorSubject.create<Anchor>()
+
     private val view = (frameLayout.findViewWithTag(id)
         ?: adapter.buildView(frameLayout.context)
             .also {
                 it.tag = id
+                it.onAttached = {
+                    Observable.combineLatest(it.heights, anchorBehavior, toSizeAnchor)
+                        .distinctUntilChanged()
+                        .subscribe { sizeAnchor ->
+                            Log.v(it.tag.toString(), "onSizeAnchor $sizeAnchor")
+                            setVBound(sizeAnchor.vBound)
+                        }
+                        .addTo(updates)
+                }
+                it.onDetached = { updates.clear() }
                 frameLayout.addView(
                     it,
                     FrameLayout.LayoutParams(
@@ -49,27 +62,8 @@ class ViewBackedTowerView<V, Sight : Any, Event : Any>(
                 )
             })
 
-    init {
-        val composite = CompositeDisposable()
-        view.onAttached = {
-            Observable.combineLatest(
-                latitudes.map { it.height },
-                anchorBehavior.distinctUntilChanged(),
-                toSizeAnchor
-            ).subscribe { sizeAnchor ->
-                Log.v(view.tag.toString(), "onSizeAnchor $sizeAnchor")
-                setVBound(sizeAnchor.anchor.toVBound(sizeAnchor.size))
-            }.addTo(composite)
-        }
-        view.onDetached = {
-            composite.clear()
-        }
-    }
-
-    private val anchorBehavior = BehaviorSubject.create<Anchor>()
-
     private fun setVBound(vbound: VBound) {
-        Log.v(view.tag.toString(), "Set vbound $vbound")
+        Log.v("${view.javaClass.simpleName}/${view.tag}", "Set vbound $vbound")
         view.layoutParams = (view.layoutParams as FrameLayout.LayoutParams)
             .apply {
                 topMargin = view.toPixels(vbound.ceiling).toInt()
@@ -86,20 +80,11 @@ class ViewBackedTowerView<V, Sight : Any, Event : Any>(
             }
     }
 
-    override val latitudes: Observable<Latitude>
-        get() = view.heights.map { Latitude(it) }
-
-    override fun setAnchor(anchor: Anchor) {
-        Log.v(view.tag.toString(), "Set anchor $anchor")
-        anchorBehavior.onNext(anchor)
-    }
-
-    override fun setSight(sight: Sight) {
-        Log.v(view.tag.toString(), "Set content $sight")
-        adapter.renderView(view, sight)
-    }
+    override val latitudes: Observable<Latitude> get() = view.heights.map { Latitude(it) }
+    override fun setAnchor(anchor: Anchor) = anchorBehavior.onNext(anchor)
 
     override val events: Observable<Event> get() = view.events
+    override fun setSight(sight: Sight) = adapter.renderView(view, sight)
 
     companion object {
         fun isViewInGroup(view: View, groupId: ViewId): Boolean {
