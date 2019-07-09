@@ -39,8 +39,11 @@ fun <Vision : Any, Action : Any> Interaction<Vision, Action>.logChanges(tag: Str
             println("$tag ACTION: $action VISION: ${core.visions.blockingFirst()}")
             core.sendAction(action)
         }
+
+        override fun isEnding(someVision: Any?): Boolean = core.isEnding(someVision)
     }
 }
 
-fun Intent.putActivityInteractionSearchKey(key: Long): Intent =
-    this.also { ActivityInteraction.setInteractionSearchKey(it, key) }
+fun Intent.putActivityInteractionSearchKey(key: Long): Intent = this.also {
+    ActivityInteraction.setInteractionSearchKey(it, key)
+}

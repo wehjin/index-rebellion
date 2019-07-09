@@ -22,14 +22,21 @@ class SkeletonCoopInteractionActivity : AppCompatActivity() {
 
     private val coopContentView = CoopContentView(Standard.BodyTower().inCoop())
 
+    private lateinit var activityInteraction: ActivityInteraction<Vision, Action>
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        lifecycle.addObserver(ActivityInteraction(group, this, this::renderVision))
+        activityInteraction = ActivityInteraction(group, this, this::renderVision)
+        lifecycle.addObserver(activityInteraction)
         coopContentView.setInActivity(this)
     }
 
     private fun renderVision(vision: Vision, sendAction: (Action) -> Unit, edge: Edge) {
         coopContentView.setSight(vision.toString())
+    }
+
+    override fun onBackPressed() {
+        activityInteraction.sendAction(Action.End)
     }
 
     companion object : ProjectionSource<Vision, Action> {

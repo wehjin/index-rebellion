@@ -36,7 +36,7 @@ sealed class Action {
 
 private fun start(): Vision = Vision.Idle
 
-private fun isEnding(maybe: Any?): Boolean = maybe is Action.End
+private fun isEnding(maybe: Any?): Boolean = maybe is Vision.Ended
 
 private const val READ_DRIFTS = "read-drifts"
 

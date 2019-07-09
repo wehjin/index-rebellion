@@ -18,18 +18,23 @@ class SkeletonStory :
 
 sealed class Vision {
     object Idle : Vision()
+    object Ended : Vision()
 }
 
 sealed class Action {
     data class Ignore(val ignore: Any) : Action()
+    object End : Action()
 }
 
 private fun start(): Vision = Vision.Idle
 
-private fun isEnding(@Suppress("UNUSED_PARAMETER") maybe: Any?): Boolean = false
+private fun isEnding(maybe: Any?): Boolean = maybe is Vision.Ended
 
 @Suppress("IntroduceWhenSubject")
 private fun revise(vision: Vision, action: Action): Revision<Vision, Action> = when {
+    action is Action.End -> {
+        Revision(Vision.Ended)
+    }
     action is Action.Ignore -> {
         println(addTag("IGNORE: ${action.ignore} VISION: $vision"))
         Revision(vision)

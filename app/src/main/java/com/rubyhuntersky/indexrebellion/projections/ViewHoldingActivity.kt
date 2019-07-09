@@ -25,24 +25,6 @@ import io.reactivex.disposables.Disposable
 
 class ViewHoldingActivity : AppCompatActivity() {
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        activityInteraction = ActivityInteraction(ViewHoldingStory.groupId, this, this::renderVision)
-        lifecycle.addObserver(activityInteraction)
-        coopContentView.setInActivity(this@ViewHoldingActivity)
-        eventUpdates = coopContentView.events.subscribe()
-    }
-
-    private lateinit var activityInteraction: ActivityInteraction<Vision, Action>
-    private lateinit var eventUpdates: Disposable
-
-    @Suppress("UNUSED_PARAMETER")
-    private fun renderVision(vision: Vision, sendAction: (Action) -> Unit, edge: Edge) {
-        when (vision) {
-            is Vision.Viewing -> coopContentView.setSight(vision)
-        }
-    }
-
     @Suppress("RedundantLambdaArrow")
     private val pageTower =
         Standard.TitleTower()
@@ -63,6 +45,27 @@ class ViewHoldingActivity : AppCompatActivity() {
             .plusVMargin(Standard.uniformMargin)
 
     private val coopContentView = CoopContentView(pageTower.inCoop())
+    private lateinit var activityInteraction: ActivityInteraction<Vision, Action>
+    private lateinit var eventUpdates: Disposable
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        activityInteraction = ActivityInteraction(ViewHoldingStory.groupId, this, this::renderVision)
+        lifecycle.addObserver(activityInteraction)
+        coopContentView.setInActivity(this@ViewHoldingActivity)
+        eventUpdates = coopContentView.events.subscribe()
+    }
+
+    @Suppress("UNUSED_PARAMETER")
+    private fun renderVision(vision: Vision, sendAction: (Action) -> Unit, edge: Edge) {
+        when (vision) {
+            is Vision.Viewing -> coopContentView.setSight(vision)
+        }
+    }
+
+    override fun onBackPressed() {
+        activityInteraction.sendAction(Action.End)
+    }
 
     companion object : ProjectionSource<Vision, Action> {
 
