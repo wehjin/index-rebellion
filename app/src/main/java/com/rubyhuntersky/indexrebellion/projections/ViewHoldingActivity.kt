@@ -1,4 +1,4 @@
-package com.rubyhuntersky.indexrebellion.projections.holdings
+package com.rubyhuntersky.indexrebellion.projections
 
 import android.content.Intent
 import android.os.Bundle
@@ -7,7 +7,6 @@ import android.support.v7.app.AppCompatActivity
 import com.rubyhuntersky.indexrebellion.interactions.viewholding.Action
 import com.rubyhuntersky.indexrebellion.interactions.viewholding.ViewHoldingStory
 import com.rubyhuntersky.indexrebellion.interactions.viewholding.Vision
-import com.rubyhuntersky.indexrebellion.projections.Standard
 import com.rubyhuntersky.indexrebellion.toLabel
 import com.rubyhuntersky.interaction.android.ActivityInteraction
 import com.rubyhuntersky.interaction.android.ProjectionSource

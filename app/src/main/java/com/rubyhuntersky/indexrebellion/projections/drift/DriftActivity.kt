@@ -1,4 +1,4 @@
-package com.rubyhuntersky.indexrebellion.projections.holdings
+package com.rubyhuntersky.indexrebellion.projections.drift
 
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
@@ -10,8 +10,8 @@ import com.rubyhuntersky.indexrebellion.interactions.viewdrift.Action
 import com.rubyhuntersky.indexrebellion.interactions.viewdrift.ViewDriftStory
 import com.rubyhuntersky.indexrebellion.interactions.viewdrift.Vision
 import com.rubyhuntersky.indexrebellion.projections.Standard
-import com.rubyhuntersky.indexrebellion.projections.holdings.towers.BalanceTower
-import com.rubyhuntersky.indexrebellion.projections.holdings.towers.HoldingTower
+import com.rubyhuntersky.indexrebellion.projections.drift.towers.BalanceTower
+import com.rubyhuntersky.indexrebellion.projections.drift.towers.HoldingTower
 import com.rubyhuntersky.indexrebellion.toLabel
 import com.rubyhuntersky.interaction.android.ActivityInteraction
 import com.rubyhuntersky.interaction.core.Edge

@@ -28,8 +28,8 @@ sealed class Vision {
 
 sealed class Action {
     data class Ignore(val ignore: Any) : Action()
-    data class Load(val instrumentId: InstrumentId) : Action()
-    data class View(val instrumentId: InstrumentId, val plate: Plate) : Action()
+    data class Start(val instrumentId: InstrumentId) : Action()
+    data class Load(val instrumentId: InstrumentId, val plate: Plate) : Action()
     data class Write(val plate: Plate) : Action()
     object End : Action()
 }
@@ -42,16 +42,16 @@ private const val READ_DRIFTS = "read-drifts"
 
 @Suppress("IntroduceWhenSubject")
 private fun revise(vision: Vision, action: Action): Revision<Vision, Action> = when {
-    vision is Vision.Idle && action is Action.Load -> {
+    vision is Vision.Idle && action is Action.Start -> {
         val instrumentId = action.instrumentId
         val readDrifts = ReadDrifts.toWish<ReadDrifts, Action>(
             READ_DRIFTS,
-            onResult = { Action.View(instrumentId, it.plating.findPlate(instrumentId)) },
+            onResult = { Action.Load(instrumentId, it.plating.findPlate(instrumentId)) },
             onAction = Action::Ignore
         )
         Revision(Vision.Reading(instrumentId), readDrifts)
     }
-    (vision is Vision.Reading || vision is Vision.Viewing) && action is Action.View -> {
+    (vision is Vision.Reading || vision is Vision.Viewing) && action is Action.Load -> {
         Revision(Vision.Viewing(action.instrumentId, action.plate))
     }
     vision is Vision.Viewing && action is Action.Write -> {

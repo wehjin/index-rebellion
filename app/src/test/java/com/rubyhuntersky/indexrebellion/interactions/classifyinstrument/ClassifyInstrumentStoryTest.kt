@@ -20,7 +20,7 @@ class ClassifyInstrumentStoryTest {
         val story = ClassifyInstrumentStory().also { edge.addInteraction(it) }
         story.visions.test().assertValues(Vision.Idle)
 
-        story.sendAction(Action.Load(Fixture.TSLA_INSTRUMENT))
+        story.sendAction(Action.Start(Fixture.TSLA_INSTRUMENT))
         story.visions.test().assertValue(Vision.Viewing(Fixture.TSLA_INSTRUMENT, Plate.Unknown))
 
         story.sendAction(Action.Write(Plate.GlobalEquity))

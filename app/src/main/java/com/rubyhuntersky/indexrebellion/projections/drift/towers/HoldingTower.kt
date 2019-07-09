@@ -1,7 +1,7 @@
-package com.rubyhuntersky.indexrebellion.projections.holdings.towers
+package com.rubyhuntersky.indexrebellion.projections.drift.towers
 
 import com.rubyhuntersky.indexrebellion.projections.Standard
-import com.rubyhuntersky.indexrebellion.projections.holdings.HoldingSight
+import com.rubyhuntersky.indexrebellion.projections.drift.HoldingSight
 import com.rubyhuntersky.vx.common.margin.Margin
 import com.rubyhuntersky.vx.coop.additions.Span
 import com.rubyhuntersky.vx.tower.Tower

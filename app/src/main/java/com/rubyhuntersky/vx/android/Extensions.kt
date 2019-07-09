@@ -1,8 +1,10 @@
 package com.rubyhuntersky.vx.android
 
+import android.content.Intent
 import android.util.DisplayMetrics
 import android.util.TypedValue
 import android.view.View
+import com.rubyhuntersky.interaction.android.ActivityInteraction
 import com.rubyhuntersky.interaction.core.Edge
 import com.rubyhuntersky.interaction.core.Interaction
 import io.reactivex.Observable
@@ -39,3 +41,6 @@ fun <Vision : Any, Action : Any> Interaction<Vision, Action>.logChanges(tag: Str
         }
     }
 }
+
+fun Intent.putActivityInteractionSearchKey(key: Long): Intent =
+    this.also { ActivityInteraction.setInteractionSearchKey(it, key) }

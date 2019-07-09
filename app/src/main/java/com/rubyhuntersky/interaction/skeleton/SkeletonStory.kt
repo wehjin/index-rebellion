@@ -1,4 +1,4 @@
-package com.rubyhuntersky.interaction
+package com.rubyhuntersky.interaction.skeleton
 
 import com.rubyhuntersky.interaction.core.Interaction
 import com.rubyhuntersky.interaction.core.InteractionCompanion

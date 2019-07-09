@@ -4,14 +4,11 @@ import com.rubyhuntersky.indexrebellion.data.techtonic.Drift
 import com.rubyhuntersky.indexrebellion.data.techtonic.GeneralHolding
 import com.rubyhuntersky.indexrebellion.data.techtonic.instrument.InstrumentId
 import com.rubyhuntersky.indexrebellion.data.techtonic.plating.Plate
+import com.rubyhuntersky.indexrebellion.interactions.classifyinstrument.ClassifyInstrumentStory
 import com.rubyhuntersky.indexrebellion.spirits.readdrift.ReadDrifts
-import com.rubyhuntersky.indexrebellion.spirits.showtoast.ShowToast
-import com.rubyhuntersky.interaction.core.Interaction
-import com.rubyhuntersky.interaction.core.InteractionCompanion
-import com.rubyhuntersky.interaction.core.Revision
-import com.rubyhuntersky.interaction.core.Story
+import com.rubyhuntersky.interaction.core.*
 import com.rubyhuntersky.interaction.core.wish.Wish
-import com.rubyhuntersky.interaction.core.wish.WishKind
+import com.rubyhuntersky.indexrebellion.interactions.classifyinstrument.Action as ClassifyInstrumentAction
 
 class ViewHoldingStory : Interaction<Vision, Action>
 by Story(::start, ::isEnding, ::revise, groupId) {
@@ -35,10 +32,10 @@ sealed class Action {
     data class Init(val instrumentId: InstrumentId) : Action()
     data class Load(val drift: Drift) : Action()
     object Reclassify : Action()
-    object Ignore : Action()
+    data class Ignore(val ignore: Any?) : Action()
 }
 
-private fun revise(vision: Vision, action: Action): Revision<Vision, Action> {
+private fun revise(vision: Vision, action: Action, edge: Edge): Revision<Vision, Action> {
     return when {
         vision is Vision.Idle && action is Action.Init -> {
             val readDrifts = ReadDrifts.toWish<ReadDrifts, Action>(
@@ -61,12 +58,13 @@ private fun revise(vision: Vision, action: Action): Revision<Vision, Action> {
             Revision(Vision.Viewing(holding, plate))
         }
         vision is Vision.Viewing && action is Action.Reclassify -> {
-            val showToast = Wish(
-                name = "reclassify",
-                params = ShowToast("Reclassifying ${vision.holding.instrumentId.symbol}", longDuration = true),
-                kind = WishKind.One<Nothing, Action>({ Action.Ignore }, { error("reclassify") })
+            val reclassify = edge.wish(
+                "reclassify",
+                ClassifyInstrumentStory(),
+                startAction = ClassifyInstrumentAction.Start(vision.holding.instrumentId),
+                endVisionToAction = Action::Ignore
             )
-            Revision(vision, showToast)
+            Revision(vision, reclassify)
         }
         action is Action.Ignore -> Revision(vision)
         else -> error("${ViewHoldingStory.groupId}: Invalid revision parameters - $vision, $action")

@@ -1,4 +1,4 @@
-package com.rubyhuntersky.indexrebellion.projections.holdings
+package com.rubyhuntersky.indexrebellion.projections.drift
 
 import com.rubyhuntersky.indexrebellion.data.techtonic.instrument.InstrumentId
 import java.math.BigDecimal

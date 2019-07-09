@@ -1,6 +1,6 @@
-package com.rubyhuntersky.indexrebellion.projections.holdings.towers
+package com.rubyhuntersky.indexrebellion.projections.drift.towers
 
-import com.rubyhuntersky.indexrebellion.projections.holdings.PageSight
+import com.rubyhuntersky.indexrebellion.projections.drift.PageSight
 import com.rubyhuntersky.indexrebellion.projections.Standard
 import com.rubyhuntersky.vx.common.TextStyle
 import com.rubyhuntersky.vx.common.margin.Margin

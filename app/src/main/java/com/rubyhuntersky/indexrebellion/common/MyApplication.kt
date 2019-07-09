@@ -24,7 +24,8 @@ import com.rubyhuntersky.indexrebellion.presenters.constituentsearch.Constituent
 import com.rubyhuntersky.indexrebellion.presenters.correctiondetails.CorrectionDetailsDialogFragment
 import com.rubyhuntersky.indexrebellion.presenters.main.MainActivity
 import com.rubyhuntersky.indexrebellion.presenters.updateshares.UpdateSharesDialogFragment
-import com.rubyhuntersky.indexrebellion.projections.holdings.ViewHoldingActivity
+import com.rubyhuntersky.indexrebellion.projections.ClassifyInstrumentActivity
+import com.rubyhuntersky.indexrebellion.projections.ViewHoldingActivity
 import com.rubyhuntersky.indexrebellion.spirits.readdrift.ReadDriftsDjinn
 import com.rubyhuntersky.indexrebellion.spirits.showtoast.ShowToastGenie
 import com.rubyhuntersky.indexrebellion.spirits.writeinstrumentplate.WriteInstrumentPlatingGenie
@@ -108,7 +109,8 @@ class MyApplication : Application() {
             ViewHoldingActivity,
             RobinhoodLoginDialogFragment,
             CorrectionDetailsDialogFragment,
-            UpdateSharesDialogFragment
+            UpdateSharesDialogFragment,
+            ClassifyInstrumentActivity
         )
     }
 

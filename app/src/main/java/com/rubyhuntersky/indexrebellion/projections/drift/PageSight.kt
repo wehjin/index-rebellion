@@ -1,4 +1,4 @@
-package com.rubyhuntersky.indexrebellion.projections.holdings
+package com.rubyhuntersky.indexrebellion.projections.drift
 
 internal data class PageSight(
     val balance: String,
