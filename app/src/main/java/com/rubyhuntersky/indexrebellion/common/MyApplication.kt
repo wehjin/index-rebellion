@@ -27,6 +27,7 @@ import com.rubyhuntersky.indexrebellion.presenters.updateshares.UpdateSharesDial
 import com.rubyhuntersky.indexrebellion.projections.holdings.ViewHoldingActivity
 import com.rubyhuntersky.indexrebellion.spirits.readdrift.ReadDriftsDjinn
 import com.rubyhuntersky.indexrebellion.spirits.showtoast.ShowToastGenie
+import com.rubyhuntersky.indexrebellion.spirits.writeinstrumentplate.WriteInstrumentPlatingGenie
 import com.rubyhuntersky.interaction.android.AndroidEdge
 import com.rubyhuntersky.interaction.core.BehaviorBook
 import com.rubyhuntersky.interaction.core.Book
@@ -67,6 +68,7 @@ class MyApplication : Application() {
             enableRobinhoodLogin(this)
             MainStory.addSpiritsToLamp(this)
             add(ReadDriftsDjinn(driftBook))
+            add(WriteInstrumentPlatingGenie(driftBook))
         }
 
         ViewDriftStory()

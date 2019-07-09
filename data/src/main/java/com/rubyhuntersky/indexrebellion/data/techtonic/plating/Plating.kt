@@ -16,4 +16,8 @@ data class Plating(
         .filter { it.plate == plate }
         .map(InstrumentPlating::instrumentId)
         .toSet()
+
+    fun replace(instrumentPlating: InstrumentPlating) = copy(
+        instrumentPlatings = instrumentPlatings.filterNot(instrumentPlating::hasInstrument).plus(instrumentPlating).toSet()
+    )
 }

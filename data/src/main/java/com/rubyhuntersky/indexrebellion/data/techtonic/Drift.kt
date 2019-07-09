@@ -4,6 +4,7 @@ import com.rubyhuntersky.indexrebellion.data.techtonic.instrument.InstrumentId
 import com.rubyhuntersky.indexrebellion.data.techtonic.market.InstrumentSample
 import com.rubyhuntersky.indexrebellion.data.techtonic.market.Market
 import com.rubyhuntersky.indexrebellion.data.techtonic.plan.Plan
+import com.rubyhuntersky.indexrebellion.data.techtonic.plating.InstrumentPlating
 import com.rubyhuntersky.indexrebellion.data.techtonic.plating.Plate
 import com.rubyhuntersky.indexrebellion.data.techtonic.plating.PlateAdjustment
 import com.rubyhuntersky.indexrebellion.data.techtonic.plating.Plating
@@ -65,6 +66,10 @@ data class Drift(
     fun replaceHolding(holding: SpecificHolding): Drift {
         require(market.contains(holding.instrumentId))
         return copy(vault = vault.replaceHolding(holding))
+    }
+
+    fun replace(instrumentPlating: InstrumentPlating): Drift {
+        return copy(plating = plating.replace(instrumentPlating))
     }
 }
 

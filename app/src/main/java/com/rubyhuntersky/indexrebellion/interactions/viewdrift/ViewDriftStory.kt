@@ -3,7 +3,7 @@ package com.rubyhuntersky.indexrebellion.interactions.viewdrift
 import com.rubyhuntersky.indexrebellion.data.techtonic.Drift
 import com.rubyhuntersky.indexrebellion.data.techtonic.instrument.InstrumentId
 import com.rubyhuntersky.indexrebellion.interactions.viewholding.ViewHoldingStory
-import com.rubyhuntersky.indexrebellion.spirits.readdrift.ReadDriftsDjinn
+import com.rubyhuntersky.indexrebellion.spirits.readdrift.ReadDrifts
 import com.rubyhuntersky.interaction.core.*
 import com.rubyhuntersky.vx.android.logChanges
 import com.rubyhuntersky.indexrebellion.interactions.viewholding.Action as ViewHoldingAction
@@ -32,16 +32,20 @@ sealed class Action {
 
 private fun revise(vision: Vision, action: Action, edge: Edge): Revision<Vision, Action> {
     return when {
-        vision is Vision.Idle && action is Action.Init -> Revision(
-            Vision.Reading,
-            ReadDriftsDjinn.wish("read", Action::Load)
-        )
-        vision is Vision.Reading && action is Action.Load -> Revision(
-            Vision.Viewing(action.drift)
-        )
+        vision is Vision.Idle && action is Action.Init -> {
+            val readDrifts = ReadDrifts.toWish<ReadDrifts, Action>(
+                "read",
+                onResult = Action::Load,
+                onAction = { error("ReadDrift: $it") }
+            )
+            Revision(Vision.Reading, readDrifts)
+        }
+        (vision is Vision.Reading || vision is Vision.Viewing) && action is Action.Load -> {
+            Revision(Vision.Viewing(action.drift))
+        }
         vision is Vision.Viewing && action is Action.ViewHolding -> {
             val viewHolding = edge.wish(
-                name = "view-holding",
+                "view-holding",
                 interaction = ViewHoldingStory().logChanges(ViewHoldingStory.groupId),
                 startAction = ViewHoldingAction.Init(action.instrumentId),
                 endVisionToAction = Action::Ignore

@@ -7,4 +7,6 @@ import kotlinx.serialization.Serializable
 data class InstrumentPlating(
     val instrumentId: InstrumentId,
     val plate: Plate
-)
+) {
+    fun hasInstrument(other: InstrumentPlating): Boolean = instrumentId == other.instrumentId
+}

@@ -4,7 +4,7 @@ import com.rubyhuntersky.indexrebellion.data.techtonic.Drift
 import com.rubyhuntersky.indexrebellion.data.techtonic.GeneralHolding
 import com.rubyhuntersky.indexrebellion.data.techtonic.instrument.InstrumentId
 import com.rubyhuntersky.indexrebellion.data.techtonic.plating.Plate
-import com.rubyhuntersky.indexrebellion.spirits.readdrift.ReadDriftsDjinn
+import com.rubyhuntersky.indexrebellion.spirits.readdrift.ReadDrifts
 import com.rubyhuntersky.indexrebellion.spirits.showtoast.ShowToast
 import com.rubyhuntersky.interaction.core.Interaction
 import com.rubyhuntersky.interaction.core.InteractionCompanion
@@ -40,16 +40,25 @@ sealed class Action {
 
 private fun revise(vision: Vision, action: Action): Revision<Vision, Action> {
     return when {
-        vision is Vision.Idle && action is Action.Init -> Revision(
-            Vision.Reading(action.instrumentId),
-            ReadDriftsDjinn.wish("readDrifts", Action::Load),
-            Wish.none("reclassify")
-        )
+        vision is Vision.Idle && action is Action.Init -> {
+            val readDrifts = ReadDrifts.toWish<ReadDrifts, Action>(
+                "readDrifts",
+                onResult = Action::Load,
+                onAction = { error("ReadDrift: $it") }
+            )
+            Revision(Vision.Reading(action.instrumentId), readDrifts, Wish.none("reclassify"))
+        }
         vision is Vision.Reading && action is Action.Load -> {
-            val holding = action.drift.findHolding(vision.instrumentId)!!
-            val plate = action.drift.plating.findPlate(vision.instrumentId)
-            val newVision = Vision.Viewing(holding, plate)
-            Revision(newVision)
+            val instrumentId = vision.instrumentId
+            val holding = action.drift.findHolding(instrumentId)!!
+            val plate = action.drift.plating.findPlate(instrumentId)
+            Revision(Vision.Viewing(holding, plate))
+        }
+        vision is Vision.Viewing && action is Action.Load -> {
+            val instrumentId = vision.holding.instrumentId
+            val holding = action.drift.findHolding(instrumentId)!!
+            val plate = action.drift.plating.findPlate(instrumentId)
+            Revision(Vision.Viewing(holding, plate))
         }
         vision is Vision.Viewing && action is Action.Reclassify -> {
             val showToast = Wish(
