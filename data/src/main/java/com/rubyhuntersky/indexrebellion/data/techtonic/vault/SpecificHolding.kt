@@ -11,6 +11,7 @@ import java.util.*
 data class SpecificHolding(
     val instrumentId: InstrumentId,
     val custodian: Custodian,
+    val custodianAccount: CustodianAccount,
     @Serializable(with = BigDecimalSerializer::class)
     val size: BigDecimal,
     @Serializable(with = DateSerializer::class)
@@ -20,3 +21,4 @@ data class SpecificHolding(
         return instrumentId == other.instrumentId && custodian == other.custodian
     }
 }
+

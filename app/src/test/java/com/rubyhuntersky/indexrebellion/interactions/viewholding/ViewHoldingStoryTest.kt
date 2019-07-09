@@ -2,6 +2,7 @@ package com.rubyhuntersky.indexrebellion.interactions.viewholding
 
 import com.rubyhuntersky.indexrebellion.data.cash.CashAmount
 import com.rubyhuntersky.indexrebellion.data.techtonic.DEFAULT_DRIFT
+import com.rubyhuntersky.indexrebellion.data.techtonic.MAIN_ACCOUNT
 import com.rubyhuntersky.indexrebellion.data.techtonic.instrument.InstrumentId
 import com.rubyhuntersky.indexrebellion.data.techtonic.instrument.InstrumentType
 import com.rubyhuntersky.indexrebellion.data.techtonic.market.InstrumentSample
@@ -30,9 +31,20 @@ class ViewHoldingStoryTest {
 
     private val today = Date()
     private val instrumentId = InstrumentId("TSLA", InstrumentType.StockExchange)
-    private val instrumentSample =
-        InstrumentSample(instrumentId, "Tesla, Inc.", CashAmount(420), CashAmount(420000000000), today)
-    private val holding = SpecificHolding(instrumentId, Custodian.Etrade, BigDecimal(10), today)
+    private val instrumentSample = InstrumentSample(
+        instrumentId,
+        "Tesla, Inc.",
+        CashAmount(420),
+        CashAmount(420000000000),
+        today
+    )
+    private val holding = SpecificHolding(
+        instrumentId,
+        Custodian.Etrade,
+        MAIN_ACCOUNT,
+        BigDecimal(10),
+        today
+    )
     private val drift = DEFAULT_DRIFT.replaceSample(instrumentSample).replaceHolding(holding)
 
     private val readDriftDjinn = ReadDriftsDjinn(BehaviorBook(drift))

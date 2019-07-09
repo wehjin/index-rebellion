@@ -7,6 +7,7 @@ import com.rubyhuntersky.indexrebellion.data.techtonic.market.InstrumentSample
 import com.rubyhuntersky.indexrebellion.data.techtonic.plating.InstrumentPlating
 import com.rubyhuntersky.indexrebellion.data.techtonic.plating.Plate
 import com.rubyhuntersky.indexrebellion.data.techtonic.vault.Custodian
+import com.rubyhuntersky.indexrebellion.data.techtonic.vault.CustodianAccount
 import com.rubyhuntersky.indexrebellion.data.techtonic.vault.SpecificHolding
 import java.math.BigDecimal
 import java.util.*
@@ -24,9 +25,12 @@ val UNIT_DOLLAR_SAMPLE = InstrumentSample(
 
 val ZERO_DOLLAR_HOLDING_LAST_MODIFIED: Date = Calendar.getInstance().let { it.set(2019, 0, 1); it.time }
 
+val DOLLAR_WALLET_ACCOUNT = CustodianAccount("USD", "Dollars")
+
 val ZERO_DOLLAR_HOLDING = SpecificHolding(
     instrumentId = DOLLAR_ID,
     custodian = Custodian.Wallet,
+    custodianAccount = DOLLAR_WALLET_ACCOUNT,
     size = BigDecimal.ZERO,
     lastModified = ZERO_DOLLAR_HOLDING_LAST_MODIFIED
 )

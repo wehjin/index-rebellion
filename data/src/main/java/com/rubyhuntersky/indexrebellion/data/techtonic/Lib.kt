@@ -3,6 +3,7 @@ package com.rubyhuntersky.indexrebellion.data.techtonic
 import com.rubyhuntersky.indexrebellion.data.techtonic.market.Market
 import com.rubyhuntersky.indexrebellion.data.techtonic.plan.*
 import com.rubyhuntersky.indexrebellion.data.techtonic.plating.Plating
+import com.rubyhuntersky.indexrebellion.data.techtonic.vault.CustodianAccount
 import com.rubyhuntersky.indexrebellion.data.techtonic.vault.Vault
 
 val DEFAULT_VAULT = Vault(setOf(ZERO_DOLLAR_HOLDING))
@@ -19,3 +20,5 @@ val DEFAULT_PLAN = Plan(
 val DEFAULT_PLATING = Plating(setOf(DOLLAR_FIAT_PLATING))
 
 val DEFAULT_DRIFT = Drift(DEFAULT_VAULT, DEFAULT_MARKET, DEFAULT_PLAN, DEFAULT_PLATING)
+
+val MAIN_ACCOUNT = CustodianAccount("main", "Main")

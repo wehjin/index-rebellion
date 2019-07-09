@@ -2,6 +2,7 @@ package com.rubyhuntersky.indexrebellion.data.techtonic.fixture
 
 import com.rubyhuntersky.indexrebellion.data.cash.CashAmount
 import com.rubyhuntersky.indexrebellion.data.techtonic.DEFAULT_DRIFT
+import com.rubyhuntersky.indexrebellion.data.techtonic.MAIN_ACCOUNT
 import com.rubyhuntersky.indexrebellion.data.techtonic.instrument.InstrumentId
 import com.rubyhuntersky.indexrebellion.data.techtonic.instrument.InstrumentType
 import com.rubyhuntersky.indexrebellion.data.techtonic.market.InstrumentSample
@@ -28,5 +29,5 @@ object Fixture {
 
     val DRIFT = DEFAULT_DRIFT
         .replaceSample(TSLA_SAMPLE)
-        .replaceHolding(SpecificHolding(TSLA_INSTRUMENT, Custodian.Etrade, BigDecimal.TEN, TODAY))
+        .replaceHolding(SpecificHolding(TSLA_INSTRUMENT, Custodian.Etrade, MAIN_ACCOUNT, BigDecimal.TEN, TODAY))
 }

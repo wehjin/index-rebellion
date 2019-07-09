@@ -5,6 +5,7 @@ import com.rubyhuntersky.indexrebellion.BuildConfig
 import com.rubyhuntersky.indexrebellion.books.SharedRebellionBook
 import com.rubyhuntersky.indexrebellion.data.cash.CashAmount
 import com.rubyhuntersky.indexrebellion.data.techtonic.DEFAULT_DRIFT
+import com.rubyhuntersky.indexrebellion.data.techtonic.MAIN_ACCOUNT
 import com.rubyhuntersky.indexrebellion.data.techtonic.instrument.InstrumentId
 import com.rubyhuntersky.indexrebellion.data.techtonic.instrument.InstrumentType
 import com.rubyhuntersky.indexrebellion.data.techtonic.market.InstrumentSample
@@ -138,13 +139,13 @@ class MyApplication : Application() {
             )
             .replaceHolding(
                 SpecificHolding(
-                    TSLA_ID, Custodian.Robinhood, BigDecimal.valueOf(10),
+                    TSLA_ID, Custodian.Robinhood, MAIN_ACCOUNT, BigDecimal.valueOf(10),
                     FAR_PAST
                 )
             )
             .replaceHolding(
                 SpecificHolding(
-                    SQ_ID, Custodian.Etrade, BigDecimal.valueOf(100),
+                    SQ_ID, Custodian.Etrade, MAIN_ACCOUNT, BigDecimal.valueOf(100),
                     FAR_PAST
                 )
             )

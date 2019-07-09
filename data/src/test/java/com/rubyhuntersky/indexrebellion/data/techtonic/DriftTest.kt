@@ -30,12 +30,14 @@ class DriftTest {
     private val teslaHolding1 = SpecificHolding(
         instrumentId = teslaId,
         custodian = Custodian.Etrade,
+        custodianAccount = MAIN_ACCOUNT,
         size = teslaSize,
         lastModified = now
     )
     private val teslaHolding2 = SpecificHolding(
         instrumentId = teslaId,
         custodian = Custodian.Wallet,
+        custodianAccount = MAIN_ACCOUNT,
         size = teslaSize,
         lastModified = now
     )
@@ -56,6 +58,7 @@ class DriftTest {
     private val bitcoinHolding = SpecificHolding(
         instrumentId = bitcoinId,
         custodian = Custodian.Robinhood,
+        custodianAccount = MAIN_ACCOUNT,
         size = bitcoinSize,
         lastModified = now
     )
@@ -77,7 +80,14 @@ class DriftTest {
                 CashAmount.ZERO,
                 ZERO_DOLLAR_HOLDING_LAST_MODIFIED
             ),
-            GeneralHolding(teslaId, teslaFullSize, setOf(Custodian.Wallet, Custodian.Etrade), teslaName, teslaValue, now),
+            GeneralHolding(
+                teslaId,
+                teslaFullSize,
+                setOf(Custodian.Wallet, Custodian.Etrade),
+                teslaName,
+                teslaValue,
+                now
+            ),
             GeneralHolding(bitcoinId, bitcoinSize, setOf(Custodian.Robinhood), bitcoinName, bitcoinValue, now)
         )
         val holdings = drift.generalHoldings
