@@ -93,8 +93,8 @@ class DriftActivity : AppCompatActivity() {
         }
 
         private fun PlateAdjustment.toAction(): String = when {
-            valueDelta < 0 -> "Invest $${valueDelta.absoluteValue.toStatString()}"
-            valueDelta > 0 -> "Divest $${valueDelta.toStatString()}"
+            toPlannedValue > 0 -> "Invest $${toPlannedValue.absoluteValue.toStatString()}"
+            toPlannedValue < 0 -> "Divest $${toPlannedValue.absoluteValue.toStatString()}"
             else -> "Hold"
         }
 

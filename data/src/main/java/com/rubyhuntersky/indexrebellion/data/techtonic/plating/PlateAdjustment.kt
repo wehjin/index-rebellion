@@ -13,9 +13,9 @@ data class PlateAdjustment(
     val instruments: Set<InstrumentId>
 ) {
 
-    val portionDelta: Double by lazy { plannedPortion - realPortion }
+    private val toPlannedPortion: Double by lazy { plannedPortion - realPortion }
 
-    val valueDelta: Double by lazy { (BigDecimal(portionDelta) * vaultValue.value).toDouble() }
+    val toPlannedValue: Double by lazy { (BigDecimal(toPlannedPortion) * vaultValue.value).toDouble() }
 
     val realValue: CashAmount by lazy { vaultValue * realPortion }
 
