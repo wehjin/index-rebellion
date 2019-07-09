@@ -6,69 +6,63 @@ import com.rubyhuntersky.vx.common.ViewId
 import com.rubyhuntersky.vx.common.bound.HBound
 import com.rubyhuntersky.vx.tower.Tower
 import io.reactivex.Observable
+import io.reactivex.Observable.combineLatest
 import io.reactivex.disposables.CompositeDisposable
+import io.reactivex.functions.BiFunction
 import io.reactivex.rxkotlin.addTo
 import io.reactivex.subjects.BehaviorSubject
+import io.reactivex.subjects.PublishSubject
 
 fun <Sight : Any, Event : Any> Tower<Sight, Event>.extendFloor(tower: Tower<Sight, Event>) =
-    plusAugment(HAugment.Floor(tower))
+    plusAugment(VAugment.Floor(tower))
 
 fun <Sight : Any, Event : Any> Tower<Sight, Event>.extendFloors(vararg floors: Tower<Sight, Event>) =
     floors.fold(this, Tower<Sight, Event>::extendFloor)
 
 fun <Sight : Any, Event : Any> Tower<Sight, Event>.extendCeiling(tower: Tower<Sight, Event>) =
-    plusAugment(HAugment.Ceiling(tower))
+    plusAugment(VAugment.Ceiling(tower))
 
-fun <Sight : Any, Event : Any> Tower<Sight, Event>.plusAugment(augment: HAugment<Sight, Event>): Tower<Sight, Event> {
-    val core = this
+fun <Sight : Any, Event : Any> Tower<Sight, Event>.plusAugment(augment: VAugment<Sight, Event>): Tower<Sight, Event> {
+    val coreTowers = listOf(augment.ceilingTower, this, augment.floorTower)
     return object : Tower<Sight, Event> {
         override fun enview(viewHost: Tower.ViewHost, id: ViewId): Tower.View<Sight, Event> =
             object : Tower.View<Sight, Event> {
-                
-                private val views = listOf(augment.ceilingTower, core, augment.floorTower)
+                private val coreViews = coreTowers
                     .mapIndexed { index, tower -> tower.enview(viewHost, id.extend(index)) }
 
-                private val fullLatitudes = BehaviorSubject.createDefault(Latitude(0))
-                private val subviewLatitudes = views.map { Latitude(0) }.toMutableList()
-                private val subviewLatitudeChangeWatchers = CompositeDisposable()
-                private var edgeAnchor: Anchor? = null
-
-                private fun updateSubviewAnchors(): Latitude {
-                    val fullLatitude = subviewLatitudes.fold(Latitude(0), Latitude::plus)
-                    edgeAnchor?.let { edgeAnchor ->
-                        val offset0 = 0
-                        val offset1 = offset0 + subviewLatitudes[0].height
-                        val offset2 = offset1 + subviewLatitudes[1].height
-                        val coreOffsets = listOf(offset0, offset1, offset2)
-                        coreOffsets.forEachIndexed { index, coreOffset ->
-                            val coreHeight = subviewLatitudes[index].height
-                            val coreAnchor = edgeAnchor.edgeToCore(fullLatitude.height, coreHeight, coreOffset)
-                            views[index].setAnchor(coreAnchor)
-                        }
-                    }
-                    return fullLatitude
-                }
+                private val updates = CompositeDisposable()
+                private val coreHeights = BehaviorSubject.create<Pair<List<Int>, Int>>()
+                private val edgeAnchors = PublishSubject.create<Anchor>()
 
                 init {
-                    views.forEachIndexed { index, view ->
-                        view.latitudes.subscribe { latitude ->
-                            subviewLatitudes[index] = latitude
-                            val fullLatitude = updateSubviewAnchors()
-                            fullLatitudes.onNext(fullLatitude)
-                        }.addTo(subviewLatitudeChangeWatchers)
-                    }
+                    combineLatest(coreViews.map(Tower.View<Sight, Event>::latitudes)) { coreViewLatitudes ->
+                        val coreHeight = coreViewLatitudes
+                            .map { (it as Latitude).height }
+                            .fold(Pair(emptyList<Int>(), 0), { pair, coreViewHeight ->
+                                Pair(pair.first + pair.second, pair.second + coreViewHeight)
+                            })
+                        coreHeight
+                    }.subscribe(coreHeights::onNext).addTo(updates)
+
+                    combineLatest<Pair<List<Int>, Int>, Anchor, Triple<List<Int>, Int, Anchor>>(
+                        coreHeights, edgeAnchors,
+                        BiFunction { coreHeight, edgeAnchor ->
+                            Triple(coreHeight.first, coreHeight.second, edgeAnchor)
+                        })
+                        .subscribe { (coreOffsets, coreFullHeight, edgeAnchor) ->
+                            val edgeVBound = edgeAnchor.toVBound(coreFullHeight)
+                            coreViews.forEachIndexed { index, coreView ->
+                                coreView.setAnchor(Anchor(edgeVBound.ceiling + coreOffsets[index], 0f))
+                            }
+                        }
+                        .addTo(updates)
                 }
 
-                override val events: Observable<Event>
-                    get() = Observable.merge(views.map { it.events })
-
-                override fun setSight(sight: Sight) = views.forEach { it.setSight(sight) }
-                override fun setHBound(hbound: HBound) = views.forEach { it.setHBound(hbound) }
-                override val latitudes: Observable<Latitude> = fullLatitudes.distinctUntilChanged()
-                override fun setAnchor(anchor: Anchor) {
-                    edgeAnchor = anchor
-                    updateSubviewAnchors()
-                }
+                override val events: Observable<Event> get() = Observable.merge(coreViews.map { it.events })
+                override fun setSight(sight: Sight) = coreViews.forEach { it.setSight(sight) }
+                override fun setHBound(hbound: HBound) = coreViews.forEach { it.setHBound(hbound) }
+                override val latitudes: Observable<Latitude> get() = coreHeights.map { Latitude(it.second) }.distinctUntilChanged()
+                override fun setAnchor(anchor: Anchor) = edgeAnchors.onNext(anchor)
             }
     }
 }

@@ -10,6 +10,8 @@ import com.rubyhuntersky.interaction.core.Interaction
 import io.reactivex.Observable
 import kotlin.math.roundToInt
 
+@Suppress("unused")
+fun Any.toUnit(): Unit = Unit
 
 fun View.toPixels(dip: Int): Float {
     return TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dip.toFloat(), resources.displayMetrics)
@@ -47,3 +49,4 @@ fun <Vision : Any, Action : Any> Interaction<Vision, Action>.logChanges(tag: Str
 fun Intent.putActivityInteractionSearchKey(key: Long): Intent = this.also {
     ActivityInteraction.setInteractionSearchKey(it, key)
 }
+

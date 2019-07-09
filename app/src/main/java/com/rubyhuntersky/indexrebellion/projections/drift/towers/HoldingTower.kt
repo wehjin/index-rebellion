@@ -6,8 +6,8 @@ import com.rubyhuntersky.vx.common.margin.Margin
 import com.rubyhuntersky.vx.coop.additions.Span
 import com.rubyhuntersky.vx.tower.Tower
 import com.rubyhuntersky.vx.tower.additions.*
-import com.rubyhuntersky.vx.tower.additions.pad.HPad
-import com.rubyhuntersky.vx.tower.additions.pad.plusHPad
+import com.rubyhuntersky.vx.tower.additions.pad.VPad
+import com.rubyhuntersky.vx.tower.additions.pad.plusVPad
 import com.rubyhuntersky.vx.tower.towers.detailsubdetail.DetailSubdetailSight
 import com.rubyhuntersky.vx.tower.towers.detailsubdetail.DetailSubdetailTower
 
@@ -26,5 +26,5 @@ by TitleSubtitleTower
                 )
             }
     )
-    .plusVMargin(Margin.Uniform(Standard.marginSpan))
-    .plusHPad(HPad.Uniform(Standard.marginSize))
+    .plusHMargin(Margin.Uniform(Standard.marginSpan))
+    .plusVPad(VPad.Uniform(Standard.marginSize))

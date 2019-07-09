@@ -8,9 +8,9 @@ import com.rubyhuntersky.vx.tower.Tower
 import com.rubyhuntersky.vx.tower.additions.augment.extendCeiling
 import com.rubyhuntersky.vx.tower.additions.augment.extendFloor
 import com.rubyhuntersky.vx.tower.additions.mapSight
-import com.rubyhuntersky.vx.tower.additions.pad.HPad
-import com.rubyhuntersky.vx.tower.additions.pad.plusHPad
-import com.rubyhuntersky.vx.tower.additions.plusVMargin
+import com.rubyhuntersky.vx.tower.additions.pad.VPad
+import com.rubyhuntersky.vx.tower.additions.pad.plusVPad
+import com.rubyhuntersky.vx.tower.additions.plusHMargin
 import com.rubyhuntersky.vx.tower.towers.EmptyTower
 import com.rubyhuntersky.vx.tower.towers.wraptext.WrapTextSight
 import com.rubyhuntersky.vx.tower.towers.wraptext.WrapTextTower
@@ -20,7 +20,7 @@ object Standard {
     const val marginSize: Int = 16
     val marginSpan = Span.Absolute(marginSize)
     val uniformMargin = Margin.Uniform(marginSpan)
-    val uniformPad = HPad.Uniform(marginSize)
+    val uniformPad = VPad.Uniform(marginSize)
 
     class TitleTower : Tower<String, Nothing> by WrapTextTower()
         .mapSight({ WrapTextSight(it, TextStyle.Highlight5) })
@@ -29,17 +29,15 @@ object Standard {
         .mapSight({ WrapTextSight(it, TextStyle.Subtitle1) })
 
     class LabelTower<Sight : Any, Event : Any>(label: String) : Tower<Sight, Event> by WrapTextTower()
-        .plusVMargin(uniformMargin)
+        .plusHMargin(uniformMargin)
         .neverEvent<Event>()
         .mapSight({ WrapTextSight(label, TextStyle.Highlight5, Orbit.Center) })
 
     class BodyTower(pad: Boolean = true) : Tower<String, Nothing> by WrapTextTower()
         .let({
             if (pad) {
-                it.plusVMargin(uniformMargin).plusHPad(uniformPad)
-            } else {
-                it
-            }
+                it.plusHMargin(uniformMargin).plusVPad(uniformPad)
+            } else it
         })
         .mapSight({ WrapTextSight(it, TextStyle.Body1, Orbit.HeadLit) })
 

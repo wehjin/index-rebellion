@@ -20,23 +20,29 @@ import com.rubyhuntersky.vx.tower.additions.inCoop
 @SuppressLint("Registered")
 class SkeletonCoopInteractionActivity : AppCompatActivity() {
 
-    private val coopContentView = CoopContentView(Standard.BodyTower().inCoop())
+    private lateinit var interaction: Interaction<Vision, Action>
 
-    private lateinit var activityInteraction: ActivityInteraction<Vision, Action>
+    private val coopContentView = CoopContentView(Standard.BodyTower().inCoop())
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        activityInteraction = ActivityInteraction(group, this, this::renderVision)
-        lifecycle.addObserver(activityInteraction)
+        startActivityInteraction()
         coopContentView.setInActivity(this)
     }
 
+    private fun startActivityInteraction() {
+        val activityInteraction = ActivityInteraction(group, this, this::renderVision)
+        lifecycle.addObserver(activityInteraction)
+        interaction = activityInteraction
+    }
+
+    @Suppress("UNUSED_PARAMETER")
     private fun renderVision(vision: Vision, sendAction: (Action) -> Unit, edge: Edge) {
         coopContentView.setSight(vision.toString())
     }
 
     override fun onBackPressed() {
-        activityInteraction.sendAction(Action.End)
+        interaction.sendAction(Action.End)
     }
 
     companion object : ProjectionSource<Vision, Action> {

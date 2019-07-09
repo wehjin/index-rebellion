@@ -2,7 +2,7 @@ package com.rubyhuntersky.vx.tower.additions
 
 import com.rubyhuntersky.vx.common.TextStyle
 import com.rubyhuntersky.vx.tower.Tower
-import com.rubyhuntersky.vx.tower.additions.augment.HAugment
+import com.rubyhuntersky.vx.tower.additions.augment.VAugment
 import com.rubyhuntersky.vx.tower.additions.augment.plusAugment
 import com.rubyhuntersky.vx.tower.towers.TitleTower
 import com.rubyhuntersky.vx.tower.towers.wraptext.WrapTextSight
@@ -12,7 +12,7 @@ object TitleSubtitleTower : Tower<TitleSubtitleSight, Nothing>
 by TitleAtopSubtitleTower
     .mapSight(TitleSubtitleSight::title)
     .plusAugment(
-        HAugment.Floor(
+        VAugment.Floor(
             SubtitleBelowTitleTower.mapSight(TitleSubtitleSight::subtitle)
         )
     )

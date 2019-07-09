@@ -26,7 +26,7 @@ fun <Sight : Any, CoreEvent : Any, EdgeEvent : Any> Tower<Sight, CoreEvent>.mapE
     }
 }
 
-fun <Sight : Any, CoreEvent : Any> Tower<Sight, CoreEvent>.handleEvent(handleCoreEvent: ((CoreEvent) -> Unit)): Tower<Sight, Nothing> {
+fun <Sight : Any, Event : Any> Tower<Sight, Event>.handleEvent(onEvent: ((Event) -> Unit)): Tower<Sight, Nothing> {
     val core = this
     return object : Tower<Sight, Nothing> {
         override fun enview(viewHost: Tower.ViewHost, id: ViewId): Tower.View<Sight, Nothing> {
@@ -35,7 +35,7 @@ fun <Sight : Any, CoreEvent : Any> Tower<Sight, CoreEvent>.handleEvent(handleCor
 
                 override val events: Observable<Nothing>
                     get() = coreView.events
-                        .doOnNext(handleCoreEvent)
+                        .doOnNext(onEvent)
                         .flatMap { Observable.never<Nothing>() }
 
                 override fun setSight(sight: Sight) = coreView.setSight(sight)

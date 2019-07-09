@@ -17,8 +17,8 @@ import com.rubyhuntersky.vx.tower.additions.augment.extendFloors
 import com.rubyhuntersky.vx.tower.additions.handleEvent
 import com.rubyhuntersky.vx.tower.additions.inCoop
 import com.rubyhuntersky.vx.tower.additions.mapSight
-import com.rubyhuntersky.vx.tower.additions.pad.plusHPad
-import com.rubyhuntersky.vx.tower.additions.plusVMargin
+import com.rubyhuntersky.vx.tower.additions.pad.plusVPad
+import com.rubyhuntersky.vx.tower.additions.plusHMargin
 import com.rubyhuntersky.vx.tower.towers.click.ClickSight
 import com.rubyhuntersky.vx.tower.towers.click.ClickTower
 import io.reactivex.disposables.Disposable
@@ -41,8 +41,8 @@ class ViewHoldingActivity : AppCompatActivity() {
                     .mapSight { _: Vision.Viewing -> ClickSight("Reclassify", Unit) }
                     .handleEvent { activityInteraction.sendAction(Action.Reclassify) }
             )
-            .plusHPad(Standard.uniformPad)
-            .plusVMargin(Standard.uniformMargin)
+            .plusVPad(Standard.uniformPad)
+            .plusHMargin(Standard.uniformMargin)
 
     private val coopContentView = CoopContentView(pageTower.inCoop())
     private lateinit var activityInteraction: ActivityInteraction<Vision, Action>

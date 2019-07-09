@@ -7,9 +7,9 @@ import com.rubyhuntersky.vx.common.margin.Margin
 import com.rubyhuntersky.vx.common.orbit.Orbit
 import com.rubyhuntersky.vx.tower.Tower
 import com.rubyhuntersky.vx.tower.additions.mapSight
-import com.rubyhuntersky.vx.tower.additions.plusVMargin
-import com.rubyhuntersky.vx.tower.additions.pad.HPad
-import com.rubyhuntersky.vx.tower.additions.pad.plusHPad
+import com.rubyhuntersky.vx.tower.additions.plusHMargin
+import com.rubyhuntersky.vx.tower.additions.pad.VPad
+import com.rubyhuntersky.vx.tower.additions.pad.plusVPad
 import com.rubyhuntersky.vx.tower.towers.wraptext.WrapTextSight
 import com.rubyhuntersky.vx.tower.towers.wraptext.WrapTextTower
 
@@ -22,9 +22,9 @@ by WrapTextTower()
             Orbit.Center
         )
     })
-    .plusVMargin(Margin.Uniform(Standard.marginSpan))
-    .plusHPad(
-        HPad.Individual(
+    .plusHMargin(Margin.Uniform(Standard.marginSpan))
+    .plusVPad(
+        VPad.Individual(
             Standard.marginSize * 3 / 2,
             Standard.marginSize / 2
         )

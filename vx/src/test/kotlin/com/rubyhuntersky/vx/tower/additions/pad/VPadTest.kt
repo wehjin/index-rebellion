@@ -3,7 +3,7 @@ package com.rubyhuntersky.vx.tower.additions.pad
 import org.junit.Assert.assertEquals
 import org.junit.Test
 
-class HPadTest {
+class VPadTest {
 
     private val height1 = 100
     private val height2 = 50
@@ -11,7 +11,7 @@ class HPadTest {
 
     @Test
     fun uniform() {
-        with(HPad.Uniform(height1)) {
+        with(VPad.Uniform(height1)) {
             assertEquals(height1, ceilingHeight)
             assertEquals(height1, floorHeight)
         }
@@ -19,7 +19,7 @@ class HPadTest {
 
     @Test
     fun individual() {
-        with(HPad.Individual(height1, height2)) {
+        with(VPad.Individual(height1, height2)) {
             assertEquals(height1, ceilingHeight)
             assertEquals(height2, floorHeight)
         }
@@ -27,7 +27,7 @@ class HPadTest {
 
     @Test
     fun ceiling() {
-        with(HPad.Ceiling(height1)) {
+        with(VPad.Ceiling(height1)) {
             assertEquals(height1, ceilingHeight)
             assertEquals(noHeight, floorHeight)
         }
@@ -35,7 +35,7 @@ class HPadTest {
 
     @Test
     fun floor() {
-        with(HPad.Floor(height1)) {
+        with(VPad.Floor(height1)) {
             assertEquals(noHeight, ceilingHeight)
             assertEquals(height1, floorHeight)
         }
@@ -43,7 +43,7 @@ class HPadTest {
 
     @Test
     fun none() {
-        with(HPad.None) {
+        with(VPad.None) {
             assertEquals(noHeight, ceilingHeight)
             assertEquals(noHeight, floorHeight)
         }
