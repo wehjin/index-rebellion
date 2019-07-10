@@ -4,6 +4,9 @@ import com.rubyhuntersky.interaction.core.Interaction
 import com.rubyhuntersky.interaction.core.InteractionCompanion
 import com.rubyhuntersky.interaction.core.Revision
 import com.rubyhuntersky.interaction.core.Story
+import com.rubyhuntersky.interaction.stringedit.Seed
+import com.rubyhuntersky.interaction.stringedit.StringEdit
+import java.math.BigDecimal
 import com.rubyhuntersky.indexrebellion.interactions.editholding.EditHoldingAction as Action
 import com.rubyhuntersky.indexrebellion.interactions.editholding.EditHoldingVision as Vision
 
@@ -29,7 +32,8 @@ private fun revise(vision: Vision, action: Action): Revision<Vision, Action> = w
         Revision(vision)
     }
     vision is Vision.Idle && action is Action.Start -> {
-        Revision(Vision.Editing(Unit))
+        val sizeEdit = StringEdit<BigDecimal>("Shares", seed = Seed(BigDecimal.ZERO, true))
+        Revision(Vision.Editing(sizeEdit))
     }
     else -> Revision<Vision, Action>(vision).also {
         System.err.println(addTag("BAD REVISION: $action, $vision"))

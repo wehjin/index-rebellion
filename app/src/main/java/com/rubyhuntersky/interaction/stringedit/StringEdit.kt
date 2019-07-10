@@ -1,7 +1,8 @@
 package com.rubyhuntersky.interaction.stringedit
 
 data class StringEdit<T : Any>(
-    val placeholder: Placeholder<T>,
+    val label: String,
+    val seed: Seed<T>? = null,
     val ancient: Ancient<T>? = null,
     val novel: Novel<T>? = null
 ) {
@@ -9,15 +10,16 @@ data class StringEdit<T : Any>(
         get() = when {
             novel != null -> novel.validValue
             ancient != null -> ancient.validValue
-            else -> placeholder.validValue
+            seed != null -> seed.validValue
+            else -> null
         }
 
-    private val isValueSeeded: Boolean
-        get() = ancient == null && (novel != null || placeholder is Placeholder.Seed)
+    private val isValueFresh: Boolean
+        get() = ancient == null && (novel != null || seed != null)
 
     private val isValueChanged: Boolean
         get() = ancient != null && novel != null && novel.validValue != ancient.validValue
 
     val writableValue: T?
-        get() = if (isValueSeeded || isValueChanged) validValue else null
+        get() = if (isValueFresh || isValueChanged) validValue else null
 }

@@ -6,9 +6,9 @@ import org.junit.Test
 
 class StringEditTest {
 
-    private val label = Placeholder.Label<Int>("Count")
-    private val validSeed = Placeholder.Seed("Count", 7, true)
-    private val invalidSeed = Placeholder.Seed("Count", 8, false)
+    private val label = "Count"
+    private val validSeed = Seed(7, true)
+    private val invalidSeed = Seed(8, false)
     private val validAncient = Ancient(11)
     private val invalidAncient = Ancient(12)
     private val validNovel = Novel("21", Validity.Valid(21))
@@ -22,7 +22,8 @@ class StringEditTest {
         )
         tests.forEach { (novel, expected) ->
             val editor = StringEdit(
-                placeholder = label,
+                label,
+                seed = null,
                 ancient = null,
                 novel = novel
             )
@@ -37,9 +38,7 @@ class StringEditTest {
             Pair(invalidSeed, null)
         )
         tests.forEach {
-            val editor = StringEdit(
-                placeholder = it.first
-            )
+            val editor = StringEdit(label, seed = it.first)
             assertEquals(it.second, editor.writableValue)
         }
     }
@@ -52,21 +51,14 @@ class StringEditTest {
             Pair(validAncient, null)
         )
         tests.forEach {
-            val editor = StringEdit(
-                placeholder = validSeed,
-                ancient = it.first
-            )
+            val editor = StringEdit(label, validSeed, ancient = it.first)
             assertEquals(it.second, editor.writableValue)
         }
     }
 
     @Test
     fun validSeedProducesNullWhenNovelIsInvalid() {
-        val editor = StringEdit(
-            placeholder = validSeed,
-            ancient = null,
-            novel = invalidNovel
-        )
+        val editor = StringEdit(label, validSeed, ancient = null, novel = invalidNovel)
         assertNull(editor.writableValue)
     }
 }
