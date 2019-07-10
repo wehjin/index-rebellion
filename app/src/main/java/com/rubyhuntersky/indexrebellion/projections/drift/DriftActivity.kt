@@ -19,12 +19,12 @@ import com.rubyhuntersky.vx.android.coop.CoopContentView
 import com.rubyhuntersky.vx.coop.Coop
 import com.rubyhuntersky.vx.coop.additions.mapSight
 import com.rubyhuntersky.vx.toPercent
+import com.rubyhuntersky.vx.tower.additions.*
 import com.rubyhuntersky.vx.tower.additions.augment.extendCeiling
-import com.rubyhuntersky.vx.tower.additions.handleEvent
-import com.rubyhuntersky.vx.tower.additions.inCoop
-import com.rubyhuntersky.vx.tower.additions.logEvents
-import com.rubyhuntersky.vx.tower.additions.mapSight
+import com.rubyhuntersky.vx.tower.additions.augment.extendFloor
+import com.rubyhuntersky.vx.tower.additions.pad.plusVPad
 import com.rubyhuntersky.vx.tower.additions.replicate.replicate
+import com.rubyhuntersky.vx.tower.towers.click.ClickTower
 import com.rubyhuntersky.vx.tower.towers.click.plusClicks
 import kotlin.math.absoluteValue
 
@@ -37,16 +37,27 @@ class DriftActivity : AppCompatActivity() {
         lifecycle.addObserver(activityInteraction)
     }
 
-    private val multiHoldingTower = HoldingTower
+    private val holdingTower = HoldingTower
         .plusClicks(HoldingSight::instrumentId)
+
+    private val addHoldingTower = ClickTower<Unit>()
+        .plusHMargin(Standard.centerClickPad).plusVPad(Standard.uniformPad)
+        .mapSight(PageSight::toAddHoldingClick)
+        .handleEvent {
+            activityInteraction.sendAction(Action.AddHolding)
+        }
+
+
+    private val allHoldingsTower = holdingTower
         .replicate()
         .mapSight { page: PageSight -> page.holdings }
         .handleEvent {
             val action = Action.ViewHolding(instrumentId = it.value.context)
             activityInteraction.sendAction(action)
         }
+        .extendFloor(addHoldingTower)
 
-    private val holdingsContentTower = multiHoldingTower
+    private val balanceHoldingsTower = allHoldingsTower
         .extendCeiling(BalanceTower)
         .mapSight { drift: Drift ->
             PageSight(
@@ -66,7 +77,7 @@ class DriftActivity : AppCompatActivity() {
         .logEvents("HoldingsContentTower")
 
     private val pageTower = Standard.SectionTower(
-        Pair("Holdings", holdingsContentTower),
+        Pair("Holdings", balanceHoldingsTower),
         Pair("Adjustments", adjustmentsContentTower)
     )
 

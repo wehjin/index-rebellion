@@ -21,6 +21,7 @@ object Standard {
     val marginSpan = Span.Absolute(marginSize)
     val uniformMargin = Margin.Uniform(marginSpan)
     val uniformPad = VPad.Uniform(marginSize)
+    val centerClickPad = Margin.Uniform(Span.Relative(0.2f))
 
     class TitleTower : Tower<String, Nothing> by WrapTextTower()
         .mapSight({ WrapTextSight(it, TextStyle.Highlight5) })

@@ -39,7 +39,9 @@ private fun revise(vision: Vision, action: Action): Revision<Vision, Action> = w
         println(addTag("IGNORE: ${action.ignore} VISION: $vision"))
         Revision(vision)
     }
-    else -> error(addTag("ACTION: $action VISION: $vision"))
+    else -> Revision<Vision, Action>(vision).also {
+        System.err.println(addTag("BAD REVISION: $action, $vision"))
+    }
 }
 
 private fun addTag(message: String): String = "${SkeletonStory.groupId} $message"

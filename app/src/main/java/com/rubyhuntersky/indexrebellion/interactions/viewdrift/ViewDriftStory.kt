@@ -28,31 +28,36 @@ sealed class Action {
     data class Load(val drift: Drift) : Action()
     data class ViewHolding(val instrumentId: InstrumentId) : Action()
     data class Ignore(val ignore: Any?) : Action()
+    object AddHolding : Action()
 }
 
-private fun revise(vision: Vision, action: Action, edge: Edge): Revision<Vision, Action> {
-    return when {
-        vision is Vision.Idle && action is Action.Init -> {
-            val readDrifts = ReadDrifts.toWish<ReadDrifts, Action>(
-                "read",
-                onResult = Action::Load,
-                onAction = { error("ReadDrift: $it") }
-            )
-            Revision(Vision.Reading, readDrifts)
-        }
-        (vision is Vision.Reading || vision is Vision.Viewing) && action is Action.Load -> {
-            Revision(Vision.Viewing(action.drift))
-        }
-        vision is Vision.Viewing && action is Action.ViewHolding -> {
-            val viewHolding = edge.wish(
-                "view-holding",
-                interaction = ViewHoldingStory().logChanges(ViewHoldingStory.groupId),
-                startAction = ViewHoldingAction.Init(action.instrumentId),
-                endVisionToAction = Action::Ignore
-            )
-            Revision(vision, viewHolding)
-        }
-        action is Action.Ignore -> Revision(vision)
-        else -> error("${ViewDriftStory.groupId}: Invalid revision parameters - $vision, $action")
+private fun revise(vision: Vision, action: Action, edge: Edge): Revision<Vision, Action> = when {
+    vision is Vision.Idle && action is Action.Init -> {
+        val readDrifts = ReadDrifts.toWish<ReadDrifts, Action>(
+            "read",
+            onResult = Action::Load,
+            onAction = { error("ReadDrift: $it") }
+        )
+        Revision(Vision.Reading, readDrifts)
     }
+    (vision is Vision.Reading || vision is Vision.Viewing) && action is Action.Load -> {
+        Revision(Vision.Viewing(action.drift))
+    }
+    vision is Vision.Viewing && action is Action.ViewHolding -> {
+        val viewHolding = edge.wish(
+            "view-holding",
+            interaction = ViewHoldingStory().logChanges(ViewHoldingStory.groupId),
+            startAction = ViewHoldingAction.Init(action.instrumentId),
+            endVisionToAction = Action::Ignore
+        )
+        Revision(vision, viewHolding)
+    }
+    action is Action.Ignore -> Revision(vision)
+    else -> Revision<Vision, Action>(vision).also {
+        System.err.println(addTag(vision, action))
+    }
+}
+
+private fun addTag(vision: Vision, action: Action): String {
+    return "${ViewDriftStory.groupId} BAD REVISION: $action, $vision"
 }
