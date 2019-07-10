@@ -73,7 +73,7 @@ class DriftTest {
             .replaceHolding(bitcoinHolding)
         val expectedHoldings = setOf(
             GeneralHolding(
-                DOLLAR_ID,
+                DOLLAR_INSTRUMENT,
                 BigDecimal.ZERO,
                 setOf(Custodian.Wallet),
                 DOLLAR_NAME,

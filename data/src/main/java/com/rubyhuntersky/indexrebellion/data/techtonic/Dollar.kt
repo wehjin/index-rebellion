@@ -12,11 +12,11 @@ import com.rubyhuntersky.indexrebellion.data.techtonic.vault.SpecificHolding
 import java.math.BigDecimal
 import java.util.*
 
-val DOLLAR_ID = InstrumentId("USD", InstrumentType.Fiat)
+val DOLLAR_INSTRUMENT = InstrumentId("USD", InstrumentType.Fiat)
 const val DOLLAR_NAME = "US Dollars"
 
 val UNIT_DOLLAR_SAMPLE = InstrumentSample(
-    instrumentId = DOLLAR_ID,
+    instrumentId = DOLLAR_INSTRUMENT,
     instrumentName = DOLLAR_NAME,
     sharePrice = CashAmount.ONE,
     macroPrice = CashAmount(BigDecimal("3286668000000")),
@@ -28,7 +28,7 @@ val ZERO_DOLLAR_HOLDING_LAST_MODIFIED: Date = Calendar.getInstance().let { it.se
 val DOLLAR_WALLET_ACCOUNT = CustodianAccount("USD", "Dollars")
 
 val ZERO_DOLLAR_HOLDING = SpecificHolding(
-    instrumentId = DOLLAR_ID,
+    instrumentId = DOLLAR_INSTRUMENT,
     custodian = Custodian.Wallet,
     custodianAccount = DOLLAR_WALLET_ACCOUNT,
     size = BigDecimal.ZERO,
@@ -36,7 +36,7 @@ val ZERO_DOLLAR_HOLDING = SpecificHolding(
 )
 
 val DOLLAR_FIAT_PLATING = InstrumentPlating(
-    instrumentId = DOLLAR_ID,
+    instrumentId = DOLLAR_INSTRUMENT,
     plate = Plate.Fiat
 )
 
