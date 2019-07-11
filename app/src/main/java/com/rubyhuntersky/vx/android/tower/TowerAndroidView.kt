@@ -79,6 +79,13 @@ class TowerAndroidView<Sight : Any, Event : Any>(context: Context, tower: Tower<
         hboundBehavior.onNext(HBound(toDip(left), toDip(left + w)))
     }
 
+    override fun drop(id: ViewId) {
+        (0 until childCount)
+            .map(this::getChildAt)
+            .filter { ViewBackedTowerView.isViewInGroup(it, id) }
+            .forEach(this::removeView)
+    }
+
     override fun addInputView(
         id: ViewId
     ): Tower.View<InputSight, InputEvent> {
@@ -142,32 +149,25 @@ class TowerAndroidView<Sight : Any, Event : Any>(context: Context, tower: Tower<
         )
     }
 
-    override fun <Sight : Any, ClickContext : Any> addClickOverlayView(
+    override fun <Sight : Any, Topic : Any> addClickOverlayView(
+        id: ViewId,
         tower: Tower<Sight, Nothing>,
-        sightToClickContext: (Sight) -> ClickContext,
-        id: ViewId
-    ): Tower.View<Sight, ClickEvent<ClickContext>> {
+        sightToTopic: (Sight) -> Topic
+    ): Tower.View<Sight, ClickEvent<Topic>> {
         return ViewBackedTowerView(
             id,
             frameLayout = this@TowerAndroidView,
             adapter = object :
-                ViewBackedTowerView.Adapter<BackingClickableView<Sight, ClickContext>, Sight, ClickEvent<ClickContext>> {
+                ViewBackedTowerView.Adapter<BackingClickableView<Sight, Topic>, Sight, ClickEvent<Topic>> {
 
-                override fun buildView(context: Context): BackingClickableView<Sight, ClickContext> =
-                    BackingClickableView<Sight, ClickContext>(context)
-                        .also { it.enview(tower, id.extend(0), sightToClickContext) }
+                override fun buildView(context: Context): BackingClickableView<Sight, Topic> =
+                    BackingClickableView<Sight, Topic>(context)
+                        .also { it.enview(tower, id.extend(0), sightToTopic) }
 
-                override fun renderView(view: BackingClickableView<Sight, ClickContext>, sight: Sight) {
+                override fun renderView(view: BackingClickableView<Sight, Topic>, sight: Sight) {
                     view.setSight(sight)
                 }
             }
         )
-    }
-
-    override fun drop(id: ViewId) {
-        (0 until childCount)
-            .map(this::getChildAt)
-            .filter { ViewBackedTowerView.isViewInGroup(it, id) }
-            .forEach(this::removeView)
     }
 }

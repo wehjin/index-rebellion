@@ -70,6 +70,10 @@ class ScreenView
         hboundBehavior.onNext(HBound(toDip(left), toDip(left + w)))
     }
 
+    override fun drop(id: ViewId) {
+        error("Not implemented, use TowerAndroidView")
+    }
+
     override fun addInputView(id: ViewId): Tower.View<InputSight, InputEvent> =
         ViewBackedTowerView(
             frameLayout = this@ScreenView,
@@ -108,19 +112,15 @@ class ScreenView
                 }
             })
 
-    override fun <ClickContext : Any> addClickView(id: ViewId): Tower.View<ClickSight<ClickContext>, ClickEvent<ClickContext>> {
+    override fun <Topic : Any> addClickView(id: ViewId): Tower.View<ClickSight<Topic>, ClickEvent<Topic>> {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
-    override fun <Sight : Any, ClickContext : Any> addClickOverlayView(
+    override fun <Sight : Any, Topic : Any> addClickOverlayView(
+        id: ViewId,
         tower: Tower<Sight, Nothing>,
-        sightToClickContext: (Sight) -> ClickContext,
-        id: ViewId
-    ): Tower.View<Sight, ClickEvent<ClickContext>> {
+        sightToTopic: (Sight) -> Topic
+    ): Tower.View<Sight, ClickEvent<Topic>> {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-    }
-
-    override fun drop(id: ViewId) {
-        error("Not implemented, use TowerAndroidView")
     }
 }

@@ -22,18 +22,19 @@ interface Tower<Sight : Any, Event : Any> {
     fun enview(viewHost: ViewHost, id: ViewId): View<Sight, Event>
 
     interface ViewHost {
+        fun drop(id: ViewId)
+
         fun addWrapTextView(id: ViewId): View<WrapTextSight, Nothing>
+
         fun addInputView(id: ViewId): View<InputSight, InputEvent>
 
-        fun <ClickContext : Any> addClickView(id: ViewId): View<ClickSight<ClickContext>, ClickEvent<ClickContext>>
+        fun <Topic : Any> addClickView(id: ViewId): View<ClickSight<Topic>, ClickEvent<Topic>>
 
-        fun <Sight : Any, ClickContext : Any> addClickOverlayView(
+        fun <Sight : Any, Topic : Any> addClickOverlayView(
+            id: ViewId,
             tower: Tower<Sight, Nothing>,
-            sightToClickContext: (Sight) -> ClickContext,
-            id: ViewId
-        ): View<Sight, ClickEvent<ClickContext>>
-
-        fun drop(id: ViewId)
+            sightToTopic: (Sight) -> Topic
+        ): View<Sight, ClickEvent<Topic>>
     }
 
     interface View<in Sight : Any, Event : Any> {

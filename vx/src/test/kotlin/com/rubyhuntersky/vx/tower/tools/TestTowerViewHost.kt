@@ -15,8 +15,8 @@ import io.reactivex.subjects.BehaviorSubject
 import io.reactivex.subjects.PublishSubject
 
 class TestTowerViewHost : Tower.ViewHost {
-    sealed class Item {
 
+    sealed class Item {
         abstract val id: ViewId
         abstract val bound: HBound?
         abstract val anchor: Anchor?
@@ -30,27 +30,31 @@ class TestTowerViewHost : Tower.ViewHost {
             override var sight: WrapTextSight? = null
         ) : Item()
 
-        data class TestClick<ClickContext : Any>(
+        data class TestClick<Topic : Any>(
             override val id: ViewId,
             override var bound: HBound? = null,
             override var anchor: Anchor? = null,
-            override var sight: ClickSight<ClickContext>? = null,
-            val events: PublishSubject<ClickEvent<ClickContext>> = PublishSubject.create()
+            override var sight: ClickSight<Topic>? = null,
+            val events: PublishSubject<ClickEvent<Topic>> = PublishSubject.create()
         ) : Item()
 
-        data class TestClickOverlay<Sight : Any, ClickContext : Any>(
+        data class TestClickOverlay<Sight : Any, Topic : Any>(
             val tower: Tower<Sight, Nothing>,
             override val id: ViewId,
             override var bound: HBound? = null,
             override var anchor: Anchor? = null,
             override var sight: Sight? = null,
-            val events: PublishSubject<ClickEvent<ClickContext>> = PublishSubject.create()
+            val events: PublishSubject<ClickEvent<Topic>> = PublishSubject.create()
         ) : Item()
     }
 
-    override fun addWrapTextView(
-        id: ViewId
-    ): Tower.View<WrapTextSight, Nothing> {
+    override fun drop(id: ViewId) {
+        items.removeAll { it.id.isEqualOrExtends(id) }
+    }
+
+    val items = mutableListOf<Item>()
+
+    override fun addWrapTextView(id: ViewId): Tower.View<WrapTextSight, Nothing> {
 
         val item = Item.TestWrapText(id).also(this::addItem)
         return object : Tower.View<WrapTextSight, Nothing> {
@@ -79,23 +83,17 @@ class TestTowerViewHost : Tower.ViewHost {
         items.add(item)
     }
 
-    val items = mutableListOf<Item>()
-
-    override fun addInputView(
-        id: ViewId
-    ): Tower.View<InputSight, InputEvent> {
+    override fun addInputView(id: ViewId): Tower.View<InputSight, InputEvent> {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
-    override fun <ClickContext : Any> addClickView(
-        id: ViewId
-    ): Tower.View<ClickSight<ClickContext>, ClickEvent<ClickContext>> {
-        val item = Item.TestClick<ClickContext>(id).also(this::addItem)
-        return object : Tower.View<ClickSight<ClickContext>, ClickEvent<ClickContext>> {
-            override val events: Observable<ClickEvent<ClickContext>>
+    override fun <Topic : Any> addClickView(id: ViewId): Tower.View<ClickSight<Topic>, ClickEvent<Topic>> {
+        val item = Item.TestClick<Topic>(id).also(this::addItem)
+        return object : Tower.View<ClickSight<Topic>, ClickEvent<Topic>> {
+            override val events: Observable<ClickEvent<Topic>>
                 get() = item.events
 
-            override fun setSight(sight: ClickSight<ClickContext>) {
+            override fun setSight(sight: ClickSight<Topic>) {
                 item.sight = sight
             }
 
@@ -112,14 +110,14 @@ class TestTowerViewHost : Tower.ViewHost {
         }
     }
 
-    override fun <Sight : Any, ClickContext : Any> addClickOverlayView(
+    override fun <Sight : Any, Topic : Any> addClickOverlayView(
+        id: ViewId,
         tower: Tower<Sight, Nothing>,
-        sightToClickContext: (Sight) -> ClickContext,
-        id: ViewId
-    ): Tower.View<Sight, ClickEvent<ClickContext>> {
-        val item = Item.TestClickOverlay<Sight, ClickContext>(tower, id)
-        return object : Tower.View<Sight, ClickEvent<ClickContext>> {
-            override val events: Observable<ClickEvent<ClickContext>>
+        sightToTopic: (Sight) -> Topic
+    ): Tower.View<Sight, ClickEvent<Topic>> {
+        val item = Item.TestClickOverlay<Sight, Topic>(tower, id)
+        return object : Tower.View<Sight, ClickEvent<Topic>> {
+            override val events: Observable<ClickEvent<Topic>>
                 get() = item.events
 
             override fun setSight(sight: Sight) {
@@ -137,10 +135,6 @@ class TestTowerViewHost : Tower.ViewHost {
                 item.anchor = anchor
             }
         }
-    }
-
-    override fun drop(id: ViewId) {
-        items.removeAll { it.id.isEqualOrExtends(id) }
     }
 }
 

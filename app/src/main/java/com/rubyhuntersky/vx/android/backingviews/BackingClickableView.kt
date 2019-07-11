@@ -13,7 +13,7 @@ import com.rubyhuntersky.vx.tower.towers.click.ClickEvent
 import io.reactivex.Observable
 import io.reactivex.subjects.PublishSubject
 
-class BackingClickableView<Sight : Any, ClickContext : Any>
+class BackingClickableView<Sight : Any, Topic : Any>
 @JvmOverloads constructor(
     context: Context,
     attrs: AttributeSet? = null,
@@ -21,9 +21,9 @@ class BackingClickableView<Sight : Any, ClickContext : Any>
     defStyleRes: Int = 0
 ) :
     FrameLayout(context, attrs, defStyleAttr, defStyleRes),
-    ViewBackedTowerView.BackingView<ClickEvent<ClickContext>> {
+    ViewBackedTowerView.BackingView<ClickEvent<Topic>> {
 
-    fun enview(tower: Tower<Sight, Nothing>, id: ViewId, sightToClickContext: (Sight) -> ClickContext) {
+    fun enview(tower: Tower<Sight, Nothing>, id: ViewId, sightToTopic: (Sight) -> Topic) {
         removeAllViews()
         towerView = TowerAndroidView(context, tower, id)
             .apply {
@@ -35,7 +35,7 @@ class BackingClickableView<Sight : Any, ClickContext : Any>
                 )
                 setOnClickListener {
                     sight?.let {
-                        val single = ClickEvent.Single(sightToClickContext(it))
+                        val single = ClickEvent.Single(sightToTopic(it))
                         eventPublish.onNext(single)
                     }
                 }
@@ -47,10 +47,10 @@ class BackingClickableView<Sight : Any, ClickContext : Any>
     }
 
     private lateinit var towerView: TowerAndroidView<Sight, Nothing>
-    private val eventPublish: PublishSubject<ClickEvent<ClickContext>> = PublishSubject.create()
+    private val eventPublish: PublishSubject<ClickEvent<Topic>> = PublishSubject.create()
     private var sight: Sight? = null
 
-    override val events: Observable<ClickEvent<ClickContext>> = eventPublish
+    override val events: Observable<ClickEvent<Topic>> = eventPublish
 
     fun setSight(sight: Sight) {
         this.sight = sight
