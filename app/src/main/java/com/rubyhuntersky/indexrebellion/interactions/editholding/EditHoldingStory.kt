@@ -1,11 +1,13 @@
 package com.rubyhuntersky.indexrebellion.interactions.editholding
 
 import com.rubyhuntersky.indexrebellion.data.cash.CashAmount
-import com.rubyhuntersky.indexrebellion.data.techtonic.vault.SpecificHolding
+import com.rubyhuntersky.indexrebellion.spirits.readdrift.ReadDrifts
+import com.rubyhuntersky.indexrebellion.spirits.writedrift.WriteDrift
 import com.rubyhuntersky.interaction.core.Interaction
 import com.rubyhuntersky.interaction.core.InteractionCompanion
 import com.rubyhuntersky.interaction.core.Revision
 import com.rubyhuntersky.interaction.core.Story
+import com.rubyhuntersky.interaction.core.wish.Wish
 import com.rubyhuntersky.interaction.stringedit.Novel
 import com.rubyhuntersky.interaction.stringedit.Validity
 import java.math.BigDecimal
@@ -24,17 +26,28 @@ private fun start(): Vision = Vision.Idle
 
 private fun isEnding(maybe: Any?): Boolean = maybe is Vision.Ended
 
+private const val DRIFTS_WISH = "drifts"
+private const val WRITE_DRIFT_WISH = "write-drift"
+
 @Suppress("IntroduceWhenSubject")
 private fun revise(vision: Vision, action: Action): Revision<Vision, Action> = when {
     action is Action.End -> {
-        Revision(Vision.Ended)
+        Revision(Vision.Ended(null), Wish.none(DRIFTS_WISH), Wish.none(WRITE_DRIFT_WISH))
     }
     action is Action.Ignore -> {
         println(addTag("IGNORED: ${action.ignore} VISION: $vision"))
         Revision(vision)
     }
     vision is Vision.Idle && action is Action.Start -> {
-        val edit = action.holding.toHoldingEdit()
+        val drifts = ReadDrifts.toWish<ReadDrifts, Action>(DRIFTS_WISH, Action::Load, Action::Ignore)
+        Revision(Vision.Loading(action.holding), drifts)
+    }
+    vision is Vision.Loading && action is Action.Load -> {
+        val edit = HoldingEdit(vision.specificHolding).setDrift(action.drift)
+        Revision(Vision.Editing(edit))
+    }
+    vision is Vision.Editing && action is Action.Load -> {
+        val edit = vision.edit.setDrift(action.drift)
         Revision(Vision.Editing(edit))
     }
     vision is Vision.Editing && action is Action.SetSize -> {
@@ -54,6 +67,18 @@ private fun revise(vision: Vision, action: Action): Revision<Vision, Action> = w
         val novel = price.toNovel(action.change.second, ::priceValidity)
         val edit = vision.edit.setPriceNovel(novel)
         Revision(Vision.Editing(edit))
+    }
+    vision is Vision.Editing && action is Action.Write -> {
+        vision.edit.writableResult
+            ?.let { (drift, holding) ->
+                val writeDrift = WriteDrift(drift).toWish<WriteDrift, Action>(
+                    name = WRITE_DRIFT_WISH,
+                    onResult = Action::Ignore,
+                    onAction = Action::Ignore
+                )
+                Revision(Vision.Ended(holding), writeDrift)
+            }
+            ?: Revision(vision)
     }
     else -> Revision<Vision, Action>(vision).also {
         System.err.println(addTag("BAD REVISION: $action, $vision"))
@@ -88,9 +113,5 @@ private fun sizeValidity(string: String): Validity<BigDecimal> =
             else Validity.Invalid<BigDecimal>(string, "Must be positive")
         }
         ?: Validity.Invalid(string, "Invalid double")
-
-private fun SpecificHolding?.toHoldingEdit(): HoldingEdit = this
-    ?.let { HoldingEdit().setSymbolAncient(it.instrumentId.symbol).setSizeAncient(it.size) }
-    ?: HoldingEdit()
 
 private fun addTag(message: String): String = "${EditHoldingStory.groupId} $message"

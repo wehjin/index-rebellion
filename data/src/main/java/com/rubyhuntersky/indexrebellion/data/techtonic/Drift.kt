@@ -59,6 +59,8 @@ data class Drift(
     fun findHolding(instrumentId: InstrumentId): GeneralHolding? =
         generalHoldings.firstOrNull { it.instrumentId == instrumentId }
 
+    fun findSample(instrumentId: InstrumentId): InstrumentSample? = market.findSample(instrumentId)
+
     fun replaceSample(sample: InstrumentSample): Drift {
         return copy(market = market.replaceSample(sample))
     }

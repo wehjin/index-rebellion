@@ -14,11 +14,15 @@ import com.rubyhuntersky.interaction.core.Interaction
 import com.rubyhuntersky.vx.android.coop.CoopContentView
 import com.rubyhuntersky.vx.android.putActivityInteractionSearchKey
 import com.rubyhuntersky.vx.android.toTextInputSight
+import com.rubyhuntersky.vx.android.toUnit
 import com.rubyhuntersky.vx.tower.additions.augment.extendFloor
+import com.rubyhuntersky.vx.tower.additions.fixSight
 import com.rubyhuntersky.vx.tower.additions.handleEvents
 import com.rubyhuntersky.vx.tower.additions.inCoop
 import com.rubyhuntersky.vx.tower.additions.mapSight
 import com.rubyhuntersky.vx.tower.towers.InputType
+import com.rubyhuntersky.vx.tower.towers.click.ClickEvent
+import com.rubyhuntersky.vx.tower.towers.click.ClickSight
 import com.rubyhuntersky.vx.tower.towers.textinput.TextInputEvent
 import com.rubyhuntersky.vx.tower.towers.textinput.TextInputSight
 import java.math.BigDecimal
@@ -31,7 +35,7 @@ class EditHoldingActivity : AppCompatActivity() {
     private lateinit var interaction: Interaction<Vision, Action>
     private val visionTower = Standard.BodyTower().mapSight(Vision::toString)
 
-    private val symbolInputTower = Standard.Inset<Unit>()
+    private val symbolInputTower = Standard.InsetTextInputTower<Unit>()
         .mapSight { vision: Vision ->
             vision.symbolEdit
                 ?.toTextInputSight(InputType.WORD, Unit, String::toString)
@@ -43,7 +47,7 @@ class EditHoldingActivity : AppCompatActivity() {
                 .let(interaction::sendAction)
         }
 
-    private val sizeInputTower = Standard.Inset<Unit>()
+    private val sizeInputTower = Standard.InsetTextInputTower<Unit>()
         .mapSight { vision: Vision ->
             vision.sizeEdit
                 ?.toTextInputSight(InputType.UNSIGNED_DECIMAL, Unit, BigDecimal::toString)
@@ -55,7 +59,7 @@ class EditHoldingActivity : AppCompatActivity() {
                 .let(interaction::sendAction)
         }
 
-    private val priceInputTower = Standard.Inset<Unit>()
+    private val priceInputTower = Standard.InsetTextInputTower<Unit>()
         .mapSight { vision: Vision ->
             vision.priceEdit?.toTextInputSight(InputType.UNSIGNED_DECIMAL, Unit, CashAmount::toDollarStat)
                 ?: TextInputSight(InputType.UNSIGNED_DECIMAL, Unit, "", error = "BAD: $vision")
@@ -66,10 +70,20 @@ class EditHoldingActivity : AppCompatActivity() {
                 .let(interaction::sendAction)
         }
 
-    private val pageTower = visionTower
-        .extendFloor(symbolInputTower)
+    private val saveTower = Standard.CenteredTextButton<Unit>()
+        .fixSight(ClickSight(Unit, "Save"))
+        .mapSight(Vision::toUnit)
+        .handleEvents {
+            (it as ClickEvent.Single)
+                .let { Action.Write }
+                .let(interaction::sendAction)
+        }
+
+    private val pageTower = symbolInputTower
         .extendFloor(sizeInputTower)
         .extendFloor(priceInputTower)
+        .extendFloor(saveTower)
+        .extendFloor(visionTower)
 
     private val coopContentView = CoopContentView(pageTower.inCoop())
 
@@ -106,7 +120,5 @@ class EditHoldingActivity : AppCompatActivity() {
                 .putActivityInteractionSearchKey(key)
                 .let(activity::startActivity)
         }
-
-        private val TAG = EditHoldingActivity::class.java.simpleName
     }
 }

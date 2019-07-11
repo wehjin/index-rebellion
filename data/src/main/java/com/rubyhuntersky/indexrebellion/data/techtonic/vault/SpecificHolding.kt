@@ -17,8 +17,18 @@ data class SpecificHolding(
     @Serializable(with = DateSerializer::class)
     val lastModified: Date
 ) {
-    fun isRival(other: SpecificHolding): Boolean {
-        return instrumentId == other.instrumentId && custodian == other.custodian
+    fun isRival(other: SpecificHolding): Boolean = instrumentId == other.instrumentId &&
+            custodian == other.custodian &&
+            custodianAccount == other.custodianAccount
+
+    fun equalsExcludingDate(other: Any?): Boolean {
+        if (this === other) return true
+        if (other !is SpecificHolding) return false
+        if (instrumentId != other.instrumentId) return false
+        if (custodian != other.custodian) return false
+        if (custodianAccount != other.custodianAccount) return false
+        if (size != other.size) return false
+        return true
     }
 }
 

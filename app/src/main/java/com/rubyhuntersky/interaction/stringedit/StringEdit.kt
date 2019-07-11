@@ -6,7 +6,7 @@ data class StringEdit<T : Any>(
     val ancient: Ancient<T>? = null,
     val novel: Novel<T>? = null
 ) {
-    private val validValue: T?
+    val validValue: T?
         get() = when {
             novel != null -> novel.validValue
             ancient != null -> ancient.validValue

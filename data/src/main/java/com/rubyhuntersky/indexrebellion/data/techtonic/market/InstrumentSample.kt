@@ -14,4 +14,7 @@ data class InstrumentSample(
     val macroPrice: CashAmount,
     @Serializable(with = DateSerializer::class)
     val sampleDate: Date
-)
+) {
+    fun setPrice(price: CashAmount, date: Date?) =
+        copy(sharePrice = price, sampleDate = date ?: sampleDate)
+}

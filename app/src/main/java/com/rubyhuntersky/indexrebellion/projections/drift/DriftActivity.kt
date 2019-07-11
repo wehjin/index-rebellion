@@ -19,13 +19,14 @@ import com.rubyhuntersky.vx.android.coop.CoopContentView
 import com.rubyhuntersky.vx.coop.Coop
 import com.rubyhuntersky.vx.coop.additions.mapSight
 import com.rubyhuntersky.vx.toPercent
-import com.rubyhuntersky.vx.tower.additions.*
 import com.rubyhuntersky.vx.tower.additions.augment.extendCeiling
 import com.rubyhuntersky.vx.tower.additions.augment.extendFloor
-import com.rubyhuntersky.vx.tower.additions.pad.plusVPad
-import com.rubyhuntersky.vx.tower.additions.replicate.replicate
-import com.rubyhuntersky.vx.tower.towers.click.ClickTower
 import com.rubyhuntersky.vx.tower.additions.clicks.plusClicks
+import com.rubyhuntersky.vx.tower.additions.handleEvents
+import com.rubyhuntersky.vx.tower.additions.inCoop
+import com.rubyhuntersky.vx.tower.additions.logEvents
+import com.rubyhuntersky.vx.tower.additions.mapSight
+import com.rubyhuntersky.vx.tower.additions.replicate.replicate
 import kotlin.math.absoluteValue
 
 class DriftActivity : AppCompatActivity() {
@@ -40,8 +41,7 @@ class DriftActivity : AppCompatActivity() {
     private val holdingTower = HoldingTower
         .plusClicks(HoldingSight::instrumentId)
 
-    private val addHoldingTower = ClickTower<Unit>()
-        .plusHMargin(Standard.centerClickPad).plusVPad(Standard.uniformPad)
+    private val addHoldingTower = Standard.CenteredTextButton<Unit>()
         .mapSight(PageSight::toAddHoldingClick)
         .handleEvents {
             activityInteraction.sendAction(Action.AddHolding)
