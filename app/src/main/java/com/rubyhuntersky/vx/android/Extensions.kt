@@ -7,7 +7,11 @@ import android.view.View
 import com.rubyhuntersky.interaction.android.ActivityInteraction
 import com.rubyhuntersky.interaction.core.Edge
 import com.rubyhuntersky.interaction.core.Interaction
+import com.rubyhuntersky.interaction.stringedit.StringEdit
+import com.rubyhuntersky.interaction.stringedit.Validity
+import com.rubyhuntersky.vx.tower.towers.textinput.TextInputSight
 import io.reactivex.Observable
+import java.math.BigDecimal
 import kotlin.math.roundToInt
 
 @Suppress("unused")
@@ -50,3 +54,12 @@ fun Intent.putActivityInteractionSearchKey(key: Long): Intent = this.also {
     ActivityInteraction.setInteractionSearchKey(it, key)
 }
 
+fun <Topic : Any> StringEdit<BigDecimal>.toTextInputSight(topic: Topic): TextInputSight<Topic> {
+    val text = novel?.string ?: ""
+    val selection = novel?.selection ?: (text.length until text.length)
+    val hint = (ancient?.validValue?.toString()
+        ?: seed?.validValue?.toString()) ?: ""
+    val label = label
+    val error = (novel?.validity as? Validity.Invalid)?.reason ?: ""
+    return TextInputSight(topic, text, selection, hint, label, error)
+}

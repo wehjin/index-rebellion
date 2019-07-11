@@ -12,6 +12,8 @@ import com.rubyhuntersky.vx.tower.additions.pad.VPad
 import com.rubyhuntersky.vx.tower.additions.pad.plusVPad
 import com.rubyhuntersky.vx.tower.additions.plusHMargin
 import com.rubyhuntersky.vx.tower.towers.EmptyTower
+import com.rubyhuntersky.vx.tower.towers.textinput.TextInputEvent
+import com.rubyhuntersky.vx.tower.towers.textinput.TextInputSight
 import com.rubyhuntersky.vx.tower.towers.wraptext.WrapTextSight
 import com.rubyhuntersky.vx.tower.towers.wraptext.WrapTextTower
 
@@ -22,6 +24,10 @@ object Standard {
     val uniformMargin = Margin.Uniform(marginSpan)
     val uniformPad = VPad.Uniform(marginSize)
     val centerClickPad = Margin.Uniform(Span.Relative(0.2f))
+
+    class TextInputTower<Topic : Any> : Tower<TextInputSight<Topic>, TextInputEvent<Topic>> by TextInputTower<Topic>()
+        .plusHMargin(uniformMargin)
+        .plusVPad(uniformPad)
 
     class TitleTower : Tower<String, Nothing> by WrapTextTower()
         .mapSight({ WrapTextSight(it, TextStyle.Highlight5) })
@@ -35,23 +41,17 @@ object Standard {
         .mapSight({ WrapTextSight(label, TextStyle.Highlight5, Orbit.Center) })
 
     class BodyTower(pad: Boolean = true) : Tower<String, Nothing> by WrapTextTower()
-        .let({
-            if (pad) {
-                it.plusHMargin(uniformMargin).plusVPad(uniformPad)
-            } else it
-        })
+        .let({ if (pad) it.plusHMargin(uniformMargin).plusVPad(uniformPad) else it })
         .mapSight({ WrapTextSight(it, TextStyle.Body1, Orbit.HeadLit) })
 
-    class SectionTower<Sight : Any, Event : Any>(
-        vararg sections: Pair<String, Tower<Sight, Event>>
-    ) :
-        Tower<Sight, Event>
-        by sections.fold(
-            EmptyTower<Sight, Event>() as Tower<Sight, Event>,
-            { tower, step ->
+    class SectionTower<Sight : Any, Event : Any>(vararg sections: Pair<String, Tower<Sight, Event>>) :
+        Tower<Sight, Event> by sections.fold(
+            initial = EmptyTower<Sight, Event>() as Tower<Sight, Event>,
+            operation = { tower, step ->
                 val label = LabelTower<Sight, Event>(step.first)
                 val body = step.second
                 val section = body.extendCeiling(label)
                 tower.extendFloor(section)
-            })
+            }
+        )
 }

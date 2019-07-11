@@ -13,15 +13,13 @@ import com.rubyhuntersky.interaction.core.Edge
 import com.rubyhuntersky.interaction.core.Interaction
 import com.rubyhuntersky.vx.android.coop.CoopContentView
 import com.rubyhuntersky.vx.android.putActivityInteractionSearchKey
+import com.rubyhuntersky.vx.android.toTextInputSight
 import com.rubyhuntersky.vx.tower.additions.augment.extendFloor
 import com.rubyhuntersky.vx.tower.additions.handleEvents
 import com.rubyhuntersky.vx.tower.additions.inCoop
 import com.rubyhuntersky.vx.tower.additions.mapSight
-import com.rubyhuntersky.vx.tower.additions.pad.plusVPad
-import com.rubyhuntersky.vx.tower.additions.plusHMargin
 import com.rubyhuntersky.vx.tower.towers.textinput.TextInputEvent
 import com.rubyhuntersky.vx.tower.towers.textinput.TextInputSight
-import com.rubyhuntersky.vx.tower.towers.textinput.TextInputTower
 import com.rubyhuntersky.indexrebellion.interactions.editholding.EditHoldingAction as Action
 import com.rubyhuntersky.indexrebellion.interactions.editholding.EditHoldingVision as Vision
 
@@ -31,29 +29,18 @@ class EditHoldingActivity : AppCompatActivity() {
     private lateinit var interaction: Interaction<Vision, Action>
     private val visionTower = Standard.BodyTower().mapSight(Vision::toString)
 
-    private val sizeInputTower = TextInputTower<String>()
-        .plusHMargin(Standard.uniformMargin).plusVPad(Standard.uniformPad)
+
+    private val sizeInputTower = Standard.TextInputTower<String>()
         .mapSight { vision: Vision ->
-            when (vision) {
-                is Vision.Editing -> {
-                    val sizeEdit = vision.sizeEdit
-                    val text = sizeEdit.novel?.string ?: ""
-                    TextInputSight(
-                        SIZE_TOPIC,
-                        text,
-                        sizeEdit.novel?.selection ?: IntRange(text.length, text.length - 1),
-                        sizeEdit.ancient?.validValue?.toString() ?: sizeEdit.seed?.validValue?.toString() ?: "",
-                        sizeEdit.label
-                    )
-                }
-                else -> TextInputSight(SIZE_TOPIC, "", error = "BAD: $vision")
-            }
+            (vision as? Vision.Editing)?.sizeEdit
+                ?.toTextInputSight(SIZE_TOPIC)
+                ?: TextInputSight(SIZE_TOPIC, "", error = "BAD: $vision")
         }
         .handleEvents { event ->
             Log.d(TAG, "EVENT $event")
-            event.mapTopic(SIZE_TOPIC) {
-                (event as? TextInputEvent.Changed)?.let { Action.SetSize(Pair(event.text, event.selection)) }
-            }?.let(interaction::sendAction)
+            (event as TextInputEvent.Changed)
+                .mapTopic(SIZE_TOPIC) { Action.SetSize(Pair(event.text, event.selection)) }
+                ?.let(interaction::sendAction)
         }
 
     private val pageTower = visionTower.extendFloor(sizeInputTower)
