@@ -7,8 +7,8 @@ import com.rubyhuntersky.indexrebellion.R
 import com.rubyhuntersky.indexrebellion.data.cash.CashAmount
 import com.rubyhuntersky.indexrebellion.interactions.cashediting.Action
 import com.rubyhuntersky.indexrebellion.interactions.cashediting.Vision
-import com.rubyhuntersky.vx.common.ViewId
 import com.rubyhuntersky.vx.android.InteractionBottomSheetDialogFragment
+import com.rubyhuntersky.vx.common.ViewId
 import com.rubyhuntersky.vx.tower.Tower
 import com.rubyhuntersky.vx.tower.additions.Bottom
 import com.rubyhuntersky.vx.tower.additions.Gap
@@ -77,6 +77,7 @@ class CashEditingDialogFragment : InteractionBottomSheetDialogFragment<Vision, A
         val content = FundingEditor(
             title = "Update Funding",
             targetInput = InputSight(
+                type = InputType.SIGNED_NUMBER,
                 text = vision.edit,
                 originalText = (if (vision.oldCashAmount < CashAmount.ZERO) "-" else "") + vision.oldCashAmount.toStatString(),
                 label = getString(labelRes),

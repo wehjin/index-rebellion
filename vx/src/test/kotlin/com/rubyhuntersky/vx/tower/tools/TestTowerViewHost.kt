@@ -64,7 +64,7 @@ class TestTowerViewHost : Tower.ViewHost {
 
     val items = mutableListOf<Item>()
 
-    override fun <Topic : Any> addEditTextView(id: ViewId): Tower.View<TextInputSight<Topic>, TextInputEvent<Topic>> {
+    override fun <Topic : Any> addTextInputView(id: ViewId): Tower.View<TextInputSight<Topic>, TextInputEvent<Topic>> {
         val item = Item.TestEditText<Topic>(id).also(this::addItem)
         return object : Tower.View<TextInputSight<Topic>, TextInputEvent<Topic>> {
             override val events get() = item.events

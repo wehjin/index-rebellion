@@ -8,6 +8,7 @@ import android.util.AttributeSet
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import android.view.inputmethod.EditorInfo
 import android.widget.FrameLayout
 import com.rubyhuntersky.indexrebellion.R
 import com.rubyhuntersky.vx.android.toDip
@@ -15,6 +16,7 @@ import com.rubyhuntersky.vx.android.tower.ViewBackedTowerView
 import com.rubyhuntersky.vx.tower.towers.Icon
 import com.rubyhuntersky.vx.tower.towers.InputEvent
 import com.rubyhuntersky.vx.tower.towers.InputSight
+import com.rubyhuntersky.vx.tower.towers.InputType
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.subjects.BehaviorSubject
@@ -42,9 +44,23 @@ class BackingInputLayout
 
     private val eventPublish = PublishSubject.create<InputEvent>()
 
+    private var activeInputType: InputType? = null
+        set(value) {
+            if (field != value) {
+                field = value.also {
+                    editText.inputType = when (it) {
+                        InputType.SIGNED_NUMBER -> EditorInfo.TYPE_CLASS_NUMBER or EditorInfo.TYPE_NUMBER_FLAG_SIGNED
+                        InputType.WORD -> EditorInfo.TYPE_CLASS_TEXT or EditorInfo.TYPE_TEXT_FLAG_NO_SUGGESTIONS or EditorInfo.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD
+                        null -> EditorInfo.TYPE_CLASS_TEXT
+                    }
+                }
+            }
+        }
+
     fun render(content: InputSight) {
         Log.d(this.tag.toString(), "render $content")
         layout.hint = content.label
+        activeInputType = content.type
 
         renderEditTextHint(editText.hasFocus(), content)
         editText.setOnFocusChangeListener { _, hasFocus ->

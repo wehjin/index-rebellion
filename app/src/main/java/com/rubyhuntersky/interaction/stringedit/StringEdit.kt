@@ -24,4 +24,5 @@ data class StringEdit<T : Any>(
         get() = if (isValueFresh || isValueChanged) validValue else null
 
     fun setNovel(novel: Novel<T>?): StringEdit<T> = copy(novel = novel)
+    fun setAncient(ancient: Ancient<T>?): StringEdit<T> = copy(ancient = ancient)
 }

@@ -7,4 +7,5 @@ sealed class EditHoldingAction {
     object End : EditHoldingAction()
     data class Start(val holding: SpecificHolding?) : EditHoldingAction()
     data class SetSize(val change: Pair<String, IntRange>) : EditHoldingAction()
+    data class SetSymbol(val change: Pair<String, IntRange>) : EditHoldingAction()
 }

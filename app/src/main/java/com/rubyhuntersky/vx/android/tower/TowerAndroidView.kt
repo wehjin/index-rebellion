@@ -109,7 +109,7 @@ class TowerAndroidView<Sight : Any, Event : Any>(context: Context, tower: Tower<
 
             override fun setSight(sight: TextInputSight<Topic>) {
                 topic = sight.topic
-                core.setSight(InputSight(sight.text, sight.hint, sight.label, icon = null))
+                core.setSight(InputSight(sight.type, sight.text, sight.hint, sight.label, null))
             }
 
             override fun setHBound(hbound: HBound) {

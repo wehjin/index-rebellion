@@ -4,6 +4,7 @@ import com.rubyhuntersky.vx.common.ViewId
 import com.rubyhuntersky.vx.tower.Tower
 
 data class InputSight(
+    val type: InputType,
     val text: String,
     val originalText: String,
     val label: String,
@@ -16,6 +17,11 @@ sealed class Icon {
 
 sealed class InputEvent {
     data class TextChange(val text: String) : InputEvent()
+}
+
+enum class InputType {
+    SIGNED_NUMBER,
+    WORD
 }
 
 object InputTower :

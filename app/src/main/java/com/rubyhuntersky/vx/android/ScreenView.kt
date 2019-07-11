@@ -96,11 +96,8 @@ class ScreenView
         ViewBackedTowerView(
             frameLayout = this@ScreenView,
             id = id,
-            adapter = object :
-                ViewBackedTowerView.Adapter<BackingInputLayout, InputSight, InputEvent> {
-                override fun buildView(context: Context): BackingInputLayout {
-                    return BackingInputLayout(context, null)
-                }
+            adapter = object : ViewBackedTowerView.Adapter<BackingInputLayout, InputSight, InputEvent> {
+                override fun buildView(context: Context): BackingInputLayout = BackingInputLayout(context, null)
 
                 override fun renderView(view: BackingInputLayout, sight: InputSight) {
                     view.render(sight)
@@ -112,11 +109,8 @@ class ScreenView
         ViewBackedTowerView(
             frameLayout = this@ScreenView,
             id = id,
-            adapter = object :
-                ViewBackedTowerView.Adapter<BackingTextView, WrapTextSight, Nothing> {
-
-                override fun buildView(context: Context): BackingTextView =
-                    BackingTextView(context)
+            adapter = object : ViewBackedTowerView.Adapter<BackingTextView, WrapTextSight, Nothing> {
+                override fun buildView(context: Context): BackingTextView = BackingTextView(context)
 
                 override fun renderView(view: BackingTextView, sight: WrapTextSight) {
                     val resId = when (sight.style) {

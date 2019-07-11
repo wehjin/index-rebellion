@@ -14,6 +14,7 @@ import com.rubyhuntersky.vx.tower.additions.plusHMargin
 import com.rubyhuntersky.vx.tower.towers.EmptyTower
 import com.rubyhuntersky.vx.tower.towers.textinput.TextInputEvent
 import com.rubyhuntersky.vx.tower.towers.textinput.TextInputSight
+import com.rubyhuntersky.vx.tower.towers.textinput.TextInputTower
 import com.rubyhuntersky.vx.tower.towers.wraptext.WrapTextSight
 import com.rubyhuntersky.vx.tower.towers.wraptext.WrapTextTower
 
@@ -25,9 +26,10 @@ object Standard {
     val uniformPad = VPad.Uniform(marginSize)
     val centerClickPad = Margin.Uniform(Span.Relative(0.2f))
 
-    class TextInputTower<Topic : Any> : Tower<TextInputSight<Topic>, TextInputEvent<Topic>> by TextInputTower<Topic>()
-        .plusHMargin(uniformMargin)
-        .plusVPad(uniformPad)
+    class InsetTextInputTower<Topic : Any> :
+        Tower<TextInputSight<Topic>, TextInputEvent<Topic>> by TextInputTower<Topic>()
+            .plusHMargin(uniformMargin)
+            .plusVPad(uniformPad)
 
     class TitleTower : Tower<String, Nothing> by WrapTextTower()
         .mapSight({ WrapTextSight(it, TextStyle.Highlight5) })

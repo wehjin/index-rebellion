@@ -5,7 +5,6 @@ import android.content.Intent
 import android.os.Bundle
 import android.support.v4.app.FragmentActivity
 import android.support.v7.app.AppCompatActivity
-import android.util.Log
 import com.rubyhuntersky.indexrebellion.interactions.editholding.EditHoldingStory
 import com.rubyhuntersky.interaction.android.ActivityInteraction
 import com.rubyhuntersky.interaction.android.ProjectionSource
@@ -18,8 +17,10 @@ import com.rubyhuntersky.vx.tower.additions.augment.extendFloor
 import com.rubyhuntersky.vx.tower.additions.handleEvents
 import com.rubyhuntersky.vx.tower.additions.inCoop
 import com.rubyhuntersky.vx.tower.additions.mapSight
+import com.rubyhuntersky.vx.tower.towers.InputType
 import com.rubyhuntersky.vx.tower.towers.textinput.TextInputEvent
 import com.rubyhuntersky.vx.tower.towers.textinput.TextInputSight
+import java.math.BigDecimal
 import com.rubyhuntersky.indexrebellion.interactions.editholding.EditHoldingAction as Action
 import com.rubyhuntersky.indexrebellion.interactions.editholding.EditHoldingVision as Vision
 
@@ -29,21 +30,34 @@ class EditHoldingActivity : AppCompatActivity() {
     private lateinit var interaction: Interaction<Vision, Action>
     private val visionTower = Standard.BodyTower().mapSight(Vision::toString)
 
-
-    private val sizeInputTower = Standard.TextInputTower<String>()
+    private val symbolInputTower = Standard.InsetTextInputTower<Unit>()
         .mapSight { vision: Vision ->
-            (vision as? Vision.Editing)?.sizeEdit
-                ?.toTextInputSight(SIZE_TOPIC)
-                ?: TextInputSight(SIZE_TOPIC, "", error = "BAD: $vision")
+            vision.symbolEdit
+                ?.toTextInputSight(InputType.WORD, Unit, String::toString)
+                ?: TextInputSight(InputType.WORD, topic = Unit, text = "", error = "BAD: $vision")
         }
         .handleEvents { event ->
-            Log.d(TAG, "EVENT $event")
             (event as TextInputEvent.Changed)
-                .mapTopic(SIZE_TOPIC) { Action.SetSize(Pair(event.text, event.selection)) }
-                ?.let(interaction::sendAction)
+                .let { Action.SetSymbol(Pair(event.text, event.selection)) }
+                .let(interaction::sendAction)
         }
 
-    private val pageTower = visionTower.extendFloor(sizeInputTower)
+    private val sizeInputTower = Standard.InsetTextInputTower<Unit>()
+        .mapSight { vision: Vision ->
+            vision.sizeEdit
+                ?.toTextInputSight(InputType.SIGNED_NUMBER, Unit, BigDecimal::toString)
+                ?: TextInputSight(InputType.SIGNED_NUMBER, topic = Unit, text = "", error = "BAD: $vision")
+        }
+        .handleEvents { event ->
+            (event as TextInputEvent.Changed)
+                .let { Action.SetSize(Pair(event.text, event.selection)) }
+                .let(interaction::sendAction)
+        }
+
+    private val pageTower = visionTower
+        .extendFloor(symbolInputTower)
+        .extendFloor(sizeInputTower)
+
     private val coopContentView = CoopContentView(pageTower.inCoop())
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -81,6 +95,5 @@ class EditHoldingActivity : AppCompatActivity() {
         }
 
         private val TAG = EditHoldingActivity::class.java.simpleName
-        private const val SIZE_TOPIC = "size"
     }
 }
