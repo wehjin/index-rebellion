@@ -18,7 +18,7 @@ import com.rubyhuntersky.vx.android.putActivityInteractionSearchKey
 import com.rubyhuntersky.vx.android.toUnit
 import com.rubyhuntersky.vx.tower.additions.augment.extendFloor
 import com.rubyhuntersky.vx.tower.additions.fixSight
-import com.rubyhuntersky.vx.tower.additions.handleEvent
+import com.rubyhuntersky.vx.tower.additions.handleEvents
 import com.rubyhuntersky.vx.tower.additions.inCoop
 import com.rubyhuntersky.vx.tower.additions.mapSight
 import com.rubyhuntersky.vx.tower.additions.replicate.replicate
@@ -36,7 +36,7 @@ class ClassifyInstrumentActivity : AppCompatActivity() {
         .replicate()
         .fixSight(Plate.values().toList())
         .mapSight(Vision::toUnit)
-        .handleEvent {
+        .handleEvents {
             val plate = it.value.topic
             interaction.sendAction(Action.Write(plate))
         }

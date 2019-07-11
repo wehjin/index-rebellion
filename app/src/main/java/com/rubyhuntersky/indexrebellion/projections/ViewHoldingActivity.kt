@@ -14,7 +14,7 @@ import com.rubyhuntersky.interaction.core.Edge
 import com.rubyhuntersky.interaction.core.Interaction
 import com.rubyhuntersky.vx.android.coop.CoopContentView
 import com.rubyhuntersky.vx.tower.additions.augment.extendFloors
-import com.rubyhuntersky.vx.tower.additions.handleEvent
+import com.rubyhuntersky.vx.tower.additions.handleEvents
 import com.rubyhuntersky.vx.tower.additions.inCoop
 import com.rubyhuntersky.vx.tower.additions.mapSight
 import com.rubyhuntersky.vx.tower.additions.pad.plusVPad
@@ -39,7 +39,7 @@ class ViewHoldingActivity : AppCompatActivity() {
                 Standard.SubtitleTower().mapSight { viewing: Vision.Viewing -> viewing.plate.toLabel() },
                 ClickTower<Unit>()
                     .mapSight { _: Vision.Viewing -> ClickSight(Unit, "Reclassify") }
-                    .handleEvent { activityInteraction.sendAction(Action.Reclassify) }
+                    .handleEvents { activityInteraction.sendAction(Action.Reclassify) }
             )
             .plusVPad(Standard.uniformPad)
             .plusHMargin(Standard.uniformMargin)

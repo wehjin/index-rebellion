@@ -1,7 +1,7 @@
 package com.rubyhuntersky.vx.tower.towers
 
-import com.rubyhuntersky.vx.tower.Tower
 import com.rubyhuntersky.vx.common.ViewId
+import com.rubyhuntersky.vx.tower.Tower
 
 data class InputSight(
     val text: String,
@@ -20,5 +20,8 @@ sealed class InputEvent {
 
 object InputTower :
     Tower<InputSight, InputEvent> {
-    override fun enview(viewHost: Tower.ViewHost, id: ViewId): Tower.View<InputSight, InputEvent> = viewHost.addInputView(id)
+    override fun enview(
+        viewHost: Tower.ViewHost,
+        id: ViewId
+    ): Tower.View<InputSight, InputEvent> = viewHost.addInputView(id)
 }

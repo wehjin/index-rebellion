@@ -43,7 +43,7 @@ class DriftActivity : AppCompatActivity() {
     private val addHoldingTower = ClickTower<Unit>()
         .plusHMargin(Standard.centerClickPad).plusVPad(Standard.uniformPad)
         .mapSight(PageSight::toAddHoldingClick)
-        .handleEvent {
+        .handleEvents {
             activityInteraction.sendAction(Action.AddHolding)
         }
 
@@ -51,7 +51,7 @@ class DriftActivity : AppCompatActivity() {
     private val allHoldingsTower = holdingTower
         .replicate()
         .mapSight { page: PageSight -> page.holdings }
-        .handleEvent {
+        .handleEvents {
             val action = Action.ViewHolding(instrumentId = it.value.topic)
             activityInteraction.sendAction(action)
         }

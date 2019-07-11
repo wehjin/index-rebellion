@@ -22,6 +22,8 @@ import com.rubyhuntersky.vx.tower.towers.InputEvent
 import com.rubyhuntersky.vx.tower.towers.InputSight
 import com.rubyhuntersky.vx.tower.towers.click.ClickEvent
 import com.rubyhuntersky.vx.tower.towers.click.ClickSight
+import com.rubyhuntersky.vx.tower.towers.textinput.TextInputEvent
+import com.rubyhuntersky.vx.tower.towers.textinput.TextInputSight
 import com.rubyhuntersky.vx.tower.towers.wraptext.WrapTextSight
 import io.reactivex.Observable
 import io.reactivex.disposables.CompositeDisposable
@@ -86,26 +88,91 @@ class TowerAndroidView<Sight : Any, Event : Any>(context: Context, tower: Tower<
             .forEach(this::removeView)
     }
 
-    override fun addInputView(
-        id: ViewId
-    ): Tower.View<InputSight, InputEvent> {
-        return ViewBackedTowerView(
-            id,
+    override fun <Topic : Any> addTextInputView(id: ViewId): Tower.View<TextInputSight<Topic>, TextInputEvent<Topic>> {
+        return object : Tower.View<TextInputSight<Topic>, TextInputEvent<Topic>> {
+
+            lateinit var topic: Topic
+
+            private val core = ViewBackedTowerView(id,
+                frameLayout = this@TowerAndroidView,
+                adapter = object : ViewBackedTowerView.Adapter<BackingInputLayout, InputSight, InputEvent> {
+                    override fun buildView(context: Context): BackingInputLayout = BackingInputLayout(context)
+                    override fun renderView(view: BackingInputLayout, sight: InputSight) = view.render(sight)
+                }
+            )
+
+            override val events: Observable<TextInputEvent<Topic>>
+                get() = core.events.map {
+                    val (text) = it as InputEvent.TextChange
+                    TextInputEvent.Changed(topic, text, IntRange(text.length, text.length - 1))
+                }
+
+            override fun setSight(sight: TextInputSight<Topic>) {
+                topic = sight.topic
+                core.setSight(InputSight(sight.text, sight.hint, sight.label, icon = null))
+            }
+
+            override fun setHBound(hbound: HBound) {
+                core.setHBound(hbound)
+            }
+
+            override val latitudes: Observable<Latitude> get() = core.latitudes
+            override fun setAnchor(anchor: Anchor) {
+                core.setAnchor(anchor)
+            }
+        }
+    }
+
+    override fun addInputView(id: ViewId): Tower.View<InputSight, InputEvent> =
+        ViewBackedTowerView(id,
             frameLayout = this@TowerAndroidView,
             adapter = object : ViewBackedTowerView.Adapter<BackingInputLayout, InputSight, InputEvent> {
-                override fun buildView(context: Context) = BackingInputLayout(context, null)
+                override fun buildView(context: Context) = BackingInputLayout(context)
                 override fun renderView(view: BackingInputLayout, sight: InputSight) = view.render(sight)
             }
         )
-    }
+
+    override fun <Sight : Any, Topic : Any> addClickOverlayView(
+        id: ViewId,
+        tower: Tower<Sight, Nothing>,
+        sightToTopic: (Sight) -> Topic
+    ): Tower.View<Sight, ClickEvent<Topic>> =
+        ViewBackedTowerView(id,
+            frameLayout = this@TowerAndroidView,
+            adapter = object :
+                ViewBackedTowerView.Adapter<BackingClickableView<Sight, Topic>, Sight, ClickEvent<Topic>> {
+
+                override fun buildView(context: Context): BackingClickableView<Sight, Topic> =
+                    BackingClickableView<Sight, Topic>(context).also { it.enview(tower, id.extend(0), sightToTopic) }
+
+                override fun renderView(view: BackingClickableView<Sight, Topic>, sight: Sight) {
+                    view.setSight(sight)
+                }
+            }
+        )
+
+    override fun <Topic : Any> addClickView(id: ViewId): Tower.View<ClickSight<Topic>, ClickEvent<Topic>> =
+        ViewBackedTowerView(id,
+            frameLayout = this@TowerAndroidView,
+            adapter = object : ViewBackedTowerView.Adapter<BackingButton<Topic>, ClickSight<Topic>, ClickEvent<Topic>> {
+
+                override fun buildView(context: Context): BackingButton<Topic> =
+                    BackingButton(ContextThemeWrapper(context, android.R.style.Widget_Material_Button))
+
+                override fun renderView(view: BackingButton<Topic>, sight: ClickSight<Topic>) {
+                    view.text = sight.label
+                    view.topic = sight.topic
+                }
+            }
+        )
 
     override fun addWrapTextView(
         id: ViewId
-    ): Tower.View<WrapTextSight, Nothing> {
-        return ViewBackedTowerView(
-            id,
+    ): Tower.View<WrapTextSight, Nothing> =
+        ViewBackedTowerView(id,
             frameLayout = this@TowerAndroidView,
             adapter = object : ViewBackedTowerView.Adapter<BackingTextView, WrapTextSight, Nothing> {
+
                 override fun buildView(context: Context) = BackingTextView(context)
 
                 override fun renderView(view: BackingTextView, sight: WrapTextSight) {
@@ -127,47 +194,4 @@ class TowerAndroidView<Sight : Any, Event : Any>(context: Context, tower: Tower<
                     view.text = sight.text
                 }
             })
-    }
-
-    override fun <Topic : Any> addClickView(id: ViewId): Tower.View<ClickSight<Topic>, ClickEvent<Topic>> {
-        return ViewBackedTowerView(
-            id,
-            frameLayout = this@TowerAndroidView,
-            adapter = object :
-                ViewBackedTowerView.Adapter<BackingButton<Topic>, ClickSight<Topic>, ClickEvent<Topic>> {
-
-                override fun buildView(context: Context): BackingButton<Topic> {
-                    val themedContext = ContextThemeWrapper(context, android.R.style.Widget_Material_Button)
-                    return BackingButton(themedContext)
-                }
-
-                override fun renderView(view: BackingButton<Topic>, sight: ClickSight<Topic>) {
-                    view.text = sight.label
-                    view.topic = sight.topic
-                }
-            }
-        )
-    }
-
-    override fun <Sight : Any, Topic : Any> addClickOverlayView(
-        id: ViewId,
-        tower: Tower<Sight, Nothing>,
-        sightToTopic: (Sight) -> Topic
-    ): Tower.View<Sight, ClickEvent<Topic>> {
-        return ViewBackedTowerView(
-            id,
-            frameLayout = this@TowerAndroidView,
-            adapter = object :
-                ViewBackedTowerView.Adapter<BackingClickableView<Sight, Topic>, Sight, ClickEvent<Topic>> {
-
-                override fun buildView(context: Context): BackingClickableView<Sight, Topic> =
-                    BackingClickableView<Sight, Topic>(context)
-                        .also { it.enview(tower, id.extend(0), sightToTopic) }
-
-                override fun renderView(view: BackingClickableView<Sight, Topic>, sight: Sight) {
-                    view.setSight(sight)
-                }
-            }
-        )
-    }
 }

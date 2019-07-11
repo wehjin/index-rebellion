@@ -9,10 +9,9 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.widget.FrameLayout
-import android.widget.LinearLayout
 import com.rubyhuntersky.indexrebellion.R
-import com.rubyhuntersky.vx.android.tower.ViewBackedTowerView
 import com.rubyhuntersky.vx.android.toDip
+import com.rubyhuntersky.vx.android.tower.ViewBackedTowerView
 import com.rubyhuntersky.vx.tower.towers.Icon
 import com.rubyhuntersky.vx.tower.towers.InputEvent
 import com.rubyhuntersky.vx.tower.towers.InputSight
@@ -20,7 +19,7 @@ import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.subjects.BehaviorSubject
 import io.reactivex.subjects.PublishSubject
-import kotlinx.android.synthetic.main.view_input.view.*
+import kotlinx.android.synthetic.main.vxa_view_input.view.*
 
 class BackingInputLayout
 @JvmOverloads constructor(
@@ -33,11 +32,8 @@ class BackingInputLayout
     private var layout: TextInputLayout
 
     init {
-        val view = LayoutInflater.from(context).inflate(R.layout.view_input, this, false)
-        addView(
-            view,
-            ViewGroup.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT)
-        )
+        val view = LayoutInflater.from(context).inflate(R.layout.vxa_view_input, this, false)
+        addView(view, ViewGroup.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT))
         layout = view as TextInputLayout
     }
 

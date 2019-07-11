@@ -16,6 +16,8 @@ import com.rubyhuntersky.vx.tower.towers.InputEvent
 import com.rubyhuntersky.vx.tower.towers.InputSight
 import com.rubyhuntersky.vx.tower.towers.click.ClickEvent
 import com.rubyhuntersky.vx.tower.towers.click.ClickSight
+import com.rubyhuntersky.vx.tower.towers.textinput.TextInputEvent
+import com.rubyhuntersky.vx.tower.towers.textinput.TextInputSight
 import com.rubyhuntersky.vx.tower.towers.wraptext.WrapTextSight
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.rxkotlin.addTo
@@ -74,6 +76,22 @@ class ScreenView
         error("Not implemented, use TowerAndroidView")
     }
 
+    override fun <Topic : Any> addTextInputView(id: ViewId): Tower.View<TextInputSight<Topic>, TextInputEvent<Topic>> {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
+
+    override fun <Sight : Any, Topic : Any> addClickOverlayView(
+        id: ViewId,
+        tower: Tower<Sight, Nothing>,
+        sightToTopic: (Sight) -> Topic
+    ): Tower.View<Sight, ClickEvent<Topic>> {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
+
+    override fun <Topic : Any> addClickView(id: ViewId): Tower.View<ClickSight<Topic>, ClickEvent<Topic>> {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
+
     override fun addInputView(id: ViewId): Tower.View<InputSight, InputEvent> =
         ViewBackedTowerView(
             frameLayout = this@ScreenView,
@@ -111,16 +129,4 @@ class ScreenView
                     view.text = sight.text
                 }
             })
-
-    override fun <Topic : Any> addClickView(id: ViewId): Tower.View<ClickSight<Topic>, ClickEvent<Topic>> {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-    }
-
-    override fun <Sight : Any, Topic : Any> addClickOverlayView(
-        id: ViewId,
-        tower: Tower<Sight, Nothing>,
-        sightToTopic: (Sight) -> Topic
-    ): Tower.View<Sight, ClickEvent<Topic>> {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-    }
 }
