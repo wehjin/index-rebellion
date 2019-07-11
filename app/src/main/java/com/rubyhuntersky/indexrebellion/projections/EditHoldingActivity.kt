@@ -19,6 +19,7 @@ import com.rubyhuntersky.vx.tower.additions.inCoop
 import com.rubyhuntersky.vx.tower.additions.mapSight
 import com.rubyhuntersky.vx.tower.additions.pad.plusVPad
 import com.rubyhuntersky.vx.tower.additions.plusHMargin
+import com.rubyhuntersky.vx.tower.towers.textinput.TextInputEvent
 import com.rubyhuntersky.vx.tower.towers.textinput.TextInputSight
 import com.rubyhuntersky.vx.tower.towers.textinput.TextInputTower
 import com.rubyhuntersky.indexrebellion.interactions.editholding.EditHoldingAction as Action
@@ -33,23 +34,27 @@ class EditHoldingActivity : AppCompatActivity() {
     private val sizeInputTower = TextInputTower<String>()
         .plusHMargin(Standard.uniformMargin).plusVPad(Standard.uniformPad)
         .mapSight { vision: Vision ->
-            val topic = "size"
             when (vision) {
                 is Vision.Editing -> {
                     val sizeEdit = vision.sizeEdit
                     val text = sizeEdit.novel?.string ?: ""
                     TextInputSight(
-                        topic,
+                        SIZE_TOPIC,
                         text,
                         sizeEdit.novel?.selection ?: IntRange(text.length, text.length - 1),
                         sizeEdit.ancient?.validValue?.toString() ?: sizeEdit.seed?.validValue?.toString() ?: "",
                         sizeEdit.label
                     )
                 }
-                else -> TextInputSight(topic, "", error = "BAD: $vision")
+                else -> TextInputSight(SIZE_TOPIC, "", error = "BAD: $vision")
             }
         }
-        .handleEvents { Log.d(TAG, "EVENT $it") }
+        .handleEvents { event ->
+            Log.d(TAG, "EVENT $event")
+            event.mapTopic(SIZE_TOPIC) {
+                (event as? TextInputEvent.Changed)?.let { Action.SetSize(Pair(event.text, event.selection)) }
+            }?.let(interaction::sendAction)
+        }
 
     private val pageTower = visionTower.extendFloor(sizeInputTower)
     private val coopContentView = CoopContentView(pageTower.inCoop())
@@ -89,5 +94,6 @@ class EditHoldingActivity : AppCompatActivity() {
         }
 
         private val TAG = EditHoldingActivity::class.java.simpleName
+        private const val SIZE_TOPIC = "size"
     }
 }

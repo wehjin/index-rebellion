@@ -12,7 +12,7 @@ class StringEditTest {
     private val validAncient = Ancient(11)
     private val invalidAncient = Ancient(12)
     private val validNovel = Novel("21", Validity.Valid(21))
-    private val invalidNovel = Novel<Int>("22", Validity.Invalid("Busted"))
+    private val invalidNovel = Novel<Int>("22", Validity.Invalid("22", "Busted"))
 
     @Test
     fun labelProducesNovelValueWhenNovelIsValid() {

@@ -34,7 +34,7 @@ class TowerAndroidView<Sight : Any, Event : Any>(context: Context, tower: Tower<
     FrameLayout(context, null, 0, 0), Tower.ViewHost {
 
     init {
-        setBackgroundColor(Color.LTGRAY)
+        setBackgroundColor(Color.WHITE)
     }
 
     private val hboundUpdates = CompositeDisposable()
