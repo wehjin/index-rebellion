@@ -77,7 +77,7 @@ class CashEditingDialogFragment : InteractionBottomSheetDialogFragment<Vision, A
         val content = FundingEditor(
             title = "Update Funding",
             targetInput = InputSight(
-                type = InputType.SIGNED_NUMBER,
+                type = InputType.SIGNED_DECIMAL,
                 text = vision.edit,
                 originalText = (if (vision.oldCashAmount < CashAmount.ZERO) "-" else "") + vision.oldCashAmount.toStatString(),
                 label = getString(labelRes),

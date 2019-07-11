@@ -104,7 +104,7 @@ class TowerAndroidView<Sight : Any, Event : Any>(context: Context, tower: Tower<
             override val events: Observable<TextInputEvent<Topic>>
                 get() = core.events.map {
                     val (text) = it as InputEvent.TextChange
-                    TextInputEvent.Changed(topic, text, IntRange(text.length, text.length - 1))
+                    TextInputEvent.Changed(topic, text, text.length until text.length)
                 }
 
             override fun setSight(sight: TextInputSight<Topic>) {

@@ -49,7 +49,8 @@ class BackingInputLayout
             if (field != value) {
                 field = value.also {
                     editText.inputType = when (it) {
-                        InputType.SIGNED_NUMBER -> EditorInfo.TYPE_CLASS_NUMBER or EditorInfo.TYPE_NUMBER_FLAG_SIGNED
+                        InputType.SIGNED_DECIMAL -> EditorInfo.TYPE_CLASS_NUMBER or EditorInfo.TYPE_NUMBER_FLAG_SIGNED or EditorInfo.TYPE_NUMBER_FLAG_DECIMAL
+                        InputType.UNSIGNED_DECIMAL -> EditorInfo.TYPE_CLASS_NUMBER or EditorInfo.TYPE_NUMBER_FLAG_DECIMAL
                         InputType.WORD -> EditorInfo.TYPE_CLASS_TEXT or EditorInfo.TYPE_TEXT_FLAG_NO_SUGGESTIONS or EditorInfo.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD
                         null -> EditorInfo.TYPE_CLASS_TEXT
                     }

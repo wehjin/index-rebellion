@@ -1,5 +1,6 @@
 package com.rubyhuntersky.indexrebellion.interactions.editholding
 
+import com.rubyhuntersky.indexrebellion.data.cash.CashAmount
 import com.rubyhuntersky.indexrebellion.data.techtonic.vault.SpecificHolding
 import com.rubyhuntersky.interaction.core.Interaction
 import com.rubyhuntersky.interaction.core.InteractionCompanion
@@ -32,21 +33,26 @@ private fun revise(vision: Vision, action: Action): Revision<Vision, Action> = w
         println(addTag("IGNORED: ${action.ignore} VISION: $vision"))
         Revision(vision)
     }
-    vision is Vision.Idle && action is Action.Start -> Revision(Vision.Editing(action.holding.toHoldingEdit()))
+    vision is Vision.Idle && action is Action.Start -> {
+        val edit = action.holding.toHoldingEdit()
+        Revision(Vision.Editing(edit))
+    }
     vision is Vision.Editing && action is Action.SetSize -> {
         val size = action.change.first
-        val edit = vision.edit.setSizeNovel(
-            if (size.isBlank()) null
-            else Novel(size, sizeValidity(size), action.change.second)
-        )
+        val novel = size.toNovel(action.change.second, ::sizeValidity)
+        val edit = vision.edit.setSizeNovel(novel)
         Revision(Vision.Editing(edit))
     }
     vision is Vision.Editing && action is Action.SetSymbol -> {
         val symbol = action.change.first
-        val edit = vision.edit.setSymbolNovel(
-            if (symbol.isBlank()) null
-            else Novel(symbol, symbolValidity(symbol), action.change.second)
-        )
+        val novel = symbol.toNovel(action.change.second, ::symbolValidity)
+        val edit = vision.edit.setSymbolNovel(novel)
+        Revision(Vision.Editing(edit))
+    }
+    vision is Vision.Editing && action is Action.SetPrice -> {
+        val price = action.change.first
+        val novel = price.toNovel(action.change.second, ::priceValidity)
+        val edit = vision.edit.setPriceNovel(novel)
         Revision(Vision.Editing(edit))
     }
     else -> Revision<Vision, Action>(vision).also {
@@ -54,10 +60,24 @@ private fun revise(vision: Vision, action: Action): Revision<Vision, Action> = w
     }
 }
 
-fun symbolValidity(symbol: String): Validity<String> {
-    val trimmedSymbol = symbol.trim().isBlank()
-    return if (trimmedSymbol) Validity.Invalid(symbol.trim(), "No a symbol")
-    else Validity.Valid(symbol)
+private fun <T : Any> String.toNovel(selection: IntRange, toValidity: (String) -> Validity<T>): Novel<T>? =
+    if (isBlank()) null
+    else Novel(this, toValidity(this), selection)
+
+private fun priceValidity(price: String): Validity<CashAmount> {
+    val cashPrice = price.toBigDecimalOrNull()?.let(::CashAmount)
+    return when {
+        cashPrice != null && cashPrice > CashAmount.ZERO -> Validity.Valid(cashPrice)
+        else -> Validity.Invalid(price, "Must be positive")
+    }
+}
+
+private fun symbolValidity(symbol: String): Validity<String> {
+    val trimmedSymbol = symbol.trim()
+    return when {
+        trimmedSymbol.isBlank() -> Validity.Invalid(symbol, "No a symbol")
+        else -> Validity.Valid(trimmedSymbol)
+    }
 }
 
 private fun sizeValidity(string: String): Validity<BigDecimal> =

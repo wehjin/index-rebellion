@@ -1,7 +1,6 @@
 package com.rubyhuntersky.indexrebellion.interactions.editholding
 
 import com.rubyhuntersky.indexrebellion.data.cash.CashAmount
-import com.rubyhuntersky.interaction.stringedit.Ancient
 import com.rubyhuntersky.interaction.stringedit.Novel
 import com.rubyhuntersky.interaction.stringedit.Seed
 import com.rubyhuntersky.interaction.stringedit.StringEdit
@@ -13,15 +12,10 @@ data class HoldingEdit(
     val priceEdit: StringEdit<CashAmount> = StringEdit("Price")
 ) {
 
-    fun setSymbolAncient(symbol: String?): HoldingEdit =
-        copy(symbolEdit = symbolEdit.setAncient(symbol?.let(::Ancient)))
-
-    fun setSymbolNovel(novel: Novel<String>?): HoldingEdit =
-        copy(symbolEdit = symbolEdit.setNovel(novel))
-
-    fun setSizeAncient(size: BigDecimal?): HoldingEdit =
-        copy(sizeEdit = sizeEdit.setAncient(size?.let(::Ancient)))
-
-    fun setSizeNovel(novel: Novel<BigDecimal>?): HoldingEdit =
-        copy(sizeEdit = sizeEdit.setNovel(novel))
+    fun setSymbolAncient(symbol: String?): HoldingEdit = copy(symbolEdit = symbolEdit.setAncient(symbol))
+    fun setSymbolNovel(novel: Novel<String>?): HoldingEdit = copy(symbolEdit = symbolEdit.setNovel(novel))
+    fun setSizeAncient(size: BigDecimal?): HoldingEdit = copy(sizeEdit = sizeEdit.setAncient(size))
+    fun setSizeNovel(novel: Novel<BigDecimal>?): HoldingEdit = copy(sizeEdit = sizeEdit.setNovel(novel))
+    fun setPriceAncient(price: CashAmount?): HoldingEdit = copy(priceEdit = priceEdit.setAncient(price))
+    fun setPriceNovel(novel: Novel<CashAmount>?): HoldingEdit = copy(priceEdit = priceEdit.setNovel(novel))
 }

@@ -20,7 +20,8 @@ sealed class InputEvent {
 }
 
 enum class InputType {
-    SIGNED_NUMBER,
+    SIGNED_DECIMAL,
+    UNSIGNED_DECIMAL,
     WORD
 }
 

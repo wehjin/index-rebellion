@@ -5,6 +5,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.support.v4.app.FragmentActivity
 import android.support.v7.app.AppCompatActivity
+import com.rubyhuntersky.indexrebellion.data.cash.CashAmount
 import com.rubyhuntersky.indexrebellion.interactions.editholding.EditHoldingStory
 import com.rubyhuntersky.interaction.android.ActivityInteraction
 import com.rubyhuntersky.interaction.android.ProjectionSource
@@ -30,7 +31,7 @@ class EditHoldingActivity : AppCompatActivity() {
     private lateinit var interaction: Interaction<Vision, Action>
     private val visionTower = Standard.BodyTower().mapSight(Vision::toString)
 
-    private val symbolInputTower = Standard.InsetTextInputTower<Unit>()
+    private val symbolInputTower = Standard.Inset<Unit>()
         .mapSight { vision: Vision ->
             vision.symbolEdit
                 ?.toTextInputSight(InputType.WORD, Unit, String::toString)
@@ -42,11 +43,11 @@ class EditHoldingActivity : AppCompatActivity() {
                 .let(interaction::sendAction)
         }
 
-    private val sizeInputTower = Standard.InsetTextInputTower<Unit>()
+    private val sizeInputTower = Standard.Inset<Unit>()
         .mapSight { vision: Vision ->
             vision.sizeEdit
-                ?.toTextInputSight(InputType.SIGNED_NUMBER, Unit, BigDecimal::toString)
-                ?: TextInputSight(InputType.SIGNED_NUMBER, topic = Unit, text = "", error = "BAD: $vision")
+                ?.toTextInputSight(InputType.UNSIGNED_DECIMAL, Unit, BigDecimal::toString)
+                ?: TextInputSight(InputType.UNSIGNED_DECIMAL, topic = Unit, text = "", error = "BAD: $vision")
         }
         .handleEvents { event ->
             (event as TextInputEvent.Changed)
@@ -54,9 +55,21 @@ class EditHoldingActivity : AppCompatActivity() {
                 .let(interaction::sendAction)
         }
 
+    private val priceInputTower = Standard.Inset<Unit>()
+        .mapSight { vision: Vision ->
+            vision.priceEdit?.toTextInputSight(InputType.UNSIGNED_DECIMAL, Unit, CashAmount::toDollarStat)
+                ?: TextInputSight(InputType.UNSIGNED_DECIMAL, Unit, "", error = "BAD: $vision")
+        }
+        .handleEvents { event ->
+            (event as TextInputEvent.Changed)
+                .let { Action.SetPrice(Pair(event.text, event.selection)) }
+                .let(interaction::sendAction)
+        }
+
     private val pageTower = visionTower
         .extendFloor(symbolInputTower)
         .extendFloor(sizeInputTower)
+        .extendFloor(priceInputTower)
 
     private val coopContentView = CoopContentView(pageTower.inCoop())
 

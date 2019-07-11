@@ -26,10 +26,9 @@ object Standard {
     val uniformPad = VPad.Uniform(marginSize)
     val centerClickPad = Margin.Uniform(Span.Relative(0.2f))
 
-    class InsetTextInputTower<Topic : Any> :
+    class Inset<Topic : Any> :
         Tower<TextInputSight<Topic>, TextInputEvent<Topic>> by TextInputTower<Topic>()
             .plusHMargin(uniformMargin)
-            .plusVPad(uniformPad)
 
     class TitleTower : Tower<String, Nothing> by WrapTextTower()
         .mapSight({ WrapTextSight(it, TextStyle.Highlight5) })
