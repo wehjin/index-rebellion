@@ -38,7 +38,7 @@ class ViewHoldingActivity : AppCompatActivity() {
                 },
                 Standard.SubtitleTower().mapSight { viewing: Vision.Viewing -> viewing.plate.toLabel() },
                 ClickTower<Unit>()
-                    .mapSight { _: Vision.Viewing -> ClickSight("Reclassify", Unit) }
+                    .mapSight { _: Vision.Viewing -> ClickSight(Unit, "Reclassify") }
                     .handleEvent { activityInteraction.sendAction(Action.Reclassify) }
             )
             .plusVPad(Standard.uniformPad)

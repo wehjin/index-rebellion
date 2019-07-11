@@ -1,6 +1,6 @@
 package com.rubyhuntersky.vx.tower.towers.click
 
-data class ClickSight<ClickContext : Any>(
-    val label: String,
-    val clickContext: ClickContext
+data class ClickSight<Topic : Any>(
+    val topic: Topic,
+    val label: String
 )

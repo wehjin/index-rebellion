@@ -12,28 +12,28 @@ import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.subjects.BehaviorSubject
 import io.reactivex.subjects.PublishSubject
 
-class BackingButton<ClickContext : Any>
+class BackingButton<Topic : Any>
 @JvmOverloads constructor(
     context: Context,
     attrs: AttributeSet? = null,
     defStyleAttr: Int = 0
 ) :
     MaterialButton(context, attrs, defStyleAttr),
-    ViewBackedTowerView.BackingView<ClickEvent<ClickContext>>,
-    ViewBackedCoopView.BackingView<ClickEvent<ClickContext>> {
+    ViewBackedTowerView.BackingView<ClickEvent<Topic>>,
+    ViewBackedCoopView.BackingView<ClickEvent<Topic>> {
 
-    private val eventPublish: PublishSubject<ClickEvent<ClickContext>> = PublishSubject.create()
-    var clickContext: ClickContext? = null
+    private val eventPublish: PublishSubject<ClickEvent<Topic>> = PublishSubject.create()
+    var topic: Topic? = null
 
     init {
         setOnClickListener {
-            clickContext?.let {
+            topic?.let {
                 eventPublish.onNext(ClickEvent.Single(it))
             }
         }
     }
 
-    override val events: Observable<ClickEvent<ClickContext>> = eventPublish
+    override val events: Observable<ClickEvent<Topic>> = eventPublish
 
     override val heights: Observable<Int>
         get() = heightBehavior.distinctUntilChanged().observeOn(AndroidSchedulers.mainThread())

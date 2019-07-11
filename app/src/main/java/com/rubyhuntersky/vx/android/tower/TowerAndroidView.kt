@@ -122,21 +122,21 @@ class TowerAndroidView<Sight : Any, Event : Any>(context: Context, tower: Tower<
             })
     }
 
-    override fun <ClickContext : Any> addClickView(id: ViewId): Tower.View<ClickSight<ClickContext>, ClickEvent<ClickContext>> {
+    override fun <Topic : Any> addClickView(id: ViewId): Tower.View<ClickSight<Topic>, ClickEvent<Topic>> {
         return ViewBackedTowerView(
             id,
             frameLayout = this@TowerAndroidView,
             adapter = object :
-                ViewBackedTowerView.Adapter<BackingButton<ClickContext>, ClickSight<ClickContext>, ClickEvent<ClickContext>> {
+                ViewBackedTowerView.Adapter<BackingButton<Topic>, ClickSight<Topic>, ClickEvent<Topic>> {
 
-                override fun buildView(context: Context): BackingButton<ClickContext> {
+                override fun buildView(context: Context): BackingButton<Topic> {
                     val themedContext = ContextThemeWrapper(context, android.R.style.Widget_Material_Button)
                     return BackingButton(themedContext)
                 }
 
-                override fun renderView(view: BackingButton<ClickContext>, sight: ClickSight<ClickContext>) {
+                override fun renderView(view: BackingButton<Topic>, sight: ClickSight<Topic>) {
                     view.text = sight.label
-                    view.clickContext = sight.clickContext
+                    view.topic = sight.topic
                 }
             }
         )

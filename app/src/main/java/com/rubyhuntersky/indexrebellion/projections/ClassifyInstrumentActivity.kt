@@ -22,7 +22,7 @@ import com.rubyhuntersky.vx.tower.additions.handleEvent
 import com.rubyhuntersky.vx.tower.additions.inCoop
 import com.rubyhuntersky.vx.tower.additions.mapSight
 import com.rubyhuntersky.vx.tower.additions.replicate.replicate
-import com.rubyhuntersky.vx.tower.towers.click.plusClicks
+import com.rubyhuntersky.vx.tower.additions.clicks.plusClicks
 
 class ClassifyInstrumentActivity : AppCompatActivity() {
 
@@ -37,7 +37,7 @@ class ClassifyInstrumentActivity : AppCompatActivity() {
         .fixSight(Plate.values().toList())
         .mapSight(Vision::toUnit)
         .handleEvent {
-            val plate = it.value.context
+            val plate = it.value.topic
             interaction.sendAction(Action.Write(plate))
         }
 

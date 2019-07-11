@@ -25,7 +25,7 @@ import com.rubyhuntersky.vx.tower.additions.augment.extendFloor
 import com.rubyhuntersky.vx.tower.additions.pad.plusVPad
 import com.rubyhuntersky.vx.tower.additions.replicate.replicate
 import com.rubyhuntersky.vx.tower.towers.click.ClickTower
-import com.rubyhuntersky.vx.tower.towers.click.plusClicks
+import com.rubyhuntersky.vx.tower.additions.clicks.plusClicks
 import kotlin.math.absoluteValue
 
 class DriftActivity : AppCompatActivity() {
@@ -52,7 +52,7 @@ class DriftActivity : AppCompatActivity() {
         .replicate()
         .mapSight { page: PageSight -> page.holdings }
         .handleEvent {
-            val action = Action.ViewHolding(instrumentId = it.value.context)
+            val action = Action.ViewHolding(instrumentId = it.value.topic)
             activityInteraction.sendAction(action)
         }
         .extendFloor(addHoldingTower)
