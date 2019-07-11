@@ -37,7 +37,7 @@ data class HoldingEdit(
             val drift = drift
             val symbolValue = symbolEdit.writableValue
             val sizeValue = sizeEdit.writableValue
-            val priceValue = priceEdit.writableValue
+            val priceValue = priceEdit.validValue
             return if (drift != null && symbolValue != null && sizeValue != null && priceValue != null) {
                 val instrumentId = symbolValue.toInstrumentId()
                 val now = Date()
