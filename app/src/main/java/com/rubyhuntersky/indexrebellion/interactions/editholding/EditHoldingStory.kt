@@ -39,7 +39,10 @@ private fun revise(vision: Vision, action: Action): Revision<Vision, Action> = w
     }
     vision is Vision.Editing && action is Action.SetSize -> {
         val sizeString = action.change.first
-        val sizeEdit = vision.sizeEdit.setNovel(Novel(sizeString, sizeValidity(sizeString), action.change.second))
+        val novel =
+            if (sizeString.isBlank()) null
+            else Novel(sizeString, sizeValidity(sizeString), action.change.second)
+        val sizeEdit = vision.sizeEdit.setNovel(novel)
         Revision(Vision.Editing(sizeEdit))
     }
     else -> Revision<Vision, Action>(vision).also {
