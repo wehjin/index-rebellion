@@ -14,9 +14,9 @@ class ViewPlanStoryTest {
     fun story() {
         val edge = Edge().also { it.lamp.add(ReadDriftsDjinn(BehaviorBook(DEFAULT_DRIFT))) }
         val story = ViewPlanStory().also { edge.addInteraction(it) }
-        story.sendAction(Action.Start)
+        story.sendAction(ViewPlanAction.Start)
         story.visions.test().assertValue {
-            val plan = (it as Vision.Viewing).plan
+            val plan = (it as ViewPlanVision.Viewing).plan
             val divisionIds = plan.divisions.map(Division::divisionId).toSet()
             DivisionId.values().toSet() == divisionIds
         }

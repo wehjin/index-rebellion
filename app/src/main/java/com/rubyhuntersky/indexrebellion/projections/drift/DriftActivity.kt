@@ -15,28 +15,23 @@ import com.rubyhuntersky.indexrebellion.projections.drift.towers.HoldingTower
 import com.rubyhuntersky.indexrebellion.toLabel
 import com.rubyhuntersky.interaction.android.ActivityInteraction
 import com.rubyhuntersky.interaction.core.Edge
+import com.rubyhuntersky.interaction.core.Interaction
 import com.rubyhuntersky.vx.android.coop.CoopContentView
+import com.rubyhuntersky.vx.android.toUnit
 import com.rubyhuntersky.vx.coop.Coop
 import com.rubyhuntersky.vx.coop.additions.mapSight
 import com.rubyhuntersky.vx.toPercent
+import com.rubyhuntersky.vx.tower.additions.*
 import com.rubyhuntersky.vx.tower.additions.augment.extendCeiling
 import com.rubyhuntersky.vx.tower.additions.augment.extendFloor
 import com.rubyhuntersky.vx.tower.additions.clicks.plusClicks
-import com.rubyhuntersky.vx.tower.additions.handleEvents
-import com.rubyhuntersky.vx.tower.additions.inCoop
-import com.rubyhuntersky.vx.tower.additions.logEvents
-import com.rubyhuntersky.vx.tower.additions.mapSight
 import com.rubyhuntersky.vx.tower.additions.replicate.replicate
+import com.rubyhuntersky.vx.tower.towers.click.ClickSight
 import kotlin.math.absoluteValue
 
 class DriftActivity : AppCompatActivity() {
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        coopContentView.setInActivity(this@DriftActivity)
-        activityInteraction = ActivityInteraction(ViewDriftStory.groupId, this, this::renderVision)
-        lifecycle.addObserver(activityInteraction)
-    }
+    private lateinit var interaction: Interaction<Vision, Action>
 
     private val holdingTower = HoldingTower
         .plusClicks(HoldingSight::instrumentId)
@@ -76,9 +71,19 @@ class DriftActivity : AppCompatActivity() {
         }
         .logEvents("HoldingsContentTower")
 
+    private val planButtonTower = Standard.CenteredTextButton<Unit>()
+        .fixSight(ClickSight(Unit, "\u2202 Plan"))
+        .mapSight(Drift::toUnit)
+        .handleEvents { interaction.sendAction(Action.ViewPlan) }
+
+    private val allAdjustmentsTower = adjustmentTower
+        .replicate()
+        .neverEvent<Nothing>()
+        .mapSight { drift: Drift -> drift.plateAdjustments.toList() }
+
     private val pageTower = Standard.SectionTower(
         Pair("Holdings", balanceHoldingsTower),
-        Pair("Adjustments", adjustmentsContentTower)
+        Pair("Adjustments", allAdjustmentsTower.extendFloor(planButtonTower))
     )
 
     private val pageCoop: Coop<Vision.Viewing, Nothing> = pageTower.inCoop().mapSight(Vision.Viewing::drift)
@@ -87,11 +92,21 @@ class DriftActivity : AppCompatActivity() {
 
     private lateinit var activityInteraction: ActivityInteraction<Vision, Action>
 
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        startActivityInteraction()
+        coopContentView.setInActivity(this@DriftActivity)
+    }
+
+    private fun startActivityInteraction() {
+        val activityInteraction = ActivityInteraction(ViewDriftStory.groupId, this, this::renderVision)
+        lifecycle.addObserver(activityInteraction)
+        interaction = activityInteraction
+    }
+
     @Suppress("UNUSED_PARAMETER")
     private fun renderVision(vision: Vision, sendAction: (Action) -> Unit, edge: Edge) {
-        when (vision) {
-            is Vision.Viewing -> coopContentView.setSight(vision)
-        }
+        if (vision is Vision.Viewing) coopContentView.setSight(vision)
     }
 
     companion object {
@@ -122,9 +137,6 @@ class DriftActivity : AppCompatActivity() {
 
         private fun PlateAdjustment.toName(): String = "${plate.toLabel()} ${realValue.toDollarStat()}"
 
-        private val adjustmentsContentTower = adjustmentTower
-            .replicate()
-            .neverEvent<Nothing>()
-            .mapSight { drift: Drift -> drift.plateAdjustments.toList() }
+
     }
 }

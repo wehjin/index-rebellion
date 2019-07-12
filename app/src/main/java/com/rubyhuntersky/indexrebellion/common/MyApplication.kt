@@ -28,6 +28,7 @@ import com.rubyhuntersky.indexrebellion.presenters.updateshares.UpdateSharesDial
 import com.rubyhuntersky.indexrebellion.projections.ClassifyInstrumentActivity
 import com.rubyhuntersky.indexrebellion.projections.EditHoldingActivity
 import com.rubyhuntersky.indexrebellion.projections.ViewHoldingActivity
+import com.rubyhuntersky.indexrebellion.projections.ViewPlanActivity
 import com.rubyhuntersky.indexrebellion.spirits.readdrift.ReadDriftsDjinn
 import com.rubyhuntersky.indexrebellion.spirits.showtoast.ShowToastGenie
 import com.rubyhuntersky.indexrebellion.spirits.writedrift.WriteDriftGenie
@@ -115,7 +116,8 @@ class MyApplication : Application() {
             CorrectionDetailsDialogFragment,
             UpdateSharesDialogFragment,
             ClassifyInstrumentActivity,
-            EditHoldingActivity
+            EditHoldingActivity,
+            ViewPlanActivity
         )
     }
 

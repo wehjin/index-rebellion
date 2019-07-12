@@ -2,12 +2,14 @@ package com.rubyhuntersky.indexrebellion.interactions.viewdrift
 
 import com.rubyhuntersky.indexrebellion.data.techtonic.Drift
 import com.rubyhuntersky.indexrebellion.data.techtonic.instrument.InstrumentId
+import com.rubyhuntersky.indexrebellion.interactions.editholding.EditHoldingAction
 import com.rubyhuntersky.indexrebellion.interactions.editholding.EditHoldingStory
 import com.rubyhuntersky.indexrebellion.interactions.viewholding.ViewHoldingStory
+import com.rubyhuntersky.indexrebellion.interactions.viewplan.ViewPlanAction
+import com.rubyhuntersky.indexrebellion.interactions.viewplan.ViewPlanStory
 import com.rubyhuntersky.indexrebellion.spirits.readdrift.ReadDrifts
 import com.rubyhuntersky.interaction.core.*
 import com.rubyhuntersky.vx.android.logChanges
-import com.rubyhuntersky.indexrebellion.interactions.editholding.EditHoldingAction as EditHoldingAction
 import com.rubyhuntersky.indexrebellion.interactions.viewholding.Action as ViewHoldingAction
 
 class ViewDriftStory : Interaction<Vision, Action> by Story(::start, ::isEnding, ::revise, groupId) {
@@ -31,6 +33,7 @@ sealed class Action {
     data class ViewHolding(val instrumentId: InstrumentId) : Action()
     data class Ignore(val ignore: Any?) : Action()
     object AddHolding : Action()
+    object ViewPlan : Action()
 }
 
 private fun revise(vision: Vision, action: Action, edge: Edge): Revision<Vision, Action> = when {
@@ -63,10 +66,17 @@ private fun revise(vision: Vision, action: Action, edge: Edge): Revision<Vision,
         )
         Revision(vision, editHolding)
     }
-    action is Action.Ignore -> Revision(vision)
-    else -> Revision<Vision, Action>(vision).also {
-        System.err.println(addTag(vision, action))
+    vision is Vision.Viewing && action is Action.ViewPlan -> {
+        val viewPlan = edge.wish(
+            "view-plan",
+            interaction = ViewPlanStory(),
+            startAction = ViewPlanAction.Start,
+            endVisionToAction = Action::Ignore
+        )
+        Revision(vision, viewPlan)
     }
+    action is Action.Ignore -> Revision(vision)
+    else -> Revision<Vision, Action>(vision).also { System.err.println(addTag(vision, action)) }
 }
 
 private fun addTag(vision: Vision, action: Action): String {
