@@ -1,5 +1,6 @@
 package com.rubyhuntersky.indexrebellion.data.techtonic.plan
 
+import com.rubyhuntersky.indexrebellion.data.techtonic.toDivisionElementId
 import kotlinx.serialization.Serializable
 import kotlin.math.max
 
@@ -7,7 +8,7 @@ import kotlin.math.max
 data class PortfolioPlan(
     val commodityWeight: Weight,
     val securityWeight: Weight
-) {
+) : Division {
     init {
         check(component1() >= Weight.ZERO)
         check(component2() >= Weight.ZERO)
@@ -18,4 +19,19 @@ data class PortfolioPlan(
 
     val commodityPortion: Double by lazy { component1().toPortion(aggregateWeight) }
     val securityPortion: Double by lazy { max(0.0, 1.0 - commodityPortion) }
+
+    override val divisionId
+        get() = DivisionId.Portfolio
+
+    override val divisionElements
+        get() = listOf(
+            DivisionElement(
+                id = DivisionId.Commodities.toDivisionElementId(),
+                weight = commodityWeight
+            ),
+            DivisionElement(
+                id = DivisionId.Securities.toDivisionElementId(),
+                weight = securityWeight
+            )
+        )
 }

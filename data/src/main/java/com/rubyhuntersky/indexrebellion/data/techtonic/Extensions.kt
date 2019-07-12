@@ -1,6 +1,9 @@
 package com.rubyhuntersky.indexrebellion.data.techtonic
 
+import com.rubyhuntersky.indexrebellion.data.techtonic.plan.DivisionId
+import com.rubyhuntersky.indexrebellion.data.techtonic.plan.DivisionElementId
 import com.rubyhuntersky.indexrebellion.data.techtonic.plan.Weight
+import com.rubyhuntersky.indexrebellion.data.techtonic.plating.Plate
 import java.math.BigDecimal
 import java.math.RoundingMode
 import java.util.*
@@ -13,5 +16,8 @@ fun BigDecimal.toPortion(aggregate: BigDecimal): Double {
     check(aggregate >= this)
     return kotlin.math.min(1.0, divide(aggregate, 20, RoundingMode.HALF_UP).toDouble())
 }
+
+fun Plate.toDivisionElementId(): DivisionElementId = DivisionElementId.ForPlate(this)
+fun DivisionId.toDivisionElementId(): DivisionElementId = DivisionElementId.ForDivision(this)
 
 

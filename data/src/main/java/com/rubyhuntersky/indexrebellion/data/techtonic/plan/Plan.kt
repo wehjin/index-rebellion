@@ -10,17 +10,27 @@ data class Plan(
     val securityPlan: SecurityPlan,
     val equityPlan: EquityPlan
 ) {
-    private val equityPortion: Double by lazy {
-        portfolioPlan.securityPortion * securityPlan.equityPortion
-    }
+    private val commodityPortion = portfolioPlan.commodityPortion
+    private val fiatPortion = commodityPortion * commodityPlan.fiatPortion
+    private val coinPortion = commodityPortion * commodityPlan.blockChainPortion
+    private val securityPortion = portfolioPlan.securityPortion
+    private val debtPortion = securityPortion * securityPlan.debtPortion
+    private val equityPortion = securityPortion * securityPlan.equityPortion
+    private val globalPortion = equityPortion * equityPlan.globalPortion
+    private val zonalPortion = equityPortion * equityPlan.zonalPortion
+    private val localPortion = equityPortion * equityPlan.localPortion
+
+    val divisions
+        get() = listOf(portfolioPlan, commodityPlan, securityPlan, equityPlan)
 
     fun portion(plate: Plate): Double = when (plate) {
-        Plate.Fiat -> portfolioPlan.commodityPortion * commodityPlan.fiatPortion
-        Plate.BlockChain -> portfolioPlan.commodityPortion * commodityPlan.blockChainPortion
-        Plate.Debt -> portfolioPlan.securityPortion * securityPlan.debtPortion
-        Plate.GlobalEquity -> equityPortion * equityPlan.globalPortion
-        Plate.ZonalEquity -> equityPortion * equityPlan.zonalPortion
-        Plate.LocalEquity -> equityPortion * equityPlan.localPortion
+        Plate.Fiat -> fiatPortion
+        Plate.BlockChain -> coinPortion
+        Plate.Debt -> debtPortion
+        Plate.GlobalEquity -> globalPortion
+        Plate.ZonalEquity -> zonalPortion
+        Plate.LocalEquity -> localPortion
         Plate.Unknown -> 0.0
     }
 }
+

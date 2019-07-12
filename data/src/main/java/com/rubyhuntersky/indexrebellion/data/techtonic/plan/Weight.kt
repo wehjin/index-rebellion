@@ -10,6 +10,7 @@ data class Weight(
     @Serializable(with = BigDecimalSerializer::class)
     val value: BigDecimal
 ) {
+
     operator fun plus(weight: Weight): Weight = Weight(value.add(weight.value))
     operator fun compareTo(weight: Weight): Int = value.compareTo(weight.value)
     fun toPortion(aggregate: Weight): Double = value.toPortion(aggregate.value)
