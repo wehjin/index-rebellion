@@ -15,12 +15,18 @@ import com.rubyhuntersky.interaction.skeleton.Vision
 import com.rubyhuntersky.vx.android.coop.CoopContentView
 import com.rubyhuntersky.vx.android.putActivityInteractionSearchKey
 import com.rubyhuntersky.vx.tower.additions.inCoop
+import com.rubyhuntersky.vx.tower.additions.mapSight
 
 class SkeletonCoopInteractionActivity : AppCompatActivity() {
 
     private lateinit var interaction: Interaction<Vision, Action>
 
-    private val coopContentView = CoopContentView(Standard.BodyTower().inCoop())
+    private val visionTower = Standard.BodyTower()
+        .mapSight(Vision::toString)
+
+    private val tower = visionTower
+
+    private val coopContentView = CoopContentView(tower.inCoop())
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -35,7 +41,7 @@ class SkeletonCoopInteractionActivity : AppCompatActivity() {
     }
 
     private fun renderVision(vision: Vision, sendAction: (Action) -> Unit, edge: Edge) {
-        coopContentView.setSight(vision.toString())
+        coopContentView.setSight(vision)
     }
 
     override fun onBackPressed() {

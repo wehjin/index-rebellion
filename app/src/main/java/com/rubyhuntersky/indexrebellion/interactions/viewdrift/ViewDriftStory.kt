@@ -76,7 +76,9 @@ private fun revise(vision: Vision, action: Action, edge: Edge): Revision<Vision,
         Revision(vision, viewPlan)
     }
     action is Action.Ignore -> Revision(vision)
-    else -> Revision<Vision, Action>(vision).also { System.err.println(addTag(vision, action)) }
+    else -> Revision<Vision, Action>(vision).also {
+        System.err.println(addTag(vision, action))
+    }
 }
 
 private fun addTag(vision: Vision, action: Action): String {

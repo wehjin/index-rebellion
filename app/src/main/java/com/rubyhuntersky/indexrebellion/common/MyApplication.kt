@@ -85,7 +85,6 @@ class MyApplication : Application() {
             }
 
         ViewHoldingStory()
-            .logChanges(ViewHoldingStory.groupId)
             .also {
                 edge.addInteraction(it)
                 it.sendAction(ViewholdingAction.Init(InstrumentId("TSLA", InstrumentType.StockExchange)))

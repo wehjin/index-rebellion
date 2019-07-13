@@ -6,7 +6,6 @@ import android.view.Gravity
 import android.view.View
 import android.widget.FrameLayout
 import com.rubyhuntersky.indexrebellion.R
-import com.rubyhuntersky.vx.android.backingviews.BackingScrollView
 import com.rubyhuntersky.vx.android.backingviews.BackingTextView
 import com.rubyhuntersky.vx.android.toDip
 import com.rubyhuntersky.vx.common.TextStyle

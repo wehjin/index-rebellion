@@ -39,7 +39,7 @@ class DriftActivity : AppCompatActivity() {
     private val addHoldingTower = Standard.CenteredTextButton<Unit>()
         .mapSight(PageSight::toAddHoldingClick)
         .handleEvents {
-            activityInteraction.sendAction(Action.AddHolding)
+            interaction.sendAction(Action.AddHolding)
         }
 
 
@@ -47,8 +47,7 @@ class DriftActivity : AppCompatActivity() {
         .replicate()
         .mapSight { page: PageSight -> page.holdings }
         .handleEvents {
-            val action = Action.ViewHolding(instrumentId = it.value.topic)
-            activityInteraction.sendAction(action)
+            interaction.sendAction(Action.ViewHolding(instrumentId = it.value.topic))
         }
         .extendFloor(addHoldingTower)
 
@@ -89,8 +88,6 @@ class DriftActivity : AppCompatActivity() {
     private val pageCoop: Coop<Vision.Viewing, Nothing> = pageTower.inCoop().mapSight(Vision.Viewing::drift)
 
     private val coopContentView = CoopContentView(pageCoop)
-
-    private lateinit var activityInteraction: ActivityInteraction<Vision, Action>
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

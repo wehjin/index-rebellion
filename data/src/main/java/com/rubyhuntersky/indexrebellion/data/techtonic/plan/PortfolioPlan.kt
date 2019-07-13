@@ -26,7 +26,7 @@ data class PortfolioPlan(
     override val divisionElements
         get() = listOf(
             DivisionElement(
-                id = DivisionId.Commodities.toDivisionElementId(),
+                id = DivisionId.Cash.toDivisionElementId(),
                 weight = commodityWeight
             ),
             DivisionElement(

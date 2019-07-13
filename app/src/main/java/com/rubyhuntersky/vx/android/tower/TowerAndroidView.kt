@@ -39,10 +39,9 @@ class TowerAndroidView<Sight : Any, Event : Any>(context: Context, tower: Tower<
 
     private val hboundUpdates = CompositeDisposable()
     private val hboundBehavior: BehaviorSubject<HBound> = BehaviorSubject.create()
-    private val activeTowerView: Tower.View<Sight, Event> = tower.enview(this, id)
-        .also {
-            restartHBoundUpdates(it, isAttachedToWindow)
-        }
+    private val activeTowerView: Tower.View<Sight, Event> = tower.enview(this, id).also {
+        restartHBoundUpdates(it, isAttachedToWindow)
+    }
 
     val events: Observable<Event>
         get() = activeTowerView.events

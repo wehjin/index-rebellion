@@ -1,5 +1,6 @@
 package com.rubyhuntersky.indexrebellion.projections
 
+import com.rubyhuntersky.vx.android.toUnit
 import com.rubyhuntersky.vx.common.TextStyle
 import com.rubyhuntersky.vx.common.margin.Margin
 import com.rubyhuntersky.vx.common.orbit.Orbit
@@ -37,24 +38,33 @@ object Standard {
     by TextInputTower<Topic>()
         .plusHMargin(uniformMargin)
 
-    class TitleTower : Tower<String, Nothing>
+    class TitleTower(orbit: Orbit = Orbit.HeadLit) : Tower<String, Nothing>
     by WrapTextTower()
-        .mapSight({ WrapTextSight(it, TextStyle.Highlight5) })
+        .mapSight({
+            WrapTextSight(it, TextStyle.Highlight5, orbit)
+        })
 
-    class SubtitleTower : Tower<String, Nothing>
+    class SubtitleTower(orbit: Orbit = Orbit.HeadLit) : Tower<String, Nothing>
     by WrapTextTower()
-        .mapSight({ WrapTextSight(it, TextStyle.Subtitle1) })
+        .mapSight({
+            WrapTextSight(it, TextStyle.Subtitle1, orbit)
+        })
 
-    class LabelTower<Sight : Any, Event : Any>(label: String) : Tower<Sight, Event>
+    class ItemAttributeTower(orbit: Orbit = Orbit.HeadLit) : Tower<ClosedRange<String>, Nothing>
+    by BodyTower(pad = false, orbit = orbit).mapSight(ClosedRange<String>::start)
+        .extendFloor(
+            SubtitleTower(orbit).mapSight(ClosedRange<String>::endInclusive)
+        )
+
+    class LabelTower(label: String) : Tower<Unit, Nothing>
     by WrapTextTower()
         .plusHMargin(uniformMargin)
-        .neverEvent<Event>()
         .mapSight({ WrapTextSight(label, TextStyle.Highlight5, Orbit.Center) })
 
-    class BodyTower(pad: Boolean = true) : Tower<String, Nothing>
+    class BodyTower(pad: Boolean = true, orbit: Orbit = Orbit.HeadLit) : Tower<String, Nothing>
     by WrapTextTower()
         .let({ if (pad) it.plusHMargin(uniformMargin).plusVPad(uniformPad) else it })
-        .mapSight({ WrapTextSight(it, TextStyle.Body1, Orbit.HeadLit) })
+        .mapSight({ WrapTextSight(it, TextStyle.Body1, orbit) })
 
     class SectionTower<Sight : Any, Event : Any>(
         vararg sections: Pair<String, Tower<Sight, Event>>
@@ -62,7 +72,8 @@ object Standard {
     by sections.fold(
         initial = EmptyTower<Sight, Event>() as Tower<Sight, Event>,
         operation = { tower, step ->
-            val label = LabelTower<Sight, Event>(step.first)
+            val label = LabelTower(step.first).neverEvent<Event>()
+                .mapSight<Unit, Event, Sight> { it.toUnit() }
             val body = step.second
             val section = body.extendCeiling(label)
             tower.extendFloor(section)

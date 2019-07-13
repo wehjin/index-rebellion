@@ -22,7 +22,7 @@ data class CommodityPlan(
     val blockChainPortion: Double by lazy { max(0.0, 1.0 - fiatPortion) }
 
     override val divisionId: DivisionId
-        get() = DivisionId.Commodities
+        get() = DivisionId.Cash
 
     override val divisionElements
         get() = listOf(
