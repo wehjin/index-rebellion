@@ -6,13 +6,13 @@ import com.rubyhuntersky.stockcatalog.StockMarket
 import io.reactivex.Single
 import io.reactivex.schedulers.Schedulers
 
-data class RefreshStocks(val symbols: List<String>) :
-    GenieParams2<StockMarket.Result, RefreshStocks> {
+data class FetchStockSamples(val symbols: List<String>) :
+    GenieParams2<StockMarket.Result, FetchStockSamples> {
 
-    object GENIE : Genie<RefreshStocks, StockMarket.Result> {
-        override val paramsClass: Class<RefreshStocks> = RefreshStocks::class.java
+    object GENIE : Genie<FetchStockSamples, StockMarket.Result> {
+        override val paramsClass: Class<FetchStockSamples> = FetchStockSamples::class.java
 
-        override fun toSingle(params: RefreshStocks): Single<StockMarket.Result> {
+        override fun toSingle(params: FetchStockSamples): Single<StockMarket.Result> {
             return StockMarket
                 .fetchSamples(params.symbols)
                 .subscribeOn(Schedulers.io())

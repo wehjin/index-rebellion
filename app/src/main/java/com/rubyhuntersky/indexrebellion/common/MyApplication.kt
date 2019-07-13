@@ -30,8 +30,8 @@ import com.rubyhuntersky.indexrebellion.projections.EditHoldingActivity
 import com.rubyhuntersky.indexrebellion.projections.ViewHoldingActivity
 import com.rubyhuntersky.indexrebellion.projections.ViewPlanActivity
 import com.rubyhuntersky.indexrebellion.spirits.djinns.readdrift.ReadDriftsDjinn
-import com.rubyhuntersky.indexrebellion.spirits.genies.showtoast.ShowToastGenie
-import com.rubyhuntersky.indexrebellion.spirits.genies.writedrift.WriteDriftGenie
+import com.rubyhuntersky.indexrebellion.spirits.genies.showtoast.ShowToast
+import com.rubyhuntersky.indexrebellion.spirits.genies.writedrift.WriteDrift
 import com.rubyhuntersky.indexrebellion.spirits.genies.writeinstrumentplate.WriteInstrumentPlatingGenie
 import com.rubyhuntersky.interaction.android.AndroidEdge
 import com.rubyhuntersky.interaction.core.BehaviorBook
@@ -66,14 +66,14 @@ class MyApplication : Application() {
 
         val edge = AndroidEdge
         with(edge.lamp) {
-            add(ShowToastGenie(this@MyApplication))
+            add(ShowToast.GENIE(this@MyApplication))
             enableCorrectionDetails(this)
             enableRefreshHoldings(this)
             enableRobinhoodLogin(this)
             MainStory.addSpiritsToLamp(this)
             add(ReadDriftsDjinn(driftBook))
             add(WriteInstrumentPlatingGenie(driftBook))
-            add(WriteDriftGenie(driftBook))
+            add(WriteDrift.GENIE(driftBook))
         }
 
         ViewDriftStory()
@@ -129,25 +129,25 @@ class MyApplication : Application() {
         private val SQ_ID = InstrumentId("SQ", InstrumentType.StockExchange)
         private val FAR_PAST = Date(0)
         private val DRIFT = DEFAULT_DRIFT
-            .replaceSample(
+            .replace(
                 InstrumentSample(
                     TSLA_ID, "Tesla, Inc.", CashAmount(42), CashAmount(420000000),
                     FAR_PAST
                 )
             )
-            .replaceSample(
+            .replace(
                 InstrumentSample(
                     SQ_ID, "Square, Inc.", CashAmount(64), CashAmount(64000000),
                     FAR_PAST
                 )
             )
-            .replaceHolding(
+            .replace(
                 SpecificHolding(
                     TSLA_ID, Custodian.Robinhood, MAIN_ACCOUNT, BigDecimal.valueOf(10),
                     FAR_PAST
                 )
             )
-            .replaceHolding(
+            .replace(
                 SpecificHolding(
                     SQ_ID, Custodian.Etrade, MAIN_ACCOUNT, BigDecimal.valueOf(100),
                     FAR_PAST

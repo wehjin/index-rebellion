@@ -11,3 +11,4 @@ fun Plate.toLabel(): String = when (this) {
     Plate.ZonalEquity -> "Zonal Stocks"
     Plate.LocalEquity -> "Local Stocks"
 }
+

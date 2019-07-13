@@ -18,17 +18,19 @@ data class Market(
                 instrumentSamples.associateBy { it.instrumentId }
             }
 
+    val instrumentIds: Set<InstrumentId>
+        get() = instrumentSamples.map(InstrumentSample::instrumentId).toSet()
+
     fun contains(instrumentId: InstrumentId): Boolean = ids.contains(instrumentId)
     fun findSample(instrumentId: InstrumentId): InstrumentSample? = byId[instrumentId]
     fun findSharePrice(instrumentId: InstrumentId): CashAmount? = findSample(instrumentId)?.sharePrice
 
-    fun replaceSample(sample: InstrumentSample): Market {
-        return copy(
-            instrumentSamples = instrumentSamples.toMutableSet()
-                .also { samples ->
-                    samples.removeAll { it.instrumentId == sample.instrumentId }
-                    samples.add(sample)
-                }
-        )
-    }
+    fun replaceSample(sample: InstrumentSample): Market =
+        copy(instrumentSamples = instrumentSamples.toMutableSet().also { mutable ->
+            mutable.removeAll { it.instrumentId == sample.instrumentId }
+            mutable.add(sample)
+        })
+
+    fun replaceSamples(samples: List<InstrumentSample>): Market =
+        samples.fold(this, { partial, next -> partial.replaceSample(next) })
 }

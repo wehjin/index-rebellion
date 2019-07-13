@@ -61,11 +61,10 @@ data class Drift(
 
     fun findSample(instrumentId: InstrumentId): InstrumentSample? = market.findSample(instrumentId)
 
-    fun replaceSample(sample: InstrumentSample): Drift {
-        return copy(market = market.replaceSample(sample))
-    }
+    fun replace(sample: InstrumentSample): Drift = copy(market = market.replaceSample(sample))
+    fun replace(samples: List<InstrumentSample>): Drift = copy(market = market.replaceSamples(samples))
 
-    fun replaceHolding(holding: SpecificHolding): Drift {
+    fun replace(holding: SpecificHolding): Drift {
         require(market.contains(holding.instrumentId))
         return copy(vault = vault.replaceHolding(holding))
     }

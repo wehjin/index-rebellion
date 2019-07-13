@@ -15,4 +15,9 @@ sealed class Span {
     object None : Span() {
         override fun realize(length: Int): Int = 0
     }
+
+    companion object {
+        val HALF = Relative(0.500f)
+        val THIRD = Relative(0.333f)
+    }
 }

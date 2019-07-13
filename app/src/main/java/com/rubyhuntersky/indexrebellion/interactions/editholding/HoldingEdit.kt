@@ -46,8 +46,8 @@ data class HoldingEdit(
                 else {
                     val sample = instrumentId.toSample(drift)?.setPrice(priceValue, now)
                         ?: InstrumentSample(instrumentId, instrumentId.symbol, priceValue, priceValue, now)
-                    val novelDrift = drift.replaceSample(sample)
-                    Pair(novelDrift.replaceHolding(novel), novel)
+                    val novelDrift = drift.replace(sample)
+                    Pair(novelDrift.replace(novel), novel)
                 }
             } else null
         }

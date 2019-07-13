@@ -45,7 +45,7 @@ class ViewHoldingStoryTest {
         BigDecimal(10),
         today
     )
-    private val drift = DEFAULT_DRIFT.replaceSample(instrumentSample).replaceHolding(holding)
+    private val drift = DEFAULT_DRIFT.replace(instrumentSample).replace(holding)
 
     private val readDriftDjinn = ReadDriftsDjinn(BehaviorBook(drift))
 

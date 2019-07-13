@@ -1,5 +1,6 @@
 package com.rubyhuntersky.indexrebellion.projections.drift.towers
 
+import com.rubyhuntersky.indexrebellion.data.cash.CashAmount
 import com.rubyhuntersky.indexrebellion.projections.Standard
 import com.rubyhuntersky.indexrebellion.projections.drift.HoldingSight
 import com.rubyhuntersky.vx.common.margin.Margin
@@ -17,12 +18,12 @@ by TitleSubtitleTower
         TitleSubtitleSight(holding.name, holding.custodians.joinToString(", "))
     })
     .shareEnd(
-        Span.Relative(0.5f),
+        Span.THIRD,
         DetailSubdetailTower
             .mapSight { holding: HoldingSight ->
                 DetailSubdetailSight(
                     "${holding.count.toEngineeringString()} ${holding.symbol}",
-                    "$${holding.value.toEngineeringString()}"
+                    CashAmount(holding.value).toDollarStat()
                 )
             }
     )

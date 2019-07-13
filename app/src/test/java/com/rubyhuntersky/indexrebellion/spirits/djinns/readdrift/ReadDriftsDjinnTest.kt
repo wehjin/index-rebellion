@@ -19,16 +19,16 @@ class ReadDriftsDjinnTest {
     private val tsla = InstrumentId("TSLA", InstrumentType.StockExchange)
     private val drift0 = DEFAULT_DRIFT
     private val drift1 = drift0
-        .replaceSample(
+        .replace(
             InstrumentSample(
                 tsla, "Tesla, Inc.", CashAmount(420.0), CashAmount(50000000000), now
             )
         )
-        .replaceHolding(
+        .replace(
             SpecificHolding(tsla, Custodian.Wallet, MAIN_ACCOUNT, BigDecimal.valueOf(3), now)
         )
     private val drift2 = drift1
-        .replaceHolding(
+        .replace(
             SpecificHolding(tsla, Custodian.Robinhood, MAIN_ACCOUNT, BigDecimal.valueOf(5), now)
         )
 

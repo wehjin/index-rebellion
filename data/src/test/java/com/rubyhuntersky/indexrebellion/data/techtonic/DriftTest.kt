@@ -66,11 +66,11 @@ class DriftTest {
     @Test
     fun generalHoldings() {
         val drift = DEFAULT_DRIFT
-            .replaceSample(teslaSample)
-            .replaceHolding(teslaHolding1)
-            .replaceHolding(teslaHolding2)
-            .replaceSample(bitcoinSample)
-            .replaceHolding(bitcoinHolding)
+            .replace(teslaSample)
+            .replace(teslaHolding1)
+            .replace(teslaHolding2)
+            .replace(bitcoinSample)
+            .replace(bitcoinHolding)
         val expectedHoldings = setOf(
             GeneralHolding(
                 DOLLAR_INSTRUMENT,

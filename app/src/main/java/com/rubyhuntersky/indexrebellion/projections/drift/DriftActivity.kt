@@ -19,6 +19,7 @@ import com.rubyhuntersky.interaction.core.Interaction
 import com.rubyhuntersky.vx.android.coop.CoopContentView
 import com.rubyhuntersky.vx.android.toUnit
 import com.rubyhuntersky.vx.coop.Coop
+import com.rubyhuntersky.vx.coop.additions.Span
 import com.rubyhuntersky.vx.coop.additions.mapSight
 import com.rubyhuntersky.vx.toPercent
 import com.rubyhuntersky.vx.tower.additions.*
@@ -37,11 +38,14 @@ class DriftActivity : AppCompatActivity() {
         .plusClicks(HoldingSight::instrumentId)
 
     private val addHoldingTower = Standard.CenteredTextButton<Unit>()
-        .mapSight(PageSight::toAddHoldingClick)
-        .handleEvents {
-            interaction.sendAction(Action.AddHolding)
-        }
+        .mapSight { sight: PageSight -> ClickSight(sight.toUnit(), "+ Holding") }
+        .handleEvents { interaction.sendAction(Action.AddHolding) }
 
+    private val refreshPricesTower = Standard.CenteredTextButton<Unit>()
+        .mapSight { sight: PageSight -> ClickSight(sight.toUnit(), "▶ Prices") }
+        .handleEvents { interaction.sendAction(Action.RefreshPrices) }
+
+    private val holdingsControlTower = addHoldingTower.shareEnd(Span.HALF, refreshPricesTower)
 
     private val allHoldingsTower = holdingTower
         .replicate()
@@ -49,7 +53,7 @@ class DriftActivity : AppCompatActivity() {
         .handleEvents {
             interaction.sendAction(Action.ViewHolding(instrumentId = it.value.topic))
         }
-        .extendFloor(addHoldingTower)
+        .extendFloor(holdingsControlTower)
 
     private val balanceHoldingsTower = allHoldingsTower
         .extendCeiling(BalanceTower)

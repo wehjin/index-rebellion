@@ -28,6 +28,6 @@ object Fixture {
     )
 
     val DRIFT = DEFAULT_DRIFT
-        .replaceSample(TSLA_SAMPLE)
-        .replaceHolding(SpecificHolding(TSLA_INSTRUMENT, Custodian.Etrade, MAIN_ACCOUNT, BigDecimal.TEN, TODAY))
+        .replace(TSLA_SAMPLE)
+        .replace(SpecificHolding(TSLA_INSTRUMENT, Custodian.Etrade, MAIN_ACCOUNT, BigDecimal.TEN, TODAY))
 }
