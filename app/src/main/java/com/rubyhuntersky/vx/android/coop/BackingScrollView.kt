@@ -3,6 +3,8 @@ package com.rubyhuntersky.vx.android.coop
 import android.content.Context
 import android.util.AttributeSet
 import android.widget.ScrollView
+import com.rubyhuntersky.indexrebellion.projections.Standard
+import com.rubyhuntersky.vx.android.toPixels
 import com.rubyhuntersky.vx.android.tower.TowerAndroidView
 import com.rubyhuntersky.vx.common.ViewId
 import com.rubyhuntersky.vx.tower.Tower
@@ -23,6 +25,7 @@ class BackingScrollView<Sight : Any, Event : Any>
     fun enview(tower: Tower<Sight, Event>, id: ViewId) {
         removeAllViews()
         towerView = TowerAndroidView(context, tower, id)
+            .apply { setPadding(0, 0, 0, toPixels(Standard.marginSize).toInt()) }
         addView(towerView, LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT)
     }
 
