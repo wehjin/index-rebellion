@@ -16,13 +16,11 @@ import com.rubyhuntersky.interaction.core.Interaction
 import com.rubyhuntersky.vx.android.coop.CoopContentView
 import com.rubyhuntersky.vx.android.putActivityInteractionSearchKey
 import com.rubyhuntersky.vx.android.toUnit
+import com.rubyhuntersky.vx.tower.additions.*
 import com.rubyhuntersky.vx.tower.additions.augment.extendFloor
-import com.rubyhuntersky.vx.tower.additions.fixSight
-import com.rubyhuntersky.vx.tower.additions.handleEvents
-import com.rubyhuntersky.vx.tower.additions.inCoop
-import com.rubyhuntersky.vx.tower.additions.mapSight
-import com.rubyhuntersky.vx.tower.additions.replicate.replicate
 import com.rubyhuntersky.vx.tower.additions.clicks.plusClicks
+import com.rubyhuntersky.vx.tower.additions.pad.plusVPad
+import com.rubyhuntersky.vx.tower.additions.replicate.replicate
 
 class ClassifyInstrumentActivity : AppCompatActivity() {
 
@@ -41,7 +39,9 @@ class ClassifyInstrumentActivity : AppCompatActivity() {
             interaction.sendAction(Action.Write(plate))
         }
 
-    private val instrumentTower = Standard.BodyTower().mapSight(Vision::toString)
+    private val instrumentTower = Standard.TitleTower()
+        .plusHMargin(Standard.uniformMargin).plusVPad(Standard.uniformPad)
+        .mapSight { vision: Vision -> (vision as? Vision.Viewing)?.let(Vision.Viewing::instrumentId)?.symbol ?: "" }
     private val bodyTower = instrumentTower.extendFloor(allPlatesTower)
     private val coopContentView = CoopContentView(bodyTower.inCoop())
 

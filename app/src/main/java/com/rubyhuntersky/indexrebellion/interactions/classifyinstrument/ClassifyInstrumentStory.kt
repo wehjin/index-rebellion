@@ -61,7 +61,7 @@ private fun revise(vision: Vision, action: Action): Revision<Vision, Action> = w
                 onResult = Action::Ignore,
                 onAction = { error("WritePlate: $it") }
             )
-        Revision(vision, writePlate)
+        Revision(Vision.Ended, writePlate)
     }
     action is Action.End -> {
         Revision(Vision.Ended, Wish.none(READ_DRIFTS))

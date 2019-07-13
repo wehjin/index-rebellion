@@ -4,6 +4,8 @@ import android.content.Context
 import android.util.AttributeSet
 import android.util.TypedValue
 import android.widget.FrameLayout
+import com.rubyhuntersky.indexrebellion.projections.Standard
+import com.rubyhuntersky.vx.android.toPixels
 import com.rubyhuntersky.vx.android.tower.TowerAndroidView
 import com.rubyhuntersky.vx.android.tower.ViewBackedTowerView
 import com.rubyhuntersky.vx.common.Latitude
@@ -27,6 +29,9 @@ class BackingClickableView<Sight : Any, Topic : Any>
         removeAllViews()
         towerView = TowerAndroidView(context, tower, id)
             .apply {
+                // Bottom margin is ignored by the frame. Padding is a workaround.
+                setPadding(0, 0, 0, toPixels(Standard.marginSize).toInt())
+
                 isClickable = true
                 setBackgroundResource(
                     TypedValue()
