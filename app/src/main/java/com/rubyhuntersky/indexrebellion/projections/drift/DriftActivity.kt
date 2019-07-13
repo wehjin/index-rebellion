@@ -6,9 +6,9 @@ import com.rubyhuntersky.indexrebellion.data.techtonic.Drift
 import com.rubyhuntersky.indexrebellion.data.techtonic.plating.PlateAdjustment
 import com.rubyhuntersky.indexrebellion.data.techtonic.vault.Custodian
 import com.rubyhuntersky.indexrebellion.data.toStatString
-import com.rubyhuntersky.indexrebellion.interactions.viewdrift.Action
 import com.rubyhuntersky.indexrebellion.interactions.viewdrift.ViewDriftStory
-import com.rubyhuntersky.indexrebellion.interactions.viewdrift.Vision
+import com.rubyhuntersky.indexrebellion.interactions.viewdrift.ViewDriftStory.Action
+import com.rubyhuntersky.indexrebellion.interactions.viewdrift.ViewDriftStory.Vision
 import com.rubyhuntersky.indexrebellion.projections.Standard
 import com.rubyhuntersky.indexrebellion.projections.drift.towers.BalanceTower
 import com.rubyhuntersky.indexrebellion.projections.drift.towers.HoldingTower

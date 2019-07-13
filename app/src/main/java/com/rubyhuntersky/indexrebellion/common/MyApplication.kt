@@ -48,7 +48,6 @@ import java.math.BigDecimal
 import java.util.*
 import com.rubyhuntersky.indexrebellion.interactions.cashediting.Action as CashEditingAction
 import com.rubyhuntersky.indexrebellion.interactions.main.Action as MainAction
-import com.rubyhuntersky.indexrebellion.interactions.viewdrift.Action as ViewdriftAction
 import com.rubyhuntersky.indexrebellion.interactions.viewholding.Action as ViewholdingAction
 
 class MyApplication : Application() {
@@ -81,7 +80,7 @@ class MyApplication : Application() {
             .logChanges(ViewDriftStory.groupId)
             .also {
                 edge.addInteraction(it)
-                it.sendAction((ViewdriftAction.Init))
+                it.sendAction((ViewDriftStory.Action.Init))
             }
 
         ViewHoldingStory()

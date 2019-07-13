@@ -6,6 +6,7 @@ import com.rubyhuntersky.indexrebellion.spirits.djinns.readdrift.ReadDriftsDjinn
 import com.rubyhuntersky.indexrebellion.spirits.genies.writeinstrumentplate.WriteInstrumentPlatingGenie
 import com.rubyhuntersky.interaction.core.BehaviorBook
 import com.rubyhuntersky.interaction.core.Edge
+import org.junit.Assert.assertEquals
 import org.junit.Test
 
 class ClassifyInstrumentStoryTest {
@@ -24,9 +25,7 @@ class ClassifyInstrumentStoryTest {
         story.visions.test().assertValue(Vision.Viewing(Fixture.TSLA_INSTRUMENT, Plate.Unknown))
 
         story.sendAction(Action.Write(Plate.GlobalEquity))
-        story.visions.test().assertValue(Vision.Viewing(Fixture.TSLA_INSTRUMENT, Plate.GlobalEquity))
-
-        story.sendAction(Action.End)
+        assertEquals(Plate.GlobalEquity, book.value.plating.findPlate(Fixture.TSLA_INSTRUMENT))
         story.visions.test().assertValues(Vision.Ended)
     }
 }

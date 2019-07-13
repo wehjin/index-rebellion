@@ -9,9 +9,9 @@ import com.rubyhuntersky.interaction.android.ActivityInteraction
 import com.rubyhuntersky.interaction.android.ProjectionSource
 import com.rubyhuntersky.interaction.core.Edge
 import com.rubyhuntersky.interaction.core.Interaction
-import com.rubyhuntersky.interaction.skeleton.Action
 import com.rubyhuntersky.interaction.skeleton.SkeletonStory
-import com.rubyhuntersky.interaction.skeleton.Vision
+import com.rubyhuntersky.interaction.skeleton.SkeletonStory.Action
+import com.rubyhuntersky.interaction.skeleton.SkeletonStory.Vision
 import com.rubyhuntersky.vx.android.coop.CoopContentView
 import com.rubyhuntersky.vx.android.putActivityInteractionSearchKey
 import com.rubyhuntersky.vx.tower.additions.inCoop
