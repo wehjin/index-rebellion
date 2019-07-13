@@ -1,4 +1,4 @@
-package com.rubyhuntersky.indexrebellion.spirits.writeinstrumentplate
+package com.rubyhuntersky.indexrebellion.spirits.genies.writeinstrumentplate
 
 import com.rubyhuntersky.indexrebellion.data.techtonic.Drift
 import com.rubyhuntersky.indexrebellion.data.techtonic.plating.InstrumentPlating

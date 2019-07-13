@@ -1,4 +1,4 @@
-package com.rubyhuntersky.indexrebellion.spirits.readdrift
+package com.rubyhuntersky.indexrebellion.spirits.djinns.readdrift
 
 import com.rubyhuntersky.indexrebellion.data.cash.CashAmount
 import com.rubyhuntersky.indexrebellion.data.techtonic.DEFAULT_DRIFT

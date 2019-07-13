@@ -1,4 +1,4 @@
-package com.rubyhuntersky.indexrebellion.spirits.common
+package com.rubyhuntersky.indexrebellion.spirits.djinns.common
 
 import com.rubyhuntersky.interaction.core.Book
 import com.rubyhuntersky.interaction.core.wish.Djinn

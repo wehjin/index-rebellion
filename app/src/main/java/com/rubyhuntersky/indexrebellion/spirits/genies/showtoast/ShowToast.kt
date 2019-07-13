@@ -1,4 +1,4 @@
-package com.rubyhuntersky.indexrebellion.spirits.showtoast
+package com.rubyhuntersky.indexrebellion.spirits.genies.showtoast
 
 data class ShowToast(
     val text: String,

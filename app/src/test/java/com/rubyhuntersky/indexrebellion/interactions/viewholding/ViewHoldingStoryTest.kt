@@ -9,8 +9,8 @@ import com.rubyhuntersky.indexrebellion.data.techtonic.market.InstrumentSample
 import com.rubyhuntersky.indexrebellion.data.techtonic.plating.Plate
 import com.rubyhuntersky.indexrebellion.data.techtonic.vault.Custodian
 import com.rubyhuntersky.indexrebellion.data.techtonic.vault.SpecificHolding
-import com.rubyhuntersky.indexrebellion.spirits.readdrift.ReadDriftsDjinn
-import com.rubyhuntersky.indexrebellion.spirits.showtoast.ShowToast
+import com.rubyhuntersky.indexrebellion.spirits.djinns.readdrift.ReadDriftsDjinn
+import com.rubyhuntersky.indexrebellion.spirits.genies.showtoast.ShowToast
 import com.rubyhuntersky.interaction.core.BehaviorBook
 import com.rubyhuntersky.interaction.core.Edge
 import com.rubyhuntersky.interaction.core.wish.Genie

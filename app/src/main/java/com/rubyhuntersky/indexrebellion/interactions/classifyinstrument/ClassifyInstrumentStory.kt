@@ -3,8 +3,8 @@ package com.rubyhuntersky.indexrebellion.interactions.classifyinstrument
 import com.rubyhuntersky.indexrebellion.data.techtonic.instrument.InstrumentId
 import com.rubyhuntersky.indexrebellion.data.techtonic.plating.InstrumentPlating
 import com.rubyhuntersky.indexrebellion.data.techtonic.plating.Plate
-import com.rubyhuntersky.indexrebellion.spirits.readdrift.ReadDrifts
-import com.rubyhuntersky.indexrebellion.spirits.writeinstrumentplate.WriteInstrumentPlating
+import com.rubyhuntersky.indexrebellion.spirits.djinns.readdrift.ReadDrifts
+import com.rubyhuntersky.indexrebellion.spirits.genies.writeinstrumentplate.WriteInstrumentPlating
 import com.rubyhuntersky.interaction.core.Interaction
 import com.rubyhuntersky.interaction.core.InteractionCompanion
 import com.rubyhuntersky.interaction.core.Revision

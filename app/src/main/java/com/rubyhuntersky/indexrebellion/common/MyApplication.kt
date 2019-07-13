@@ -29,10 +29,10 @@ import com.rubyhuntersky.indexrebellion.projections.ClassifyInstrumentActivity
 import com.rubyhuntersky.indexrebellion.projections.EditHoldingActivity
 import com.rubyhuntersky.indexrebellion.projections.ViewHoldingActivity
 import com.rubyhuntersky.indexrebellion.projections.ViewPlanActivity
-import com.rubyhuntersky.indexrebellion.spirits.readdrift.ReadDriftsDjinn
-import com.rubyhuntersky.indexrebellion.spirits.showtoast.ShowToastGenie
-import com.rubyhuntersky.indexrebellion.spirits.writedrift.WriteDriftGenie
-import com.rubyhuntersky.indexrebellion.spirits.writeinstrumentplate.WriteInstrumentPlatingGenie
+import com.rubyhuntersky.indexrebellion.spirits.djinns.readdrift.ReadDriftsDjinn
+import com.rubyhuntersky.indexrebellion.spirits.genies.showtoast.ShowToastGenie
+import com.rubyhuntersky.indexrebellion.spirits.genies.writedrift.WriteDriftGenie
+import com.rubyhuntersky.indexrebellion.spirits.genies.writeinstrumentplate.WriteInstrumentPlatingGenie
 import com.rubyhuntersky.interaction.android.AndroidEdge
 import com.rubyhuntersky.interaction.core.BehaviorBook
 import com.rubyhuntersky.interaction.core.Book

@@ -10,6 +10,7 @@ import com.rubyhuntersky.indexrebellion.interactions.books.CorrectionDetailsBook
 import com.rubyhuntersky.indexrebellion.interactions.books.RebellionBook
 import com.rubyhuntersky.indexrebellion.interactions.correctiondetails.CorrectionDetailsStory
 import com.rubyhuntersky.indexrebellion.interactions.main.MainStory.Companion.groupId
+import com.rubyhuntersky.indexrebellion.spirits.genies.RefreshStocks
 import com.rubyhuntersky.interaction.core.*
 import com.rubyhuntersky.interaction.core.wish.Lamp
 import com.rubyhuntersky.stockcatalog.StockMarket
@@ -25,7 +26,7 @@ by Story(::start, ::isEnding, ::revise, groupId) {
         fun addSpiritsToLamp(lamp: Lamp) {
             with(lamp) {
                 add(ReadReportsDjinn)
-                add(FetchStockMarketSamplesGenie)
+                add(RefreshStocks.GENIE)
                 add(UpdateRebellionPricesGenie)
             }
         }
@@ -125,13 +126,12 @@ fun revise(vision: Vision, action: Action, edge: Edge): Revision<Vision, Action>
         vision is Vision.Viewing && action is Action.Refresh -> {
             val newVision = Vision.Viewing(vision.rebellionReport, true, vision.portals, vision.rebellionBook)
             val symbols = vision.rebellionBook.value.combinedAssetSymbols.map(AssetSymbol::string)
-            val samplesWish = FetchStockMarketSamplesGenie.wish(
-                name = "refresh",
-                params = FetchStockMarketSamples(symbols),
-                resultToAction = Action::ReceiveMarketSamples,
-                errorToAction = Action::ReceiveError
+            val fetchSamples = RefreshStocks(symbols).toWish2(
+                "refresh",
+                onResult = Action::ReceiveMarketSamples,
+                onAction = Action::ReceiveError
             )
-            Revision(newVision, samplesWish)
+            Revision(newVision, fetchSamples)
         }
         vision is Vision.Viewing && action is Action.ReceiveMarketSamples -> {
             val newVision = Vision.Viewing(vision.rebellionReport, false, vision.portals, vision.rebellionBook)

@@ -3,7 +3,7 @@ package com.rubyhuntersky.indexrebellion.interactions.viewdrift
 import com.rubyhuntersky.indexrebellion.data.techtonic.fixture.Fixture
 import com.rubyhuntersky.indexrebellion.data.techtonic.plating.Plate
 import com.rubyhuntersky.indexrebellion.interactions.viewholding.ViewHoldingStory
-import com.rubyhuntersky.indexrebellion.spirits.readdrift.ReadDriftsDjinn
+import com.rubyhuntersky.indexrebellion.spirits.djinns.readdrift.ReadDriftsDjinn
 import com.rubyhuntersky.interaction.core.BehaviorBook
 import com.rubyhuntersky.interaction.core.Edge
 import org.junit.Test

@@ -5,7 +5,7 @@ import com.rubyhuntersky.indexrebellion.data.techtonic.GeneralHolding
 import com.rubyhuntersky.indexrebellion.data.techtonic.instrument.InstrumentId
 import com.rubyhuntersky.indexrebellion.data.techtonic.plating.Plate
 import com.rubyhuntersky.indexrebellion.interactions.classifyinstrument.ClassifyInstrumentStory
-import com.rubyhuntersky.indexrebellion.spirits.readdrift.ReadDrifts
+import com.rubyhuntersky.indexrebellion.spirits.djinns.readdrift.ReadDrifts
 import com.rubyhuntersky.interaction.core.*
 import com.rubyhuntersky.interaction.core.wish.Wish
 import com.rubyhuntersky.indexrebellion.interactions.classifyinstrument.Action as ClassifyInstrumentAction

@@ -1,6 +1,6 @@
 package com.rubyhuntersky.indexrebellion.interactions.viewplan
 
-import com.rubyhuntersky.indexrebellion.spirits.readdrift.ReadDrifts
+import com.rubyhuntersky.indexrebellion.spirits.djinns.readdrift.ReadDrifts
 import com.rubyhuntersky.interaction.core.Interaction
 import com.rubyhuntersky.interaction.core.InteractionCompanion
 import com.rubyhuntersky.interaction.core.Revision

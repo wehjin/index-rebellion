@@ -1,8 +1,8 @@
 package com.rubyhuntersky.indexrebellion.interactions.editholding
 
 import com.rubyhuntersky.indexrebellion.data.cash.CashAmount
-import com.rubyhuntersky.indexrebellion.spirits.readdrift.ReadDrifts
-import com.rubyhuntersky.indexrebellion.spirits.writedrift.WriteDrift
+import com.rubyhuntersky.indexrebellion.spirits.djinns.readdrift.ReadDrifts
+import com.rubyhuntersky.indexrebellion.spirits.genies.writedrift.WriteDrift
 import com.rubyhuntersky.interaction.core.Interaction
 import com.rubyhuntersky.interaction.core.InteractionCompanion
 import com.rubyhuntersky.interaction.core.Revision

@@ -3,7 +3,7 @@ package com.rubyhuntersky.indexrebellion.interactions.viewplan
 import com.rubyhuntersky.indexrebellion.data.techtonic.DEFAULT_DRIFT
 import com.rubyhuntersky.indexrebellion.data.techtonic.plan.Division
 import com.rubyhuntersky.indexrebellion.data.techtonic.plan.DivisionId
-import com.rubyhuntersky.indexrebellion.spirits.readdrift.ReadDriftsDjinn
+import com.rubyhuntersky.indexrebellion.spirits.djinns.readdrift.ReadDriftsDjinn
 import com.rubyhuntersky.interaction.core.BehaviorBook
 import com.rubyhuntersky.interaction.core.Edge
 import org.junit.Test

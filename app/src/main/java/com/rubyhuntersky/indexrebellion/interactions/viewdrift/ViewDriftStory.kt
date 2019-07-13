@@ -7,7 +7,7 @@ import com.rubyhuntersky.indexrebellion.interactions.editholding.EditHoldingStor
 import com.rubyhuntersky.indexrebellion.interactions.viewholding.ViewHoldingStory
 import com.rubyhuntersky.indexrebellion.interactions.viewplan.ViewPlanAction
 import com.rubyhuntersky.indexrebellion.interactions.viewplan.ViewPlanStory
-import com.rubyhuntersky.indexrebellion.spirits.readdrift.ReadDrifts
+import com.rubyhuntersky.indexrebellion.spirits.djinns.readdrift.ReadDrifts
 import com.rubyhuntersky.interaction.core.*
 import com.rubyhuntersky.vx.android.logChanges
 import com.rubyhuntersky.indexrebellion.interactions.viewholding.Action as ViewHoldingAction

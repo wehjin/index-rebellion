@@ -1,4 +1,4 @@
-package com.rubyhuntersky.indexrebellion.spirits.showtoast
+package com.rubyhuntersky.indexrebellion.spirits.genies.showtoast
 
 import android.content.Context
 import android.widget.Toast
