@@ -31,18 +31,26 @@ android {
         applicationId "com.rubyhuntersky.indexrebellion"
         minSdkVersion 23
         targetSdkVersion 28
-        versionCode 4
-        versionName "1.0.3"
+        versionCode 5
+        versionName "1.0.4"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         buildConfigField "String", "ROBINHOOD_USERNAME", "\"" + project.property("robinhood_username") + "\""
         buildConfigField "String", "ROBINHOOD_DEVICE_TOKEN", "\"" + project.property("robinhood_device_token") + "\""
         buildConfigField "String", "ROBINHOOD_TOKEN", "\"" + project.property("robinhood_token") + "\""
     }
+    signingConfigs {
+        release {
+            storeFile file(upload_keystore_file)
+            storePassword upload_keystore_secret
+            keyAlias upload_index_rebellion_alias
+            keyPassword upload_index_rebellion_secret
+        }
+    }
     buildTypes {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.release
         }
     }
 }
-
