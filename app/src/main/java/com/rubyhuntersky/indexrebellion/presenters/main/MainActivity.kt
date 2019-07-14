@@ -1,5 +1,6 @@
 package com.rubyhuntersky.indexrebellion.presenters.main
 
+import android.content.Intent
 import android.os.Bundle
 import android.support.annotation.IdRes
 import android.support.annotation.LayoutRes
@@ -17,6 +18,7 @@ import com.rubyhuntersky.indexrebellion.interactions.main.Action
 import com.rubyhuntersky.indexrebellion.interactions.main.MainStory.Companion.groupId
 import com.rubyhuntersky.indexrebellion.interactions.main.Vision
 import com.rubyhuntersky.indexrebellion.interactions.refreshholdings.RefreshHoldingsStory
+import com.rubyhuntersky.indexrebellion.projections.drift.DriftActivity
 import com.rubyhuntersky.interaction.android.ActivityInteraction
 import com.rubyhuntersky.interaction.android.AndroidEdge
 import com.rubyhuntersky.interaction.core.Edge
@@ -32,6 +34,11 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         lifecycle.addObserver(ActivityInteraction(groupId, this, this::renderVision))
+    }
+
+    private fun beta() {
+        val intent = Intent(this, DriftActivity::class.java)
+        startActivity(intent)
     }
 
     private fun refreshHoldings() {
@@ -111,6 +118,7 @@ class MainActivity : AppCompatActivity() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean =
         when (item.itemId) {
             R.id.refreshHoldings -> true.also { refreshHoldings() }
+            R.id.beta -> true.also { beta() }
             else -> super.onOptionsItemSelected(item)
         }
 

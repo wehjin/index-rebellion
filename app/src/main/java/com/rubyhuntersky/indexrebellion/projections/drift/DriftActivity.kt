@@ -137,7 +137,5 @@ class DriftActivity : AppCompatActivity() {
         }
 
         private fun PlateAdjustment.toName(): String = "${plate.toLabel()} ${realValue.toDollarStat()}"
-
-
     }
 }
