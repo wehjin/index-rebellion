@@ -35,7 +35,10 @@ data class Vault(
             }
         )
         val aggregateValue = plateValues.values.fold(CashAmount.ZERO, CashAmount::plus)
-        val portions = plateValues.mapValues { it.value.toPortion(aggregateValue) }
+        val portions = plateValues.mapValues {
+            if (aggregateValue > CashAmount.ZERO) it.value.toPortion(aggregateValue)
+            else 0.0
+        }
         return Pair(aggregateValue, portions)
     }
 
