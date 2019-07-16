@@ -9,7 +9,6 @@ import com.rubyhuntersky.interaction.core.BehaviorBook
 import com.rubyhuntersky.interaction.core.Edge
 import org.junit.Test
 import com.rubyhuntersky.indexrebellion.interactions.viewdrift.ViewDriftStory.Vision as ViewDriftVision
-import com.rubyhuntersky.indexrebellion.interactions.viewholding.Vision as ViewHoldingVision
 
 class ViewDriftStoryTest {
 
@@ -33,7 +32,7 @@ class ViewDriftStoryTest {
         story.sendAction(Action.ViewHolding(Fixture.TSLA_INSTRUMENT))
         ViewHoldingStory.findInEdge(edge).visions.test()
             .assertValue(
-                ViewHoldingVision.Viewing(drift.findHolding(Fixture.TSLA_INSTRUMENT)!!, Plate.Unknown)
+                ViewHoldingStory.Vision.Viewing(drift.findHolding(Fixture.TSLA_INSTRUMENT)!!, Plate.Unknown)
             )
     }
 }

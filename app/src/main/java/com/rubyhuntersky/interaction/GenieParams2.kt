@@ -3,7 +3,7 @@ package com.rubyhuntersky.interaction
 import com.rubyhuntersky.interaction.core.wish.GenieParams
 import com.rubyhuntersky.interaction.core.wish.Wish
 
-interface GenieParams2<Result : Any, Params : GenieParams<Result>> : GenieParams<Result> {
+interface GenieParams2<Params, Result> : GenieParams<Result> where Result : Any, Params : GenieParams<Result> {
 
     fun <Action : Any> toWish2(
         name: String,

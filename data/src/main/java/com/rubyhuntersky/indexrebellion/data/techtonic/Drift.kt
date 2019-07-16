@@ -72,6 +72,11 @@ data class Drift(
     fun replace(instrumentPlating: InstrumentPlating): Drift {
         return copy(plating = plating.replace(instrumentPlating))
     }
+
+    fun deleteHoldings(instrumentId: InstrumentId): Drift {
+        val new = vault.deleteHoldings(instrumentId)
+        return copy(vault = new)
+    }
 }
 
 

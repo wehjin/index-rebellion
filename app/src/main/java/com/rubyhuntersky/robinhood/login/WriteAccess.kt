@@ -7,7 +7,7 @@ import com.rubyhuntersky.interaction.core.wish.Genie
 import io.reactivex.Single
 
 data class WriteAccess(val access: Access2) :
-    GenieParams2<Unit, WriteAccess> {
+    GenieParams2<WriteAccess, Unit> {
 
     class GENIE(private val book: Book<Access2>) :
         Genie<WriteAccess, Unit> {

@@ -12,14 +12,17 @@ data class Vault(
     val specificHoldings: Set<SpecificHolding>
 ) {
 
+    fun deleteHoldings(instrumentId: InstrumentId): Vault {
+        val new = specificHoldings.filter { it.instrumentId != instrumentId }.toSet()
+        return copy(specificHoldings = new)
+    }
+
     fun replaceHolding(holding: SpecificHolding): Vault {
-        val newHoldings = specificHoldings
-            .toMutableSet()
-            .also {
-                it.removeAll(holding::isRival)
-                it.add(holding)
-            }
-        return copy(specificHoldings = newHoldings)
+        val new = specificHoldings.toMutableSet().also {
+            it.removeAll(holding::isRival)
+            it.add(holding)
+        }
+        return copy(specificHoldings = new)
     }
 
     fun toValueAndPortions(plating: Plating, market: Market): Pair<CashAmount, Map<Plate, Double>> {

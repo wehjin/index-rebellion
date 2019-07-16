@@ -7,7 +7,8 @@ import com.rubyhuntersky.indexrebellion.data.techtonic.instrument.InstrumentType
 import com.rubyhuntersky.indexrebellion.data.techtonic.market.InstrumentSample
 import com.rubyhuntersky.indexrebellion.interactions.editholding.EditHoldingAction
 import com.rubyhuntersky.indexrebellion.interactions.editholding.EditHoldingStory
-import com.rubyhuntersky.indexrebellion.interactions.viewdrift.ViewDriftStory.*
+import com.rubyhuntersky.indexrebellion.interactions.viewdrift.ViewDriftStory.Action
+import com.rubyhuntersky.indexrebellion.interactions.viewdrift.ViewDriftStory.Vision
 import com.rubyhuntersky.indexrebellion.interactions.viewholding.ViewHoldingStory
 import com.rubyhuntersky.indexrebellion.interactions.viewplan.ViewPlanAction
 import com.rubyhuntersky.indexrebellion.interactions.viewplan.ViewPlanStory
@@ -22,7 +23,6 @@ import com.rubyhuntersky.stockcatalog.StockMarket
 import com.rubyhuntersky.stockcatalog.StockSample
 import com.rubyhuntersky.vx.android.logChanges
 import java.util.*
-import com.rubyhuntersky.indexrebellion.interactions.viewholding.Action as ViewHoldingAction
 
 class ViewDriftStory : Interaction<Vision, Action> by Story(::start, ::isEnding, ::revise, groupId) {
 
@@ -70,7 +70,7 @@ private fun revise(vision: Vision, action: Action, edge: Edge): Revision<Vision,
         val viewHolding = edge.wish(
             "view-holding",
             interaction = ViewHoldingStory().logChanges(ViewHoldingStory.groupId),
-            startAction = ViewHoldingAction.Init(action.instrumentId),
+            startAction = ViewHoldingStory.Action.Init(action.instrumentId),
             endVisionToAction = Action::Ignore
         )
         Revision(vision, Wish.none(REFRESH_PRICES), viewHolding)

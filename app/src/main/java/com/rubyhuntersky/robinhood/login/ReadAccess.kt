@@ -7,7 +7,7 @@ import com.rubyhuntersky.interaction.core.wish.Genie
 import io.reactivex.Single
 
 object ReadAccess :
-    GenieParams2<Access2, ReadAccess> {
+    GenieParams2<ReadAccess, Access2> {
 
     class GENIE(private val book: Book<Access2>) : Genie<ReadAccess, Access2> {
         override val paramsClass: Class<ReadAccess> = ReadAccess::class.java

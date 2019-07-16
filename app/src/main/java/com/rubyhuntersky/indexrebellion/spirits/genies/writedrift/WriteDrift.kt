@@ -6,7 +6,7 @@ import com.rubyhuntersky.interaction.core.Book
 import com.rubyhuntersky.interaction.core.wish.Genie
 import io.reactivex.Single
 
-data class WriteDrift(val drift: Drift) : GenieParams2<Drift, WriteDrift> {
+data class WriteDrift(val drift: Drift) : GenieParams2<WriteDrift, Drift> {
 
     class GENIE(val book: Book<Drift>) : Genie<WriteDrift, Drift> {
         override val paramsClass: Class<WriteDrift> = WriteDrift::class.java

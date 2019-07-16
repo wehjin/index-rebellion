@@ -7,7 +7,7 @@ import io.reactivex.Single
 import io.reactivex.schedulers.Schedulers
 
 data class FetchStockSamples(val symbols: List<String>) :
-    GenieParams2<StockMarket.Result, FetchStockSamples> {
+    GenieParams2<FetchStockSamples, StockMarket.Result> {
 
     object GENIE : Genie<FetchStockSamples, StockMarket.Result> {
         override val paramsClass: Class<FetchStockSamples> = FetchStockSamples::class.java

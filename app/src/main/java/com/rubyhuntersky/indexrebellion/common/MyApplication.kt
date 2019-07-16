@@ -22,6 +22,7 @@ import com.rubyhuntersky.indexrebellion.projections.EditHoldingActivity
 import com.rubyhuntersky.indexrebellion.projections.ViewHoldingActivity
 import com.rubyhuntersky.indexrebellion.projections.ViewPlanActivity
 import com.rubyhuntersky.indexrebellion.spirits.djinns.readdrift.ReadDriftsDjinn
+import com.rubyhuntersky.indexrebellion.spirits.genies.DeleteGeneralHolding
 import com.rubyhuntersky.indexrebellion.spirits.genies.showtoast.ShowToast
 import com.rubyhuntersky.indexrebellion.spirits.genies.writedrift.WriteDrift
 import com.rubyhuntersky.indexrebellion.spirits.genies.writeinstrumentplate.WriteInstrumentPlatingGenie
@@ -63,6 +64,7 @@ class MyApplication : Application() {
             add(ReadAccess.GENIE(accessBook))
             add(WriteAccess.GENIE(accessBook))
             add(FetchRbhAccessTokenGenie)
+            add(DeleteGeneralHolding.GENIE(driftBook))
         }
 
         ViewDriftStory()
