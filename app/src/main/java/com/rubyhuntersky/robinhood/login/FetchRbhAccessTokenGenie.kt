@@ -10,8 +10,8 @@ object FetchRbhAccessTokenGenie :
     override val paramsClass: Class<FetchRbhAccessToken> = FetchRbhAccessToken::class.java
 
     override fun toSingle(params: FetchRbhAccessToken): Single<String> {
-        val (api, username, password, secondFactor) = params
-        return api.login(username, password, secondFactor)
+        val (api, deviceToken, username, password, secondFactor) = params
+        return api.login(username, password, secondFactor, deviceToken)
             .subscribeOn(Schedulers.io())
     }
 }

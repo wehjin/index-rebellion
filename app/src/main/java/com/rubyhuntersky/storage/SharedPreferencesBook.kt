@@ -17,6 +17,7 @@ class SharedPreferencesBook<T : Any>(
     context: Context,
     preferencesName: String,
     private val serializer: KSerializer<T>,
+    alwaysWriteDefault: Boolean = false,
     default: () -> T
 ) : Book<T> {
 
@@ -29,7 +30,10 @@ class SharedPreferencesBook<T : Any>(
         .fromCallable { context.getSharedPreferences(preferencesName, Context.MODE_PRIVATE) }
         .subscribeOn(Schedulers.io())
         .flatMapObservable { sharedPreferences ->
-            readBehavior.onNext(sharedPreferences.readValue() ?: default())
+            val storedValue = sharedPreferences.readValue()
+                ?: (default().also { if (alwaysWriteDefault) sharedPreferences.writeValue(it) })
+            Log.d(preferencesName, "READ $storedValue")
+            readBehavior.onNext(storedValue)
             writeQueue.map { Pair(it, sharedPreferences) }
         }
         .observeOn(Schedulers.single())

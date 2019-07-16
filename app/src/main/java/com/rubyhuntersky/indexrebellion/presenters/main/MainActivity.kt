@@ -11,7 +11,6 @@ import android.view.MenuItem
 import android.view.View
 import android.widget.Toast
 import com.rubyhuntersky.indexrebellion.R
-import com.rubyhuntersky.indexrebellion.common.MyApplication.Companion.accessBook
 import com.rubyhuntersky.indexrebellion.common.MyApplication.Companion.rbhApi
 import com.rubyhuntersky.indexrebellion.common.MyApplication.Companion.rebellionBook
 import com.rubyhuntersky.indexrebellion.interactions.main.Action
@@ -45,13 +44,7 @@ class MainActivity : AppCompatActivity() {
         val interaction = RefreshHoldingsStory()
             .also {
                 AndroidEdge.addInteraction(it)
-                it.sendAction(
-                    RefreshHoldingsAction.Start(
-                        token = accessBook.value.token,
-                        api = rbhApi,
-                        book = rebellionBook
-                    )
-                )
+                it.sendAction(RefreshHoldingsAction.Start(rbhApi, rebellionBook))
             }
         pendingInteractions.follow(interaction) { vision ->
             runOnUiThread {

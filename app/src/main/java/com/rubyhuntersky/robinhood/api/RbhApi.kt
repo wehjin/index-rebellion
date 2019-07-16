@@ -8,8 +8,10 @@ import okhttp3.Request
 
 class RbhApi(private val httpClient: OkHttpClient) {
 
-    fun login(username: String, password: String, mfa: String): Single<String> =
-        loginRequest(username, password, mfa).fetchBody().map { parseLoginBody(it, username, password) }
+    fun login(username: String, password: String, mfa: String, deviceToken: String): Single<String> =
+        loginRequest(username, password, mfa, deviceToken)
+            .fetchBody()
+            .map { parseLoginBody(it, username, password) }
 
     private fun Request.fetchBody(): Single<String> {
         return Single.create<String> { emitter ->

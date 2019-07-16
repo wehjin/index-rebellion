@@ -2,7 +2,6 @@ package com.rubyhuntersky.robinhood.api
 
 import com.beust.klaxon.JsonObject
 import com.beust.klaxon.Parser
-import com.rubyhuntersky.indexrebellion.BuildConfig
 import com.rubyhuntersky.robinhood.api.results.RbhAccountsResult
 import com.rubyhuntersky.robinhood.api.results.RbhInstrumentsResult
 import com.rubyhuntersky.robinhood.api.results.RbhPositionsResult
@@ -17,10 +16,11 @@ private const val API_VERSION = "1.265.0"
 private const val X_ROBINHOOD_API_VERSION = "x-robinhood-api-version"
 private const val AUTHORIZATION = "authorization"
 
-internal fun loginRequest(username: String, password: String, mfa: String): Request {
+
+internal fun loginRequest(username: String, password: String, mfa: String, deviceToken: String): Request {
     val formBody = FormBody.Builder()
         .add("client_id", "c82SH0WZOsabOXGP2sxqcj34FxkvfnWRZBKlBjFS")
-        .add("device_token", BuildConfig.ROBINHOOD_DEVICE_TOKEN)
+        .add("device_token", deviceToken)
         .add("expires_in", "86400")
         .add("grant_type", "password")
         .add("username", username)

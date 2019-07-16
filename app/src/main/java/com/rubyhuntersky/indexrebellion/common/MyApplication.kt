@@ -1,7 +1,6 @@
 package com.rubyhuntersky.indexrebellion.common
 
 import android.app.Application
-import com.rubyhuntersky.indexrebellion.BuildConfig
 import com.rubyhuntersky.indexrebellion.books.SharedRebellionBook
 import com.rubyhuntersky.indexrebellion.data.techtonic.DEFAULT_DRIFT
 import com.rubyhuntersky.indexrebellion.data.techtonic.Drift
@@ -9,7 +8,7 @@ import com.rubyhuntersky.indexrebellion.interactions.books.RebellionBook
 import com.rubyhuntersky.indexrebellion.interactions.correctiondetails.enableCorrectionDetails
 import com.rubyhuntersky.indexrebellion.interactions.main.MainPortals
 import com.rubyhuntersky.indexrebellion.interactions.main.MainStory
-import com.rubyhuntersky.indexrebellion.interactions.refreshholdings.Access
+import com.rubyhuntersky.indexrebellion.interactions.refreshholdings.Access2
 import com.rubyhuntersky.indexrebellion.interactions.refreshholdings.enableRefreshHoldings
 import com.rubyhuntersky.indexrebellion.interactions.viewdrift.ViewDriftStory
 import com.rubyhuntersky.indexrebellion.presenters.cashediting.CashEditingDialogFragment
@@ -27,11 +26,12 @@ import com.rubyhuntersky.indexrebellion.spirits.genies.showtoast.ShowToast
 import com.rubyhuntersky.indexrebellion.spirits.genies.writedrift.WriteDrift
 import com.rubyhuntersky.indexrebellion.spirits.genies.writeinstrumentplate.WriteInstrumentPlatingGenie
 import com.rubyhuntersky.interaction.android.AndroidEdge
-import com.rubyhuntersky.interaction.core.Book
 import com.rubyhuntersky.interaction.core.Portal
 import com.rubyhuntersky.robinhood.api.RbhApi
+import com.rubyhuntersky.robinhood.login.FetchRbhAccessTokenGenie
+import com.rubyhuntersky.robinhood.login.ReadAccess
 import com.rubyhuntersky.robinhood.login.RobinhoodLoginDialogFragment
-import com.rubyhuntersky.robinhood.login.enableRobinhoodLogin
+import com.rubyhuntersky.robinhood.login.WriteAccess
 import com.rubyhuntersky.stockcatalog.StockMarket
 import com.rubyhuntersky.storage.SharedPreferencesBook
 import com.rubyhuntersky.vx.android.logChanges
@@ -47,22 +47,22 @@ class MyApplication : Application() {
         StockMarket.network = SharedHttpNetwork
 
         // Books
-        accessBook = SharedPreferencesBook(this, "AccessBook", Access.serializer()) {
-            Access(BuildConfig.ROBINHOOD_USERNAME, BuildConfig.ROBINHOOD_TOKEN)
-        }
         rebellionBook = SharedRebellionBook.also { it.open(this) }
+        val driftBook = SharedPreferencesBook(this, "DriftBook", Drift.serializer(), true) { DEFAULT_DRIFT }
+        val accessBook = SharedPreferencesBook(this, "Access2Book", Access2.serializer()) { Access2() }
 
-        val driftBook = SharedPreferencesBook(this, "DriftBook", Drift.serializer()) { DEFAULT_DRIFT }
         val edge = AndroidEdge
         with(edge.lamp) {
             add(ShowToast.GENIE(this@MyApplication))
             enableCorrectionDetails(this)
             enableRefreshHoldings(this)
-            enableRobinhoodLogin(this)
             MainStory.addSpiritsToLamp(this)
             add(ReadDriftsDjinn(driftBook))
             add(WriteInstrumentPlatingGenie(driftBook))
             add(WriteDrift.GENIE(driftBook))
+            add(ReadAccess.GENIE(accessBook))
+            add(WriteAccess.GENIE(accessBook))
+            add(FetchRbhAccessTokenGenie)
         }
 
         ViewDriftStory()
@@ -104,7 +104,6 @@ class MyApplication : Application() {
 
     companion object {
         val rbhApi = RbhApi.SHARED
-        lateinit var accessBook: Book<Access>
         lateinit var rebellionBook: RebellionBook
     }
 }

@@ -1,2 +1,4 @@
 # index-rebellion
-Create and maintain a personal stock index (on Android)
+Maintain a balanced portfolio of assets.
+
+Build a plan, add holdings, and see what changes aligns them.

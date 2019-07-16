@@ -25,6 +25,19 @@ dependencies {
     androidTestImplementation "com.android.support.test.espresso:espresso-core:3.0.2"
 }
 
+if (!project.hasProperty("upload_keystore_file")) {
+    ext.upload_keystore_file = "keystore.jks"
+}
+if (!project.hasProperty("upload_keystore_secret")) {
+    ext.upload_keystore_secret = "not a secret"
+}
+if (!project.hasProperty("upload_index_rebellion_alias")) {
+    ext.upload_index_rebellion_alias = "upload-indexrebellion"
+}
+if (!project.hasProperty("upload_index_rebellion_secret")) {
+    ext.upload_index_rebellion_secret = "not a secret"
+}
+
 android {
     compileSdkVersion 28
     defaultConfig {
@@ -34,9 +47,6 @@ android {
         versionCode 5
         versionName "1.0.4"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
-        buildConfigField "String", "ROBINHOOD_USERNAME", "\"" + project.property("robinhood_username") + "\""
-        buildConfigField "String", "ROBINHOOD_DEVICE_TOKEN", "\"" + project.property("robinhood_device_token") + "\""
-        buildConfigField "String", "ROBINHOOD_TOKEN", "\"" + project.property("robinhood_token") + "\""
     }
     signingConfigs {
         release {
