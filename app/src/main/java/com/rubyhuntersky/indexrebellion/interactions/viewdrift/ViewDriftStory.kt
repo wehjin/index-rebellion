@@ -15,6 +15,7 @@ import com.rubyhuntersky.indexrebellion.spirits.djinns.readdrift.ReadDrifts
 import com.rubyhuntersky.indexrebellion.spirits.genies.FetchStockSamples
 import com.rubyhuntersky.indexrebellion.spirits.genies.showtoast.ShowToast
 import com.rubyhuntersky.indexrebellion.spirits.genies.writedrift.WriteDrift
+import com.rubyhuntersky.indexrebellion.toMacroValue
 import com.rubyhuntersky.interaction.core.*
 import com.rubyhuntersky.interaction.core.wish.Wish
 import com.rubyhuntersky.stockcatalog.StockMarket
@@ -143,7 +144,7 @@ private fun List<StockSample>.toInstrumentSamples(): List<InstrumentSample> = ma
         instrumentId = InstrumentId(it.symbol.toUpperCase().trim(), InstrumentType.StockExchange),
         instrumentName = it.issuer,
         sharePrice = CashAmount(it.sharePrice),
-        macroPrice = CashAmount(it.marketCapitalization),
+        macroPrice = CashAmount(it.toMacroValue()),
         sampleDate = Date()
     )
 }

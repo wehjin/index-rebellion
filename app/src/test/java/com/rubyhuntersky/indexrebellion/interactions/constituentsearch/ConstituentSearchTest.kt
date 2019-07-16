@@ -47,7 +47,7 @@ class ConstituentSearchTest {
                     StockSample(
                         symbol = "TSLA",
                         sharePrice = BigDecimal.ONE,
-                        marketCapitalization = BigDecimal.TEN,
+                        marketWeight = MarketWeight.Capitalization(BigDecimal.TEN),
                         issuer = "Tesla Motors"
                     )
                 )

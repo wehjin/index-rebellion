@@ -3,6 +3,7 @@ package com.rubyhuntersky.indexrebellion.interactions.constituentsearch
 import com.rubyhuntersky.indexrebellion.data.Rebellion
 import com.rubyhuntersky.indexrebellion.data.assets.AssetSymbol
 import com.rubyhuntersky.indexrebellion.data.index.MarketWeight
+import com.rubyhuntersky.indexrebellion.toMacroValue
 import com.rubyhuntersky.interaction.core.Book
 import com.rubyhuntersky.interaction.core.Interaction
 import com.rubyhuntersky.interaction.core.SubjectInteraction
@@ -81,7 +82,7 @@ class ConstituentSearch(private val rebellionBook: Book<Rebellion>) : Constituen
                         Candidate(
                             assetSymbol = AssetSymbol(it.symbol.trim().toUpperCase()),
                             description = it.issuer,
-                            marketWeight = MarketWeight(it.marketCapitalization)
+                            marketWeight = MarketWeight(it.toMacroValue())
                         )
                     })
             } else {

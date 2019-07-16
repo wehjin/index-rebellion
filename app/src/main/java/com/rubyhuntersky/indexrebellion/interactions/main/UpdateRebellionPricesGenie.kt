@@ -5,6 +5,7 @@ import com.rubyhuntersky.indexrebellion.data.assets.PriceSample
 import com.rubyhuntersky.indexrebellion.data.cash.CashAmount
 import com.rubyhuntersky.indexrebellion.data.index.Constituent
 import com.rubyhuntersky.indexrebellion.data.index.MarketWeight
+import com.rubyhuntersky.indexrebellion.toMacroValue
 import com.rubyhuntersky.interaction.core.wish.Genie
 import com.rubyhuntersky.stockcatalog.StockMarket
 import com.rubyhuntersky.stockcatalog.StockSample
@@ -32,7 +33,7 @@ object UpdateRebellionPricesGenie :
                     samples[old.assetSymbol]?.let {
                         Constituent(
                             old.assetSymbol,
-                            MarketWeight(it.marketCapitalization)
+                            MarketWeight(it.toMacroValue())
                         )
                     } ?: old
                 }

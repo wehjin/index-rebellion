@@ -5,7 +5,7 @@ apply plugin: 'kotlinx-serialization'
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
-    api "io.reactivex.rxjava2:rxjava:2.2.6"
+    api "io.reactivex.rxjava2:rxjava:2.2.10"
     implementation 'io.reactivex.rxjava2:rxkotlin:2.3.0'
     testImplementation 'junit:junit:4.12'
     testImplementation "com.nhaarman.mockitokotlin2:mockito-kotlin:2.1.0"
