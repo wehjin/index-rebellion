@@ -7,7 +7,6 @@ import android.support.v7.app.AppCompatActivity
 import com.rubyhuntersky.indexrebellion.interactions.viewholding.ViewHoldingStory
 import com.rubyhuntersky.indexrebellion.interactions.viewholding.ViewHoldingStory.Action
 import com.rubyhuntersky.indexrebellion.interactions.viewholding.ViewHoldingStory.Vision
-import com.rubyhuntersky.indexrebellion.toLabel
 import com.rubyhuntersky.interaction.android.ActivityInteraction
 import com.rubyhuntersky.interaction.android.ProjectionSource
 import com.rubyhuntersky.interaction.core.Edge
@@ -50,7 +49,7 @@ class ViewHoldingActivity : AppCompatActivity() {
                 Standard.SubtitleTower().mapSight { viewing: Vision.Viewing ->
                     viewing.holding.cashValue?.toDollarStat() ?: "Unknown value"
                 },
-                Standard.SubtitleTower().mapSight { viewing: Vision.Viewing -> viewing.plate.toLabel() },
+                Standard.SubtitleTower().mapSight { viewing: Vision.Viewing -> viewing.plate.memberTag },
                 buttonBar
             )
             .plusVPad(Standard.uniformPad)

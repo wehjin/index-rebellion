@@ -8,7 +8,6 @@ import com.rubyhuntersky.indexrebellion.data.techtonic.plating.Plate
 import com.rubyhuntersky.indexrebellion.interactions.classifyinstrument.Action
 import com.rubyhuntersky.indexrebellion.interactions.classifyinstrument.ClassifyInstrumentStory
 import com.rubyhuntersky.indexrebellion.interactions.classifyinstrument.Vision
-import com.rubyhuntersky.indexrebellion.toLabel
 import com.rubyhuntersky.interaction.android.ActivityInteraction
 import com.rubyhuntersky.interaction.android.ProjectionSource
 import com.rubyhuntersky.interaction.core.Edge
@@ -27,12 +26,12 @@ class ClassifyInstrumentActivity : AppCompatActivity() {
     private lateinit var interaction: Interaction<Vision, Action>
 
     private val plateTower = Standard.BodyTower()
-        .mapSight(Plate::toLabel)
+        .mapSight(Plate::memberTag)
         .plusClicks { it }
 
     private val allPlatesTower = plateTower
         .replicate()
-        .fixSight(Plate.values().toList())
+        .fixSight(Plate.values().toList().filter { it != Plate.Unknown })
         .mapSight(Vision::toUnit)
         .handleEvents {
             val plate = it.value.topic

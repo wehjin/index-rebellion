@@ -15,16 +15,17 @@ import com.rubyhuntersky.vx.tower.towers.detailsubdetail.DetailSubdetailTower
 internal object HoldingTower : Tower<HoldingSight, Nothing>
 by TitleSubtitleTower
     .mapSight({ holding: HoldingSight ->
-        TitleSubtitleSight(holding.name, holding.custodians.joinToString(", "))
+        val title = holding.name
+        val subtitle = holding.plate.memberTag
+        TitleSubtitleSight(title, subtitle)
     })
     .shareEnd(
         Span.THIRD,
         DetailSubdetailTower
             .mapSight { holding: HoldingSight ->
-                DetailSubdetailSight(
-                    "${holding.count.toEngineeringString()} ${holding.symbol}",
-                    CashAmount(holding.value).toDollarStat()
-                )
+                val detail = "${holding.count.toEngineeringString()} ${holding.symbol}"
+                val subdetail = CashAmount(holding.value).toDollarStat()
+                DetailSubdetailSight(detail, subdetail)
             }
     )
     .plusHMargin(Margin.Uniform(Standard.marginSpan))

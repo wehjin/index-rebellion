@@ -12,7 +12,6 @@ import com.rubyhuntersky.indexrebellion.interactions.viewdrift.ViewDriftStory.Vi
 import com.rubyhuntersky.indexrebellion.projections.Standard
 import com.rubyhuntersky.indexrebellion.projections.drift.towers.BalanceTower
 import com.rubyhuntersky.indexrebellion.projections.drift.towers.HoldingTower
-import com.rubyhuntersky.indexrebellion.toLabel
 import com.rubyhuntersky.interaction.android.ActivityInteraction
 import com.rubyhuntersky.interaction.core.Edge
 import com.rubyhuntersky.interaction.core.Interaction
@@ -67,7 +66,8 @@ class DriftActivity : AppCompatActivity() {
                         custodians = it.custodians.map(Custodian::toString),
                         count = it.size,
                         symbol = it.instrumentId.symbol,
-                        value = it.cashValue!!.value
+                        value = it.cashValue!!.value,
+                        plate = drift.plating.findPlate(it.instrumentId)
                     )
                 }
             )
@@ -136,6 +136,6 @@ class DriftActivity : AppCompatActivity() {
             return "$real $separator $planned"
         }
 
-        private fun PlateAdjustment.toName(): String = "${plate.toLabel()} ${realValue.toDollarStat()}"
+        private fun PlateAdjustment.toName(): String = "${plate.memberTag} ${realValue.toDollarStat()}"
     }
 }
