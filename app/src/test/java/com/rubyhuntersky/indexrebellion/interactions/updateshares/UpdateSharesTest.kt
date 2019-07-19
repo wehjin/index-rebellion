@@ -12,8 +12,8 @@ import com.rubyhuntersky.indexrebellion.data.assets.ShareCount
 import com.rubyhuntersky.indexrebellion.data.cash.CashAmount
 import com.rubyhuntersky.indexrebellion.interactions.books.RebellionBook
 import com.rubyhuntersky.interaction.core.Edge
-import org.junit.Assert.assertEquals
-import org.junit.Test
+import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Test
 import java.util.*
 
 class UpdateSharesTest {

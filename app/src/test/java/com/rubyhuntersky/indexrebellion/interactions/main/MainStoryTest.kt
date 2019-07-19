@@ -8,7 +8,7 @@ import com.rubyhuntersky.indexrebellion.interactions.books.RebellionBook
 import com.rubyhuntersky.interaction.core.Edge
 import com.rubyhuntersky.interaction.core.Portal
 import io.reactivex.Observable
-import org.junit.Test
+import org.junit.jupiter.api.Test
 
 class MainStoryTest {
 

@@ -4,7 +4,8 @@ data class StringEdit<T : Any>(
     val label: String,
     val seed: Seed<T>? = null,
     val ancient: Ancient<T>? = null,
-    val novel: Novel<T>? = null
+    val novel: Novel<T>? = null,
+    val enabled: Boolean = true
 ) {
     val validValue: T?
         get() = when {

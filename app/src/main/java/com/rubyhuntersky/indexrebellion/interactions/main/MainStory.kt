@@ -129,7 +129,7 @@ fun revise(vision: Vision, action: Action, edge: Edge): Revision<Vision, Action>
             val fetchSamples = FetchStockSamples(symbols).toWish2(
                 "refresh",
                 onResult = Action::ReceiveMarketSamples,
-                onAction = Action::ReceiveError
+                onError = Action::ReceiveError
             )
             Revision(newVision, fetchSamples)
         }

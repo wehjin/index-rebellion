@@ -8,7 +8,8 @@ data class InputSight(
     val text: String,
     val originalText: String,
     val label: String,
-    val icon: Icon?
+    val icon: Icon?,
+    val enabled: Boolean = true
 )
 
 sealed class Icon {

@@ -5,8 +5,7 @@ import com.rubyhuntersky.indexrebellion.data.techtonic.Drift
 import com.rubyhuntersky.indexrebellion.data.techtonic.instrument.InstrumentId
 import com.rubyhuntersky.indexrebellion.data.techtonic.instrument.InstrumentType
 import com.rubyhuntersky.indexrebellion.data.techtonic.market.InstrumentSample
-import com.rubyhuntersky.indexrebellion.interactions.editholding.EditHoldingAction
-import com.rubyhuntersky.indexrebellion.interactions.editholding.EditHoldingStory
+import com.rubyhuntersky.indexrebellion.interactions.ChooseHoldingTypeStory
 import com.rubyhuntersky.indexrebellion.interactions.viewdrift.ViewDriftStory.Action
 import com.rubyhuntersky.indexrebellion.interactions.viewdrift.ViewDriftStory.Vision
 import com.rubyhuntersky.indexrebellion.interactions.viewholding.ViewHoldingStory
@@ -59,7 +58,7 @@ private fun revise(vision: Vision, action: Action, edge: Edge): Revision<Vision,
         val readDrifts = ReadDrifts.toWish<ReadDrifts, Action>(
             "read",
             onResult = Action::Load,
-            onAction = { error("ReadDrift: $it") }
+            onError = { error("ReadDrift: $it") }
         )
         Revision(Vision.Reading, readDrifts)
     }
@@ -76,13 +75,13 @@ private fun revise(vision: Vision, action: Action, edge: Edge): Revision<Vision,
         Revision(vision, Wish.none(REFRESH_PRICES), viewHolding)
     }
     vision is Vision.Viewing && action is Action.AddHolding -> {
-        val editHolding = edge.wish(
-            "edit-holding",
-            interaction = EditHoldingStory().logChanges(EditHoldingStory.groupId),
-            startAction = EditHoldingAction.Start(null),
+        val addHolding = edge.wish(
+            "add-holding",
+            interaction = ChooseHoldingTypeStory(),
+            startAction = null,
             endVisionToAction = Action::Ignore
         )
-        Revision(vision, Wish.none(REFRESH_PRICES), editHolding)
+        Revision(vision, Wish.none(REFRESH_PRICES), addHolding)
     }
     vision is Vision.Viewing && action is Action.ViewPlan -> {
         val viewPlan = edge.wish(
@@ -101,7 +100,7 @@ private fun revise(vision: Vision, action: Action, edge: Edge): Revision<Vision,
             .toWish2(
                 REFRESH_PRICES,
                 onResult = Action::LoadSamples,
-                onAction = Action::Ignore
+                onError = Action::Ignore
             )
         Revision(vision, refreshPrices)
     }
@@ -111,14 +110,14 @@ private fun revise(vision: Vision, action: Action, edge: Edge): Revision<Vision,
                 logError("MARKET NETWORK ERROR $result")
                 val reason = result.reason
                 val showToast = ShowToast(reason, longDuration = true)
-                    .toWish2("toast", onResult = Action::Ignore, onAction = Action::Ignore)
+                    .toWish2("toast", onResult = Action::Ignore, onError = Action::Ignore)
                 Revision(vision, showToast)
             }
             is StockMarket.Result.ParseError -> {
                 logError("MARKET PARSE ERROR $result")
                 val reason = result.reason ?: result.text
                 val showToast = ShowToast(reason, longDuration = true)
-                    .toWish2("toast", onResult = Action::Ignore, onAction = Action::Ignore)
+                    .toWish2("toast", onResult = Action::Ignore, onError = Action::Ignore)
                 Revision(vision, showToast)
             }
             is StockMarket.Result.Samples -> {
@@ -126,7 +125,7 @@ private fun revise(vision: Vision, action: Action, edge: Edge): Revision<Vision,
                 val writeDrift = WriteDrift(drift).toWish2(
                     "write-drift",
                     onResult = Action::Ignore,
-                    onAction = Action::Ignore
+                    onError = Action::Ignore
                 )
                 Revision(vision, writeDrift)
             }

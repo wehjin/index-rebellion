@@ -6,8 +6,8 @@ import com.rubyhuntersky.indexrebellion.data.assets.AssetSymbol
 import com.rubyhuntersky.indexrebellion.interactions.books.RebellionBook
 import com.rubyhuntersky.stockcatalog.*
 import io.reactivex.subjects.BehaviorSubject
-import org.junit.Assert.assertNotNull
-import org.junit.Test
+import org.junit.jupiter.api.Assertions.assertNotNull
+import org.junit.jupiter.api.Test
 import java.math.BigDecimal
 
 class ConstituentSearchTest {

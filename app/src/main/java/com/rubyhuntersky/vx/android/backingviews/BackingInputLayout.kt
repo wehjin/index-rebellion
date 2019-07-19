@@ -60,13 +60,34 @@ class BackingInputLayout
 
     fun render(content: InputSight) {
         Log.d(this.tag.toString(), "render $content")
-        layout.hint = content.label
         activeInputType = content.type
 
-        renderEditTextHint(editText.hasFocus(), content)
-        editText.setOnFocusChangeListener { _, hasFocus ->
-            renderEditTextHint(hasFocus, content)
+        if (content.enabled) {
+            fun renderEnabledHints(hasFocus: Boolean) {
+                layout.hint = content.label
+                if (hasFocus) {
+                    editText.hint = content.originalText
+                } else {
+                    editText.hint = null
+                }
+            }
+            renderEnabledHints(editText.hasFocus())
+            editText.setOnFocusChangeListener { _, hasFocus -> renderEnabledHints(hasFocus) }
+        } else {
+            fun renderDisabledHints(hasFocus: Boolean) {
+                if (hasFocus) {
+                    layout.hint = content.label
+                    editText.hint = content.originalText
+                } else {
+                    layout.hint = "${content.label}: ${content.originalText}"
+                    editText.hint = null
+                }
+            }
+            renderDisabledHints(editText.hasFocus())
+            editText.setOnFocusChangeListener { _, hasFocus -> renderDisabledHints(hasFocus) }
         }
+        editText.isEnabled = content.enabled
+
         if (editText.text.toString() != content.text) {
             editText.setText(content.text)
         }
@@ -74,14 +95,6 @@ class BackingInputLayout
             resources.getDrawable(it.resId, context.theme)
         }
         editText.setCompoundDrawablesWithIntrinsicBounds(drawable, null, null, null)
-    }
-
-    private fun renderEditTextHint(hasFocus: Boolean, content: InputSight) {
-        if (hasFocus) {
-            editText.hint = content.originalText
-        } else {
-            editText.hint = null
-        }
     }
 
     override val heights: Observable<Int>

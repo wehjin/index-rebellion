@@ -47,7 +47,7 @@ private fun revise(vision: Vision, action: Action): Revision<Vision, Action> = w
         val readDrifts = ReadDrifts.toWish<ReadDrifts, Action>(
             READ_DRIFTS,
             onResult = { Action.Load(instrumentId, it.plating.findPlate(instrumentId)) },
-            onAction = Action::Ignore
+            onError = Action::Ignore
         )
         Revision(Vision.Reading(instrumentId), readDrifts)
     }
@@ -59,7 +59,7 @@ private fun revise(vision: Vision, action: Action): Revision<Vision, Action> = w
             .toWish<WriteInstrumentPlating, Action>(
                 "write-plating",
                 onResult = Action::Ignore,
-                onAction = { error("WritePlate: $it") }
+                onError = { error("WritePlate: $it") }
             )
         Revision(Vision.Ended, Wish.none(READ_DRIFTS), writePlate)
     }

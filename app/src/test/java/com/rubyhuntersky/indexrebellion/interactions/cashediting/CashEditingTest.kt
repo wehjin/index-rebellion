@@ -2,8 +2,8 @@ package com.rubyhuntersky.indexrebellion.interactions.cashediting
 
 import com.rubyhuntersky.indexrebellion.data.cash.CashAmount
 import com.rubyhuntersky.indexrebellion.interactions.books.MemoryRebellionBook
-import org.junit.Assert.assertEquals
-import org.junit.Test
+import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Test
 
 class CashEditingTest {
 

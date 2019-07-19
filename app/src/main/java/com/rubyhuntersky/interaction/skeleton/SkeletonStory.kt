@@ -30,7 +30,6 @@ private fun start(): Vision = Vision.Idle
 
 private fun isEnding(maybe: Any?): Boolean = maybe is Vision.Ended
 
-@Suppress("IntroduceWhenSubject")
 private fun revise(vision: Vision, action: Action): Revision<Vision, Action> = when {
     vision is Vision.Idle && action is Action.Start -> {
         Revision(Vision.Viewing)

@@ -7,6 +7,8 @@ import android.support.v4.app.FragmentActivity
 import android.support.v7.app.AppCompatActivity
 import com.rubyhuntersky.indexrebellion.data.cash.CashAmount
 import com.rubyhuntersky.indexrebellion.interactions.editholding.EditHoldingStory
+import com.rubyhuntersky.indexrebellion.interactions.editholding.EditHoldingStory.Action
+import com.rubyhuntersky.indexrebellion.interactions.editholding.EditHoldingStory.Vision
 import com.rubyhuntersky.interaction.android.ActivityInteraction
 import com.rubyhuntersky.interaction.android.ProjectionSource
 import com.rubyhuntersky.interaction.core.Edge
@@ -26,8 +28,6 @@ import com.rubyhuntersky.vx.tower.towers.click.ClickSight
 import com.rubyhuntersky.vx.tower.towers.textinput.TextInputEvent
 import com.rubyhuntersky.vx.tower.towers.textinput.TextInputSight
 import java.math.BigDecimal
-import com.rubyhuntersky.indexrebellion.interactions.editholding.EditHoldingAction as Action
-import com.rubyhuntersky.indexrebellion.interactions.editholding.EditHoldingVision as Vision
 
 @SuppressLint("Registered")
 class EditHoldingActivity : AppCompatActivity() {
@@ -39,7 +39,7 @@ class EditHoldingActivity : AppCompatActivity() {
         .mapSight { vision: Vision ->
             vision.symbolEdit
                 ?.toTextInputSight(InputType.WORD, Unit, String::toString)
-                ?: TextInputSight(InputType.WORD, topic = Unit, text = "", error = "BAD: $vision")
+                ?: TextInputSight(InputType.WORD, topic = Unit, text = "", error = "BAD: $vision", enabled = false)
         }
         .handleEvents { event ->
             (event as TextInputEvent.Changed)
@@ -51,7 +51,13 @@ class EditHoldingActivity : AppCompatActivity() {
         .mapSight { vision: Vision ->
             vision.sizeEdit
                 ?.toTextInputSight(InputType.UNSIGNED_DECIMAL, Unit, BigDecimal::toString)
-                ?: TextInputSight(InputType.UNSIGNED_DECIMAL, topic = Unit, text = "", error = "BAD: $vision")
+                ?: TextInputSight(
+                    InputType.UNSIGNED_DECIMAL,
+                    topic = Unit,
+                    text = "",
+                    error = "BAD: $vision",
+                    enabled = false
+                )
         }
         .handleEvents { event ->
             (event as TextInputEvent.Changed)
@@ -62,7 +68,7 @@ class EditHoldingActivity : AppCompatActivity() {
     private val priceInputTower = Standard.InsetTextInputTower<Unit>()
         .mapSight { vision: Vision ->
             vision.priceEdit?.toTextInputSight(InputType.UNSIGNED_DECIMAL, Unit, CashAmount::toDollarStat)
-                ?: TextInputSight(InputType.UNSIGNED_DECIMAL, Unit, "", error = "BAD: $vision")
+                ?: TextInputSight(InputType.UNSIGNED_DECIMAL, Unit, "", error = "BAD: $vision", enabled = false)
         }
         .handleEvents { event ->
             (event as TextInputEvent.Changed)

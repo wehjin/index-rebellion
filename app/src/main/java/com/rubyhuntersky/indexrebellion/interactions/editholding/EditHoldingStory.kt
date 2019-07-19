@@ -1,6 +1,10 @@
 package com.rubyhuntersky.indexrebellion.interactions.editholding
 
 import com.rubyhuntersky.indexrebellion.data.cash.CashAmount
+import com.rubyhuntersky.indexrebellion.data.techtonic.Drift
+import com.rubyhuntersky.indexrebellion.data.techtonic.vault.SpecificHolding
+import com.rubyhuntersky.indexrebellion.interactions.editholding.EditHoldingStory.Action
+import com.rubyhuntersky.indexrebellion.interactions.editholding.EditHoldingStory.Vision
 import com.rubyhuntersky.indexrebellion.spirits.djinns.readdrift.ReadDrifts
 import com.rubyhuntersky.indexrebellion.spirits.genies.writedrift.WriteDrift
 import com.rubyhuntersky.interaction.core.Interaction
@@ -11,11 +15,32 @@ import com.rubyhuntersky.interaction.core.wish.Wish
 import com.rubyhuntersky.interaction.stringedit.Novel
 import com.rubyhuntersky.interaction.stringedit.Validity
 import java.math.BigDecimal
-import com.rubyhuntersky.indexrebellion.interactions.editholding.EditHoldingAction as Action
-import com.rubyhuntersky.indexrebellion.interactions.editholding.EditHoldingVision as Vision
 
 class EditHoldingStory :
     Interaction<Vision, Action> by Story(::start, ::isEnding, ::revise, groupId) {
+
+    sealed class Vision {
+
+        val symbolEdit get() = (this  as? Editing)?.holdingEdit?.symbolEdit
+        val sizeEdit get() = (this  as? Editing)?.holdingEdit?.sizeEdit
+        val priceEdit get() = (this  as? Editing)?.holdingEdit?.priceEdit
+
+        object Idle : Vision()
+        data class Loading(val holdingEditType: HoldingEditType) : Vision()
+        data class Editing(val holdingEdit: HoldingEdit) : Vision()
+        data class Ended(val novelHolding: SpecificHolding?) : Vision()
+    }
+
+    sealed class Action {
+        data class Start(val editType: HoldingEditType) : Action()
+        data class Ignore(val ignore: Any) : Action()
+        data class Load(val drift: Drift) : Action()
+        data class SetSize(val change: Pair<String, IntRange>) : Action()
+        data class SetSymbol(val change: Pair<String, IntRange>) : Action()
+        data class SetPrice(val change: Pair<String, IntRange>) : Action()
+        object Write : Action()
+        object End : Action()
+    }
 
     companion object : InteractionCompanion<Vision, Action> {
         override val groupId: String = EditHoldingStory::class.java.simpleName
@@ -39,42 +64,46 @@ private fun revise(vision: Vision, action: Action): Revision<Vision, Action> = w
         Revision(vision)
     }
     vision is Vision.Idle && action is Action.Start -> {
-        val drifts = ReadDrifts.toWish<ReadDrifts, Action>(DRIFTS_WISH, Action::Load, Action::Ignore)
-        Revision(Vision.Loading(action.holding), drifts)
+        val drifts = ReadDrifts.toWish<ReadDrifts, Action>(
+            name = DRIFTS_WISH,
+            onResult = Action::Load,
+            onError = Action::Ignore
+        )
+        Revision(Vision.Loading(action.editType), drifts)
     }
     vision is Vision.Loading && action is Action.Load -> {
-        val edit = HoldingEdit(vision.specificHolding).setDrift(action.drift)
+        val edit = HoldingEdit(vision.holdingEditType).setDrift(action.drift)
         Revision(Vision.Editing(edit))
     }
     vision is Vision.Editing && action is Action.Load -> {
-        val edit = vision.edit.setDrift(action.drift)
+        val edit = vision.holdingEdit.setDrift(action.drift)
         Revision(Vision.Editing(edit))
     }
     vision is Vision.Editing && action is Action.SetSize -> {
         val size = action.change.first
         val novel = size.toNovel(action.change.second, ::sizeValidity)
-        val edit = vision.edit.setSizeNovel(novel)
+        val edit = vision.holdingEdit.setSizeNovel(novel)
         Revision(Vision.Editing(edit))
     }
     vision is Vision.Editing && action is Action.SetSymbol -> {
         val symbol = action.change.first
         val novel = symbol.toNovel(action.change.second, ::symbolValidity)
-        val edit = vision.edit.setSymbolNovel(novel)
+        val edit = vision.holdingEdit.setSymbolNovel(novel)
         Revision(Vision.Editing(edit))
     }
     vision is Vision.Editing && action is Action.SetPrice -> {
         val price = action.change.first
         val novel = price.toNovel(action.change.second, ::priceValidity)
-        val edit = vision.edit.setPriceNovel(novel)
+        val edit = vision.holdingEdit.setPriceNovel(novel)
         Revision(Vision.Editing(edit))
     }
     vision is Vision.Editing && action is Action.Write -> {
-        vision.edit.writableResult
+        vision.holdingEdit.writableResult
             ?.let { (drift, holding) ->
                 val writeDrift = WriteDrift(drift).toWish<WriteDrift, Action>(
                     name = WRITE_DRIFT_WISH,
                     onResult = Action::Ignore,
-                    onAction = Action::Ignore
+                    onError = Action::Ignore
                 )
                 Revision(Vision.Ended(holding), writeDrift)
             }

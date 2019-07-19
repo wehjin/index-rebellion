@@ -26,7 +26,7 @@ private fun revise(vision: Vision, action: Action): Revision<Vision, Action> = w
         val load = ReadDrifts.toWish<ReadDrifts, Action>(
             name = "load",
             onResult = Action::Load,
-            onAction = Action::Ignore
+            onError = Action::Ignore
         )
         Revision(Vision.Loading, load)
     }

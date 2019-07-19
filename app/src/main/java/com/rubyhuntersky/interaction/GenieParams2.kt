@@ -8,6 +8,6 @@ interface GenieParams2<Params, Result> : GenieParams<Result> where Result : Any,
     fun <Action : Any> toWish2(
         name: String,
         onResult: (Result) -> Action,
-        onAction: (Throwable) -> Action
-    ): Wish<Params, Action> = toWish(name, onResult, onAction)
+        onError: (Throwable) -> Action
+    ): Wish<Params, Action> = toWish(name, onResult, onError)
 }

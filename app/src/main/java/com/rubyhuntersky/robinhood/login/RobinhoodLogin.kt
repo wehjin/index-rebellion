@@ -122,7 +122,7 @@ fun revise(vision: Vision, action: Action): Revision<Vision, Action> {
                 .toWish2(
                     name = "save-token",
                     onResult = Action::Ignore,
-                    onAction = Action::Ignore
+                    onError = Action::Ignore
                 )
             val reporting = Vision.Reporting(vision.username, action.token)
             Revision(reporting, writeAccess)

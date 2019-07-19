@@ -9,8 +9,8 @@ import com.rubyhuntersky.indexrebellion.data.report.CorrectionDetails
 import com.rubyhuntersky.indexrebellion.interactions.books.CorrectionDetailsBook
 import com.rubyhuntersky.indexrebellion.interactions.books.MemoryRebellionBook
 import com.rubyhuntersky.interaction.core.Edge
-import org.junit.Before
-import org.junit.Test
+import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.Test
 import java.util.*
 
 class CorrectionDetailsStoryTest {
@@ -40,7 +40,7 @@ class CorrectionDetailsStoryTest {
             it.addInteraction(interaction)
         }
 
-    @Before
+    @BeforeEach
     fun setUp() {
         enableCorrectionDetails(edge.lamp)
         edge.addInteraction(interaction)

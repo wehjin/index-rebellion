@@ -25,7 +25,7 @@ fun View.toDip(px: Int): Int {
     return (px / (resources.displayMetrics.xdpi / DisplayMetrics.DENSITY_DEFAULT)).roundToInt()
 }
 
-fun <Vision : Any, Action : Any> Interaction<Vision, Action>.logChanges(tag: String): Interaction<Vision, Action> {
+fun <Vision : Any, Action : Any> Interaction<Vision, Action>.logChanges(tag: String = this.group): Interaction<Vision, Action> {
     val core = this
     return object : Interaction<Vision, Action> {
 
@@ -62,7 +62,6 @@ fun <Topic : Any, T : Any> StringEdit<T>.toTextInputSight(
     val text = novel?.string ?: ""
     val selection = novel?.selection ?: (text.length until text.length)
     val hint = ancient?.validValue?.let(stringify) ?: seed?.validValue?.let(stringify) ?: ""
-    val label = label
     val error = (novel?.validity as? Validity.Invalid)?.reason ?: ""
-    return TextInputSight(type, topic, text, selection, hint, label, error)
+    return TextInputSight(type, topic, text, selection, hint, label, error, enabled)
 }

@@ -57,7 +57,7 @@ private fun revise(vision: Vision, action: Action, edge: Edge): Revision<Vision,
             val readAccess = ReadAccess.toWish2(
                 "read-access",
                 onResult = Action::Load,
-                onAction = Action::ReceiveError
+                onError = Action::ReceiveError
             )
             val loading = Vision.Loading(action.api, action.book)
             Revision(loading, Wish.none(WRITE_ACCESS), readAccess)

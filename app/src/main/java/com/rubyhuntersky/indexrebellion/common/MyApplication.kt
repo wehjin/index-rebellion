@@ -11,6 +11,7 @@ import com.rubyhuntersky.indexrebellion.interactions.main.MainStory
 import com.rubyhuntersky.indexrebellion.interactions.refreshholdings.Access2
 import com.rubyhuntersky.indexrebellion.interactions.refreshholdings.enableRefreshHoldings
 import com.rubyhuntersky.indexrebellion.interactions.viewdrift.ViewDriftStory
+import com.rubyhuntersky.indexrebellion.presenters.ChooseHoldingTypeFragment
 import com.rubyhuntersky.indexrebellion.presenters.cashediting.CashEditingDialogFragment
 import com.rubyhuntersky.indexrebellion.presenters.cashediting.SharedCashEditingInteraction
 import com.rubyhuntersky.indexrebellion.presenters.constituentsearch.ConstituentSearchPortal
@@ -100,7 +101,8 @@ class MyApplication : Application() {
             UpdateSharesDialogFragment,
             ClassifyInstrumentActivity,
             EditHoldingActivity,
-            ViewPlanActivity
+            ViewPlanActivity,
+            ChooseHoldingTypeFragment
         )
     }
 

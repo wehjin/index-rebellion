@@ -9,7 +9,7 @@ import com.rubyhuntersky.indexrebellion.data.techtonic.market.InstrumentSample
 import com.rubyhuntersky.indexrebellion.data.techtonic.vault.Custodian
 import com.rubyhuntersky.indexrebellion.data.techtonic.vault.SpecificHolding
 import com.rubyhuntersky.interaction.core.BehaviorBook
-import org.junit.Test
+import org.junit.jupiter.api.Test
 import java.math.BigDecimal
 import java.util.*
 

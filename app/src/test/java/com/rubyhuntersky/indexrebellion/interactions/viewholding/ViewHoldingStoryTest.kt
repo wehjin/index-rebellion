@@ -18,9 +18,9 @@ import com.rubyhuntersky.interaction.core.BehaviorBook
 import com.rubyhuntersky.interaction.core.Edge
 import com.rubyhuntersky.interaction.core.wish.Genie
 import io.reactivex.Single
-import org.junit.Assert.assertNotEquals
-import org.junit.Assert.assertNull
-import org.junit.Test
+import org.junit.jupiter.api.Assertions.assertNotEquals
+import org.junit.jupiter.api.Assertions.assertNull
+import org.junit.jupiter.api.Test
 import java.math.BigDecimal
 import java.util.*
 

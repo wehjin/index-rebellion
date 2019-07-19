@@ -9,5 +9,6 @@ data class TextInputSight<out Topic : Any>(
     val selection: IntRange = text.length until text.length,
     val hint: String = "",
     val label: String = "",
-    val error: String = ""
+    val error: String = "",
+    val enabled: Boolean = true
 )

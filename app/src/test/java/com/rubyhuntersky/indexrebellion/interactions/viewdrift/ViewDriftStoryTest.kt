@@ -7,7 +7,7 @@ import com.rubyhuntersky.indexrebellion.interactions.viewholding.ViewHoldingStor
 import com.rubyhuntersky.indexrebellion.spirits.djinns.readdrift.ReadDriftsDjinn
 import com.rubyhuntersky.interaction.core.BehaviorBook
 import com.rubyhuntersky.interaction.core.Edge
-import org.junit.Test
+import org.junit.jupiter.api.Test
 import com.rubyhuntersky.indexrebellion.interactions.viewdrift.ViewDriftStory.Vision as ViewDriftVision
 
 class ViewDriftStoryTest {

@@ -49,7 +49,7 @@ private fun revise(vision: Vision, action: Action, edge: Edge): Revision<Vision,
         val readDrifts = ReadDrifts.toWish<ReadDrifts, Action>(
             READ_DRIFTS,
             onResult = Action::Load,
-            onAction = { error("ReadDrift: $it") }
+            onError = { error("ReadDrift: $it") }
         )
         Revision(Vision.Reading(action.instrumentId), readDrifts, Wish.none(RECLASSIFY))
     }
@@ -78,7 +78,7 @@ private fun revise(vision: Vision, action: Action, edge: Edge): Revision<Vision,
         val deleteHoldings = DeleteGeneralHolding(vision.holding.instrumentId).toWish2(
             name = DELETE_HOLDING,
             onResult = Action::Ignore,
-            onAction = Action::Ignore
+            onError = Action::Ignore
         )
         Revision(Vision.Ended, Wish.none(READ_DRIFTS), deleteHoldings)
     }

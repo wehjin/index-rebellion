@@ -4,6 +4,7 @@ import android.content.DialogInterface
 import android.os.Bundle
 import android.support.annotation.LayoutRes
 import android.support.design.widget.BottomSheetDialogFragment
+import android.support.v4.app.FragmentActivity
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -14,6 +15,7 @@ import com.rubyhuntersky.interaction.core.InteractionRegistry
 import com.rubyhuntersky.interaction.core.InteractionSearch
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
+import io.reactivex.functions.Consumer
 
 abstract class InteractionBottomSheetDialogFragment<V : Any, A : Any>(
     @LayoutRes private val layoutRes: Int,
@@ -33,7 +35,8 @@ abstract class InteractionBottomSheetDialogFragment<V : Any, A : Any>(
                     ?: AndroidEdge.findInteraction(InteractionSearch.ByKey(indirectInteractionKey))
             }
 
-    private var visionDisposable: Disposable? = null
+    private lateinit var visionDisposable: Disposable
+    private var endingDisposable: Disposable? = null
     private var _vision: V? = null
     protected val renderedVision get() = _vision
 
@@ -43,6 +46,11 @@ abstract class InteractionBottomSheetDialogFragment<V : Any, A : Any>(
     protected fun sendAction(action: A) {
         Log.d(this.javaClass.simpleName, "ACTION: $action")
         interaction.sendAction(action)
+    }
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        endingDisposable = interaction.ending.subscribe(Consumer { dismiss() })
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? =
@@ -78,6 +86,11 @@ abstract class InteractionBottomSheetDialogFragment<V : Any, A : Any>(
         }
         dismissAction?.also { interaction.sendAction(it) }
         super.onDismiss(dialog)
+    }
+
+    fun startInActivity(activity: FragmentActivity, key: Long) {
+        indirectInteractionKey = key
+        this.show(activity.supportFragmentManager, "${this::class.java.simpleName}-$key")
     }
 
     companion object {
