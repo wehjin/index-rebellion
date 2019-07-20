@@ -1,7 +1,7 @@
 package com.rubyhuntersky.vx.tower.additions
 
 import com.rubyhuntersky.vx.common.bound.HBound
-import com.rubyhuntersky.vx.coop.additions.Span
+import com.rubyhuntersky.vx.common.Span
 import com.rubyhuntersky.vx.tower.Tower
 
 sealed class HShare<Sight : Any, Event : Any> {

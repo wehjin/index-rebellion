@@ -4,7 +4,7 @@ import com.rubyhuntersky.vx.android.toUnit
 import com.rubyhuntersky.vx.common.TextStyle
 import com.rubyhuntersky.vx.common.margin.Margin
 import com.rubyhuntersky.vx.common.orbit.Orbit
-import com.rubyhuntersky.vx.coop.additions.Span
+import com.rubyhuntersky.vx.common.Span
 import com.rubyhuntersky.vx.tower.Tower
 import com.rubyhuntersky.vx.tower.additions.augment.extendCeiling
 import com.rubyhuntersky.vx.tower.additions.augment.extendFloor

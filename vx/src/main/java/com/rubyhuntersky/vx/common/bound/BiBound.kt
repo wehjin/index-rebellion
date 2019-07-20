@@ -1,6 +1,6 @@
 package com.rubyhuntersky.vx.common.bound
 
-import com.rubyhuntersky.vx.coop.additions.Span
+import com.rubyhuntersky.vx.common.Span
 import com.rubyhuntersky.vx.common.margin.BiMargin
 
 data class BiBound(val hBound: HBound, val vBound: VBound) {

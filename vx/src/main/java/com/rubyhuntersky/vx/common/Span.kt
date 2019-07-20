@@ -1,4 +1,4 @@
-package com.rubyhuntersky.vx.coop.additions
+package com.rubyhuntersky.vx.common
 
 sealed class Span {
 

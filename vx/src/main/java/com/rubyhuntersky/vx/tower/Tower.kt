@@ -1,5 +1,6 @@
 package com.rubyhuntersky.vx.tower
 
+import com.rubyhuntersky.vx.Vx
 import com.rubyhuntersky.vx.common.Anchor
 import com.rubyhuntersky.vx.common.Latitude
 import com.rubyhuntersky.vx.common.ViewId
@@ -24,7 +25,7 @@ interface Tower<Sight : Any, Event : Any> {
     fun enview(viewHost: ViewHost, id: ViewId): View<Sight, Event>
 
     interface ViewHost {
-        fun drop(id: ViewId)
+        fun drop(viewId: ViewId)
 
         fun <Topic : Any> addTextInputView(id: ViewId): View<TextInputSight<Topic>, TextInputEvent<Topic>>
 
@@ -41,9 +42,9 @@ interface Tower<Sight : Any, Event : Any> {
         fun addWrapTextView(id: ViewId): View<WrapTextSight, Nothing>
     }
 
-    interface View<in Sight : Any, Event : Any> {
-        val events: Observable<Event>
-        fun setSight(sight: Sight)
+    interface View<in Sight : Any, Event : Any> : Vx<Sight, Event> {
+        override val events: Observable<Event>
+        override fun setSight(sight: Sight)
         fun setHBound(hbound: HBound)
         val latitudes: Observable<Latitude>
         fun setAnchor(anchor: Anchor)

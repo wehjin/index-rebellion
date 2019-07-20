@@ -3,9 +3,7 @@ package com.rubyhuntersky.vx.android.coop
 import android.content.Context
 import android.util.AttributeSet
 import android.widget.ScrollView
-import com.rubyhuntersky.indexrebellion.projections.Standard
-import com.rubyhuntersky.vx.android.toPixels
-import com.rubyhuntersky.vx.android.tower.TowerAndroidView
+import com.rubyhuntersky.vx.android.tower.AndroidTowerViewHost
 import com.rubyhuntersky.vx.common.ViewId
 import com.rubyhuntersky.vx.tower.Tower
 import io.reactivex.Observable
@@ -24,16 +22,15 @@ class BackingScrollView<Sight : Any, Event : Any>
 
     fun enview(tower: Tower<Sight, Event>, id: ViewId) {
         removeAllViews()
-        towerView = TowerAndroidView(context, tower, id)
-            .apply { setPadding(0, 0, 0, toPixels(Standard.marginSize).toInt()) }
-        addView(towerView, LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT)
+        towerViewHost = AndroidTowerViewHost(context, tower, id)
+        addView(towerViewHost, LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT)
     }
 
-    private lateinit var towerView: TowerAndroidView<Sight, Event>
+    private lateinit var towerViewHost: AndroidTowerViewHost<Sight, Event>
     private var eventUpdates: Disposable? = null
 
     fun setSight(sight: Sight) {
-        towerView.setSight(sight)
+        towerViewHost.setSight(sight)
     }
 
     private val eventPublish: PublishSubject<Event> = PublishSubject.create()
@@ -42,7 +39,7 @@ class BackingScrollView<Sight : Any, Event : Any>
 
     override fun onAttachedToWindow() {
         super.onAttachedToWindow()
-        eventUpdates = towerView.events.subscribe(eventPublish::onNext, eventPublish::onError)
+        eventUpdates = towerViewHost.events.subscribe(eventPublish::onNext, eventPublish::onError)
     }
 
     override fun onDetachedFromWindow() {

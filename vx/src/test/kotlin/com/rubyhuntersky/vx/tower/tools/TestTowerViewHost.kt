@@ -58,8 +58,8 @@ class TestTowerViewHost : Tower.ViewHost {
         ) : Item()
     }
 
-    override fun drop(id: ViewId) {
-        items.removeAll { it.id.isEqualOrExtends(id) }
+    override fun drop(viewId: ViewId) {
+        items.removeAll { it.id.isEqualOrExtends(viewId) }
     }
 
     val items = mutableListOf<Item>()

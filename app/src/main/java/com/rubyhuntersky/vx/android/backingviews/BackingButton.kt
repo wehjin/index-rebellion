@@ -5,7 +5,7 @@ import android.support.design.button.MaterialButton
 import android.util.AttributeSet
 import com.rubyhuntersky.vx.android.coop.ViewBackedCoopView
 import com.rubyhuntersky.vx.android.toDip
-import com.rubyhuntersky.vx.android.tower.ViewBackedTowerView
+import com.rubyhuntersky.vx.android.tower.AndroidTowerView
 import com.rubyhuntersky.vx.tower.towers.click.ClickEvent
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -19,7 +19,7 @@ class BackingButton<Topic : Any>
     defStyleAttr: Int = 0
 ) :
     MaterialButton(context, attrs, defStyleAttr),
-    ViewBackedTowerView.BackingView<ClickEvent<Topic>>,
+    AndroidTowerView.BackingView<ClickEvent<Topic>>,
     ViewBackedCoopView.BackingView<ClickEvent<Topic>> {
 
     private val eventPublish: PublishSubject<ClickEvent<Topic>> = PublishSubject.create()

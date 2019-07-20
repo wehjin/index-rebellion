@@ -6,8 +6,8 @@ import android.util.TypedValue
 import android.widget.FrameLayout
 import com.rubyhuntersky.indexrebellion.projections.Standard
 import com.rubyhuntersky.vx.android.toPixels
-import com.rubyhuntersky.vx.android.tower.TowerAndroidView
-import com.rubyhuntersky.vx.android.tower.ViewBackedTowerView
+import com.rubyhuntersky.vx.android.tower.AndroidTowerViewHost
+import com.rubyhuntersky.vx.android.tower.AndroidTowerView
 import com.rubyhuntersky.vx.common.Latitude
 import com.rubyhuntersky.vx.common.ViewId
 import com.rubyhuntersky.vx.tower.Tower
@@ -23,15 +23,12 @@ class BackingClickableView<Sight : Any, Topic : Any>
     defStyleRes: Int = 0
 ) :
     FrameLayout(context, attrs, defStyleAttr, defStyleRes),
-    ViewBackedTowerView.BackingView<ClickEvent<Topic>> {
+    AndroidTowerView.BackingView<ClickEvent<Topic>> {
 
     fun enview(tower: Tower<Sight, Nothing>, id: ViewId, sightToTopic: (Sight) -> Topic) {
         removeAllViews()
-        towerView = TowerAndroidView(context, tower, id)
+        towerViewHost = AndroidTowerViewHost(context, tower, id)
             .apply {
-                // Bottom margin is ignored by the frame. Padding is a workaround.
-                setPadding(0, 0, 0, toPixels(Standard.marginSize).toInt())
-
                 isClickable = true
                 setBackgroundResource(
                     TypedValue()
@@ -46,12 +43,12 @@ class BackingClickableView<Sight : Any, Topic : Any>
                 }
             }
         addView(
-            towerView,
+            towerViewHost,
             LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT)
         )
     }
 
-    private lateinit var towerView: TowerAndroidView<Sight, Nothing>
+    private lateinit var towerViewHost: AndroidTowerViewHost<Sight, Nothing>
     private val eventPublish: PublishSubject<ClickEvent<Topic>> = PublishSubject.create()
     private var sight: Sight? = null
 
@@ -59,11 +56,11 @@ class BackingClickableView<Sight : Any, Topic : Any>
 
     fun setSight(sight: Sight) {
         this.sight = sight
-        towerView.setSight(sight)
+        towerViewHost.setSight(sight)
     }
 
     override val heights: Observable<Int>
-        get() = towerView.latitudes.map(Latitude::height).distinctUntilChanged()
+        get() = towerViewHost.latitudes.map(Latitude::height).distinctUntilChanged()
 
     override var onAttached: (() -> Unit)? = null
 

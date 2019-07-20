@@ -1,7 +1,7 @@
 package com.rubyhuntersky.indexrebellion.projections.drift
 
 import android.os.Bundle
-import android.support.v7.app.AppCompatActivity
+import com.rubyhuntersky.indexrebellion.data.techtonic.DEFAULT_DRIFT
 import com.rubyhuntersky.indexrebellion.data.techtonic.Drift
 import com.rubyhuntersky.indexrebellion.data.techtonic.plating.PlateAdjustment
 import com.rubyhuntersky.indexrebellion.data.techtonic.vault.Custodian
@@ -15,21 +15,22 @@ import com.rubyhuntersky.indexrebellion.projections.drift.towers.HoldingTower
 import com.rubyhuntersky.interaction.android.ActivityInteraction
 import com.rubyhuntersky.interaction.core.Edge
 import com.rubyhuntersky.interaction.core.Interaction
-import com.rubyhuntersky.vx.android.coop.CoopContentView
 import com.rubyhuntersky.vx.android.toUnit
-import com.rubyhuntersky.vx.coop.Coop
-import com.rubyhuntersky.vx.coop.additions.Span
-import com.rubyhuntersky.vx.coop.additions.mapSight
+import com.rubyhuntersky.vx.android.tower.TowerActivity
+import com.rubyhuntersky.vx.common.Span
 import com.rubyhuntersky.vx.toPercent
+import com.rubyhuntersky.vx.tower.Tower
 import com.rubyhuntersky.vx.tower.additions.*
 import com.rubyhuntersky.vx.tower.additions.augment.extendCeiling
 import com.rubyhuntersky.vx.tower.additions.augment.extendFloor
 import com.rubyhuntersky.vx.tower.additions.clicks.plusClicks
+import com.rubyhuntersky.vx.tower.additions.pad.VPad
+import com.rubyhuntersky.vx.tower.additions.pad.plusVPad
 import com.rubyhuntersky.vx.tower.additions.replicate.replicate
 import com.rubyhuntersky.vx.tower.towers.click.ClickSight
 import kotlin.math.absoluteValue
 
-class DriftActivity : AppCompatActivity() {
+class DriftActivity : TowerActivity<Vision, Nothing>() {
 
     private lateinit var interaction: Interaction<Vision, Action>
 
@@ -84,19 +85,18 @@ class DriftActivity : AppCompatActivity() {
         .neverEvent<Nothing>()
         .mapSight { drift: Drift -> drift.plateAdjustments.toList() }
 
-    private val pageTower = Standard.SectionTower(
-        Pair("Holdings", balanceHoldingsTower),
-        Pair("Adjustments", allAdjustmentsTower.extendFloor(planButtonTower))
-    )
+    override val activityTower: Tower<Vision, Nothing> = Standard
+        .SectionTower(
+            Pair("Holdings", balanceHoldingsTower),
+            Pair("Adjustments", allAdjustmentsTower.extendFloor(planButtonTower))
+        )
+        .plusVPad(VPad.Ceiling(Standard.marginSize))
+        .mapSight { vision: Vision -> (vision as? Vision.Viewing)?.drift ?: DEFAULT_DRIFT }
 
-    private val pageCoop: Coop<Vision.Viewing, Nothing> = pageTower.inCoop().mapSight(Vision.Viewing::drift)
-
-    private val coopContentView = CoopContentView(pageCoop)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         startActivityInteraction()
-        coopContentView.setInActivity(this@DriftActivity)
     }
 
     private fun startActivityInteraction() {
@@ -106,9 +106,7 @@ class DriftActivity : AppCompatActivity() {
     }
 
     @Suppress("UNUSED_PARAMETER")
-    private fun renderVision(vision: Vision, sendAction: (Action) -> Unit, edge: Edge) {
-        if (vision is Vision.Viewing) coopContentView.setSight(vision)
-    }
+    private fun renderVision(vision: Vision, sendAction: (Action) -> Unit, edge: Edge) = vx.setSight(vision)
 
     companion object {
 

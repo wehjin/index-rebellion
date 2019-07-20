@@ -5,7 +5,7 @@ import com.rubyhuntersky.vx.common.TextStyle
 import com.rubyhuntersky.vx.common.ViewId
 import com.rubyhuntersky.vx.common.bound.HBound
 import com.rubyhuntersky.vx.common.margin.Margin
-import com.rubyhuntersky.vx.coop.additions.Span
+import com.rubyhuntersky.vx.common.Span
 import com.rubyhuntersky.vx.common.Latitude
 import com.rubyhuntersky.vx.tower.tools.TestTowerViewHost
 import com.rubyhuntersky.vx.tower.towers.wraptext.WrapTextSight

@@ -32,12 +32,10 @@ fun <Sight : Any, Event : Any> Tower<Sight, Event>.handleEvents(onEvent: ((Event
         override fun enview(viewHost: Tower.ViewHost, id: ViewId): Tower.View<Sight, Nothing> {
             val coreView = core.enview(viewHost, id)
             return object : Tower.View<Sight, Nothing> {
+                @Suppress("unused")
+                private val eventHandler = coreView.events.subscribe(onEvent)
 
-                override val events: Observable<Nothing>
-                    get() = coreView.events
-                        .doOnNext(onEvent)
-                        .flatMap { Observable.never<Nothing>() }
-
+                override val events: Observable<Nothing> get() = coreView.events.flatMap { Observable.never<Nothing>() }
                 override fun setSight(sight: Sight) = coreView.setSight(sight)
                 override fun setHBound(hbound: HBound) = coreView.setHBound(hbound)
                 override val latitudes: Observable<Latitude> get() = coreView.latitudes

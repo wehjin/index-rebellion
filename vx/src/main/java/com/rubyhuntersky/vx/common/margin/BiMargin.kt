@@ -1,6 +1,6 @@
 package com.rubyhuntersky.vx.common.margin
 
-import com.rubyhuntersky.vx.coop.additions.Span
+import com.rubyhuntersky.vx.common.Span
 
 sealed class BiMargin {
 

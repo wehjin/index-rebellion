@@ -22,7 +22,7 @@ fun View.toPixels(dip: Int): Float {
 }
 
 fun View.toDip(px: Int): Int {
-    return (px / (resources.displayMetrics.xdpi / DisplayMetrics.DENSITY_DEFAULT)).roundToInt()
+    return (px / (resources.displayMetrics.densityDpi.toFloat() / DisplayMetrics.DENSITY_DEFAULT)).roundToInt()
 }
 
 fun <Vision : Any, Action : Any> Interaction<Vision, Action>.logChanges(tag: String = this.group): Interaction<Vision, Action> {

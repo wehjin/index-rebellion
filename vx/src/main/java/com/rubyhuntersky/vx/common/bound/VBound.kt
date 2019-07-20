@@ -1,6 +1,6 @@
 package com.rubyhuntersky.vx.common.bound
 
-import com.rubyhuntersky.vx.coop.additions.Span
+import com.rubyhuntersky.vx.common.Span
 import com.rubyhuntersky.vx.common.margin.Margin
 
 data class VBound(val ceiling: Int, val floor: Int) {

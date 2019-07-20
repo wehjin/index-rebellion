@@ -8,6 +8,11 @@ import com.rubyhuntersky.vx.tower.Tower
 import io.reactivex.Observable
 import java.text.DecimalFormat
 
+interface Vx<in Sight : Any, Event : Any> {
+    val events: Observable<Event>
+    fun setSight(sight: Sight)
+}
+
 fun <CoreC : Any, EdgeC : Any, Ev : Any> Tower<CoreC, Ev>.transform(transformer: (EdgeC) -> CoreC): Tower<EdgeC, Ev> {
     return object : Tower<EdgeC, Ev> {
         override fun enview(viewHost: Tower.ViewHost, id: ViewId): Tower.View<EdgeC, Ev> =

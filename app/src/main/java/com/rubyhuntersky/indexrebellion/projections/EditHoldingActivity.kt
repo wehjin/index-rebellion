@@ -22,6 +22,7 @@ import com.rubyhuntersky.vx.tower.additions.fixSight
 import com.rubyhuntersky.vx.tower.additions.handleEvents
 import com.rubyhuntersky.vx.tower.additions.inCoop
 import com.rubyhuntersky.vx.tower.additions.mapSight
+import com.rubyhuntersky.vx.tower.additions.pad.plusVPad
 import com.rubyhuntersky.vx.tower.towers.InputType
 import com.rubyhuntersky.vx.tower.towers.click.ClickEvent
 import com.rubyhuntersky.vx.tower.towers.click.ClickSight
@@ -90,6 +91,7 @@ class EditHoldingActivity : AppCompatActivity() {
         .extendFloor(priceInputTower)
         .extendFloor(saveTower)
         .extendFloor(visionTower)
+        .plusVPad(Standard.uniformPad)
 
     private val coopContentView = CoopContentView(pageTower.inCoop())
 

@@ -1,5 +1,6 @@
 package com.rubyhuntersky.vx.coop.additions
 
+import com.rubyhuntersky.vx.common.Span
 import com.rubyhuntersky.vx.coop.Coop
 
 data class Share<Sight : Any, Event : Any>(

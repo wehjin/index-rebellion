@@ -1,5 +1,6 @@
 package com.rubyhuntersky.vx.coop.additions
 
+import com.rubyhuntersky.vx.common.Span
 import com.rubyhuntersky.vx.common.TextStyle
 import com.rubyhuntersky.vx.common.ViewId
 import com.rubyhuntersky.vx.common.bound.BiBound

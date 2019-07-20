@@ -1,12 +1,12 @@
 package com.rubyhuntersky.vx.android
 
 import android.content.Context
+import android.support.constraint.ConstraintLayout
 import android.util.AttributeSet
-import android.widget.FrameLayout
 import com.rubyhuntersky.indexrebellion.R
 import com.rubyhuntersky.vx.android.backingviews.BackingInputLayout
 import com.rubyhuntersky.vx.android.backingviews.BackingTextView
-import com.rubyhuntersky.vx.android.tower.ViewBackedTowerView
+import com.rubyhuntersky.vx.android.tower.AndroidTowerView
 import com.rubyhuntersky.vx.common.Anchor
 import com.rubyhuntersky.vx.common.TextStyle
 import com.rubyhuntersky.vx.common.ViewId
@@ -28,9 +28,10 @@ class ScreenView
 @JvmOverloads constructor(
     context: Context,
     attrs: AttributeSet? = null,
-    defStyleAttr: Int = 0,
-    defStyleRes: Int = 0
-) : FrameLayout(context, attrs, defStyleAttr, defStyleRes), Tower.ViewHost {
+    defStyleAttr: Int = 0
+) :
+    Tower.ViewHost,
+    ConstraintLayout(context, attrs, defStyleAttr) {
 
     fun <C : Any, E : Any> render(towerView: Tower.View<C, E>) {
         this.renderedTowerView = towerView
@@ -72,7 +73,7 @@ class ScreenView
         hboundBehavior.onNext(HBound(toDip(left), toDip(left + w)))
     }
 
-    override fun drop(id: ViewId) {
+    override fun drop(viewId: ViewId) {
         error("Not implemented, use TowerAndroidView")
     }
 
@@ -93,10 +94,10 @@ class ScreenView
     }
 
     override fun addInputView(id: ViewId): Tower.View<InputSight, InputEvent> =
-        ViewBackedTowerView(
-            frameLayout = this@ScreenView,
-            id = id,
-            adapter = object : ViewBackedTowerView.Adapter<BackingInputLayout, InputSight, InputEvent> {
+        AndroidTowerView(
+            hostLayout = this@ScreenView,
+            viewId = id,
+            adapter = object : AndroidTowerView.Adapter<BackingInputLayout, InputSight, InputEvent> {
                 override fun buildView(context: Context): BackingInputLayout = BackingInputLayout(context, null)
 
                 override fun renderView(view: BackingInputLayout, sight: InputSight) {
@@ -106,10 +107,10 @@ class ScreenView
         )
 
     override fun addWrapTextView(id: ViewId): Tower.View<WrapTextSight, Nothing> =
-        ViewBackedTowerView(
-            frameLayout = this@ScreenView,
-            id = id,
-            adapter = object : ViewBackedTowerView.Adapter<BackingTextView, WrapTextSight, Nothing> {
+        AndroidTowerView(
+            hostLayout = this@ScreenView,
+            viewId = id,
+            adapter = object : AndroidTowerView.Adapter<BackingTextView, WrapTextSight, Nothing> {
                 override fun buildView(context: Context): BackingTextView = BackingTextView(context)
 
                 override fun renderView(view: BackingTextView, sight: WrapTextSight) {

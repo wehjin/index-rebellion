@@ -4,7 +4,7 @@ import com.rubyhuntersky.indexrebellion.data.cash.CashAmount
 import com.rubyhuntersky.indexrebellion.projections.Standard
 import com.rubyhuntersky.indexrebellion.projections.drift.HoldingSight
 import com.rubyhuntersky.vx.common.margin.Margin
-import com.rubyhuntersky.vx.coop.additions.Span
+import com.rubyhuntersky.vx.common.Span
 import com.rubyhuntersky.vx.tower.Tower
 import com.rubyhuntersky.vx.tower.additions.*
 import com.rubyhuntersky.vx.tower.additions.pad.VPad

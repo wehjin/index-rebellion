@@ -14,7 +14,7 @@ import com.rubyhuntersky.interaction.core.Interaction
 import com.rubyhuntersky.vx.android.coop.CoopContentView
 import com.rubyhuntersky.vx.android.putActivityInteractionSearchKey
 import com.rubyhuntersky.vx.common.orbit.Orbit
-import com.rubyhuntersky.vx.coop.additions.Span
+import com.rubyhuntersky.vx.common.Span
 import com.rubyhuntersky.vx.tower.additions.*
 import com.rubyhuntersky.vx.tower.additions.augment.extendFloor
 import com.rubyhuntersky.vx.tower.additions.pad.plusVPad

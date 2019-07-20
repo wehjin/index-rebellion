@@ -12,7 +12,7 @@ import android.view.inputmethod.EditorInfo
 import android.widget.FrameLayout
 import com.rubyhuntersky.indexrebellion.R
 import com.rubyhuntersky.vx.android.toDip
-import com.rubyhuntersky.vx.android.tower.ViewBackedTowerView
+import com.rubyhuntersky.vx.android.tower.AndroidTowerView
 import com.rubyhuntersky.vx.tower.towers.Icon
 import com.rubyhuntersky.vx.tower.towers.InputEvent
 import com.rubyhuntersky.vx.tower.towers.InputSight
@@ -29,7 +29,7 @@ class BackingInputLayout
     attrs: AttributeSet? = null,
     defStyleAttr: Int = 0,
     defStyleRes: Int = 0
-) : FrameLayout(context, attrs, defStyleAttr, defStyleRes), ViewBackedTowerView.BackingView<InputEvent> {
+) : FrameLayout(context, attrs, defStyleAttr, defStyleRes), AndroidTowerView.BackingView<InputEvent> {
 
     private var layout: TextInputLayout
 
