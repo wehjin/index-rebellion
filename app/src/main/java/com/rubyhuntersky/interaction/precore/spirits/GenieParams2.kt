@@ -1,4 +1,4 @@
-package com.rubyhuntersky.interaction
+package com.rubyhuntersky.interaction.precore.spirits
 
 import com.rubyhuntersky.interaction.core.wish.GenieParams
 import com.rubyhuntersky.interaction.core.wish.Wish

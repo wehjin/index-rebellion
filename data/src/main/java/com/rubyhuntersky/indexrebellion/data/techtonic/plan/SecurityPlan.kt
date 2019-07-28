@@ -1,7 +1,6 @@
 package com.rubyhuntersky.indexrebellion.data.techtonic.plan
 
 import com.rubyhuntersky.indexrebellion.data.techtonic.plating.Plate
-import com.rubyhuntersky.indexrebellion.data.techtonic.toDivisionElementId
 import kotlinx.serialization.Serializable
 import kotlin.math.max
 
@@ -24,15 +23,20 @@ data class SecurityPlan(
     override val divisionId
         get() = DivisionId.Securities
 
-    override val divisionElements
+    override val divisionElements: List<DivisionElement>
         get() = listOf(
-            DivisionElement(
-                id = Plate.Debt.toDivisionElementId(),
-                weight = debtWeight
-            ),
-            DivisionElement(
-                id = DivisionId.Equities.toDivisionElementId(),
-                weight = equityWeight
-            )
+            DivisionElement(debtElementId, debtWeight),
+            DivisionElement(equitiesElementId, equityWeight)
         )
+
+    private val debtElementId get() = DivisionElementId.Plate(divisionId, Plate.Debt)
+    private val equitiesElementId get() = DivisionElementId.Subdivision(DivisionId.Equities)
+
+    override fun replace(divisionElements: List<DivisionElement>): SecurityPlan {
+        val weights = divisionElements.associateBy(DivisionElement::id, DivisionElement::weight)
+        return copy(
+            debtWeight = weights[debtElementId] ?: debtWeight,
+            equityWeight = weights[equitiesElementId] ?: equityWeight
+        )
+    }
 }

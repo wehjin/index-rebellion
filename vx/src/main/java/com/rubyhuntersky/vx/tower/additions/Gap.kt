@@ -21,6 +21,12 @@ operator fun <Sight : Any, Event : Any> Tower<Sight, Event>.plus(gap: Gap): Towe
     object : Tower<Sight, Event> {
         override fun enview(viewHost: Tower.ViewHost, id: ViewId): Tower.View<Sight, Event> =
             object : Tower.View<Sight, Event> {
+
+                override fun dequeue() {
+                    composite.clear()
+                    view.dequeue()
+                }
+
                 private val view = this@plus.enview(viewHost, id.extend(0))
                 private val heights = view.latitudes.map { it.height + (gap as Gap.TitleBody).dips }
                 private val anchorBehavior = BehaviorSubject.createDefault(Anchor(0, 0f))

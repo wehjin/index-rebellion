@@ -11,6 +11,7 @@ import com.rubyhuntersky.vx.tower.Tower
 abstract class TowerActivity<Sight : Any, Event : Any> : AppCompatActivity() {
 
     abstract val activityTower: Tower<Sight, Event>
+
     lateinit var vx: Vx<Sight, Event>
 
     override fun onCreate(savedInstanceState: Bundle?) {

@@ -13,7 +13,12 @@ import com.rubyhuntersky.vx.tower.Tower
 import com.rubyhuntersky.vx.tower.additions.Bottom
 import com.rubyhuntersky.vx.tower.additions.Gap
 import com.rubyhuntersky.vx.tower.additions.plus
-import com.rubyhuntersky.vx.tower.towers.*
+import com.rubyhuntersky.vx.tower.towers.Icon
+import com.rubyhuntersky.vx.tower.towers.InputType
+import com.rubyhuntersky.vx.tower.towers.TitleTower
+import com.rubyhuntersky.vx.tower.towers.textinput.TextInputEvent
+import com.rubyhuntersky.vx.tower.towers.textinput.TextInputSight
+import com.rubyhuntersky.vx.tower.towers.textinput.TextInputTower
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.rxkotlin.addTo
 import kotlinx.android.synthetic.main.fragment_cash_editing.*
@@ -25,17 +30,18 @@ class CashEditingDialogFragment : InteractionBottomSheetDialogFragment<Vision, A
 ) {
     data class FundingEditor(
         val title: String,
-        val targetInput: InputSight
+        val targetInput: TextInputSight<Unit>
     ) {
         fun toPair() = Pair(title, targetInput)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        val textInputTower = TextInputTower<Unit>()
         val tower =
-            TitleTower.neverEvent<InputEvent>() +
+            TitleTower.neverEvent<TextInputEvent<Unit>>() +
                     Gap.TitleBody +
-                    Bottom(InputTower, FundingEditor::toPair)
+                    Bottom(textInputTower, FundingEditor::toPair)
 
         towerView = tower.enview(view.screenView, ViewId())
             .also {
@@ -43,7 +49,7 @@ class CashEditingDialogFragment : InteractionBottomSheetDialogFragment<Vision, A
             }
         towerView.events
             .subscribe {
-                sendAction(Action.SetEdit((it as InputEvent.TextChange).text))
+                sendAction(Action.SetEdit((it as TextInputEvent.Changed<Unit>).text))
             }
             .addTo(composite)
 
@@ -53,7 +59,7 @@ class CashEditingDialogFragment : InteractionBottomSheetDialogFragment<Vision, A
     }
 
     private val composite = CompositeDisposable()
-    private lateinit var towerView: Tower.View<FundingEditor, InputEvent>
+    private lateinit var towerView: Tower.View<FundingEditor, TextInputEvent<Unit>>
 
     override fun onDestroyView() {
         composite.clear()
@@ -76,12 +82,13 @@ class CashEditingDialogFragment : InteractionBottomSheetDialogFragment<Vision, A
         }
         val content = FundingEditor(
             title = "Update Funding",
-            targetInput = InputSight(
+            targetInput = TextInputSight(
                 type = InputType.SIGNED_DECIMAL,
                 text = vision.edit,
-                originalText = (if (vision.oldCashAmount < CashAmount.ZERO) "-" else "") + vision.oldCashAmount.toStatString(),
+                hint = (if (vision.oldCashAmount < CashAmount.ZERO) "-" else "") + vision.oldCashAmount.toStatString(),
                 label = getString(labelRes),
-                icon = Icon.ResId(R.drawable.ic_attach_money_black_24dp)
+                icon = Icon.ResId(R.drawable.ic_attach_money_black_24dp),
+                topic = Unit
             )
         )
         towerView.setSight(content)

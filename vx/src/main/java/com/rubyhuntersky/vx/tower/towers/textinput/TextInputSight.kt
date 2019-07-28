@@ -1,5 +1,6 @@
 package com.rubyhuntersky.vx.tower.towers.textinput
 
+import com.rubyhuntersky.vx.tower.towers.Icon
 import com.rubyhuntersky.vx.tower.towers.InputType
 
 data class TextInputSight<out Topic : Any>(
@@ -10,5 +11,6 @@ data class TextInputSight<out Topic : Any>(
     val hint: String = "",
     val label: String = "",
     val error: String = "",
-    val enabled: Boolean = true
+    val enabled: Boolean = true,
+    val icon: Icon? = null
 )

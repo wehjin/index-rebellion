@@ -9,7 +9,6 @@ import com.rubyhuntersky.indexrebellion.interactions.ChooseHoldingTypeStory
 import com.rubyhuntersky.indexrebellion.interactions.viewdrift.ViewDriftStory.Action
 import com.rubyhuntersky.indexrebellion.interactions.viewdrift.ViewDriftStory.Vision
 import com.rubyhuntersky.indexrebellion.interactions.viewholding.ViewHoldingStory
-import com.rubyhuntersky.indexrebellion.interactions.viewplan.ViewPlanAction
 import com.rubyhuntersky.indexrebellion.interactions.viewplan.ViewPlanStory
 import com.rubyhuntersky.indexrebellion.spirits.djinns.readdrift.ReadDrifts
 import com.rubyhuntersky.indexrebellion.spirits.genies.FetchStockSamples
@@ -87,7 +86,7 @@ private fun revise(vision: Vision, action: Action, edge: Edge): Revision<Vision,
         val viewPlan = edge.wish(
             "view-plan",
             interaction = ViewPlanStory(),
-            startAction = ViewPlanAction.Start,
+            startAction = ViewPlanStory.Action.Start,
             endVisionToAction = Action::Ignore
         )
         Revision(vision, Wish.none(REFRESH_PRICES), viewPlan)

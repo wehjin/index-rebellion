@@ -18,12 +18,10 @@ import com.rubyhuntersky.indexrebellion.presenters.constituentsearch.Constituent
 import com.rubyhuntersky.indexrebellion.presenters.correctiondetails.CorrectionDetailsDialogFragment
 import com.rubyhuntersky.indexrebellion.presenters.main.MainActivity
 import com.rubyhuntersky.indexrebellion.presenters.updateshares.UpdateSharesDialogFragment
-import com.rubyhuntersky.indexrebellion.projections.ClassifyInstrumentActivity
-import com.rubyhuntersky.indexrebellion.projections.EditHoldingActivity
-import com.rubyhuntersky.indexrebellion.projections.ViewHoldingActivity
-import com.rubyhuntersky.indexrebellion.projections.ViewPlanActivity
+import com.rubyhuntersky.indexrebellion.projections.*
 import com.rubyhuntersky.indexrebellion.spirits.djinns.readdrift.ReadDriftsDjinn
 import com.rubyhuntersky.indexrebellion.spirits.genies.DeleteGeneralHolding
+import com.rubyhuntersky.indexrebellion.spirits.genies.WriteDivision
 import com.rubyhuntersky.indexrebellion.spirits.genies.showtoast.ShowToast
 import com.rubyhuntersky.indexrebellion.spirits.genies.writedrift.WriteDrift
 import com.rubyhuntersky.indexrebellion.spirits.genies.writeinstrumentplate.WriteInstrumentPlatingGenie
@@ -66,6 +64,7 @@ class MyApplication : Application() {
             add(WriteAccess.GENIE(accessBook))
             add(FetchRbhAccessTokenGenie)
             add(DeleteGeneralHolding.GENIE(driftBook))
+            add(WriteDivision.GENIE(driftBook))
         }
 
         ViewDriftStory()
@@ -102,7 +101,8 @@ class MyApplication : Application() {
             ClassifyInstrumentActivity,
             EditHoldingActivity,
             ViewPlanActivity,
-            ChooseHoldingTypeFragment
+            ChooseHoldingTypeFragment,
+            EditDivisionActivity
         )
     }
 

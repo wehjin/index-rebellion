@@ -58,15 +58,29 @@ class TestTowerViewHost : Tower.ViewHost {
         ) : Item()
     }
 
-    override fun drop(viewId: ViewId) {
-        items.removeAll { it.id.isEqualOrExtends(viewId) }
+    override fun drop(viewId: ViewId, start: Boolean) {
+        if (start) {
+            dropViewIds = items.map(Item::id).filter { it.isEqualOrExtends(viewId) }.toSet()
+            recycledViewIds.clear()
+        } else {
+            val subtract = dropViewIds.subtract(recycledViewIds)
+            items.removeAll { subtract.contains(it.id) }
+            dropViewIds = emptySet()
+            recycledViewIds.clear()
+        }
     }
+
+    private var dropViewIds: Set<ViewId> = emptySet()
+    private val recycledViewIds = mutableSetOf<ViewId>()
 
     val items = mutableListOf<Item>()
 
     override fun <Topic : Any> addTextInputView(id: ViewId): Tower.View<TextInputSight<Topic>, TextInputEvent<Topic>> {
         val item = Item.TestEditText<Topic>(id).also(this::addItem)
         return object : Tower.View<TextInputSight<Topic>, TextInputEvent<Topic>> {
+
+            override fun dequeue() {}
+
             override val events get() = item.events
             override fun setSight(sight: TextInputSight<Topic>) {
                 item.sight = sight
@@ -84,9 +98,12 @@ class TestTowerViewHost : Tower.ViewHost {
     }
 
     private fun addItem(item: Item) {
+        println("ADD ITEM: $item")
         items.removeIf { it.id == item.id }
         items.add(item)
     }
+
+    private fun findItem(id: ViewId): Item? = items.firstOrNull { it.id == id }
 
     override fun addInputView(id: ViewId): Tower.View<InputSight, InputEvent> {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
@@ -99,6 +116,9 @@ class TestTowerViewHost : Tower.ViewHost {
     ): Tower.View<Sight, ClickEvent<Topic>> {
         val item = Item.TestClickOverlay<Sight, Topic>(id, tower = tower)
         return object : Tower.View<Sight, ClickEvent<Topic>> {
+
+            override fun dequeue() {}
+
             override val events: Observable<ClickEvent<Topic>> get() = item.events
             override fun setSight(sight: Sight) {
                 item.sight = sight
@@ -118,6 +138,10 @@ class TestTowerViewHost : Tower.ViewHost {
     override fun <Topic : Any> addClickView(id: ViewId): Tower.View<ClickSight<Topic>, ClickEvent<Topic>> {
         val item = Item.TestClick<Topic>(id).also(this::addItem)
         return object : Tower.View<ClickSight<Topic>, ClickEvent<Topic>> {
+            override fun dequeue() {
+
+            }
+
             override val events: Observable<ClickEvent<Topic>> get() = item.events
             override fun setSight(sight: ClickSight<Topic>) {
                 item.sight = sight
@@ -135,20 +159,46 @@ class TestTowerViewHost : Tower.ViewHost {
     }
 
     override fun addWrapTextView(id: ViewId): Tower.View<WrapTextSight, Nothing> {
-        val item = Item.TestWrapText(id).also(this::addItem)
-        return object : Tower.View<WrapTextSight, Nothing> {
-            override val events: Observable<Nothing> get() = Observable.never()
-            override fun setSight(sight: WrapTextSight) {
-                item.sight = sight
-            }
+        val old = findItem(id) as? Item.TestWrapText
+        if (old == null) {
+            val item = Item.TestWrapText(id).also(this::addItem)
+            return object : Tower.View<WrapTextSight, Nothing> {
 
-            override fun setHBound(hbound: HBound) {
-                item.bound = hbound
-            }
+                override fun dequeue() {}
 
-            override val latitudes: Observable<Latitude> get() = item.latitudes
-            override fun setAnchor(anchor: Anchor) {
-                item.anchor = anchor
+                override val events: Observable<Nothing> get() = Observable.never()
+                override fun setSight(sight: WrapTextSight) {
+                    item.sight = sight
+                }
+
+                override fun setHBound(hbound: HBound) {
+                    item.bound = hbound
+                }
+
+                override val latitudes: Observable<Latitude> get() = item.latitudes
+                override fun setAnchor(anchor: Anchor) {
+                    item.anchor = anchor
+                }
+            }
+        } else {
+            recycledViewIds.add(id)
+            return object : Tower.View<WrapTextSight, Nothing> {
+
+                override fun dequeue() {}
+
+                override val events: Observable<Nothing> get() = Observable.never()
+                override fun setSight(sight: WrapTextSight) {
+                    old.sight = sight
+                }
+
+                override fun setHBound(hbound: HBound) {
+                    old.bound = hbound
+                }
+
+                override val latitudes: Observable<Latitude> get() = old.latitudes
+                override fun setAnchor(anchor: Anchor) {
+                    old.anchor = anchor
+                }
             }
         }
     }

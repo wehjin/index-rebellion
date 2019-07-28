@@ -14,6 +14,9 @@ fun <Sight : Any, Event : Any> Tower<Sight, Event>.plusHMargin(margin: Margin): 
         override fun enview(viewHost: Tower.ViewHost, id: ViewId): Tower.View<Sight, Event> {
             val coreView = core.enview(viewHost, id)
             return object : Tower.View<Sight, Event> {
+
+                override fun dequeue() = coreView.dequeue()
+
                 override val events: Observable<Event> get() = coreView.events
                 override fun setSight(sight: Sight) = coreView.setSight(sight)
                 override fun setHBound(hbound: HBound) = coreView.setHBound(hbound.withMargin(margin))

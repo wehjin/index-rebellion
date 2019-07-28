@@ -17,7 +17,7 @@ import com.rubyhuntersky.vx.android.coop.CoopContentView
 import com.rubyhuntersky.vx.android.putActivityInteractionSearchKey
 import com.rubyhuntersky.vx.android.toTextInputSight
 import com.rubyhuntersky.vx.android.toUnit
-import com.rubyhuntersky.vx.tower.additions.augment.extendFloor
+import com.rubyhuntersky.vx.tower.additions.extend.extendFloor
 import com.rubyhuntersky.vx.tower.additions.fixSight
 import com.rubyhuntersky.vx.tower.additions.handleEvents
 import com.rubyhuntersky.vx.tower.additions.inCoop

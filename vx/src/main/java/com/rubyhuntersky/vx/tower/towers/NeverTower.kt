@@ -7,13 +7,15 @@ import com.rubyhuntersky.vx.common.bound.HBound
 import com.rubyhuntersky.vx.tower.Tower
 import io.reactivex.Observable
 
-class NeverTower<Sight : Any, NeverE : Any, EverE : Any>(
+class NeverTower<in Sight : Any, NeverE : Any, EverE : Any>(
     private val tower: Tower<Sight, EverE>
 ) : Tower<Sight, NeverE> {
 
-    private class NeverView<Sight : Any, NeverE : Any, EverE : Any>(
+    private class NeverView<in Sight : Any, NeverE : Any, EverE : Any>(
         private val coreView: Tower.View<Sight, EverE>
     ) : Tower.View<Sight, NeverE> {
+
+        override fun dequeue() = coreView.dequeue()
         override fun setHBound(hbound: HBound) = coreView.setHBound(hbound)
         override val latitudes: Observable<Latitude> get() = coreView.latitudes
         override fun setAnchor(anchor: Anchor) = coreView.setAnchor(anchor)

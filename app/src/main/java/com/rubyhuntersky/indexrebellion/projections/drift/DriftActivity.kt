@@ -21,8 +21,8 @@ import com.rubyhuntersky.vx.common.Span
 import com.rubyhuntersky.vx.toPercent
 import com.rubyhuntersky.vx.tower.Tower
 import com.rubyhuntersky.vx.tower.additions.*
-import com.rubyhuntersky.vx.tower.additions.augment.extendCeiling
-import com.rubyhuntersky.vx.tower.additions.augment.extendFloor
+import com.rubyhuntersky.vx.tower.additions.extend.extendCeiling
+import com.rubyhuntersky.vx.tower.additions.extend.extendFloor
 import com.rubyhuntersky.vx.tower.additions.clicks.plusClicks
 import com.rubyhuntersky.vx.tower.additions.pad.VPad
 import com.rubyhuntersky.vx.tower.additions.pad.plusVPad

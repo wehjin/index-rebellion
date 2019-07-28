@@ -2,9 +2,9 @@ package com.rubyhuntersky.vx.tower.additions
 
 import com.rubyhuntersky.vx.common.Anchor
 import com.rubyhuntersky.vx.common.Latitude
+import com.rubyhuntersky.vx.common.Span
 import com.rubyhuntersky.vx.common.ViewId
 import com.rubyhuntersky.vx.common.bound.HBound
-import com.rubyhuntersky.vx.common.Span
 import com.rubyhuntersky.vx.tower.Tower
 import io.reactivex.Observable
 import io.reactivex.disposables.CompositeDisposable
@@ -26,6 +26,11 @@ fun <Sight : Any, Event : Any> Tower<Sight, Event>.plusShare(share: HShare<Sight
             val coreView = core.enview(viewHost, id.extend(0))
             val altView = alt.enview(viewHost, id.extend(1))
             return object : Tower.View<Sight, Event> {
+                override fun dequeue() {
+                    latitudeWatchers.clear()
+                    coreView.dequeue()
+                    altView.dequeue()
+                }
 
                 override val events: Observable<Event>
                     get() = Observable.merge(coreView.events, altView.events)

@@ -4,7 +4,7 @@ import com.rubyhuntersky.vx.common.ViewId
 import com.rubyhuntersky.vx.coop.Coop
 import com.rubyhuntersky.vx.tower.Tower
 
-class TowerCoop<Sight : Any, Event : Any>(
+class TowerCoop<in Sight: Any, Event : Any>(
     private val tower: Tower<Sight, Event>
 ) : Coop<Sight, Event> {
 

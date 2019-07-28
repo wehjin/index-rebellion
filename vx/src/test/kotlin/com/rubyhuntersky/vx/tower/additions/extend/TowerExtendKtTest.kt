@@ -1,4 +1,4 @@
-package com.rubyhuntersky.vx.tower.additions.augment
+package com.rubyhuntersky.vx.tower.additions.extend
 
 import com.rubyhuntersky.vx.common.Anchor
 import com.rubyhuntersky.vx.common.Latitude
@@ -12,16 +12,16 @@ import com.rubyhuntersky.vx.tower.towers.wraptext.WrapTextTower
 import org.junit.Assert.assertEquals
 import org.junit.Test
 
-class TowerAugmentKtTest {
+class TowerExtendKtTest {
 
     private val viewHost = TestTowerViewHost()
 
     @Test
-    fun plusVAugment() {
-        val tower = WrapTextTower()
-            .plus(
-                VAugment.Uniform(EmptyTower(10))
-            )
+    fun main() {
+
+        val tower =
+            WrapTextTower().extendVertical(VExtend.Uniform(EmptyTower(10)))
+
         val sight = WrapTextSight("Hello", TextStyle.Body1)
         val view = tower.enview(viewHost, ViewId())
             .apply {

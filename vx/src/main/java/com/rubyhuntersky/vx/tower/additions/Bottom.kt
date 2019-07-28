@@ -20,6 +20,11 @@ data class Bottom<A : Any, B : Any, C : Any, Ev : Any>(
 operator fun <A : Any, B : Any, C : Any, Ev : Any> Tower<A, Ev>.plus(bottom: Bottom<A, B, C, Ev>): Tower<C, Ev> =
     object : Tower<C, Ev> {
         override fun enview(viewHost: Tower.ViewHost, id: ViewId): Tower.View<C, Ev> = object : Tower.View<C, Ev> {
+            override fun dequeue() {
+                viewA.dequeue()
+                viewB.dequeue()
+            }
+
             private val viewA = this@plus.enview(viewHost, id.extend(0))
             private val viewB = bottom.tower.enview(viewHost, id.extend(1))
             private val heights = Observable.combineLatest(viewA.latitudes, viewB.latitudes, sumLatitudes)

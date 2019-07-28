@@ -13,6 +13,9 @@ fun <CoreSight : Any, Event : Any, EdgeSight : Any> Tower<CoreSight, Event>.mapS
         override fun enview(viewHost: Tower.ViewHost, id: ViewId): Tower.View<EdgeSight, Event> {
             val coreView = core.enview(viewHost, id)
             return object : Tower.View<EdgeSight, Event> {
+
+                override fun dequeue() = coreView.dequeue()
+
                 override val events: Observable<Event> get() = coreView.events
                 override fun setSight(sight: EdgeSight) = coreView.setSight(edgeToCoreSight(sight))
                 override fun setHBound(hbound: HBound) = coreView.setHBound(hbound)
@@ -29,6 +32,9 @@ fun <Sight : Any, Event : Any> Tower<Sight, Event>.fixSight(fixed: Sight): Tower
         override fun enview(viewHost: Tower.ViewHost, id: ViewId): Tower.View<Unit, Event> {
             val coreView = core.enview(viewHost, id)
             return object : Tower.View<Unit, Event> {
+
+                override fun dequeue() = coreView.dequeue()
+
                 override val events: Observable<Event> get() = coreView.events
                 override fun setSight(sight: Unit) = coreView.setSight(fixed)
                 override fun setHBound(hbound: HBound) = coreView.setHBound(hbound)

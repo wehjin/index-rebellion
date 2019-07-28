@@ -3,6 +3,8 @@ package com.rubyhuntersky.indexrebellion.data.techtonic
 import com.rubyhuntersky.indexrebellion.data.techtonic.instrument.InstrumentId
 import com.rubyhuntersky.indexrebellion.data.techtonic.market.InstrumentSample
 import com.rubyhuntersky.indexrebellion.data.techtonic.market.Market
+import com.rubyhuntersky.indexrebellion.data.techtonic.plan.Division
+import com.rubyhuntersky.indexrebellion.data.techtonic.plan.DivisionId
 import com.rubyhuntersky.indexrebellion.data.techtonic.plan.Plan
 import com.rubyhuntersky.indexrebellion.data.techtonic.plating.InstrumentPlating
 import com.rubyhuntersky.indexrebellion.data.techtonic.plating.Plate
@@ -61,8 +63,11 @@ data class Drift(
 
     fun findSample(instrumentId: InstrumentId): InstrumentSample? = market.findSample(instrumentId)
 
+    fun find(divisionId: DivisionId): Division? = plan.findDivision(divisionId)
+
     fun replace(sample: InstrumentSample): Drift = copy(market = market.replaceSample(sample))
     fun replace(samples: List<InstrumentSample>): Drift = copy(market = market.replaceSamples(samples))
+    fun replace(division: Division): Drift = copy(plan = plan.replace(division))
 
     fun replace(holding: SpecificHolding): Drift {
         require(market.contains(holding.instrumentId))

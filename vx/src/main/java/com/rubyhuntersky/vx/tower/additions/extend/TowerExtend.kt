@@ -1,4 +1,4 @@
-package com.rubyhuntersky.vx.tower.additions.augment
+package com.rubyhuntersky.vx.tower.additions.extend
 
 import com.rubyhuntersky.vx.common.Anchor
 import com.rubyhuntersky.vx.common.Latitude
@@ -14,21 +14,26 @@ import io.reactivex.subjects.BehaviorSubject
 import io.reactivex.subjects.PublishSubject
 
 fun <Sight : Any, Event : Any> Tower<Sight, Event>.extendFloor(tower: Tower<Sight, Event>) =
-    plusAugment(VAugment.Floor(tower))
+    extendVertical(VExtend.Floor(tower))
 
 fun <Sight : Any, Event : Any> Tower<Sight, Event>.extendFloors(vararg floors: Tower<Sight, Event>) =
     floors.fold(this, Tower<Sight, Event>::extendFloor)
 
 fun <Sight : Any, Event : Any> Tower<Sight, Event>.extendCeiling(tower: Tower<Sight, Event>) =
-    plusAugment(VAugment.Ceiling(tower))
+    extendVertical(VExtend.Ceiling(tower))
 
-fun <Sight : Any, Event : Any> Tower<Sight, Event>.plusAugment(augment: VAugment<Sight, Event>): Tower<Sight, Event> {
-    val coreTowers = listOf(augment.ceilingTower, this, augment.floorTower)
+fun <Sight : Any, Event : Any> Tower<Sight, Event>.extendVertical(extend: VExtend<Sight, Event>): Tower<Sight, Event> {
+    val coreTowers = listOf(extend.ceilingTower, this, extend.floorTower)
     return object : Tower<Sight, Event> {
         override fun enview(viewHost: Tower.ViewHost, id: ViewId): Tower.View<Sight, Event> =
             object : Tower.View<Sight, Event> {
                 private val coreViews = coreTowers
                     .mapIndexed { index, tower -> tower.enview(viewHost, id.extend(index)) }
+
+                override fun dequeue() {
+                    updates.clear()
+                    coreViews.forEach(Tower.View<Sight, Event>::dequeue)
+                }
 
                 private val updates = CompositeDisposable()
                 private val coreHeights = BehaviorSubject.create<Pair<List<Int>, Int>>()
@@ -38,9 +43,12 @@ fun <Sight : Any, Event : Any> Tower<Sight, Event>.plusAugment(augment: VAugment
                     combineLatest(coreViews.map(Tower.View<Sight, Event>::latitudes)) { coreViewLatitudes ->
                         val coreHeight = coreViewLatitudes
                             .map { (it as Latitude).height }
-                            .fold(Pair(emptyList<Int>(), 0), { pair, coreViewHeight ->
-                                Pair(pair.first + pair.second, pair.second + coreViewHeight)
-                            })
+                            .fold(
+                                initial = Pair(emptyList<Int>(), 0),
+                                operation = { (minorHeights, majorHeight), coreViewHeight ->
+                                    Pair(minorHeights + majorHeight, majorHeight + coreViewHeight)
+                                }
+                            )
                         coreHeight
                     }.subscribe(coreHeights::onNext).addTo(updates)
 

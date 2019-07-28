@@ -7,8 +7,8 @@ import android.view.View
 import com.rubyhuntersky.interaction.android.ActivityInteraction
 import com.rubyhuntersky.interaction.core.Edge
 import com.rubyhuntersky.interaction.core.Interaction
+import com.rubyhuntersky.interaction.edit.Validity
 import com.rubyhuntersky.interaction.stringedit.StringEdit
-import com.rubyhuntersky.interaction.stringedit.Validity
 import com.rubyhuntersky.vx.tower.towers.InputType
 import com.rubyhuntersky.vx.tower.towers.textinput.TextInputSight
 import io.reactivex.Observable
@@ -59,7 +59,7 @@ fun <Topic : Any, T : Any> StringEdit<T>.toTextInputSight(
     topic: Topic,
     stringify: (T) -> String
 ): TextInputSight<Topic> {
-    val text = novel?.string ?: ""
+    val text = novel?.component ?: ""
     val selection = novel?.selection ?: (text.length until text.length)
     val hint = ancient?.validValue?.let(stringify) ?: seed?.validValue?.let(stringify) ?: ""
     val error = (novel?.validity as? Validity.Invalid)?.reason ?: ""

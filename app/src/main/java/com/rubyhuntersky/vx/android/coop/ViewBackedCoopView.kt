@@ -13,7 +13,7 @@ import com.rubyhuntersky.vx.coop.Coop
 import io.reactivex.Observable
 
 class ViewBackedCoopView<V, Sight : Any, Event : Any>(
-    id: ViewId,
+    viewId: ViewId,
     private val frameLayout: FrameLayout,
     private val adapter: Adapter<V, Sight, Event>
 ) : Coop.View<Sight, Event> where V : View, V : ViewBackedCoopView.BackingView<Event> {
@@ -27,10 +27,10 @@ class ViewBackedCoopView<V, Sight : Any, Event : Any>(
         fun renderView(view: V, sight: C)
     }
 
-    private val view = (frameLayout.findViewWithTag(id)
+    private val view = (frameLayout.findViewWithTag(viewId)
         ?: adapter.buildView(frameLayout.context)
             .also {
-                it.tag = id
+                it.tag = viewId
                 frameLayout.addView(
                     it,
                     FrameLayout.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT)

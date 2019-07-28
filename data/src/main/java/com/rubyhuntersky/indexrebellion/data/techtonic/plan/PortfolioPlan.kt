@@ -1,6 +1,5 @@
 package com.rubyhuntersky.indexrebellion.data.techtonic.plan
 
-import com.rubyhuntersky.indexrebellion.data.techtonic.toDivisionElementId
 import kotlinx.serialization.Serializable
 import kotlin.math.max
 
@@ -9,6 +8,7 @@ data class PortfolioPlan(
     val commodityWeight: Weight,
     val securityWeight: Weight
 ) : Division {
+
     init {
         check(component1() >= Weight.ZERO)
         check(component2() >= Weight.ZERO)
@@ -23,15 +23,20 @@ data class PortfolioPlan(
     override val divisionId
         get() = DivisionId.Portfolio
 
-    override val divisionElements
+    override val divisionElements: List<DivisionElement>
         get() = listOf(
-            DivisionElement(
-                id = DivisionId.Cash.toDivisionElementId(),
-                weight = commodityWeight
-            ),
-            DivisionElement(
-                id = DivisionId.Securities.toDivisionElementId(),
-                weight = securityWeight
-            )
+            DivisionElement(cashDivisionId, commodityWeight),
+            DivisionElement(securitiesDivisionId, securityWeight)
         )
+
+    private val cashDivisionId get() = DivisionElementId.Subdivision(DivisionId.Cash)
+    private val securitiesDivisionId get() = DivisionElementId.Subdivision(DivisionId.Securities)
+
+    override fun replace(divisionElements: List<DivisionElement>): PortfolioPlan {
+        val weights = divisionElements.associateBy(DivisionElement::id, DivisionElement::weight)
+        return copy(
+            commodityWeight = weights[cashDivisionId] ?: commodityWeight,
+            securityWeight = weights[securitiesDivisionId] ?: securityWeight
+        )
+    }
 }

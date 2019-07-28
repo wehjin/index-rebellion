@@ -7,9 +7,9 @@ import com.rubyhuntersky.indexrebellion.data.techtonic.instrument.InstrumentId
 import com.rubyhuntersky.indexrebellion.data.techtonic.market.InstrumentSample
 import com.rubyhuntersky.indexrebellion.data.techtonic.vault.Custodian
 import com.rubyhuntersky.indexrebellion.data.techtonic.vault.SpecificHolding
-import com.rubyhuntersky.interaction.stringedit.Ancient
-import com.rubyhuntersky.interaction.stringedit.Novel
-import com.rubyhuntersky.interaction.stringedit.Seed
+import com.rubyhuntersky.interaction.edit.Ancient
+import com.rubyhuntersky.interaction.edit.StringNovel
+import com.rubyhuntersky.interaction.edit.Seed
 import com.rubyhuntersky.interaction.stringedit.StringEdit
 import java.math.BigDecimal
 import java.util.*
@@ -54,7 +54,7 @@ data class HoldingEdit(
             } else null
         }
 
-    fun setSymbolNovel(novel: Novel<String>?): HoldingEdit {
+    fun setSymbolNovel(novel: StringNovel<String>?): HoldingEdit {
         val symbolEdit = symbolEdit.setNovel(novel)
         return copy(
             symbolEdit = symbolEdit,
@@ -62,11 +62,11 @@ data class HoldingEdit(
         )
     }
 
-    fun setSizeNovel(novel: Novel<BigDecimal>?): HoldingEdit = copy(
+    fun setSizeNovel(novel: StringNovel<BigDecimal>?): HoldingEdit = copy(
         sizeEdit = sizeEdit.setNovel(novel)
     )
 
-    fun setPriceNovel(novel: Novel<CashAmount>?): HoldingEdit = copy(
+    fun setPriceNovel(novel: StringNovel<CashAmount>?): HoldingEdit = copy(
         priceEdit = priceEdit.setNovel(novel)
     )
 

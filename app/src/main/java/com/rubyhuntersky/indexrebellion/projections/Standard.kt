@@ -6,8 +6,8 @@ import com.rubyhuntersky.vx.common.margin.Margin
 import com.rubyhuntersky.vx.common.orbit.Orbit
 import com.rubyhuntersky.vx.common.Span
 import com.rubyhuntersky.vx.tower.Tower
-import com.rubyhuntersky.vx.tower.additions.augment.extendCeiling
-import com.rubyhuntersky.vx.tower.additions.augment.extendFloor
+import com.rubyhuntersky.vx.tower.additions.extend.extendCeiling
+import com.rubyhuntersky.vx.tower.additions.extend.extendFloor
 import com.rubyhuntersky.vx.tower.additions.mapSight
 import com.rubyhuntersky.vx.tower.additions.pad.VPad
 import com.rubyhuntersky.vx.tower.additions.pad.plusVPad
@@ -66,7 +66,7 @@ object Standard {
         .let({ if (pad) it.plusHMargin(uniformMargin).plusVPad(uniformPad) else it })
         .mapSight({ WrapTextSight(it, TextStyle.Body1, orbit) })
 
-    class SectionTower<Sight : Any, Event : Any>(
+    class SectionTower<in Sight: Any, Event : Any>(
         vararg sections: Pair<String, Tower<Sight, Event>>
     ) : Tower<Sight, Event>
     by sections.fold(

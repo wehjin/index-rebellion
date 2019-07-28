@@ -32,5 +32,15 @@ data class Plan(
         Plate.LocalEquity -> localPortion
         Plate.Unknown -> 0.0
     }
+
+    fun findDivision(divisionId: DivisionId): Division? = divisions.firstOrNull { it.divisionId == divisionId }
+
+    fun replace(division: Division): Plan = when (division.divisionId) {
+        portfolioPlan.divisionId -> copy(portfolioPlan = portfolioPlan.replace(division.divisionElements))
+        commodityPlan.divisionId -> copy(commodityPlan = commodityPlan.replace(division.divisionElements))
+        securityPlan.divisionId -> copy(securityPlan = securityPlan.replace(division.divisionElements))
+        equityPlan.divisionId -> copy(equityPlan = equityPlan.replace(division.divisionElements))
+        else -> error("Invalid division id.")
+    }
 }
 

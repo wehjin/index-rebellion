@@ -1,7 +1,7 @@
 package com.rubyhuntersky.robinhood.login
 
 import com.rubyhuntersky.indexrebellion.interactions.refreshholdings.Access2
-import com.rubyhuntersky.interaction.GenieParams2
+import com.rubyhuntersky.interaction.precore.spirits.GenieParams2
 import com.rubyhuntersky.interaction.core.Book
 import com.rubyhuntersky.interaction.core.wish.Genie
 import io.reactivex.Single

@@ -1,5 +1,9 @@
 package com.rubyhuntersky.interaction.stringedit
 
+import com.rubyhuntersky.interaction.edit.Ancient
+import com.rubyhuntersky.interaction.edit.StringNovel
+import com.rubyhuntersky.interaction.edit.Seed
+import com.rubyhuntersky.interaction.edit.Validity
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertNull
 import org.junit.jupiter.api.Test
@@ -11,8 +15,8 @@ class StringEditTest {
     private val invalidSeed = Seed(8, false)
     private val validAncient = Ancient(11)
     private val invalidAncient = Ancient(12)
-    private val validNovel = Novel("21", Validity.Valid(21))
-    private val invalidNovel = Novel<Int>("22", Validity.Invalid("22", "Busted"))
+    private val validNovel = StringNovel("21", Validity.Valid(21))
+    private val invalidNovel = StringNovel<Int>("22", Validity.Invalid("22", "Busted"))
 
     @Test
     fun labelProducesNovelValueWhenNovelIsValid() {

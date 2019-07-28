@@ -6,7 +6,7 @@ import com.rubyhuntersky.vx.common.Ranked
 import com.rubyhuntersky.vx.common.ViewId
 import com.rubyhuntersky.vx.common.bound.HBound
 import com.rubyhuntersky.vx.tower.Tower
-import com.rubyhuntersky.vx.tower.additions.augment.extendFloor
+import com.rubyhuntersky.vx.tower.additions.extend.extendFloor
 import com.rubyhuntersky.vx.tower.additions.mapEvent
 import com.rubyhuntersky.vx.tower.additions.mapSight
 import com.rubyhuntersky.vx.tower.towers.EmptyTower
@@ -16,7 +16,7 @@ import io.reactivex.rxkotlin.addTo
 import io.reactivex.subjects.BehaviorSubject
 import io.reactivex.subjects.PublishSubject
 
-class ReplicateTower<Sight : Any, Event : Any>(
+class ReplicateTower<in Sight : Any, Event : Any>(
     private val itemTower: Tower<Sight, Event>
 ) : Tower<List<Sight>, Ranked<Event>> {
 
@@ -32,35 +32,54 @@ class ReplicateTower<Sight : Any, Event : Any>(
             private var edgeAnchor: Anchor? = null
 
             override fun setSight(sight: List<Sight>) {
-                dropFullView()
-                val initial: Tower<List<Sight>, Ranked<Event>> = EmptyTower(0)
-                val fullTower: Tower<List<Sight>, Ranked<Event>> = (0 until sight.size)
-                    .map { index -> itemTower.mapSight { list: List<Sight> -> list[index] } }
-                    .foldIndexed(initial, { index, acc, tower ->
-                        acc.extendFloor(tower.mapEvent { Ranked(it, index) })
-                    })
+                eventLatitudeUpdates.clear()
+                viewHost.drop(id, true)
+                fullView?.dequeue()
+                fullView = null
+
+                val fullTower: Tower<List<Sight>, Ranked<Event>> =
+                    (0 until sight.size)
+                        .map {
+                            itemTower.mapSight { list: List<Sight> -> list[it] }
+                        }
+                        .foldIndexed(
+                            initial = EmptyTower<List<Sight>, Ranked<Event>>(0),
+                            operation = { index, acc: Tower<List<Sight>, Ranked<Event>>, tower ->
+                                acc.extendFloor(tower.mapEvent { Ranked(it, index) })
+                            })
 
                 fullView = fullTower.enview(viewHost, id)
                     .apply {
                         events.subscribe(eventPublish::onNext).addTo(eventLatitudeUpdates)
-                        latitudes.subscribe(latitudeBehavior::onNext).addTo(eventLatitudeUpdates)
+                        latitudes.subscribe {
+                            updateAnchor()
+                            latitudeBehavior.onNext(it)
+                        }.addTo(eventLatitudeUpdates)
                         setSight(sight)
                     }
+                viewHost.drop(id, false)
                 update()
             }
 
-            private fun dropFullView() {
-                eventLatitudeUpdates.clear()
-                viewHost.drop(id)
-                fullView = null
+            override fun dequeue() {
+                fullView?.dequeue()
             }
 
             private fun update() {
+                updateHBound()
+                updateAnchor()
+            }
+
+            private fun updateHBound() {
                 val fullView = fullView
                 val hBound = edgeHBound
                 if (hBound != null && fullView != null) {
                     fullView.setHBound(hBound)
                 }
+            }
+
+            private fun updateAnchor() {
+                val fullView = fullView
                 val anchor = edgeAnchor
                 if (anchor != null && fullView != null) {
                     fullView.setAnchor(anchor)

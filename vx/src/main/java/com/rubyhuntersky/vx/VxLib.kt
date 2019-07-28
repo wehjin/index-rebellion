@@ -22,6 +22,9 @@ fun <CoreC : Any, EdgeC : Any, Ev : Any> Tower<CoreC, Ev>.transform(transformer:
 
 fun <CoreC : Any, EdgeC : Any, Ev : Any> Tower.View<CoreC, Ev>.transform(transformer: (EdgeC) -> CoreC): Tower.View<EdgeC, Ev> {
     return object : Tower.View<EdgeC, Ev> {
+
+        override fun dequeue() = this@transform.dequeue()
+
         override fun setHBound(hbound: HBound) = this@transform.setHBound(hbound)
         override val latitudes: Observable<Latitude> get() = this@transform.latitudes
         override fun setAnchor(anchor: Anchor) = this@transform.setAnchor(anchor)

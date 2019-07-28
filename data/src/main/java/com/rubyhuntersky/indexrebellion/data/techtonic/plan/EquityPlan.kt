@@ -1,7 +1,6 @@
 package com.rubyhuntersky.indexrebellion.data.techtonic.plan
 
 import com.rubyhuntersky.indexrebellion.data.techtonic.plating.Plate
-import com.rubyhuntersky.indexrebellion.data.techtonic.toDivisionElementId
 import kotlinx.serialization.Serializable
 import kotlin.math.max
 
@@ -27,19 +26,23 @@ data class EquityPlan(
     override val divisionId
         get() = DivisionId.Equities
 
-    override val divisionElements
+    override val divisionElements: List<DivisionElement>
         get() = listOf(
-            DivisionElement(
-                id = Plate.GlobalEquity.toDivisionElementId(),
-                weight = globalWeight
-            ),
-            DivisionElement(
-                id = Plate.ZonalEquity.toDivisionElementId(),
-                weight = zonalWeight
-            ),
-            DivisionElement(
-                id = Plate.LocalEquity.toDivisionElementId(),
-                weight = localWeight
-            )
+            DivisionElement(globalElementId, globalWeight),
+            DivisionElement(zonalElementId, zonalWeight),
+            DivisionElement(localElementId, localWeight)
         )
+
+    private val globalElementId get() = DivisionElementId.Plate(divisionId, Plate.GlobalEquity)
+    private val zonalElementId get() = DivisionElementId.Plate(divisionId, Plate.ZonalEquity)
+    private val localElementId get() = DivisionElementId.Plate(divisionId, Plate.LocalEquity)
+
+    override fun replace(divisionElements: List<DivisionElement>): EquityPlan {
+        val weights = divisionElements.associateBy(DivisionElement::id, DivisionElement::weight)
+        return copy(
+            globalWeight = weights[globalElementId] ?: globalWeight,
+            zonalWeight = weights[zonalElementId] ?: zonalWeight,
+            localWeight = weights[localElementId] ?: localWeight
+        )
+    }
 }

@@ -16,23 +16,26 @@ class TowerReplicateKtTest {
 
     private val viewHost = TestTowerViewHost()
 
+    private val sight = listOf(
+        WrapTextSight("A"),
+        WrapTextSight("B"),
+        WrapTextSight("C")
+    )
+
+    val tower = WrapTextTower().replicate()
+    val view = tower.enview(viewHost, ViewId())
+        .also { view ->
+            view.setSight(sight)
+            view.setHBound(HBound(0, 100))
+            viewHost.items.forEach {
+                it.latitudes.onNext(Latitude(20))
+            }
+            view.setAnchor(Anchor(0))
+        }
+
     @Test
     fun listTower() {
-        val sight = listOf(
-            WrapTextSight("A"),
-            WrapTextSight("B"),
-            WrapTextSight("C")
-        )
-        val tower = WrapTextTower().replicate()
-        val view = tower.enview(viewHost, ViewId())
-        view.setSight(sight)
-        view.setHBound(HBound(0, 100))
-        viewHost.items.forEach {
-            it.latitudes.onNext(Latitude(20))
-        }
-        view.setAnchor(Anchor(0))
-
-        // Verify
+        // First sight
         assertEquals(
             sight.toSet(),
             viewHost.items.map(Item::sight).toSet()
@@ -44,6 +47,22 @@ class TowerReplicateKtTest {
         view.latitudes.test().assertValue(Latitude(60))
         assertEquals(
             setOf(Anchor(0), Anchor(20), Anchor(40)),
+            viewHost.items.map(Item::anchor).toSet()
+        )
+
+        // Shorten the sight
+        val shortSight = listOf(
+            WrapTextSight("A"),
+            WrapTextSight("C")
+        )
+        view.setSight(shortSight)
+        assertEquals(
+            shortSight.toSet(),
+            viewHost.items.map(Item::sight).toSet()
+        )
+        view.latitudes.test().assertValue(Latitude(40))
+        assertEquals(
+            setOf(Anchor(0), Anchor(20)),
             viewHost.items.map(Item::anchor).toSet()
         )
     }

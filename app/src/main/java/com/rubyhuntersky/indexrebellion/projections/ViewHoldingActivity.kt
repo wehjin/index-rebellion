@@ -15,7 +15,7 @@ import com.rubyhuntersky.vx.android.coop.CoopContentView
 import com.rubyhuntersky.vx.android.toUnit
 import com.rubyhuntersky.vx.common.Span
 import com.rubyhuntersky.vx.tower.additions.*
-import com.rubyhuntersky.vx.tower.additions.augment.extendFloors
+import com.rubyhuntersky.vx.tower.additions.extend.extendFloors
 import com.rubyhuntersky.vx.tower.additions.pad.plusVPad
 import com.rubyhuntersky.vx.tower.towers.click.ClickSight
 import com.rubyhuntersky.vx.tower.towers.click.ClickTower

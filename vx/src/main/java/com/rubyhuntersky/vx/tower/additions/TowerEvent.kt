@@ -14,6 +14,8 @@ fun <Sight : Any, CoreEvent : Any, EdgeEvent : Any> Tower<Sight, CoreEvent>.mapE
             val coreView = core.enview(viewHost, id)
             return object : Tower.View<Sight, EdgeEvent> {
 
+                override fun dequeue() = coreView.dequeue()
+
                 override val events: Observable<EdgeEvent>
                     get() = coreView.events.map(coreToEdgeEvent)
 
@@ -32,6 +34,9 @@ fun <Sight : Any, Event : Any> Tower<Sight, Event>.handleEvents(onEvent: ((Event
         override fun enview(viewHost: Tower.ViewHost, id: ViewId): Tower.View<Sight, Nothing> {
             val coreView = core.enview(viewHost, id)
             return object : Tower.View<Sight, Nothing> {
+
+                override fun dequeue() = coreView.dequeue()
+
                 @Suppress("unused")
                 private val eventHandler = coreView.events.subscribe(onEvent)
 

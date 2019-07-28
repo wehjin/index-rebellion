@@ -2,7 +2,7 @@ package com.rubyhuntersky.indexrebellion.spirits.genies.showtoast
 
 import android.content.Context
 import android.widget.Toast
-import com.rubyhuntersky.interaction.GenieParams2
+import com.rubyhuntersky.interaction.precore.spirits.GenieParams2
 import com.rubyhuntersky.interaction.core.wish.Genie
 import io.reactivex.Single
 import io.reactivex.android.schedulers.AndroidSchedulers

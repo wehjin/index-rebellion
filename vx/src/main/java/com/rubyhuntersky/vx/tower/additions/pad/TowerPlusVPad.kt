@@ -14,16 +14,17 @@ import io.reactivex.subjects.PublishSubject
 
 operator fun <Sight : Any, Event : Any> Tower<Sight, Event>.plus(pad: VPad): Tower<Sight, Event> = this.plusVPad(pad)
 
-data class CoreLatitudeEdgeAnchor(
-    val coreLatitude: Latitude,
-    val edgeAnchor: Anchor
-)
-
 fun <Sight : Any, Event : Any> Tower<Sight, Event>.plusVPad(pad: VPad): Tower<Sight, Event> {
     val core = this
     return object : Tower<Sight, Event> {
         override fun enview(viewHost: Tower.ViewHost, id: ViewId): Tower.View<Sight, Event> =
             object : Tower.View<Sight, Event> {
+                
+                override fun dequeue() {
+                    latitudeAnchorUpdates.clear()
+                    coreView.dequeue()
+                }
+
                 private val coreView = core.enview(viewHost, id)
                 private val edgeLatitudes: PublishSubject<Latitude> = PublishSubject.create()
                 private val edgeAnchors: PublishSubject<Anchor> = PublishSubject.create()

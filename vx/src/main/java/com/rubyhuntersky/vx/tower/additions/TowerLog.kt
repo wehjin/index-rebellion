@@ -13,6 +13,9 @@ fun <Sight : Any, Event : Any> Tower<Sight, Event>.logAnchors(tag: String): Towe
         override fun enview(viewHost: Tower.ViewHost, id: ViewId): Tower.View<Sight, Event> {
             val coreView = core.enview(viewHost, id)
             return object : Tower.View<Sight, Event> {
+
+                override fun dequeue() = coreView.dequeue()
+
                 override val events: Observable<Event> get() = coreView.events
                 override fun setSight(sight: Sight) = coreView.setSight(sight)
                 override fun setHBound(hbound: HBound) = coreView.setHBound(hbound)
@@ -26,6 +29,50 @@ fun <Sight : Any, Event : Any> Tower<Sight, Event>.logAnchors(tag: String): Towe
     }
 }
 
+fun <Sight : Any, Event : Any> Tower<Sight, Event>.logSight(tag: String): Tower<Sight, Event> {
+    val core = this
+    return object : Tower<Sight, Event> {
+        override fun enview(viewHost: Tower.ViewHost, id: ViewId): Tower.View<Sight, Event> {
+            val coreView = core.enview(viewHost, id)
+            return object : Tower.View<Sight, Event> {
+
+                override fun dequeue() = coreView.dequeue()
+
+                override val events: Observable<Event> get() = coreView.events
+                override fun setSight(sight: Sight) {
+                    println("$tag/$id: SIGHT: $sight")
+                    coreView.setSight(sight)
+                }
+
+                override fun setHBound(hbound: HBound) = coreView.setHBound(hbound)
+                override val latitudes: Observable<Latitude> get() = coreView.latitudes
+                override fun setAnchor(anchor: Anchor) = coreView.setAnchor(anchor)
+            }
+        }
+    }
+}
+
+fun <Sight : Any, Event : Any> Tower<Sight, Event>.logLatitudes(tag: String): Tower<Sight, Event> {
+    val core = this
+    return object : Tower<Sight, Event> {
+        override fun enview(viewHost: Tower.ViewHost, id: ViewId): Tower.View<Sight, Event> {
+            val coreView = core.enview(viewHost, id)
+            return object : Tower.View<Sight, Event> {
+
+                override fun dequeue() = coreView.dequeue()
+
+                override val events: Observable<Event> get() = coreView.events
+                override fun setSight(sight: Sight) = coreView.setSight(sight)
+                override fun setHBound(hbound: HBound) = coreView.setHBound(hbound)
+                override val latitudes: Observable<Latitude>
+                    get() = coreView.latitudes.doOnNext { println("$tag/$id: LATITUDE: $it") }
+
+                override fun setAnchor(anchor: Anchor) = coreView.setAnchor(anchor)
+            }
+        }
+    }
+}
+
 
 fun <Sight : Any, Event : Any> Tower<Sight, Event>.logEvents(tag: String): Tower<Sight, Event> {
     val core = this
@@ -33,6 +80,9 @@ fun <Sight : Any, Event : Any> Tower<Sight, Event>.logEvents(tag: String): Tower
         override fun enview(viewHost: Tower.ViewHost, id: ViewId): Tower.View<Sight, Event> {
             val view = core.enview(viewHost, id)
             return object : Tower.View<Sight, Event> {
+
+                override fun dequeue() = view.dequeue()
+
                 override val events: Observable<Event>
                     get() {
                         println("$tag/$id: EVENTS")

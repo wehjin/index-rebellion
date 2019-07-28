@@ -8,6 +8,7 @@ import com.rubyhuntersky.vx.android.backingviews.BackingInputLayout
 import com.rubyhuntersky.vx.android.backingviews.BackingTextView
 import com.rubyhuntersky.vx.android.tower.AndroidTowerView
 import com.rubyhuntersky.vx.common.Anchor
+import com.rubyhuntersky.vx.common.Latitude
 import com.rubyhuntersky.vx.common.TextStyle
 import com.rubyhuntersky.vx.common.ViewId
 import com.rubyhuntersky.vx.common.bound.HBound
@@ -19,6 +20,7 @@ import com.rubyhuntersky.vx.tower.towers.click.ClickSight
 import com.rubyhuntersky.vx.tower.towers.textinput.TextInputEvent
 import com.rubyhuntersky.vx.tower.towers.textinput.TextInputSight
 import com.rubyhuntersky.vx.tower.towers.wraptext.WrapTextSight
+import io.reactivex.Observable
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.rxkotlin.addTo
 import io.reactivex.subjects.BehaviorSubject
@@ -73,12 +75,41 @@ class ScreenView
         hboundBehavior.onNext(HBound(toDip(left), toDip(left + w)))
     }
 
-    override fun drop(viewId: ViewId) {
+    override fun drop(viewId: ViewId, start: Boolean) {
         error("Not implemented, use TowerAndroidView")
     }
 
     override fun <Topic : Any> addTextInputView(id: ViewId): Tower.View<TextInputSight<Topic>, TextInputEvent<Topic>> {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        return object : Tower.View<TextInputSight<Topic>, TextInputEvent<Topic>> {
+
+            override fun dequeue() = core.dequeue()
+
+            lateinit var topic: Topic
+
+            private val core = AndroidTowerView(
+                id,
+                hostLayout = this@ScreenView,
+                adapter = BackingInputLayout
+            )
+
+            override val events: Observable<TextInputEvent<Topic>>
+                get() = core.events.map {
+                    val (text) = it as InputEvent.TextChange
+                    TextInputEvent.Changed(topic, text, text.length until text.length)
+                }
+
+            override fun setSight(sight: TextInputSight<Topic>) {
+                topic = sight.topic
+                core.setSight(InputSight(sight.type, sight.text, sight.hint, sight.label, sight.icon, sight.enabled))
+            }
+
+            override fun setHBound(hbound: HBound) {
+                core.setHBound(hbound)
+            }
+
+            override val latitudes: Observable<Latitude> get() = core.latitudes
+            override fun setAnchor(anchor: Anchor) = core.setAnchor(anchor)
+        }
     }
 
     override fun <Sight : Any, Topic : Any> addClickOverlayView(
@@ -98,7 +129,8 @@ class ScreenView
             hostLayout = this@ScreenView,
             viewId = id,
             adapter = object : AndroidTowerView.Adapter<BackingInputLayout, InputSight, InputEvent> {
-                override fun buildView(context: Context): BackingInputLayout = BackingInputLayout(context, null)
+                override fun buildView(context: Context, viewId: ViewId): BackingInputLayout =
+                    BackingInputLayout(context, null)
 
                 override fun renderView(view: BackingInputLayout, sight: InputSight) {
                     view.render(sight)
@@ -111,7 +143,7 @@ class ScreenView
             hostLayout = this@ScreenView,
             viewId = id,
             adapter = object : AndroidTowerView.Adapter<BackingTextView, WrapTextSight, Nothing> {
-                override fun buildView(context: Context): BackingTextView = BackingTextView(context)
+                override fun buildView(context: Context, viewId: ViewId): BackingTextView = BackingTextView(context)
 
                 override fun renderView(view: BackingTextView, sight: WrapTextSight) {
                     val resId = when (sight.style) {

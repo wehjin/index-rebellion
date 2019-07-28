@@ -12,8 +12,8 @@ import com.rubyhuntersky.interaction.core.InteractionCompanion
 import com.rubyhuntersky.interaction.core.Revision
 import com.rubyhuntersky.interaction.core.Story
 import com.rubyhuntersky.interaction.core.wish.Wish
-import com.rubyhuntersky.interaction.stringedit.Novel
-import com.rubyhuntersky.interaction.stringedit.Validity
+import com.rubyhuntersky.interaction.edit.StringNovel
+import com.rubyhuntersky.interaction.edit.Validity
 import java.math.BigDecimal
 
 class EditHoldingStory :
@@ -114,11 +114,14 @@ private fun revise(vision: Vision, action: Action): Revision<Vision, Action> = w
     }
 }
 
-private fun <T : Any> String.toNovel(selection: IntRange, toValidity: (String) -> Validity<T>): Novel<T>? =
+private fun <T : Any> String.toNovel(
+    selection: IntRange,
+    toValidity: (String) -> Validity<T, String>
+): StringNovel<T>? =
     if (isBlank()) null
-    else Novel(this, toValidity(this), selection)
+    else StringNovel(this, toValidity(this), selection)
 
-private fun priceValidity(price: String): Validity<CashAmount> {
+private fun priceValidity(price: String): Validity<CashAmount, String> {
     val cashPrice = price.toBigDecimalOrNull()?.let(::CashAmount)
     return when {
         cashPrice != null && cashPrice > CashAmount.ZERO -> Validity.Valid(cashPrice)
@@ -126,7 +129,7 @@ private fun priceValidity(price: String): Validity<CashAmount> {
     }
 }
 
-private fun symbolValidity(symbol: String): Validity<String> {
+private fun symbolValidity(symbol: String): Validity<String, String> {
     val trimmedSymbol = symbol.trim()
     return when {
         trimmedSymbol.isBlank() -> Validity.Invalid(symbol, "No a symbol")
@@ -134,12 +137,12 @@ private fun symbolValidity(symbol: String): Validity<String> {
     }
 }
 
-private fun sizeValidity(string: String): Validity<BigDecimal> =
+private fun sizeValidity(string: String): Validity<BigDecimal, String> =
     string.toDoubleOrNull()
         ?.let(BigDecimal::valueOf)
         ?.let {
-            if (it >= BigDecimal.ZERO) Validity.Valid(it)
-            else Validity.Invalid<BigDecimal>(string, "Must be positive")
+            if (it >= BigDecimal.ZERO) Validity.Valid<BigDecimal, String>(it)
+            else Validity.Invalid<BigDecimal, String>(string, "Must be positive")
         }
         ?: Validity.Invalid(string, "Invalid double")
 

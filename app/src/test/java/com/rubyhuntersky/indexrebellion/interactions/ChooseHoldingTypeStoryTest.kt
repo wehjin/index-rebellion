@@ -9,13 +9,28 @@ import com.rubyhuntersky.indexrebellion.interactions.editholding.HoldingEditType
 import com.rubyhuntersky.indexrebellion.spirits.djinns.readdrift.ReadDriftsDjinn
 import com.rubyhuntersky.interaction.core.BehaviorBook
 import com.rubyhuntersky.interaction.core.Edge
-import org.spekframework.spek2.Spek
-import org.spekframework.spek2.style.specification.describe
+import org.junit.jupiter.api.Test
 
 
-object ChooseHoldingTypeStoryTest : Spek({
+class ChooseHoldingTypeStoryTest {
 
-    fun Edge.assertHoldingEditStoryIsEditingWithType(holdingEditType: HoldingEditType) {
+    @Test
+    fun beginsWithChoices() {
+        val edge = Edge().also { it.lamp.add(ReadDriftsDjinn(BehaviorBook(DEFAULT_DRIFT))) }
+        val story = ChooseHoldingTypeStory().also { edge.addInteraction(it) }
+        story.visions.test().assertValue(Vision.Choosing(ChooseHoldingTypeStory.DEFAULT_CHOICES))
+    }
+
+    @Test
+    fun launchesEditHoldingStoryWithTypeStockWhenChoiceIsSTOCKS() {
+        val edge = Edge().also { it.lamp.add(ReadDriftsDjinn(BehaviorBook(DEFAULT_DRIFT))) }
+        val story = ChooseHoldingTypeStory().also { edge.addInteraction(it) }
+        story.sendAction(Action.Choose(HoldingType.STOCKS))
+        story.visions.test().assertValue(Vision.ChoiceMade(HoldingType.STOCKS))
+        edge.assertHoldingEditStoryIsEditingWithType(HoldingEditType.Stock)
+    }
+
+    private fun Edge.assertHoldingEditStoryIsEditingWithType(holdingEditType: HoldingEditType) {
         findInteraction<EditHoldingStory.Vision, EditHoldingStory.Action>(EditHoldingStory.searchByGroup)
             .visions.test()
             .assertValue {
@@ -24,28 +39,13 @@ object ChooseHoldingTypeStoryTest : Spek({
             }
     }
 
-    describe("ChooseHoldingType story") {
-        it("begins with choices") {
-            val edge = Edge().also { it.lamp.add(ReadDriftsDjinn(BehaviorBook(DEFAULT_DRIFT))) }
-            val story = ChooseHoldingTypeStory().also { edge.addInteraction(it) }
-            story.visions.test().assertValue(Vision.Choosing(ChooseHoldingTypeStory.DEFAULT_CHOICES))
-        }
-
-        it("launches EditHoldingStory with type Stock when choice is STOCKS") {
-            val edge = Edge().also { it.lamp.add(ReadDriftsDjinn(BehaviorBook(DEFAULT_DRIFT))) }
-            val story = ChooseHoldingTypeStory().also { edge.addInteraction(it) }
-            story.sendAction(Action.Choose(HoldingType.STOCKS))
-            story.visions.test().assertValue(Vision.ChoiceMade(HoldingType.STOCKS))
-            edge.assertHoldingEditStoryIsEditingWithType(HoldingEditType.Stock)
-        }
-
-        it("launches EditHoldingStory with type FixedInstrument when choice is DOLLARS") {
-            val edge = Edge().also { it.lamp.add(ReadDriftsDjinn(BehaviorBook(DEFAULT_DRIFT))) }
-            val story = ChooseHoldingTypeStory().also { edge.addInteraction(it) }
-            story.sendAction(Action.Choose(HoldingType.DOLLARS))
-            story.visions.test().assertValue(Vision.ChoiceMade(HoldingType.DOLLARS))
-            edge.assertHoldingEditStoryIsEditingWithType(HoldingEditType.FixedInstrument(DOLLAR_INSTRUMENT))
-        }
+    @Test
+    fun launchesEditHoldingStoryWithTypeFixedInstrumentWhenChoiceIsDOLLARS() {
+        val edge = Edge().also { it.lamp.add(ReadDriftsDjinn(BehaviorBook(DEFAULT_DRIFT))) }
+        val story = ChooseHoldingTypeStory().also { edge.addInteraction(it) }
+        story.sendAction(Action.Choose(HoldingType.DOLLARS))
+        story.visions.test().assertValue(Vision.ChoiceMade(HoldingType.DOLLARS))
+        edge.assertHoldingEditStoryIsEditingWithType(HoldingEditType.FixedInstrument(DOLLAR_INSTRUMENT))
     }
-})
+}
 

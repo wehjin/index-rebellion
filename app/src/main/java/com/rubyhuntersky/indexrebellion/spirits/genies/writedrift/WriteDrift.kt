@@ -1,7 +1,7 @@
 package com.rubyhuntersky.indexrebellion.spirits.genies.writedrift
 
 import com.rubyhuntersky.indexrebellion.data.techtonic.Drift
-import com.rubyhuntersky.interaction.GenieParams2
+import com.rubyhuntersky.interaction.precore.spirits.GenieParams2
 import com.rubyhuntersky.interaction.core.Book
 import com.rubyhuntersky.interaction.core.wish.Genie
 import io.reactivex.Single

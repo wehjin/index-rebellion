@@ -1,4 +1,4 @@
-package com.rubyhuntersky.interaction.stringedit
+package com.rubyhuntersky.interaction.edit
 
 data class Seed<T : Any>(
     val value: T,

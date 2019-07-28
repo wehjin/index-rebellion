@@ -1,6 +1,6 @@
 package com.rubyhuntersky.indexrebellion.spirits.genies
 
-import com.rubyhuntersky.interaction.GenieParams2
+import com.rubyhuntersky.interaction.precore.spirits.GenieParams2
 import com.rubyhuntersky.interaction.core.wish.Genie
 import com.rubyhuntersky.stockcatalog.StockMarket
 import io.reactivex.Single
