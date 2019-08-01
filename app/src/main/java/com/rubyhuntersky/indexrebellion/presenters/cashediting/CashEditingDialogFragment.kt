@@ -7,15 +7,14 @@ import com.rubyhuntersky.indexrebellion.R
 import com.rubyhuntersky.indexrebellion.data.cash.CashAmount
 import com.rubyhuntersky.indexrebellion.interactions.cashediting.Action
 import com.rubyhuntersky.indexrebellion.interactions.cashediting.Vision
+import com.rubyhuntersky.indexrebellion.projections.Standard
 import com.rubyhuntersky.vx.android.InteractionBottomSheetDialogFragment
 import com.rubyhuntersky.vx.common.ViewId
 import com.rubyhuntersky.vx.tower.Tower
-import com.rubyhuntersky.vx.tower.additions.Bottom
-import com.rubyhuntersky.vx.tower.additions.Gap
-import com.rubyhuntersky.vx.tower.additions.plus
+import com.rubyhuntersky.vx.tower.additions.mapSight
+import com.rubyhuntersky.vx.tower.towers.EmptyTower
 import com.rubyhuntersky.vx.tower.towers.Icon
 import com.rubyhuntersky.vx.tower.towers.InputType
-import com.rubyhuntersky.vx.tower.towers.TitleTower
 import com.rubyhuntersky.vx.tower.towers.textinput.TextInputEvent
 import com.rubyhuntersky.vx.tower.towers.textinput.TextInputSight
 import com.rubyhuntersky.vx.tower.towers.textinput.TextInputTower
@@ -31,17 +30,13 @@ class CashEditingDialogFragment : InteractionBottomSheetDialogFragment<Vision, A
     data class FundingEditor(
         val title: String,
         val targetInput: TextInputSight<Unit>
-    ) {
-        fun toPair() = Pair(title, targetInput)
-    }
+    )
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        val textInputTower = TextInputTower<Unit>()
-        val tower =
-            TitleTower.neverEvent<TextInputEvent<Unit>>() +
-                    Gap.TitleBody +
-                    Bottom(textInputTower, FundingEditor::toPair)
+        val textInput = TextInputTower<Unit>().mapSight(FundingEditor::targetInput)
+        val title = Standard.TitleTower().neverEvent<TextInputEvent<Unit>>().mapSight(FundingEditor::title)
+        val tower = title and EmptyTower(Standard.titleToBodySpacing) and textInput
 
         towerView = tower.enview(view.screenView, ViewId())
             .also {

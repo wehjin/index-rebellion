@@ -19,7 +19,7 @@ class TowerPlusShareKtTest {
         val alt = WrapTextTower()
 
         val combined = main
-            .plusShare(HShare.End(Span.Absolute(15), alt))
+            .plusHShare(HShare.End(Span.Absolute(15), alt))
 
         val viewHost = TestTowerViewHost()
         val view = combined.enview(viewHost, ViewId())

@@ -36,6 +36,7 @@ class BackingTextView
                 TextStyle.Highlight5 -> R.style.TextAppearance_MaterialComponents_Headline5
                 TextStyle.Highlight6 -> R.style.TextAppearance_MaterialComponents_Headline6
                 TextStyle.Subtitle1 -> R.style.TextAppearance_MaterialComponents_Subtitle1
+                TextStyle.Subtitle2 -> R.style.TextAppearance_MaterialComponents_Subtitle2
                 TextStyle.Body1 -> R.style.TextAppearance_MaterialComponents_Body1
             }
             view.setTextAppearance(resId)

@@ -7,7 +7,7 @@ import com.rubyhuntersky.vx.common.bound.HBound
 import com.rubyhuntersky.vx.tower.Tower
 import io.reactivex.Observable
 
-class NeverTower<in Sight : Any, NeverE : Any, EverE : Any>(
+class NeverTower<Sight : Any, NeverE : Any, EverE : Any>(
     private val tower: Tower<Sight, EverE>
 ) : Tower<Sight, NeverE> {
 

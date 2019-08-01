@@ -25,7 +25,7 @@ by WrapTextTower()
     .plusHMargin(Margin.Uniform(Standard.marginSpan))
     .plusVPad(
         VPad.Individual(
-            Standard.marginSize * 3 / 2,
-            Standard.marginSize / 2
+            Standard.spacing * 3 / 2,
+            Standard.spacing / 2
         )
     )

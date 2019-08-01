@@ -1,5 +1,8 @@
 package com.rubyhuntersky.vx.common
 
+import com.rubyhuntersky.vx.tower.Tower
+import com.rubyhuntersky.vx.tower.additions.Share
+
 sealed class Span {
 
     abstract fun realize(length: Int): Int
@@ -20,4 +23,6 @@ sealed class Span {
         val HALF = Relative(0.500f)
         val THIRD = Relative(0.333f)
     }
+
+    operator fun <Sight : Any, Event : Any> get(tower: Tower<Sight, Event>): Share<Sight, Event> = Share(this, tower)
 }

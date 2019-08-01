@@ -29,4 +29,4 @@ by TitleSubtitleTower
             }
     )
     .plusHMargin(Margin.Uniform(Standard.marginSpan))
-    .plusVPad(VPad.Uniform(Standard.marginSize))
+    .plusVPad(VPad.Uniform(Standard.spacing))

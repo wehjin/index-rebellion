@@ -16,7 +16,7 @@ import io.reactivex.rxkotlin.addTo
 import io.reactivex.subjects.BehaviorSubject
 import io.reactivex.subjects.PublishSubject
 
-class ReplicateTower<in Sight : Any, Event : Any>(
+class ReplicateTower<Sight : Any, Event : Any>(
     private val itemTower: Tower<Sight, Event>
 ) : Tower<List<Sight>, Ranked<Event>> {
 

@@ -18,17 +18,19 @@ import com.rubyhuntersky.interaction.core.Interaction
 import com.rubyhuntersky.vx.android.toUnit
 import com.rubyhuntersky.vx.android.tower.TowerActivity
 import com.rubyhuntersky.vx.common.Span
+import com.rubyhuntersky.vx.common.orbit.Orbit
 import com.rubyhuntersky.vx.toPercent
 import com.rubyhuntersky.vx.tower.Tower
 import com.rubyhuntersky.vx.tower.additions.*
+import com.rubyhuntersky.vx.tower.additions.clicks.plusClicks
 import com.rubyhuntersky.vx.tower.additions.extend.extendCeiling
 import com.rubyhuntersky.vx.tower.additions.extend.extendFloor
-import com.rubyhuntersky.vx.tower.additions.clicks.plusClicks
 import com.rubyhuntersky.vx.tower.additions.pad.VPad
 import com.rubyhuntersky.vx.tower.additions.pad.plusVPad
 import com.rubyhuntersky.vx.tower.additions.replicate.replicate
 import com.rubyhuntersky.vx.tower.towers.click.ClickSight
 import kotlin.math.absoluteValue
+import com.rubyhuntersky.indexrebellion.projections.Standard.ItemAttributeTower as ItemAttribute
 
 class DriftActivity : TowerActivity<Vision, Nothing>() {
 
@@ -90,7 +92,7 @@ class DriftActivity : TowerActivity<Vision, Nothing>() {
             Pair("Holdings", balanceHoldingsTower),
             Pair("Adjustments", allAdjustmentsTower.extendFloor(planButtonTower))
         )
-        .plusVPad(VPad.Ceiling(Standard.marginSize))
+        .plusVPad(VPad.Ceiling(Standard.spacing))
         .mapSight { vision: Vision -> (vision as? Vision.Viewing)?.drift ?: DEFAULT_DRIFT }
 
 
@@ -110,12 +112,14 @@ class DriftActivity : TowerActivity<Vision, Nothing>() {
 
     companion object {
 
-        private val adjustmentTower = Standard.BodyTower().mapSight { adjustment: PlateAdjustment ->
-            val name = adjustment.toName()
-            val status = adjustment.toStatus()
-            val verb = adjustment.toAction()
-            listOf(name, status, verb).joinToString(" | ")
-        }
+        private val adjustmentStart =
+            ItemAttribute().mapSight { adjust: PlateAdjustment -> adjust.plate.memberTag..adjust.realValue.toDollarStat() }
+
+        private val adjustmentEnd =
+            ItemAttribute(Orbit.TailLit).mapSight { adjust: PlateAdjustment -> adjust.toAction()..adjust.toStatus() }
+
+        private val adjustmentTower =
+            adjustmentStart shl Span.HALF[adjustmentEnd] pad Standard.spacing
 
         private fun PlateAdjustment.toAction(): String = when {
             toPlannedValue > 0 -> "Invest $${toPlannedValue.absoluteValue.toStatString()}"
@@ -134,6 +138,5 @@ class DriftActivity : TowerActivity<Vision, Nothing>() {
             return "$real $separator $planned"
         }
 
-        private fun PlateAdjustment.toName(): String = "${plate.memberTag} ${realValue.toDollarStat()}"
     }
 }

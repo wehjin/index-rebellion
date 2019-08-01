@@ -15,12 +15,12 @@ fun <Sight : Any, Event : Any> Tower<Sight, Event>.shareEnd(
     span: Span,
     tower: Tower<Sight, Event>
 ): Tower<Sight, Event> {
-    return this.plusShare(HShare.End(span, tower))
+    return this.plusHShare(HShare.End(span, tower))
 }
 
-fun <Sight : Any, Event : Any> Tower<Sight, Event>.plusShare(share: HShare<Sight, Event>): Tower<Sight, Event> {
+fun <Sight : Any, Event : Any> Tower<Sight, Event>.plusHShare(hShare: HShare<Sight, Event>): Tower<Sight, Event> {
     val core = this
-    val alt = share.tower
+    val alt = hShare.tower
     return object : Tower<Sight, Event> {
         override fun enview(viewHost: Tower.ViewHost, id: ViewId): Tower.View<Sight, Event> {
             val coreView = core.enview(viewHost, id.extend(0))
@@ -42,7 +42,7 @@ fun <Sight : Any, Event : Any> Tower<Sight, Event>.plusShare(share: HShare<Sight
 
                 override fun setHBound(hbound: HBound) {
                     edgeBound = hbound
-                    val (coreBound, altBound) = share.hostGuestBounds(hbound)
+                    val (coreBound, altBound) = hShare.hostGuestBounds(hbound)
                     coreView.setHBound(coreBound)
                     altView.setHBound(altBound)
                 }
