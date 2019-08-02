@@ -1,8 +1,8 @@
 package com.rubyhuntersky.vx.coop.additions
 
 import com.rubyhuntersky.vx.common.Span
-import org.junit.Assert.assertEquals
-import org.junit.Test
+import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Test
 
 class SpanTest {
 

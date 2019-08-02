@@ -27,7 +27,7 @@ import io.reactivex.Observable
 
 interface Tower<Sight : Any, Event : Any> {
 
-    fun enview(viewHost: ViewHost, id: ViewId): View<Sight, Event>
+    fun enview(viewHost: ViewHost, viewId: ViewId): View<Sight, Event>
 
     interface ViewHost {
         fun drop(viewId: ViewId, start: Boolean)

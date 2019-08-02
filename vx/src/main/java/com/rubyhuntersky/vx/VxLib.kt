@@ -15,8 +15,8 @@ interface Vx<in Sight : Any, Event : Any> {
 
 fun <CoreC : Any, EdgeC : Any, Ev : Any> Tower<CoreC, Ev>.transform(transformer: (EdgeC) -> CoreC): Tower<EdgeC, Ev> {
     return object : Tower<EdgeC, Ev> {
-        override fun enview(viewHost: Tower.ViewHost, id: ViewId): Tower.View<EdgeC, Ev> =
-            this@transform.enview(viewHost, id).transform(transformer)
+        override fun enview(viewHost: Tower.ViewHost, viewId: ViewId): Tower.View<EdgeC, Ev> =
+            this@transform.enview(viewHost, viewId).transform(transformer)
     }
 }
 

@@ -23,8 +23,8 @@ class NeverTower<Sight : Any, NeverE : Any, EverE : Any>(
         override val events: Observable<NeverE> get() = Observable.never()
     }
 
-    override fun enview(viewHost: Tower.ViewHost, id: ViewId): Tower.View<Sight, NeverE> {
-        return NeverView(tower.enview(viewHost, id))
+    override fun enview(viewHost: Tower.ViewHost, viewId: ViewId): Tower.View<Sight, NeverE> {
+        return NeverView(tower.enview(viewHost, viewId))
     }
 }
 

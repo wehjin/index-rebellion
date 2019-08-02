@@ -3,7 +3,7 @@ package com.rubyhuntersky.vx.tower.towers
 import com.nhaarman.mockitokotlin2.mock
 import com.rubyhuntersky.vx.common.ViewId
 import com.rubyhuntersky.vx.common.Latitude
-import org.junit.Test
+import org.junit.jupiter.api.Test
 
 class GapSightTowerTest {
 

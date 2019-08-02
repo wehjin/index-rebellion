@@ -13,7 +13,7 @@ sealed class GapSight {
 }
 
 object GapTower : Tower<GapSight, Nothing> {
-    override fun enview(viewHost: Tower.ViewHost, id: ViewId): Tower.View<GapSight, Nothing> =
+    override fun enview(viewHost: Tower.ViewHost, viewId: ViewId): Tower.View<GapSight, Nothing> =
         object : Tower.View<GapSight, Nothing> {
 
             override fun dequeue() {}

@@ -26,7 +26,12 @@ class ViewDriftStoryTest {
     fun story() {
         story.sendAction(Action.Init)
         test.assertValues(
-            ViewDriftVision.Idle, ViewDriftVision.Reading, ViewDriftVision.Viewing(drift)
+            ViewDriftVision.Idle, ViewDriftVision.Reading, ViewDriftVision.Viewing(drift, null)
+        )
+
+        story.sendAction(Action.ShowNet(true))
+        story.visions.test().assertValue(
+            ViewDriftVision.Viewing(drift, drift.netValue)
         )
 
         story.sendAction(Action.ViewHolding(Fixture.TSLA_INSTRUMENT))

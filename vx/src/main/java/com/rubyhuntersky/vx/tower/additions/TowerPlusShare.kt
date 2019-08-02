@@ -22,9 +22,9 @@ fun <Sight : Any, Event : Any> Tower<Sight, Event>.plusHShare(hShare: HShare<Sig
     val core = this
     val alt = hShare.tower
     return object : Tower<Sight, Event> {
-        override fun enview(viewHost: Tower.ViewHost, id: ViewId): Tower.View<Sight, Event> {
-            val coreView = core.enview(viewHost, id.extend(0))
-            val altView = alt.enview(viewHost, id.extend(1))
+        override fun enview(viewHost: Tower.ViewHost, viewId: ViewId): Tower.View<Sight, Event> {
+            val coreView = core.enview(viewHost, viewId.extend(0))
+            val altView = alt.enview(viewHost, viewId.extend(1))
             return object : Tower.View<Sight, Event> {
                 override fun dequeue() {
                     latitudeWatchers.clear()

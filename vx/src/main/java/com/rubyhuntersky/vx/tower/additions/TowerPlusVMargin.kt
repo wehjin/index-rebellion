@@ -11,8 +11,8 @@ import io.reactivex.Observable
 fun <Sight : Any, Event : Any> Tower<Sight, Event>.plusHMargin(margin: Margin): Tower<Sight, Event> {
     val core = this
     return object : Tower<Sight, Event> {
-        override fun enview(viewHost: Tower.ViewHost, id: ViewId): Tower.View<Sight, Event> {
-            val coreView = core.enview(viewHost, id)
+        override fun enview(viewHost: Tower.ViewHost, viewId: ViewId): Tower.View<Sight, Event> {
+            val coreView = core.enview(viewHost, viewId)
             return object : Tower.View<Sight, Event> {
 
                 override fun dequeue() = coreView.dequeue()

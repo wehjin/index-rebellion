@@ -8,6 +8,6 @@ import com.rubyhuntersky.vx.tower.towers.textinput.TextInputSight as Sight
 class TextInputTower<Topic : Any> : Tower<Sight<Topic>, Event<Topic>> {
     override fun enview(
         viewHost: Tower.ViewHost,
-        id: ViewId
-    ): Tower.View<Sight<Topic>, Event<Topic>> = viewHost.addTextInputView(id)
+        viewId: ViewId
+    ): Tower.View<Sight<Topic>, Event<Topic>> = viewHost.addTextInputView(viewId)
 }

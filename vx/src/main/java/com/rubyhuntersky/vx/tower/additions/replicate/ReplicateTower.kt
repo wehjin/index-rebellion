@@ -20,7 +20,7 @@ class ReplicateTower<Sight : Any, Event : Any>(
     private val itemTower: Tower<Sight, Event>
 ) : Tower<List<Sight>, Ranked<Event>> {
 
-    override fun enview(viewHost: Tower.ViewHost, id: ViewId): Tower.View<List<Sight>, Ranked<Event>> {
+    override fun enview(viewHost: Tower.ViewHost, viewId: ViewId): Tower.View<List<Sight>, Ranked<Event>> {
 
         return object : Tower.View<List<Sight>, Ranked<Event>> {
 
@@ -33,7 +33,7 @@ class ReplicateTower<Sight : Any, Event : Any>(
 
             override fun setSight(sight: List<Sight>) {
                 eventLatitudeUpdates.clear()
-                viewHost.drop(id, true)
+                viewHost.drop(viewId, true)
                 fullView?.dequeue()
                 fullView = null
 
@@ -48,7 +48,7 @@ class ReplicateTower<Sight : Any, Event : Any>(
                                 acc.extendFloor(tower.mapEvent { Ranked(it, index) })
                             })
 
-                fullView = fullTower.enview(viewHost, id)
+                fullView = fullTower.enview(viewHost, viewId)
                     .apply {
                         events.subscribe(eventPublish::onNext).addTo(eventLatitudeUpdates)
                         latitudes.subscribe {
@@ -57,7 +57,7 @@ class ReplicateTower<Sight : Any, Event : Any>(
                         }.addTo(eventLatitudeUpdates)
                         setSight(sight)
                     }
-                viewHost.drop(id, false)
+                viewHost.drop(viewId, false)
                 update()
             }
 

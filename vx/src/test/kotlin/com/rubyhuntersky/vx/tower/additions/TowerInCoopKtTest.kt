@@ -4,9 +4,9 @@ import com.rubyhuntersky.vx.common.ViewId
 import com.rubyhuntersky.vx.common.bound.BiBound
 import com.rubyhuntersky.vx.coop.tools.TestCoopViewHost
 import com.rubyhuntersky.vx.tower.towers.EmptyTower
-import org.junit.Assert.assertEquals
-import org.junit.Assert.fail
-import org.junit.Test
+import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Assertions.fail
+import org.junit.jupiter.api.Test
 
 class TowerInCoopKtTest {
 

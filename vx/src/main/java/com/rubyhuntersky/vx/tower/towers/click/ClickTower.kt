@@ -8,6 +8,6 @@ class ClickTower<Topic : Any> :
 
     override fun enview(
         viewHost: Tower.ViewHost,
-        id: ViewId
-    ): Tower.View<ClickSight<Topic>, ClickEvent<Topic>> = viewHost.addClickView(id)
+        viewId: ViewId
+    ): Tower.View<ClickSight<Topic>, ClickEvent<Topic>> = viewHost.addClickView(viewId)
 }

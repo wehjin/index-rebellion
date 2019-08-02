@@ -7,8 +7,8 @@ import com.rubyhuntersky.vx.common.bound.HBound
 import com.rubyhuntersky.vx.common.bound.VBound
 import com.rubyhuntersky.vx.common.orbit.BiOrbit
 import com.rubyhuntersky.vx.coop.tools.TestCoopViewHost
-import org.junit.Assert.assertEquals
-import org.junit.Test
+import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Test
 
 class FitTextCoopTest {
 

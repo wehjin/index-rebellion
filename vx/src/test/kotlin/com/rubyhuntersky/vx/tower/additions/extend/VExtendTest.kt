@@ -2,8 +2,8 @@ package com.rubyhuntersky.vx.tower.additions.extend
 
 import com.rubyhuntersky.vx.tower.towers.EmptyTower
 import com.rubyhuntersky.vx.tower.towers.wraptext.WrapTextSight
-import org.junit.Assert.assertEquals
-import org.junit.Test
+import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Test
 
 class VExtendTest {
 

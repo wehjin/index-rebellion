@@ -25,10 +25,10 @@ fun <Sight : Any, Event : Any> Tower<Sight, Event>.extendCeiling(tower: Tower<Si
 fun <Sight : Any, Event : Any> Tower<Sight, Event>.extendVertical(extend: VExtend<Sight, Event>): Tower<Sight, Event> {
     val coreTowers = listOf(extend.ceilingTower, this, extend.floorTower)
     return object : Tower<Sight, Event> {
-        override fun enview(viewHost: Tower.ViewHost, id: ViewId): Tower.View<Sight, Event> =
+        override fun enview(viewHost: Tower.ViewHost, viewId: ViewId): Tower.View<Sight, Event> =
             object : Tower.View<Sight, Event> {
                 private val coreViews = coreTowers
-                    .mapIndexed { index, tower -> tower.enview(viewHost, id.extend(index)) }
+                    .mapIndexed { index, tower -> tower.enview(viewHost, viewId.extend(index)) }
 
                 override fun dequeue() {
                     updates.clear()

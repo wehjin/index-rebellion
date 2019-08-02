@@ -17,7 +17,7 @@ operator fun <Sight : Any, Event : Any> Tower<Sight, Event>.plus(pad: VPad): Tow
 fun <Sight : Any, Event : Any> Tower<Sight, Event>.plusVPad(pad: VPad): Tower<Sight, Event> {
     val core = this
     return object : Tower<Sight, Event> {
-        override fun enview(viewHost: Tower.ViewHost, id: ViewId): Tower.View<Sight, Event> =
+        override fun enview(viewHost: Tower.ViewHost, viewId: ViewId): Tower.View<Sight, Event> =
             object : Tower.View<Sight, Event> {
                 
                 override fun dequeue() {
@@ -25,7 +25,7 @@ fun <Sight : Any, Event : Any> Tower<Sight, Event>.plusVPad(pad: VPad): Tower<Si
                     coreView.dequeue()
                 }
 
-                private val coreView = core.enview(viewHost, id)
+                private val coreView = core.enview(viewHost, viewId)
                 private val edgeLatitudes: PublishSubject<Latitude> = PublishSubject.create()
                 private val edgeAnchors: PublishSubject<Anchor> = PublishSubject.create()
                 private val latitudeAnchorUpdates = CompositeDisposable()

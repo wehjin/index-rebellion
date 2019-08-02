@@ -11,7 +11,7 @@ import com.rubyhuntersky.vx.common.Latitude
 import com.rubyhuntersky.vx.tower.Tower
 import com.rubyhuntersky.vx.tower.towers.wraptext.WrapTextSight
 import io.reactivex.subjects.PublishSubject
-import org.junit.Test
+import org.junit.jupiter.api.Test
 
 class TitleTowerTest {
 

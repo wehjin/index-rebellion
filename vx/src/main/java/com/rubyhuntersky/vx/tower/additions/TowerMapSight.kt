@@ -10,8 +10,8 @@ import io.reactivex.Observable
 fun <CoreSight : Any, Event : Any, EdgeSight : Any> Tower<CoreSight, Event>.mapSight(edgeToCoreSight: (EdgeSight) -> CoreSight): Tower<EdgeSight, Event> {
     val core = this
     return object : Tower<EdgeSight, Event> {
-        override fun enview(viewHost: Tower.ViewHost, id: ViewId): Tower.View<EdgeSight, Event> {
-            val coreView = core.enview(viewHost, id)
+        override fun enview(viewHost: Tower.ViewHost, viewId: ViewId): Tower.View<EdgeSight, Event> {
+            val coreView = core.enview(viewHost, viewId)
             return object : Tower.View<EdgeSight, Event> {
 
                 override fun dequeue() = coreView.dequeue()
@@ -29,8 +29,8 @@ fun <CoreSight : Any, Event : Any, EdgeSight : Any> Tower<CoreSight, Event>.mapS
 fun <Sight : Any, Event : Any> Tower<Sight, Event>.fixSight(fixed: Sight): Tower<Unit, Event> {
     val core = this
     return object : Tower<Unit, Event> {
-        override fun enview(viewHost: Tower.ViewHost, id: ViewId): Tower.View<Unit, Event> {
-            val coreView = core.enview(viewHost, id)
+        override fun enview(viewHost: Tower.ViewHost, viewId: ViewId): Tower.View<Unit, Event> {
+            val coreView = core.enview(viewHost, viewId)
             return object : Tower.View<Unit, Event> {
 
                 override fun dequeue() = coreView.dequeue()

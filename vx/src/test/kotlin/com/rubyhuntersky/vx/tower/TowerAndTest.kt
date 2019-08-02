@@ -9,8 +9,8 @@ import com.rubyhuntersky.vx.tower.additions.mapSight
 import com.rubyhuntersky.vx.tower.tools.TestTowerViewHost
 import com.rubyhuntersky.vx.tower.towers.TitleTower
 import com.rubyhuntersky.vx.tower.towers.wraptext.WrapTextSight
-import junit.framework.Assert.assertEquals
-import org.junit.Test
+import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Test
 
 class TowerAndTest {
     private val viewId = ViewId()

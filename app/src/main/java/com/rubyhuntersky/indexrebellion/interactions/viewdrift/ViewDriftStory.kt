@@ -27,7 +27,7 @@ class ViewDriftStory : Interaction<Vision, Action> by Story(::start, ::isEnding,
     sealed class Vision {
         object Idle : Vision()
         object Reading : Vision()
-        data class Viewing(val drift: Drift) : Vision()
+        data class Viewing(val drift: Drift, val netValue: CashAmount?) : Vision()
     }
 
     sealed class Action {
@@ -38,6 +38,7 @@ class ViewDriftStory : Interaction<Vision, Action> by Story(::start, ::isEnding,
         object AddHolding : Action()
         object ViewPlan : Action()
         object RefreshPrices : Action()
+        data class ShowNet(val show: Boolean) : Action()
         data class LoadSamples(val result: StockMarket.Result) : Action()
     }
 
@@ -61,8 +62,14 @@ private fun revise(vision: Vision, action: Action, edge: Edge): Revision<Vision,
         )
         Revision(Vision.Reading, readDrifts)
     }
-    (vision is Vision.Reading || vision is Vision.Viewing) && action is Action.Load -> {
-        Revision(Vision.Viewing(action.drift), Wish.none(REFRESH_PRICES))
+    vision is Vision.Reading && action is Action.Load -> {
+        Revision(Vision.Viewing(action.drift, null), Wish.none(REFRESH_PRICES))
+    }
+    vision is Vision.Viewing && action is Action.Load -> {
+        Revision(Vision.Viewing(action.drift, vision.netValue), Wish.none(REFRESH_PRICES))
+    }
+    vision is Vision.Viewing && action is Action.ShowNet -> {
+        Revision(Vision.Viewing(vision.drift, if (action.show) vision.drift.netValue else null))
     }
     vision is Vision.Viewing && action is Action.ViewHolding -> {
         val viewHolding = edge.wish(

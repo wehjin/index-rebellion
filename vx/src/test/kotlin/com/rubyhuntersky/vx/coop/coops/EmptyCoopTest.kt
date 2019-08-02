@@ -3,8 +3,8 @@ package com.rubyhuntersky.vx.coop.coops
 import com.rubyhuntersky.vx.common.ViewId
 import com.rubyhuntersky.vx.common.bound.BiBound
 import com.rubyhuntersky.vx.coop.tools.TestCoopViewHost
-import org.junit.Assert
-import org.junit.Test
+import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Test
 
 class EmptyCoopTest {
 
@@ -16,6 +16,6 @@ class EmptyCoopTest {
             setSight(Unit)
             setBound(BiBound(0, 100, 0, 100))
         }
-        Assert.assertEquals(0, viewHost.items.size)
+        assertEquals(0, viewHost.items.size)
     }
 }

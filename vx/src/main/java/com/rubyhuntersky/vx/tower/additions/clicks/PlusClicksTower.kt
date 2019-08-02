@@ -9,7 +9,7 @@ internal class PlusClicksTower<Sight : Any, Topic : Any>(
     private val sightToTopic: (Sight) -> Topic
 ) : Tower<Sight, ClickEvent<Topic>> {
 
-    override fun enview(viewHost: Tower.ViewHost, id: ViewId):
-            Tower.View<Sight, ClickEvent<Topic>> = viewHost.addClickOverlayView(id, core, sightToTopic)
+    override fun enview(viewHost: Tower.ViewHost, viewId: ViewId):
+            Tower.View<Sight, ClickEvent<Topic>> = viewHost.addClickOverlayView(viewId, core, sightToTopic)
 }
 

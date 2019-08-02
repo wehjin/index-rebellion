@@ -8,8 +8,8 @@ import com.rubyhuntersky.vx.common.margin.BiMargin
 import com.rubyhuntersky.vx.coop.coops.FitTextCoop
 import com.rubyhuntersky.vx.coop.tools.TestCoopViewHost
 import com.rubyhuntersky.vx.common.orbit.BiOrbit
-import org.junit.Assert.assertEquals
-import org.junit.Test
+import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Test
 
 class CoopPlusMarginKtTest {
 

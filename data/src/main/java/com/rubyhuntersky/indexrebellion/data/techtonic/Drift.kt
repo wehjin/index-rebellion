@@ -1,5 +1,6 @@
 package com.rubyhuntersky.indexrebellion.data.techtonic
 
+import com.rubyhuntersky.indexrebellion.data.cash.CashAmount
 import com.rubyhuntersky.indexrebellion.data.techtonic.instrument.InstrumentId
 import com.rubyhuntersky.indexrebellion.data.techtonic.market.InstrumentSample
 import com.rubyhuntersky.indexrebellion.data.techtonic.market.Market
@@ -56,6 +57,15 @@ data class Drift(
                 PlateAdjustment(plate, plannedPortion, realPortion, vaultValue, instrumentIds)
             }
             .toSet()
+    }
+
+    val netValue: CashAmount by lazy {
+        generalHoldings
+            .map(GeneralHolding::cashValue)
+            .fold(
+                initial = CashAmount.ZERO,
+                operation = { total, next -> next?.let { total + it } ?: total }
+            )
     }
 
     fun findHolding(instrumentId: InstrumentId): GeneralHolding? =

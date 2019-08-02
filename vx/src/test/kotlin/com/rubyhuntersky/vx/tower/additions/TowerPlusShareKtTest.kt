@@ -8,8 +8,8 @@ import com.rubyhuntersky.vx.common.bound.VBound
 import com.rubyhuntersky.vx.common.Span
 import com.rubyhuntersky.vx.tower.tools.TestTowerViewHost
 import com.rubyhuntersky.vx.tower.towers.wraptext.WrapTextTower
-import org.junit.Assert.assertEquals
-import org.junit.Test
+import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Test
 
 class TowerPlusShareKtTest {
 

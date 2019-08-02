@@ -4,5 +4,5 @@ import com.rubyhuntersky.vx.common.ViewId
 import com.rubyhuntersky.vx.tower.Tower
 
 class WrapTextTower : Tower<WrapTextSight, Nothing> {
-    override fun enview(viewHost: Tower.ViewHost, id: ViewId) = viewHost.addWrapTextView(id)
+    override fun enview(viewHost: Tower.ViewHost, viewId: ViewId) = viewHost.addWrapTextView(viewId)
 }
