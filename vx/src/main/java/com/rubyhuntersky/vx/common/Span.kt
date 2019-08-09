@@ -1,9 +1,10 @@
 package com.rubyhuntersky.vx.common
 
+import com.rubyhuntersky.vx.common.orbit.Orbit
 import com.rubyhuntersky.vx.tower.Tower
 import com.rubyhuntersky.vx.tower.additions.Share
 
-sealed class Span {
+sealed class Span(val orbit: Orbit = Orbit.Center) {
 
     abstract fun realize(length: Int): Int
 

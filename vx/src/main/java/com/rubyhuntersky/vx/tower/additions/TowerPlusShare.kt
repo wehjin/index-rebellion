@@ -21,6 +21,7 @@ fun <Sight : Any, Event : Any> Tower<Sight, Event>.shareEnd(
 fun <Sight : Any, Event : Any> Tower<Sight, Event>.plusHShare(hShare: HShare<Sight, Event>): Tower<Sight, Event> {
     val core = this
     val alt = hShare.tower
+    val span = hShare.span
     return object : Tower<Sight, Event> {
         override fun enview(viewHost: Tower.ViewHost, viewId: ViewId): Tower.View<Sight, Event> {
             val coreView = core.enview(viewHost, viewId.extend(0))
@@ -57,21 +58,21 @@ fun <Sight : Any, Event : Any> Tower<Sight, Event>.plusHShare(hShare: HShare<Sig
 
                 override fun setAnchor(anchor: Anchor) {
                     edgeAnchor = anchor
-                    updateCoreAnchors()
+                    updateCoreAnchors(subLatitudes, edgeAnchor)
                 }
 
                 private var edgeAnchor: Anchor? = null
 
-                private fun updateCoreAnchors(): Latitude {
+                private fun updateCoreAnchors(subLatitudes: List<Latitude>, edgeAnchor: Anchor?): Latitude {
                     val maxLatitude = subLatitudes.fold(Latitude(0), Latitude::max)
-                    val edgeAnchor = edgeAnchor
                     if (edgeAnchor != null) {
                         val edgeHeight = maxLatitude.height
-                        subViews.forEachIndexed { index, view ->
-                            val coreHeight = subLatitudes[index].height
-                            val coreOffset = 0 // TODO Adjust for orbit
-                            view.setAnchor(edgeAnchor.edgeToCore(edgeHeight, coreHeight, coreOffset))
-                        }
+                        val edgeCeiling = edgeAnchor.toCeiling(edgeHeight)
+                        val coreAnchor = Anchor(
+                            position = edgeCeiling + (span.orbit.pole * edgeHeight).toInt(),
+                            placement = span.orbit.swing
+                        )
+                        subViews.forEach { it.setAnchor(coreAnchor) }
                     }
                     return maxLatitude
                 }
@@ -82,11 +83,12 @@ fun <Sight : Any, Event : Any> Tower<Sight, Event>.plusHShare(hShare: HShare<Sig
 
                 init {
                     subViews.forEachIndexed { index, subView ->
-                        subView.latitudes.subscribe { latitude ->
-                            subLatitudes[index] = latitude
-                            val maxLatitude = updateCoreAnchors()
-                            edgeLatitude.onNext(maxLatitude)
-                        }.addTo(latitudeWatchers)
+                        subView.latitudes
+                            .subscribe { latitude ->
+                                subLatitudes[index] = latitude
+                                val maxLatitude = updateCoreAnchors(subLatitudes, edgeAnchor)
+                                edgeLatitude.onNext(maxLatitude)
+                            }.addTo(latitudeWatchers)
                     }
                 }
             }

@@ -1,7 +1,7 @@
 package com.rubyhuntersky.vx.tower.additions
 
-import com.rubyhuntersky.vx.common.bound.HBound
 import com.rubyhuntersky.vx.common.Span
+import com.rubyhuntersky.vx.common.bound.HBound
 import com.rubyhuntersky.vx.tower.towers.wraptext.WrapTextTower
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test

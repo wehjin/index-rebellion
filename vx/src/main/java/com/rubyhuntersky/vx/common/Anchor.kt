@@ -18,12 +18,4 @@ data class Anchor(
 
     private fun toHead(size: Int): Int = position - (placement * size).toInt()
 
-    fun edgeToCore(edgeSize: Int, coreSize: Int, coreOffset: Int): Anchor = copy(
-        position = position + coreOffset,
-        placement = if (coreSize == 0) {
-            0f
-        } else {
-            placement * edgeSize.toFloat() / coreSize.toFloat()
-        }
-    )
 }
