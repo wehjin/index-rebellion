@@ -25,7 +25,7 @@ import com.rubyhuntersky.vx.tower.additions.mapSight
 import com.rubyhuntersky.vx.tower.additions.pad.plusVPad
 import com.rubyhuntersky.vx.tower.towers.InputType
 import com.rubyhuntersky.vx.tower.towers.click.ClickEvent
-import com.rubyhuntersky.vx.tower.towers.click.ClickSight
+import com.rubyhuntersky.vx.tower.towers.click.ButtonSight
 import com.rubyhuntersky.vx.tower.towers.textinput.TextInputEvent
 import com.rubyhuntersky.vx.tower.towers.textinput.TextInputSight
 import java.math.BigDecimal
@@ -78,7 +78,7 @@ class EditHoldingActivity : AppCompatActivity() {
         }
 
     private val saveTower = Standard.CenteredTextButton<Unit>()
-        .fixSight(ClickSight(Unit, "Save"))
+        .fixSight(ButtonSight(Unit, "Save"))
         .mapSight(Vision::toUnit)
         .handleEvents {
             (it as ClickEvent.Single)

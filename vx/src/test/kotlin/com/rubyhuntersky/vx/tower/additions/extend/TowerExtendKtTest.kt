@@ -1,7 +1,7 @@
 package com.rubyhuntersky.vx.tower.additions.extend
 
 import com.rubyhuntersky.vx.common.Anchor
-import com.rubyhuntersky.vx.common.Latitude
+import com.rubyhuntersky.vx.common.Height
 import com.rubyhuntersky.vx.common.TextStyle
 import com.rubyhuntersky.vx.common.ViewId
 import com.rubyhuntersky.vx.common.bound.HBound
@@ -31,11 +31,11 @@ class TowerExtendKtTest {
             }
         val item = viewHost.items.first()
             .apply {
-                latitudes.onNext(Latitude(100))
+                latitudes.onNext(Height(100))
             }
         assertEquals(sight, item.sight)
         assertEquals(HBound(0, 1000), item.bound)
         assertEquals(10, item.anchor!!.position)
-        view.latitudes.test().assertValue(Latitude(120))
+        view.latitudes.test().assertValue(Height(120))
     }
 }

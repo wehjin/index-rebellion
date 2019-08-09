@@ -1,7 +1,7 @@
 package com.rubyhuntersky.vx.tower.towers
 
 import com.rubyhuntersky.vx.common.Anchor
-import com.rubyhuntersky.vx.common.Latitude
+import com.rubyhuntersky.vx.common.Height
 import com.rubyhuntersky.vx.common.Mortal
 import com.rubyhuntersky.vx.common.ViewId
 import com.rubyhuntersky.vx.common.bound.HBound
@@ -19,8 +19,8 @@ class MortalTower<Sight : Any, Event : Any>(private val tower: Tower<Sight, Even
         return object : Tower.View<Mortal<Sight>, Event> {
 
 
-            override fun dequeue() {
-                coreView?.dequeue()
+            override fun drop() {
+                coreView?.drop()
             }
 
             override val events: Observable<Event>
@@ -29,7 +29,7 @@ class MortalTower<Sight : Any, Event : Any>(private val tower: Tower<Sight, Even
             override fun setSight(sight: Mortal<Sight>) {
                 updates.clear()
                 viewHost.drop(viewId, true)
-                coreView?.dequeue()
+                coreView?.drop()
                 coreView = when (sight) {
                     is Mortal.Be -> tower.enview(viewHost, viewId).apply { setSight(sight.coil) }
                     is Mortal.NotToBe -> null
@@ -42,8 +42,8 @@ class MortalTower<Sight : Any, Event : Any>(private val tower: Tower<Sight, Even
             }
 
 
-            override val latitudes: Observable<Latitude>
-                get() = latitudeBehavior.distinctUntilChanged()
+            override val latitudes: Observable<Height>
+                get() = heightBehavior.distinctUntilChanged()
 
             override fun setAnchor(anchor: Anchor) {
                 edgeAnchor = anchor
@@ -52,7 +52,7 @@ class MortalTower<Sight : Any, Event : Any>(private val tower: Tower<Sight, Even
 
             private val updates = CompositeDisposable()
             private val eventPublish: PublishSubject<Event> = PublishSubject.create()
-            private val latitudeBehavior: BehaviorSubject<Latitude> = BehaviorSubject.createDefault(Latitude(0))
+            private val heightBehavior: BehaviorSubject<Height> = BehaviorSubject.createDefault(Height(0))
 
             private var edgeHBound: HBound? = null
                 set(value) {
@@ -60,12 +60,12 @@ class MortalTower<Sight : Any, Event : Any>(private val tower: Tower<Sight, Even
                     updateCoreHBoundAndAnchor(coreView, value, edgeAnchor)
                 }
 
-            private var coreLatitude: Latitude? = null
+            private var coreHeight: Height? = null
                 set(value) {
                     field = value
                     value?.let {
                         updateCoreAnchor(coreView, edgeAnchor)
-                        latitudeBehavior.onNext(it)
+                        heightBehavior.onNext(it)
                     }
                 }
 
@@ -79,9 +79,9 @@ class MortalTower<Sight : Any, Event : Any>(private val tower: Tower<Sight, Even
                 set(value) {
                     field = value
                     if (value == null) {
-                        coreLatitude = Latitude.ZERO
+                        coreHeight = Height.ZERO
                     } else {
-                        value.latitudes.subscribe { coreLatitude = it }.addTo(updates)
+                        value.latitudes.subscribe { coreHeight = it }.addTo(updates)
                         value.events.subscribe(eventPublish::onNext).addTo(updates)
                     }
                     updateCoreHBoundAndAnchor(value, edgeHBound, edgeAnchor)

@@ -4,10 +4,10 @@ import com.rubyhuntersky.vx.common.ViewId
 import com.rubyhuntersky.vx.tower.Tower
 
 class ClickTower<Topic : Any> :
-    Tower<ClickSight<Topic>, ClickEvent<Topic>> {
+    Tower<ButtonSight<Topic>, ClickEvent<Topic>> {
 
     override fun enview(
         viewHost: Tower.ViewHost,
         viewId: ViewId
-    ): Tower.View<ClickSight<Topic>, ClickEvent<Topic>> = viewHost.addClickView(viewId)
+    ): Tower.View<ButtonSight<Topic>, ClickEvent<Topic>> = viewHost.addButtonView(viewId)
 }

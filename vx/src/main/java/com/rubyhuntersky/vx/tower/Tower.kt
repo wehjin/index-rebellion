@@ -2,7 +2,7 @@ package com.rubyhuntersky.vx.tower
 
 import com.rubyhuntersky.vx.Vx
 import com.rubyhuntersky.vx.common.Anchor
-import com.rubyhuntersky.vx.common.Latitude
+import com.rubyhuntersky.vx.common.Height
 import com.rubyhuntersky.vx.common.Span
 import com.rubyhuntersky.vx.common.ViewId
 import com.rubyhuntersky.vx.common.bound.HBound
@@ -14,11 +14,9 @@ import com.rubyhuntersky.vx.tower.additions.pad.VPad
 import com.rubyhuntersky.vx.tower.additions.pad.plusVPad
 import com.rubyhuntersky.vx.tower.additions.plusHMargin
 import com.rubyhuntersky.vx.tower.additions.plusHShare
-import com.rubyhuntersky.vx.tower.towers.InputEvent
-import com.rubyhuntersky.vx.tower.towers.InputSight
 import com.rubyhuntersky.vx.tower.towers.NeverTower
+import com.rubyhuntersky.vx.tower.towers.click.ButtonSight
 import com.rubyhuntersky.vx.tower.towers.click.ClickEvent
-import com.rubyhuntersky.vx.tower.towers.click.ClickSight
 import com.rubyhuntersky.vx.tower.towers.textinput.TextInputEvent
 import com.rubyhuntersky.vx.tower.towers.textinput.TextInputSight
 import com.rubyhuntersky.vx.tower.towers.wraptext.WrapTextSight
@@ -40,19 +38,17 @@ interface Tower<Sight : Any, Event : Any> {
             sightToTopic: (InnerSight) -> Topic
         ): View<InnerSight, ClickEvent<Topic>>
 
-        fun <Topic : Any> addClickView(id: ViewId): View<ClickSight<Topic>, ClickEvent<Topic>>
-
-        fun addInputView(id: ViewId): View<InputSight, InputEvent>
+        fun <Topic : Any> addButtonView(id: ViewId): View<ButtonSight<Topic>, ClickEvent<Topic>>
 
         fun addWrapTextView(id: ViewId): View<WrapTextSight, Nothing>
     }
 
     interface View<in Sight : Any, Event : Any> : Vx<Sight, Event> {
-        fun dequeue()
+        fun drop()
         override val events: Observable<Event>
         override fun setSight(sight: Sight)
         fun setHBound(hbound: HBound)
-        val latitudes: Observable<Latitude>
+        val latitudes: Observable<Height>
         fun setAnchor(anchor: Anchor)
     }
 

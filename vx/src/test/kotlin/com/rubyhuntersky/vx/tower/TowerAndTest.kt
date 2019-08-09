@@ -1,14 +1,14 @@
 package com.rubyhuntersky.vx.tower
 
 import com.rubyhuntersky.vx.common.Anchor
-import com.rubyhuntersky.vx.common.Latitude
+import com.rubyhuntersky.vx.common.Height
 import com.rubyhuntersky.vx.common.TextStyle
 import com.rubyhuntersky.vx.common.ViewId
 import com.rubyhuntersky.vx.common.bound.HBound
 import com.rubyhuntersky.vx.tower.additions.mapSight
 import com.rubyhuntersky.vx.tower.tools.TestTowerViewHost
-import com.rubyhuntersky.vx.tower.towers.TitleTower
 import com.rubyhuntersky.vx.tower.towers.wraptext.WrapTextSight
+import com.rubyhuntersky.vx.tower.towers.wraptext.WrapTextTower
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 
@@ -16,8 +16,9 @@ class TowerAndTest {
     private val viewId = ViewId()
     private val viewHost = TestTowerViewHost()
 
-    private val tower = TitleTower.mapSight(Pair<String, String>::first) and
-            TitleTower.mapSight(Pair<String, String>::second)
+    private val tower1 = WrapTextTower().mapSight { it: Pair<String, String> -> WrapTextSight(it.first) }
+    private val tower2 = WrapTextTower().mapSight { it: Pair<String, String> -> WrapTextSight(it.second) }
+    private val tower = tower1 and tower2
 
     private val view = tower.enview(viewHost, viewId)
 
@@ -25,7 +26,7 @@ class TowerAndTest {
     fun setSight() {
         view.setSight(Pair("Hello", "World"))
         assertEquals(
-            setOf(WrapTextSight("Hello", TextStyle.Highlight5), WrapTextSight("World", TextStyle.Highlight5)),
+            setOf(WrapTextSight("Hello", TextStyle.Body1), WrapTextSight("World", TextStyle.Body1)),
             viewHost.items.map(TestTowerViewHost.Item::sight).toSet()
         )
     }
@@ -42,8 +43,8 @@ class TowerAndTest {
 
     @Test
     fun setAnchor() {
-        viewHost.items[0].latitudes.onNext(Latitude(75))
-        viewHost.items[1].latitudes.onNext(Latitude(25))
+        viewHost.items[0].latitudes.onNext(Height(75))
+        viewHost.items[1].latitudes.onNext(Height(25))
         view.setAnchor(Anchor(0, 0f))
         assertEquals(
             setOf(Anchor(0, 0f), Anchor(75, 0f)),
@@ -55,9 +56,9 @@ class TowerAndTest {
     @Test
     fun latitudes() {
         val test = view.latitudes.test()
-        viewHost.items[0].latitudes.onNext(Latitude(100))
-        viewHost.items[1].latitudes.onNext(Latitude(5))
-        test.assertValue(Latitude(105))
+        viewHost.items[0].latitudes.onNext(Height(100))
+        viewHost.items[1].latitudes.onNext(Height(5))
+        test.assertValue(Height(105))
     }
 
     @Test

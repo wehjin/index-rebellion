@@ -1,7 +1,7 @@
 package com.rubyhuntersky.vx.tower.additions
 
 import com.rubyhuntersky.vx.common.Anchor
-import com.rubyhuntersky.vx.common.Latitude
+import com.rubyhuntersky.vx.common.Height
 import com.rubyhuntersky.vx.common.Span
 import com.rubyhuntersky.vx.common.ViewId
 import com.rubyhuntersky.vx.common.bound.HBound
@@ -32,15 +32,15 @@ class TowerPlusShareKtTest {
         )
 
         // Upstream Latitude
-        viewHost.items[0].latitudes.onNext(Latitude(40))
-        viewHost.items[1].latitudes.onNext(Latitude(100))
-        view.latitudes.test().assertValue(Latitude(100))
+        viewHost.items[0].latitudes.onNext(Height(40))
+        viewHost.items[1].latitudes.onNext(Height(100))
+        view.latitudes.test().assertValue(Height(100))
 
         // Downstream Anchor
         view.setAnchor(Anchor(0, 0f))
         assertEquals(
             setOf(VBound(30, 70), VBound(0, 100)),
-            viewHost.items.map { it.anchor!!.toVBound(it.latitudes.value!!.height) }.toSet()
+            viewHost.items.map { it.anchor!!.toVBound(it.latitudes.value!!.dips) }.toSet()
         )
     }
 }

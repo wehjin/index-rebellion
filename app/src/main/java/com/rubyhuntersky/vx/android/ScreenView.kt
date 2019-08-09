@@ -8,7 +8,7 @@ import com.rubyhuntersky.vx.android.backingviews.BackingInputLayout
 import com.rubyhuntersky.vx.android.backingviews.BackingTextView
 import com.rubyhuntersky.vx.android.tower.AndroidTowerView
 import com.rubyhuntersky.vx.common.Anchor
-import com.rubyhuntersky.vx.common.Latitude
+import com.rubyhuntersky.vx.common.Height
 import com.rubyhuntersky.vx.common.TextStyle
 import com.rubyhuntersky.vx.common.ViewId
 import com.rubyhuntersky.vx.common.bound.HBound
@@ -16,7 +16,7 @@ import com.rubyhuntersky.vx.tower.Tower
 import com.rubyhuntersky.vx.tower.towers.InputEvent
 import com.rubyhuntersky.vx.tower.towers.InputSight
 import com.rubyhuntersky.vx.tower.towers.click.ClickEvent
-import com.rubyhuntersky.vx.tower.towers.click.ClickSight
+import com.rubyhuntersky.vx.tower.towers.click.ButtonSight
 import com.rubyhuntersky.vx.tower.towers.textinput.TextInputEvent
 import com.rubyhuntersky.vx.tower.towers.textinput.TextInputSight
 import com.rubyhuntersky.vx.tower.towers.wraptext.WrapTextSight
@@ -82,7 +82,7 @@ class ScreenView
     override fun <Topic : Any> addTextInputView(id: ViewId): Tower.View<TextInputSight<Topic>, TextInputEvent<Topic>> {
         return object : Tower.View<TextInputSight<Topic>, TextInputEvent<Topic>> {
 
-            override fun dequeue() = core.dequeue()
+            override fun drop() = core.drop()
 
             lateinit var topic: Topic
 
@@ -107,7 +107,7 @@ class ScreenView
                 core.setHBound(hbound)
             }
 
-            override val latitudes: Observable<Latitude> get() = core.latitudes
+            override val latitudes: Observable<Height> get() = core.latitudes
             override fun setAnchor(anchor: Anchor) = core.setAnchor(anchor)
         }
     }
@@ -120,23 +120,9 @@ class ScreenView
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
-    override fun <Topic : Any> addClickView(id: ViewId): Tower.View<ClickSight<Topic>, ClickEvent<Topic>> {
+    override fun <Topic : Any> addButtonView(id: ViewId): Tower.View<ButtonSight<Topic>, ClickEvent<Topic>> {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
-
-    override fun addInputView(id: ViewId): Tower.View<InputSight, InputEvent> =
-        AndroidTowerView(
-            hostLayout = this@ScreenView,
-            viewId = id,
-            adapter = object : AndroidTowerView.Adapter<BackingInputLayout, InputSight, InputEvent> {
-                override fun buildView(context: Context, viewId: ViewId): BackingInputLayout =
-                    BackingInputLayout(context, null)
-
-                override fun renderView(view: BackingInputLayout, sight: InputSight) {
-                    view.render(sight)
-                }
-            }
-        )
 
     override fun addWrapTextView(id: ViewId): Tower.View<WrapTextSight, Nothing> =
         AndroidTowerView(

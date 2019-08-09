@@ -1,7 +1,7 @@
 package com.rubyhuntersky.vx.tower.additions.pad
 
 import com.rubyhuntersky.vx.common.Anchor
-import com.rubyhuntersky.vx.common.Latitude
+import com.rubyhuntersky.vx.common.Height
 import com.rubyhuntersky.vx.common.ViewId
 import com.rubyhuntersky.vx.common.bound.HBound
 import com.rubyhuntersky.vx.tower.Tower
@@ -20,25 +20,25 @@ fun <Sight : Any, Event : Any> Tower<Sight, Event>.plusVPad(pad: VPad): Tower<Si
         override fun enview(viewHost: Tower.ViewHost, viewId: ViewId): Tower.View<Sight, Event> =
             object : Tower.View<Sight, Event> {
                 
-                override fun dequeue() {
+                override fun drop() {
                     latitudeAnchorUpdates.clear()
-                    coreView.dequeue()
+                    coreView.drop()
                 }
 
                 private val coreView = core.enview(viewHost, viewId)
-                private val edgeLatitudes: PublishSubject<Latitude> = PublishSubject.create()
+                private val edgeLatitudes: PublishSubject<Height> = PublishSubject.create()
                 private val edgeAnchors: PublishSubject<Anchor> = PublishSubject.create()
                 private val latitudeAnchorUpdates = CompositeDisposable()
 
                 init {
                     coreView.latitudes.subscribe {
-                        edgeLatitudes.onNext(Latitude(it.height + pad.ceilingHeight + pad.floorHeight))
+                        edgeLatitudes.onNext(Height(it.dips + pad.ceilingHeight + pad.floorHeight))
                     }.addTo(latitudeAnchorUpdates)
                     combineLatest(
                         edgeLatitudes, edgeAnchors,
-                        BiFunction { latitude: Latitude, anchor: Anchor -> Pair(latitude, anchor) }
+                        BiFunction { height: Height, anchor: Anchor -> Pair(height, anchor) }
                     ).subscribe { (latitude, anchor) ->
-                        val edgeVBound = anchor.toVBound(latitude.height)
+                        val edgeVBound = anchor.toVBound(latitude.dips)
                         coreView.setAnchor(Anchor(edgeVBound.ceiling + pad.ceilingHeight, 0f))
                     }.addTo(latitudeAnchorUpdates)
                 }
@@ -46,7 +46,7 @@ fun <Sight : Any, Event : Any> Tower<Sight, Event>.plusVPad(pad: VPad): Tower<Si
                 override val events: Observable<Event> get() = coreView.events
                 override fun setSight(sight: Sight) = coreView.setSight(sight)
                 override fun setHBound(hbound: HBound) = coreView.setHBound(hbound)
-                override val latitudes: Observable<Latitude> = edgeLatitudes.distinctUntilChanged()
+                override val latitudes: Observable<Height> = edgeLatitudes.distinctUntilChanged()
                 override fun setAnchor(anchor: Anchor) = edgeAnchors.onNext(anchor)
             }
     }

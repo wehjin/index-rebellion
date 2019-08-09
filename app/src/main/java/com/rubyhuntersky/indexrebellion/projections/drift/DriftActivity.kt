@@ -27,7 +27,7 @@ import com.rubyhuntersky.vx.tower.additions.pad.VPad
 import com.rubyhuntersky.vx.tower.additions.pad.plusVPad
 import com.rubyhuntersky.vx.tower.additions.replicate.replicate
 import com.rubyhuntersky.vx.tower.towers.DualityTower
-import com.rubyhuntersky.vx.tower.towers.click.ClickSight
+import com.rubyhuntersky.vx.tower.towers.click.ButtonSight
 import com.rubyhuntersky.vx.tower.towers.wraptext.WrapTextSight
 import com.rubyhuntersky.vx.tower.towers.wraptext.WrapTextTower
 import kotlin.math.absoluteValue
@@ -40,12 +40,12 @@ class DriftActivity : TowerActivity<Vision, Nothing>() {
 
     private val addHolding =
         Standard.CenteredTextButton<Unit>()
-            .mapSight { vision: Vision -> ClickSight(vision.toUnit(), "+ Holding") }
+            .mapSight { vision: Vision -> ButtonSight(vision.toUnit(), "+ Holding") }
             .handleEvents { interaction.sendAction(Action.AddHolding) }
 
     private val refreshPrices =
         Standard.CenteredTextButton<Unit>()
-            .mapSight { vision: Vision -> ClickSight(vision.toUnit(), "+= Prices") }
+            .mapSight { vision: Vision -> ButtonSight(vision.toUnit(), "+= Prices") }
             .handleEvents { interaction.sendAction(Action.RefreshPrices) }
 
     private val holdings = holding.replicate()
@@ -88,7 +88,7 @@ class DriftActivity : TowerActivity<Vision, Nothing>() {
             .plusVPad(VPad.Individual(Standard.spacing * 3 / 2, Standard.spacing / 2))
 
     private val planButton = Standard.CenteredTextButton<Unit>()
-        .fixSight(ClickSight(Unit, "\u2202 Plan"))
+        .fixSight(ButtonSight(Unit, "\u2202 Plan"))
         .mapSight(Vision::toUnit)
         .handleEvents { interaction.sendAction(Action.ViewPlan) }
 

@@ -17,7 +17,7 @@ import com.rubyhuntersky.vx.common.Span
 import com.rubyhuntersky.vx.tower.additions.*
 import com.rubyhuntersky.vx.tower.additions.extend.extendFloors
 import com.rubyhuntersky.vx.tower.additions.pad.plusVPad
-import com.rubyhuntersky.vx.tower.towers.click.ClickSight
+import com.rubyhuntersky.vx.tower.towers.click.ButtonSight
 import com.rubyhuntersky.vx.tower.towers.click.ClickTower
 import io.reactivex.disposables.Disposable
 
@@ -26,12 +26,12 @@ class ViewHoldingActivity : AppCompatActivity() {
     private lateinit var interaction: Interaction<Vision, Action>
 
     private val moveButton = ClickTower<Unit>()
-        .fixSight(ClickSight(Unit, "Move")).mapSight(Vision.Viewing::toUnit)
+        .fixSight(ButtonSight(Unit, "Move")).mapSight(Vision.Viewing::toUnit)
         .handleEvents { interaction.sendAction(Action.Reclassify) }
         .plusVPad(Standard.uniformPad).plusHMargin(Standard.uniformMargin)
 
     private val deleteButton = ClickTower<Unit>()
-        .fixSight(ClickSight(Unit, "Delete"))
+        .fixSight(ButtonSight(Unit, "Delete"))
         .mapSight(Vision.Viewing::toUnit)
         .handleEvents { interaction.sendAction(Action.Delete) }
         .plusVPad(Standard.uniformPad).plusHMargin(Standard.uniformMargin)

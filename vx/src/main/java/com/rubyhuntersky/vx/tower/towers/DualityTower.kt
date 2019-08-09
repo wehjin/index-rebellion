@@ -28,12 +28,12 @@ class DualityTower<YinSight : Any, YangSight : Any, Event : Any>(
             private val yinView = MortalTower(yinTower).enview(viewHost, viewId.extend(0))
             private val yangView = MortalTower(yangTower).enview(viewHost, viewId.extend(1))
             private val edgeEvents: PublishSubject<Event> = PublishSubject.create()
-            private val edgeLatitudes = BehaviorSubject.createDefault(Latitude(0))
+            private val edgeLatitudes = BehaviorSubject.createDefault(Height(0))
             private var edgeAnchor: Anchor? = null
             private val edgeUpdates = CompositeDisposable()
 
             init {
-                combineLatest<Latitude, Latitude, Latitude>(
+                combineLatest<Height, Height, Height>(
                     yinView.latitudes,
                     yangView.latitudes,
                     BiFunction { yin, yang -> if (pickYin) yin else yang })
@@ -55,9 +55,9 @@ class DualityTower<YinSight : Any, YangSight : Any, Event : Any>(
                     .addTo(edgeUpdates)
             }
 
-            override fun dequeue() {
-                yinView.dequeue()
-                yangView.dequeue()
+            override fun drop() {
+                yinView.drop()
+                yangView.drop()
             }
 
             override val events: Observable<Event>
@@ -83,7 +83,7 @@ class DualityTower<YinSight : Any, YangSight : Any, Event : Any>(
                 yangView.setHBound(hbound)
             }
 
-            override val latitudes: Observable<Latitude>
+            override val latitudes: Observable<Height>
                 get() = edgeLatitudes.distinctUntilChanged()
 
             override fun setAnchor(anchor: Anchor) {

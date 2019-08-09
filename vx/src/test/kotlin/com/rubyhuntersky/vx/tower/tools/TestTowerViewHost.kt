@@ -1,14 +1,12 @@
 package com.rubyhuntersky.vx.tower.tools
 
 import com.rubyhuntersky.vx.common.Anchor
-import com.rubyhuntersky.vx.common.Latitude
+import com.rubyhuntersky.vx.common.Height
 import com.rubyhuntersky.vx.common.ViewId
 import com.rubyhuntersky.vx.common.bound.HBound
 import com.rubyhuntersky.vx.tower.Tower
-import com.rubyhuntersky.vx.tower.towers.InputEvent
-import com.rubyhuntersky.vx.tower.towers.InputSight
 import com.rubyhuntersky.vx.tower.towers.click.ClickEvent
-import com.rubyhuntersky.vx.tower.towers.click.ClickSight
+import com.rubyhuntersky.vx.tower.towers.click.ButtonSight
 import com.rubyhuntersky.vx.tower.towers.textinput.TextInputEvent
 import com.rubyhuntersky.vx.tower.towers.textinput.TextInputSight
 import com.rubyhuntersky.vx.tower.towers.wraptext.WrapTextSight
@@ -23,7 +21,7 @@ class TestTowerViewHost : Tower.ViewHost {
         abstract val bound: HBound?
         abstract val anchor: Anchor?
         abstract val sight: Any?
-        val latitudes: BehaviorSubject<Latitude> = BehaviorSubject.create()
+        val latitudes: BehaviorSubject<Height> = BehaviorSubject.create()
 
         data class TestEditText<Topic : Any>(
             override val id: ViewId,
@@ -46,7 +44,7 @@ class TestTowerViewHost : Tower.ViewHost {
             override val id: ViewId,
             override var bound: HBound? = null,
             override var anchor: Anchor? = null,
-            override var sight: ClickSight<Topic>? = null,
+            override var sight: ButtonSight<Topic>? = null,
             val events: PublishSubject<ClickEvent<Topic>> = PublishSubject.create()
         ) : Item()
 
@@ -79,7 +77,7 @@ class TestTowerViewHost : Tower.ViewHost {
         val item = Item.TestEditText<Topic>(id).also(this::addItem)
         return object : Tower.View<TextInputSight<Topic>, TextInputEvent<Topic>> {
 
-            override fun dequeue() {}
+            override fun drop() {}
 
             override val events get() = item.events
             override fun setSight(sight: TextInputSight<Topic>) {
@@ -90,7 +88,7 @@ class TestTowerViewHost : Tower.ViewHost {
                 item.bound = hbound
             }
 
-            override val latitudes: Observable<Latitude> = item.latitudes
+            override val latitudes: Observable<Height> = item.latitudes
             override fun setAnchor(anchor: Anchor) {
                 item.anchor = anchor
             }
@@ -105,10 +103,6 @@ class TestTowerViewHost : Tower.ViewHost {
 
     private fun findItem(id: ViewId): Item? = items.firstOrNull { it.id == id }
 
-    override fun addInputView(id: ViewId): Tower.View<InputSight, InputEvent> {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-    }
-
     override fun <Sight : Any, Topic : Any> addClickOverlayView(
         id: ViewId,
         tower: Tower<Sight, Nothing>,
@@ -117,7 +111,7 @@ class TestTowerViewHost : Tower.ViewHost {
         val item = Item.TestClickOverlay<Sight, Topic>(id, tower = tower)
         return object : Tower.View<Sight, ClickEvent<Topic>> {
 
-            override fun dequeue() {}
+            override fun drop() {}
 
             override val events: Observable<ClickEvent<Topic>> get() = item.events
             override fun setSight(sight: Sight) {
@@ -128,22 +122,22 @@ class TestTowerViewHost : Tower.ViewHost {
                 item.bound = hbound
             }
 
-            override val latitudes: Observable<Latitude> get() = item.latitudes
+            override val latitudes: Observable<Height> get() = item.latitudes
             override fun setAnchor(anchor: Anchor) {
                 item.anchor = anchor
             }
         }
     }
 
-    override fun <Topic : Any> addClickView(id: ViewId): Tower.View<ClickSight<Topic>, ClickEvent<Topic>> {
+    override fun <Topic : Any> addButtonView(id: ViewId): Tower.View<ButtonSight<Topic>, ClickEvent<Topic>> {
         val item = Item.TestClick<Topic>(id).also(this::addItem)
-        return object : Tower.View<ClickSight<Topic>, ClickEvent<Topic>> {
-            override fun dequeue() {
+        return object : Tower.View<ButtonSight<Topic>, ClickEvent<Topic>> {
+            override fun drop() {
 
             }
 
             override val events: Observable<ClickEvent<Topic>> get() = item.events
-            override fun setSight(sight: ClickSight<Topic>) {
+            override fun setSight(sight: ButtonSight<Topic>) {
                 item.sight = sight
             }
 
@@ -151,7 +145,7 @@ class TestTowerViewHost : Tower.ViewHost {
                 item.bound = hbound
             }
 
-            override val latitudes: Observable<Latitude> get() = item.latitudes
+            override val latitudes: Observable<Height> get() = item.latitudes
             override fun setAnchor(anchor: Anchor) {
                 item.anchor = anchor
             }
@@ -164,7 +158,7 @@ class TestTowerViewHost : Tower.ViewHost {
             val item = Item.TestWrapText(id).also(this::addItem)
             return object : Tower.View<WrapTextSight, Nothing> {
 
-                override fun dequeue() {}
+                override fun drop() {}
 
                 override val events: Observable<Nothing> get() = Observable.never()
                 override fun setSight(sight: WrapTextSight) {
@@ -175,7 +169,7 @@ class TestTowerViewHost : Tower.ViewHost {
                     item.bound = hbound
                 }
 
-                override val latitudes: Observable<Latitude> get() = item.latitudes
+                override val latitudes: Observable<Height> get() = item.latitudes
                 override fun setAnchor(anchor: Anchor) {
                     item.anchor = anchor
                 }
@@ -184,7 +178,7 @@ class TestTowerViewHost : Tower.ViewHost {
             recycledViewIds.add(id)
             return object : Tower.View<WrapTextSight, Nothing> {
 
-                override fun dequeue() {}
+                override fun drop() {}
 
                 override val events: Observable<Nothing> get() = Observable.never()
                 override fun setSight(sight: WrapTextSight) {
@@ -195,7 +189,7 @@ class TestTowerViewHost : Tower.ViewHost {
                     old.bound = hbound
                 }
 
-                override val latitudes: Observable<Latitude> get() = old.latitudes
+                override val latitudes: Observable<Height> get() = old.latitudes
                 override fun setAnchor(anchor: Anchor) {
                     old.anchor = anchor
                 }

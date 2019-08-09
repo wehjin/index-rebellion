@@ -7,7 +7,7 @@ import android.support.constraint.ConstraintSet
 import android.view.View
 import com.rubyhuntersky.vx.android.toPixels
 import com.rubyhuntersky.vx.common.Anchor
-import com.rubyhuntersky.vx.common.Latitude
+import com.rubyhuntersky.vx.common.Height
 import com.rubyhuntersky.vx.common.ViewId
 import com.rubyhuntersky.vx.common.bound.HBound
 import com.rubyhuntersky.vx.tower.Tower
@@ -77,7 +77,7 @@ class AndroidTowerView<V, in Sight : Any, Event : Any>(
         onDetached = { updates.clear() }
     }
 
-    override fun dequeue() = updates.clear()
+    override fun drop() = updates.clear()
 
     private var activeCeiling: Int? = null
 
@@ -107,7 +107,7 @@ class AndroidTowerView<V, in Sight : Any, Event : Any>(
             .applyTo(hostLayout)
     }
 
-    override val latitudes: Observable<Latitude> get() = view.heights.map { Latitude(it) }
+    override val latitudes: Observable<Height> get() = view.heights.map { Height(it) }
     override fun setAnchor(anchor: Anchor) = anchorBehavior.onNext(anchor)
 
     override val events: Observable<Event> get() = view.events

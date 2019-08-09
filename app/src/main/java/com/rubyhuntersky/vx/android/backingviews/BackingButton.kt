@@ -10,7 +10,7 @@ import com.rubyhuntersky.vx.android.toDip
 import com.rubyhuntersky.vx.android.tower.AndroidTowerView
 import com.rubyhuntersky.vx.common.ViewId
 import com.rubyhuntersky.vx.tower.towers.click.ClickEvent
-import com.rubyhuntersky.vx.tower.towers.click.ClickSight
+import com.rubyhuntersky.vx.tower.towers.click.ButtonSight
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.subjects.BehaviorSubject
@@ -26,12 +26,12 @@ class BackingButton<Topic : Any>
     AndroidTowerView.BackingView<ClickEvent<Topic>>,
     ViewBackedCoopView.BackingView<ClickEvent<Topic>> {
 
-    class Adapter<Topic : Any> : AndroidTowerView.Adapter<BackingButton<Topic>, ClickSight<Topic>, ClickEvent<Topic>> {
+    class Adapter<Topic : Any> : AndroidTowerView.Adapter<BackingButton<Topic>, ButtonSight<Topic>, ClickEvent<Topic>> {
 
         override fun buildView(context: Context, viewId: ViewId): BackingButton<Topic> =
             BackingButton(ContextThemeWrapper(context, R.style.Widget_Material_Button))
 
-        override fun renderView(view: BackingButton<Topic>, sight: ClickSight<Topic>) {
+        override fun renderView(view: BackingButton<Topic>, sight: ButtonSight<Topic>) {
             view.text = sight.label
             view.topic = sight.topic
         }

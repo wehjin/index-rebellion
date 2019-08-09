@@ -1,7 +1,7 @@
 package com.rubyhuntersky.vx.tower.towers
 
 import com.rubyhuntersky.vx.common.Anchor
-import com.rubyhuntersky.vx.common.Latitude
+import com.rubyhuntersky.vx.common.Height
 import com.rubyhuntersky.vx.common.ViewId
 import com.rubyhuntersky.vx.common.bound.HBound
 import com.rubyhuntersky.vx.tower.additions.replicate.replicate
@@ -28,7 +28,7 @@ class TowerReplicateKtTest {
             view.setSight(sight)
             view.setHBound(HBound(0, 100))
             viewHost.items.forEach {
-                it.latitudes.onNext(Latitude(20))
+                it.latitudes.onNext(Height(20))
             }
             view.setAnchor(Anchor(0))
         }
@@ -44,7 +44,7 @@ class TowerReplicateKtTest {
             setOf(HBound(0, 100)),
             viewHost.items.map(Item::bound).toSet()
         )
-        view.latitudes.test().assertValue(Latitude(60))
+        view.latitudes.test().assertValue(Height(60))
         assertEquals(
             setOf(Anchor(0), Anchor(20), Anchor(40)),
             viewHost.items.map(Item::anchor).toSet()
@@ -60,7 +60,7 @@ class TowerReplicateKtTest {
             shortSight.toSet(),
             viewHost.items.map(Item::sight).toSet()
         )
-        view.latitudes.test().assertValue(Latitude(40))
+        view.latitudes.test().assertValue(Height(40))
         assertEquals(
             setOf(Anchor(0), Anchor(20)),
             viewHost.items.map(Item::anchor).toSet()

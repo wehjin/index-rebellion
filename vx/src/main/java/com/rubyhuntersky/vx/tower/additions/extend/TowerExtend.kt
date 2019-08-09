@@ -1,7 +1,7 @@
 package com.rubyhuntersky.vx.tower.additions.extend
 
 import com.rubyhuntersky.vx.common.Anchor
-import com.rubyhuntersky.vx.common.Latitude
+import com.rubyhuntersky.vx.common.Height
 import com.rubyhuntersky.vx.common.ViewId
 import com.rubyhuntersky.vx.common.bound.HBound
 import com.rubyhuntersky.vx.tower.Tower
@@ -30,9 +30,9 @@ fun <Sight : Any, Event : Any> Tower<Sight, Event>.extendVertical(extend: VExten
                 private val coreViews = coreTowers
                     .mapIndexed { index, tower -> tower.enview(viewHost, viewId.extend(index)) }
 
-                override fun dequeue() {
+                override fun drop() {
                     updates.clear()
-                    coreViews.forEach(Tower.View<Sight, Event>::dequeue)
+                    coreViews.forEach(Tower.View<Sight, Event>::drop)
                 }
 
                 private val updates = CompositeDisposable()
@@ -42,7 +42,7 @@ fun <Sight : Any, Event : Any> Tower<Sight, Event>.extendVertical(extend: VExten
                 init {
                     combineLatest(coreViews.map(Tower.View<Sight, Event>::latitudes)) { coreViewLatitudes ->
                         val coreHeight = coreViewLatitudes
-                            .map { (it as Latitude).height }
+                            .map { (it as Height).dips }
                             .fold(
                                 initial = Pair(emptyList<Int>(), 0),
                                 operation = { (minorHeights, majorHeight), coreViewHeight ->
@@ -69,7 +69,7 @@ fun <Sight : Any, Event : Any> Tower<Sight, Event>.extendVertical(extend: VExten
                 override val events: Observable<Event> get() = Observable.merge(coreViews.map { it.events })
                 override fun setSight(sight: Sight) = coreViews.forEach { it.setSight(sight) }
                 override fun setHBound(hbound: HBound) = coreViews.forEach { it.setHBound(hbound) }
-                override val latitudes: Observable<Latitude> get() = coreHeights.map { Latitude(it.second) }.distinctUntilChanged()
+                override val latitudes: Observable<Height> get() = coreHeights.map { Height(it.second) }.distinctUntilChanged()
                 override fun setAnchor(anchor: Anchor) = edgeAnchors.onNext(anchor)
             }
     }

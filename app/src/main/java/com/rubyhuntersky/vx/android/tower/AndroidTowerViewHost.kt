@@ -15,14 +15,14 @@ import com.rubyhuntersky.vx.android.backingviews.BackingTextView
 import com.rubyhuntersky.vx.android.toDip
 import com.rubyhuntersky.vx.android.toPixels
 import com.rubyhuntersky.vx.common.Anchor
-import com.rubyhuntersky.vx.common.Latitude
+import com.rubyhuntersky.vx.common.Height
 import com.rubyhuntersky.vx.common.ViewId
 import com.rubyhuntersky.vx.common.bound.HBound
 import com.rubyhuntersky.vx.tower.Tower
 import com.rubyhuntersky.vx.tower.towers.InputEvent
 import com.rubyhuntersky.vx.tower.towers.InputSight
 import com.rubyhuntersky.vx.tower.towers.click.ClickEvent
-import com.rubyhuntersky.vx.tower.towers.click.ClickSight
+import com.rubyhuntersky.vx.tower.towers.click.ButtonSight
 import com.rubyhuntersky.vx.tower.towers.textinput.TextInputEvent
 import com.rubyhuntersky.vx.tower.towers.textinput.TextInputSight
 import com.rubyhuntersky.vx.tower.towers.wraptext.WrapTextSight
@@ -54,8 +54,8 @@ class AndroidTowerViewHost<in Sight : Any, Event : Any>(
     override val events: Observable<Event> get() = activeTowerView.events
     override fun setSight(sight: Sight) = activeTowerView.setSight(sight)
 
-    val latitudes: Observable<Latitude> get() = latitudeBehavior
-    private val latitudeBehavior: BehaviorSubject<Latitude> = BehaviorSubject.create()
+    val latitudes: Observable<Height> get() = heightBehavior
+    private val heightBehavior: BehaviorSubject<Height> = BehaviorSubject.create()
 
     private fun <C : Any, E : Any> manageUpdates(towerView: Tower.View<C, E>?, isAttachedToWindow: Boolean) {
         updates.clear()
@@ -67,10 +67,10 @@ class AndroidTowerViewHost<in Sight : Any, Event : Any>(
                 .addTo(updates)
             activeTowerView.latitudes.distinctUntilChanged()
                 .subscribe {
-                    latitudeBehavior.onNext(it)
+                    heightBehavior.onNext(it)
                     ConstraintSet().apply {
                         clone(this@AndroidTowerViewHost)
-                        constrainHeight(girder.id, toPixels(it.height).toInt())
+                        constrainHeight(girder.id, toPixels(it.dips).toInt())
                         connect(girder.id, ConstraintSet.TOP, ConstraintSet.PARENT_ID, ConstraintSet.TOP)
                         applyTo(this@AndroidTowerViewHost)
                     }
@@ -124,7 +124,7 @@ class AndroidTowerViewHost<in Sight : Any, Event : Any>(
     override fun <Topic : Any> addTextInputView(id: ViewId): Tower.View<TextInputSight<Topic>, TextInputEvent<Topic>> {
         return object : Tower.View<TextInputSight<Topic>, TextInputEvent<Topic>> {
 
-            override fun dequeue() = core.dequeue()
+            override fun drop() = core.drop()
 
             lateinit var topic: Topic
 
@@ -150,18 +150,10 @@ class AndroidTowerViewHost<in Sight : Any, Event : Any>(
                 core.setHBound(hbound)
             }
 
-            override val latitudes: Observable<Latitude> get() = core.latitudes
+            override val latitudes: Observable<Height> get() = core.latitudes
             override fun setAnchor(anchor: Anchor) = core.setAnchor(anchor)
         }
     }
-
-    override fun addInputView(id: ViewId): Tower.View<InputSight, InputEvent> =
-        AndroidTowerView(
-            id,
-            hostLayout = this@AndroidTowerViewHost,
-            adapter = BackingInputLayout,
-            onRecycledView = this::onRecycledView
-        )
 
     override fun <Sight : Any, Topic : Any> addClickOverlayView(
         id: ViewId,
@@ -175,7 +167,7 @@ class AndroidTowerViewHost<in Sight : Any, Event : Any>(
             onRecycledView = this::onRecycledView
         )
 
-    override fun <Topic : Any> addClickView(id: ViewId): Tower.View<ClickSight<Topic>, ClickEvent<Topic>> =
+    override fun <Topic : Any> addButtonView(id: ViewId): Tower.View<ButtonSight<Topic>, ClickEvent<Topic>> =
         AndroidTowerView(
             id,
             hostLayout = this@AndroidTowerViewHost,

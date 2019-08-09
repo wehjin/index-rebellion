@@ -1,7 +1,7 @@
 package com.rubyhuntersky.vx.tower.additions
 
 import com.rubyhuntersky.vx.common.Anchor
-import com.rubyhuntersky.vx.common.Latitude
+import com.rubyhuntersky.vx.common.Height
 import com.rubyhuntersky.vx.common.ViewId
 import com.rubyhuntersky.vx.common.bound.HBound
 import com.rubyhuntersky.vx.tower.Tower
@@ -14,12 +14,12 @@ fun <Sight : Any, Event : Any> Tower<Sight, Event>.logAnchors(tag: String): Towe
             val coreView = core.enview(viewHost, viewId)
             return object : Tower.View<Sight, Event> {
 
-                override fun dequeue() = coreView.dequeue()
+                override fun drop() = coreView.drop()
 
                 override val events: Observable<Event> get() = coreView.events
                 override fun setSight(sight: Sight) = coreView.setSight(sight)
                 override fun setHBound(hbound: HBound) = coreView.setHBound(hbound)
-                override val latitudes: Observable<Latitude> get() = coreView.latitudes
+                override val latitudes: Observable<Height> get() = coreView.latitudes
                 override fun setAnchor(anchor: Anchor) {
                     println("$tag/$viewId: ANCHOR: $anchor")
                     coreView.setAnchor(anchor)
@@ -36,7 +36,7 @@ fun <Sight : Any, Event : Any> Tower<Sight, Event>.logSight(tag: String): Tower<
             val coreView = core.enview(viewHost, viewId)
             return object : Tower.View<Sight, Event> {
 
-                override fun dequeue() = coreView.dequeue()
+                override fun drop() = coreView.drop()
 
                 override val events: Observable<Event> get() = coreView.events
                 override fun setSight(sight: Sight) {
@@ -45,7 +45,7 @@ fun <Sight : Any, Event : Any> Tower<Sight, Event>.logSight(tag: String): Tower<
                 }
 
                 override fun setHBound(hbound: HBound) = coreView.setHBound(hbound)
-                override val latitudes: Observable<Latitude> get() = coreView.latitudes
+                override val latitudes: Observable<Height> get() = coreView.latitudes
                 override fun setAnchor(anchor: Anchor) = coreView.setAnchor(anchor)
             }
         }
@@ -59,12 +59,12 @@ fun <Sight : Any, Event : Any> Tower<Sight, Event>.logLatitudes(tag: String): To
             val coreView = core.enview(viewHost, viewId)
             return object : Tower.View<Sight, Event> {
 
-                override fun dequeue() = coreView.dequeue()
+                override fun drop() = coreView.drop()
 
                 override val events: Observable<Event> get() = coreView.events
                 override fun setSight(sight: Sight) = coreView.setSight(sight)
                 override fun setHBound(hbound: HBound) = coreView.setHBound(hbound)
-                override val latitudes: Observable<Latitude>
+                override val latitudes: Observable<Height>
                     get() = coreView.latitudes.doOnNext { println("$tag/$viewId: LATITUDE: $it") }
 
                 override fun setAnchor(anchor: Anchor) = coreView.setAnchor(anchor)
@@ -81,7 +81,7 @@ fun <Sight : Any, Event : Any> Tower<Sight, Event>.logEvents(tag: String): Tower
             val view = core.enview(viewHost, viewId)
             return object : Tower.View<Sight, Event> {
 
-                override fun dequeue() = view.dequeue()
+                override fun drop() = view.drop()
 
                 override val events: Observable<Event>
                     get() {
@@ -91,7 +91,7 @@ fun <Sight : Any, Event : Any> Tower<Sight, Event>.logEvents(tag: String): Tower
 
                 override fun setSight(sight: Sight) = view.setSight(sight)
                 override fun setHBound(hbound: HBound) = view.setHBound(hbound)
-                override val latitudes: Observable<Latitude> get() = view.latitudes
+                override val latitudes: Observable<Height> get() = view.latitudes
                 override fun setAnchor(anchor: Anchor) = view.setAnchor(anchor)
             }
         }

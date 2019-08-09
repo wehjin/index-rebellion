@@ -2,7 +2,7 @@ package com.rubyhuntersky.vx.tower.towers
 
 import com.rubyhuntersky.vx.common.Anchor
 import com.rubyhuntersky.vx.common.Duality
-import com.rubyhuntersky.vx.common.Latitude
+import com.rubyhuntersky.vx.common.Height
 import com.rubyhuntersky.vx.common.ViewId
 import com.rubyhuntersky.vx.common.bound.HBound
 import com.rubyhuntersky.vx.tower.tools.TestTowerViewHost
@@ -35,8 +35,8 @@ internal class DualityTowerTest {
             viewHost.items.map(TestTowerViewHost.Item::bound)
         )
 
-        viewHost.items.first().latitudes.onNext(Latitude(250))
-        view.latitudes.test().assertValue(Latitude(250))
+        viewHost.items.first().latitudes.onNext(Height(250))
+        view.latitudes.test().assertValue(Height(250))
 
         view.setAnchor(Anchor(10, 0f))
         assertEquals(
@@ -53,8 +53,8 @@ internal class DualityTowerTest {
             listOf(HBound(0 to 100)),
             viewHost.items.map(TestTowerViewHost.Item::bound)
         )
-        viewHost.items.first().latitudes.onNext(Latitude(10))
-        view.latitudes.test().assertValue(Latitude(10))
+        viewHost.items.first().latitudes.onNext(Height(10))
+        view.latitudes.test().assertValue(Height(10))
     }
 }
 

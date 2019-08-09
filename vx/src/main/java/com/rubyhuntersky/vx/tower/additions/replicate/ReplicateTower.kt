@@ -1,7 +1,7 @@
 package com.rubyhuntersky.vx.tower.additions.replicate
 
 import com.rubyhuntersky.vx.common.Anchor
-import com.rubyhuntersky.vx.common.Latitude
+import com.rubyhuntersky.vx.common.Height
 import com.rubyhuntersky.vx.common.Ranked
 import com.rubyhuntersky.vx.common.ViewId
 import com.rubyhuntersky.vx.common.bound.HBound
@@ -25,7 +25,7 @@ class ReplicateTower<Sight : Any, Event : Any>(
         return object : Tower.View<List<Sight>, Ranked<Event>> {
 
             private val eventPublish: PublishSubject<Ranked<Event>> = PublishSubject.create()
-            private val latitudeBehavior: BehaviorSubject<Latitude> = BehaviorSubject.createDefault(Latitude(0))
+            private val heightBehavior: BehaviorSubject<Height> = BehaviorSubject.createDefault(Height(0))
             private val eventLatitudeUpdates = CompositeDisposable()
             private var fullView: Tower.View<List<Sight>, Ranked<Event>>? = null
             private var edgeHBound: HBound? = null
@@ -34,7 +34,7 @@ class ReplicateTower<Sight : Any, Event : Any>(
             override fun setSight(sight: List<Sight>) {
                 eventLatitudeUpdates.clear()
                 viewHost.drop(viewId, true)
-                fullView?.dequeue()
+                fullView?.drop()
                 fullView = null
 
                 val fullTower: Tower<List<Sight>, Ranked<Event>> =
@@ -53,7 +53,7 @@ class ReplicateTower<Sight : Any, Event : Any>(
                         events.subscribe(eventPublish::onNext).addTo(eventLatitudeUpdates)
                         latitudes.subscribe {
                             updateAnchor()
-                            latitudeBehavior.onNext(it)
+                            heightBehavior.onNext(it)
                         }.addTo(eventLatitudeUpdates)
                         setSight(sight)
                     }
@@ -61,8 +61,8 @@ class ReplicateTower<Sight : Any, Event : Any>(
                 update()
             }
 
-            override fun dequeue() {
-                fullView?.dequeue()
+            override fun drop() {
+                fullView?.drop()
             }
 
             private fun update() {
@@ -94,8 +94,8 @@ class ReplicateTower<Sight : Any, Event : Any>(
                 update()
             }
 
-            override val latitudes: Observable<Latitude>
-                get() = latitudeBehavior.distinctUntilChanged()
+            override val latitudes: Observable<Height>
+                get() = heightBehavior.distinctUntilChanged()
 
             override fun setAnchor(anchor: Anchor) {
                 edgeAnchor = anchor

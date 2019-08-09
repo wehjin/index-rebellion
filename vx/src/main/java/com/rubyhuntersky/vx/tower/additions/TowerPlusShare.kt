@@ -1,7 +1,7 @@
 package com.rubyhuntersky.vx.tower.additions
 
 import com.rubyhuntersky.vx.common.Anchor
-import com.rubyhuntersky.vx.common.Latitude
+import com.rubyhuntersky.vx.common.Height
 import com.rubyhuntersky.vx.common.Span
 import com.rubyhuntersky.vx.common.ViewId
 import com.rubyhuntersky.vx.common.bound.HBound
@@ -27,10 +27,10 @@ fun <Sight : Any, Event : Any> Tower<Sight, Event>.plusHShare(hShare: HShare<Sig
             val coreView = core.enview(viewHost, viewId.extend(0))
             val altView = alt.enview(viewHost, viewId.extend(1))
             return object : Tower.View<Sight, Event> {
-                override fun dequeue() {
+                override fun drop() {
                     latitudeWatchers.clear()
-                    coreView.dequeue()
-                    altView.dequeue()
+                    coreView.drop()
+                    altView.drop()
                 }
 
                 override val events: Observable<Event>
@@ -50,11 +50,11 @@ fun <Sight : Any, Event : Any> Tower<Sight, Event>.plusHShare(hShare: HShare<Sig
 
                 private var edgeBound: HBound? = null
 
-                override val latitudes: Observable<Latitude>
+                override val latitudes: Observable<Height>
                     get() = edgeLatitude.distinctUntilChanged()
 
                 private var edgeLatitude =
-                    BehaviorSubject.createDefault(Latitude(0))
+                    BehaviorSubject.createDefault(Height(0))
 
                 override fun setAnchor(anchor: Anchor) {
                     edgeAnchor = anchor
@@ -63,10 +63,10 @@ fun <Sight : Any, Event : Any> Tower<Sight, Event>.plusHShare(hShare: HShare<Sig
 
                 private var edgeAnchor: Anchor? = null
 
-                private fun updateCoreAnchors(subLatitudes: List<Latitude>, edgeAnchor: Anchor?): Latitude {
-                    val maxLatitude = subLatitudes.fold(Latitude(0), Latitude::max)
+                private fun updateCoreAnchors(subHeights: List<Height>, edgeAnchor: Anchor?): Height {
+                    val maxLatitude = subHeights.fold(Height(0), Height::max)
                     if (edgeAnchor != null) {
-                        val edgeHeight = maxLatitude.height
+                        val edgeHeight = maxLatitude.dips
                         val edgeCeiling = edgeAnchor.toCeiling(edgeHeight)
                         val coreAnchor = Anchor(
                             position = edgeCeiling + (span.orbit.pole * edgeHeight).toInt(),
@@ -78,7 +78,7 @@ fun <Sight : Any, Event : Any> Tower<Sight, Event>.plusHShare(hShare: HShare<Sig
                 }
 
                 private val subViews = listOf(coreView, altView)
-                private val subLatitudes = subViews.map { Latitude(0) }.toMutableList()
+                private val subLatitudes = subViews.map { Height(0) }.toMutableList()
                 private val latitudeWatchers = CompositeDisposable()
 
                 init {

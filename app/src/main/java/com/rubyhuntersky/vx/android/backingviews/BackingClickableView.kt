@@ -7,7 +7,7 @@ import android.util.AttributeSet
 import android.util.TypedValue
 import com.rubyhuntersky.vx.android.tower.AndroidTowerView
 import com.rubyhuntersky.vx.android.tower.AndroidTowerViewHost
-import com.rubyhuntersky.vx.common.Latitude
+import com.rubyhuntersky.vx.common.Height
 import com.rubyhuntersky.vx.common.ViewId
 import com.rubyhuntersky.vx.tower.Tower
 import com.rubyhuntersky.vx.tower.towers.click.ClickEvent
@@ -78,7 +78,7 @@ class BackingClickableView<Sight : Any, Topic : Any>
     }
 
     override val heights: Observable<Int>
-        get() = towerViewHost.latitudes.map(Latitude::height).distinctUntilChanged()
+        get() = towerViewHost.latitudes.map(Height::dips).distinctUntilChanged()
 
     override var onAttached: (() -> Unit)? = null
 

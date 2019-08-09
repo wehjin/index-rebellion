@@ -18,7 +18,7 @@ import com.rubyhuntersky.vx.tower.additions.handleEvents
 import com.rubyhuntersky.vx.tower.additions.mapSight
 import com.rubyhuntersky.vx.tower.additions.replicate.replicate
 import com.rubyhuntersky.vx.tower.towers.InputType
-import com.rubyhuntersky.vx.tower.towers.click.ClickSight
+import com.rubyhuntersky.vx.tower.towers.click.ButtonSight
 
 
 class EditDivisionActivity : InteractionTowerActivity<Vision, Action>(
@@ -72,8 +72,8 @@ class EditDivisionActivity : InteractionTowerActivity<Vision, Action>(
     private val saveTower =
         Standard.CenteredTextButton<Unit>()
             .mapSight { vision: Vision ->
-                (vision as? Vision.Editing)?.divisionEdit?.writableValue?.let { ClickSight(Unit, "Save") }
-                    ?: ClickSight(Unit, "Invalid")
+                (vision as? Vision.Editing)?.divisionEdit?.writableValue?.let { ButtonSight(Unit, "Save") }
+                    ?: ButtonSight(Unit, "Invalid")
             }
             .handleEvents {
                 interaction.sendAction(Action.Save)

@@ -14,7 +14,7 @@ import com.rubyhuntersky.vx.tower.additions.pad.plusVPad
 import com.rubyhuntersky.vx.tower.additions.plusHMargin
 import com.rubyhuntersky.vx.tower.towers.EmptyTower
 import com.rubyhuntersky.vx.tower.towers.click.ClickEvent
-import com.rubyhuntersky.vx.tower.towers.click.ClickSight
+import com.rubyhuntersky.vx.tower.towers.click.ButtonSight
 import com.rubyhuntersky.vx.tower.towers.click.ClickTower
 import com.rubyhuntersky.vx.tower.towers.textinput.TextInputEvent
 import com.rubyhuntersky.vx.tower.towers.textinput.TextInputSight
@@ -31,7 +31,7 @@ object Standard {
     val uniformPad = VPad.Uniform(spacing)
     val centerClickPad = Margin.Uniform(Span.Relative(0.2f))
 
-    class CenteredTextButton<Topic : Any> : Tower<ClickSight<Topic>, ClickEvent<Topic>>
+    class CenteredTextButton<Topic : Any> : Tower<ButtonSight<Topic>, ClickEvent<Topic>>
     by ClickTower<Topic>()
         .plusHMargin(centerClickPad).plusVPad(uniformPad)
 
