@@ -21,10 +21,8 @@ import com.rubyhuntersky.vx.common.orbit.Orbit
 import com.rubyhuntersky.vx.common.toDuality
 import com.rubyhuntersky.vx.toPercent
 import com.rubyhuntersky.vx.tower.Tower
+import com.rubyhuntersky.vx.tower.additions.*
 import com.rubyhuntersky.vx.tower.additions.clicks.plusClicks
-import com.rubyhuntersky.vx.tower.additions.fixSight
-import com.rubyhuntersky.vx.tower.additions.handleEvents
-import com.rubyhuntersky.vx.tower.additions.mapSight
 import com.rubyhuntersky.vx.tower.additions.pad.VPad
 import com.rubyhuntersky.vx.tower.additions.pad.plusVPad
 import com.rubyhuntersky.vx.tower.additions.replicate.replicate
@@ -33,7 +31,6 @@ import com.rubyhuntersky.vx.tower.towers.click.ClickSight
 import com.rubyhuntersky.vx.tower.towers.wraptext.WrapTextSight
 import com.rubyhuntersky.vx.tower.towers.wraptext.WrapTextTower
 import kotlin.math.absoluteValue
-import com.rubyhuntersky.indexrebellion.projections.Standard.ItemAttributeTower as ItemAttribute
 
 class DriftActivity : TowerActivity<Vision, Nothing>() {
 
@@ -50,8 +47,6 @@ class DriftActivity : TowerActivity<Vision, Nothing>() {
         Standard.CenteredTextButton<Unit>()
             .mapSight { vision: Vision -> ClickSight(vision.toUnit(), "+= Prices") }
             .handleEvents { interaction.sendAction(Action.RefreshPrices) }
-
-    private val holdingsControl = addHolding shl Span.HALF[refreshPrices]
 
     private val holdings = holding.replicate()
         .mapSight { vision: Vision ->
@@ -70,7 +65,7 @@ class DriftActivity : TowerActivity<Vision, Nothing>() {
         }
         .handleEvents { interaction.sendAction(Action.ViewHolding(instrumentId = it.value.topic)) }
 
-    private val holdingsAndControl = holdings and holdingsControl
+    private val holdingsAndControl = holdings and (addHolding shl Span.HALF[refreshPrices])
 
     private val netHidden =
         WrapTextTower()
@@ -92,24 +87,22 @@ class DriftActivity : TowerActivity<Vision, Nothing>() {
             }
             .plusVPad(VPad.Individual(Standard.spacing * 3 / 2, Standard.spacing / 2))
 
-    private val netAndHoldings = net hpad Standard.spacing and holdingsAndControl
-
     private val planButton = Standard.CenteredTextButton<Unit>()
         .fixSight(ClickSight(Unit, "\u2202 Plan"))
         .mapSight(Vision::toUnit)
         .handleEvents { interaction.sendAction(Action.ViewPlan) }
 
-    private val adjustments = adjustment.replicate()
+    private val adjustments = adjust.replicate()
         .neverEvent<Nothing>()
         .mapSight { vision: Vision ->
             val drift = (vision as? Vision.Viewing)?.drift ?: DEFAULT_DRIFT
-            drift.plateAdjustments.toList()
+            drift.plateAdjustments.toList().filter(PlateAdjustment::isOwnedOrPlanned)
         }
 
     override val activityTower: Tower<Vision, Nothing> = Standard
         .SectionTower(
-            "Holdings" to netAndHoldings,
-            "Adjustments" to (adjustments and planButton)
+            "Adjustments" to ((net hpad Standard.spacing) and adjustments and (planButton shl Span.HALF[refreshPrices])),
+            "Holdings" to (holdingsAndControl)
         )
         .plusVPad(VPad.Ceiling(Standard.spacing))
 
@@ -129,31 +122,35 @@ class DriftActivity : TowerActivity<Vision, Nothing>() {
 
     companion object {
 
-        private val adjustmentStart =
-            ItemAttribute().mapSight { adjust: PlateAdjustment -> adjust.plate.memberTag..adjust.realValue.toDollarStat() }
+        private val adjustStart = TitleSubtitleTower.mapSight(::adjustToTitle)
+        private val adjustMiddle = WrapTextTower().mapSight(::adjustToHeld)
+        private val adjustEnd = WrapTextTower().mapSight(::adjustToAction)
+        private val adjust = adjustStart shl Span.HALF[adjustMiddle] shl Span.THIRD[adjustEnd] pad Standard.spacing
 
-        private val adjustmentEnd =
-            ItemAttribute(Orbit.TailLit).mapSight { adjust: PlateAdjustment -> adjust.toAction()..adjust.toStatus() }
-
-        private val adjustment =
-            adjustmentStart shl Span.HALF[adjustmentEnd] pad Standard.spacing
-
-        private fun PlateAdjustment.toAction(): String = when {
-            toPlannedValue > 0 -> "Invest $${toPlannedValue.absoluteValue.toStatString()}"
-            toPlannedValue < 0 -> "Divest $${toPlannedValue.absoluteValue.toStatString()}"
-            else -> "Hold"
+        private fun adjustToTitle(adjust: PlateAdjustment): TitleSubtitleSight {
+            val title = adjust.plate.groupTag
+            val subtitle = adjust.realValue.toDollarStat()
+            return TitleSubtitleSight(title, subtitle)
         }
 
-        private fun PlateAdjustment.toStatus(): String {
-            val planned = "Plan ${plannedPortion.toPercent()}"
-            val real = "Held ${realPortion.toPercent()}"
-            val separator = when {
-                realPortion > plannedPortion -> ">"
-                realPortion < plannedPortion -> "<"
+        private fun adjustToAction(adjust: PlateAdjustment): WrapTextSight {
+            val text = when {
+                adjust.toPlannedValue > 0 -> "↗ $${adjust.toPlannedValue.absoluteValue.toStatString()}"
+                adjust.toPlannedValue < 0 -> "↘ $${adjust.toPlannedValue.absoluteValue.toStatString()}"
+                else -> "Hold"
+            }
+            return WrapTextSight(text, TextStyle.Highlight6, Orbit.TailLit)
+        }
+
+        private fun adjustToHeld(adjust: PlateAdjustment): WrapTextSight {
+            val held = "Held ${adjust.realPortion.toPercent()}"
+            val direction = when {
+                adjust.realPortion > adjust.plannedPortion -> ">"
+                adjust.realPortion < adjust.plannedPortion -> "<"
                 else -> "="
             }
-            return "$real $separator $planned"
+            val planned = "${adjust.plannedPortion.toPercent()} Planned"
+            return WrapTextSight("$held\n$direction\n$planned", TextStyle.Subtitle2, Orbit.Center)
         }
-
     }
 }

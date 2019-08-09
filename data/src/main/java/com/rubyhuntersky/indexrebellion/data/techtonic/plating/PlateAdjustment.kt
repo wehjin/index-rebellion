@@ -13,11 +13,15 @@ data class PlateAdjustment(
     val instruments: Set<InstrumentId>
 ) {
 
+    val isOwnedOrPlanned: Boolean
+        get() = plannedPortion > 0.0 || realPortion > 0.0
+
     private val toPlannedPortion: Double by lazy { plannedPortion - realPortion }
 
     val toPlannedValue: Double by lazy { (BigDecimal(toPlannedPortion) * vaultValue.value).toDouble() }
 
     val realValue: CashAmount by lazy { vaultValue * realPortion }
+    val plannedValue: Double by lazy { (BigDecimal(plannedPortion) * vaultValue.value).toDouble() }
 
     override fun hashCode(): Int {
         var result = plate.hashCode()
