@@ -42,7 +42,7 @@ if (!project.hasProperty("upload_index_rebellion_secret")) {
 }
 
 android {
-    compileSdkVersion 28
+    compileSdkVersion 29
 
     sourceSets.each {
         it.java.srcDirs += "src/$it.name/kotlin"
@@ -51,7 +51,7 @@ android {
     defaultConfig {
         applicationId "com.rubyhuntersky.indexrebellion"
         minSdkVersion 23
-        targetSdkVersion 28
+        targetSdkVersion 29
         versionCode 15
         versionName "1.0.$versionCode"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
