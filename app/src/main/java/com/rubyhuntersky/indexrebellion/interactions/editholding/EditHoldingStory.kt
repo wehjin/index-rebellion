@@ -21,9 +21,9 @@ class EditHoldingStory :
 
     sealed class Vision {
 
-        val symbolEdit get() = (this  as? Editing)?.holdingEdit?.symbolEdit
-        val sizeEdit get() = (this  as? Editing)?.holdingEdit?.sizeEdit
-        val priceEdit get() = (this  as? Editing)?.holdingEdit?.priceEdit
+        val symbolEdit get() = (this as? Editing)?.holdingEdit?.symbolEdit
+        val sizeEdit get() = (this as? Editing)?.holdingEdit?.sizeEdit
+        val priceEdit get() = (this as? Editing)?.holdingEdit?.priceEdit
 
         object Idle : Vision()
         data class Loading(val holdingEditType: HoldingEditType) : Vision()

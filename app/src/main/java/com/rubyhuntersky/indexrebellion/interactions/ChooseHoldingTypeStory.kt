@@ -7,7 +7,8 @@ import com.rubyhuntersky.indexrebellion.interactions.editholding.EditHoldingStor
 import com.rubyhuntersky.indexrebellion.interactions.editholding.HoldingEditType
 import com.rubyhuntersky.interaction.core.*
 
-class ChooseHoldingTypeStory : Interaction<Vision, Action> by Story(::start, ::isEnding, ::revise, groupId) {
+class ChooseHoldingTypeStory :
+    Interaction<Vision, Action> by Story(::start, ::isEnding, ::revise, groupId) {
 
     sealed class Vision {
         data class Choosing(val choices: List<HoldingType>) : Vision()
@@ -32,18 +33,16 @@ private fun isEnding(maybe: Any?): Boolean = maybe is Vision.ChoiceMade
 private fun revise(vision: Vision, action: Action, edge: Edge): Revision<Vision, Action> = when {
     vision is Vision.Choosing && action is Action.Choose -> {
         action.choice?.let {
-            val editType = when (it) {
-                HoldingType.STOCKS -> HoldingEditType.Stock
-                HoldingType.DOLLARS -> HoldingEditType.FixedInstrument(DOLLAR_INSTRUMENT)
-            }
-            val editHolding = edge.wish(
-                name = "ending",
-                interaction = EditHoldingStory(),
-                startAction = EditHoldingStory.Action.Start(editType),
-                endVisionToAction = Action::Ignore
+            Revision(
+                newVision = Vision.ChoiceMade(action.choice),
+                wish = edge.wish(
+                    name = "ending",
+                    interaction = EditHoldingStory(),
+                    startAction = EditHoldingStory.Action.Start(it.toHoldingEditType()),
+                    endVisionToAction = Action::Ignore
+                )
             )
-            Revision(Vision.ChoiceMade(action.choice), editHolding)
-        } ?: Revision(Vision.ChoiceMade(null))
+        } ?: Revision(newVision = Vision.ChoiceMade(null))
     }
     action is Action.Ignore -> {
         println(addTag("IGNORED: ${action.ignore} VISION: $vision"))
@@ -52,6 +51,11 @@ private fun revise(vision: Vision, action: Action, edge: Edge): Revision<Vision,
     else -> Revision<Vision, Action>(vision).also {
         System.err.println(addTag("BAD REVISION: $action, $vision"))
     }
+}
+
+private fun HoldingType.toHoldingEditType() = when (this) {
+    HoldingType.STOCKS -> HoldingEditType.Stock
+    HoldingType.DOLLARS -> HoldingEditType.FixedInstrument(DOLLAR_INSTRUMENT)
 }
 
 private fun addTag(message: String): String = "${ChooseHoldingTypeStory.groupId} $message"

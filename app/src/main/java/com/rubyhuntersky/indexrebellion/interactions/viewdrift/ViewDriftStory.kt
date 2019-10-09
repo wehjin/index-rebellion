@@ -22,7 +22,8 @@ import com.rubyhuntersky.stockcatalog.StockSample
 import com.rubyhuntersky.vx.android.logChanges
 import java.util.*
 
-class ViewDriftStory : Interaction<Vision, Action> by Story(::start, ::isEnding, ::revise, groupId) {
+class ViewDriftStory :
+    Interaction<Vision, Action> by Story(::start, ::isEnding, ::revise, groupId) {
 
     sealed class Vision {
         object Idle : Vision()
