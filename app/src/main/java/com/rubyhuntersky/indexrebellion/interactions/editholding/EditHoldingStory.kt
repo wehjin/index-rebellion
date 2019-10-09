@@ -2,6 +2,8 @@ package com.rubyhuntersky.indexrebellion.interactions.editholding
 
 import com.rubyhuntersky.indexrebellion.data.cash.CashAmount
 import com.rubyhuntersky.indexrebellion.data.techtonic.Drift
+import com.rubyhuntersky.indexrebellion.data.techtonic.MAIN_ACCOUNT
+import com.rubyhuntersky.indexrebellion.data.techtonic.vault.CustodianAccount
 import com.rubyhuntersky.indexrebellion.data.techtonic.vault.SpecificHolding
 import com.rubyhuntersky.indexrebellion.interactions.editholding.EditHoldingStory.Action
 import com.rubyhuntersky.indexrebellion.interactions.editholding.EditHoldingStory.Vision
@@ -15,6 +17,7 @@ import com.rubyhuntersky.interaction.core.wish.Wish
 import com.rubyhuntersky.interaction.edit.StringNovel
 import com.rubyhuntersky.interaction.edit.Validity
 import java.math.BigDecimal
+import java.util.*
 
 class EditHoldingStory :
     Interaction<Vision, Action> by Story(::start, ::isEnding, ::revise, groupId) {
@@ -24,6 +27,7 @@ class EditHoldingStory :
         val symbolEdit get() = (this as? Editing)?.holdingEdit?.symbolEdit
         val sizeEdit get() = (this as? Editing)?.holdingEdit?.sizeEdit
         val priceEdit get() = (this as? Editing)?.holdingEdit?.priceEdit
+        val accountEdit get() = (this as? Editing)?.holdingEdit?.accountEdit
 
         object Idle : Vision()
         data class Loading(val holdingEditType: HoldingEditType) : Vision()
@@ -38,6 +42,7 @@ class EditHoldingStory :
         data class SetSize(val change: Pair<String, IntRange>) : Action()
         data class SetSymbol(val change: Pair<String, IntRange>) : Action()
         data class SetPrice(val change: Pair<String, IntRange>) : Action()
+        data class SetAccount(val change: Pair<String, IntRange>) : Action()
         object Write : Action()
         object End : Action()
     }
@@ -97,6 +102,12 @@ private fun revise(vision: Vision, action: Action): Revision<Vision, Action> = w
         val edit = vision.holdingEdit.setPriceNovel(novel)
         Revision(Vision.Editing(edit))
     }
+    vision is Vision.Editing && action is Action.SetAccount -> {
+        val (text, range) = action.change
+        val novel = text.toNovel(range, ::accountValidity)
+        val edit = vision.holdingEdit.setAccountNovel(novel)
+        Revision(Vision.Editing(edit))
+    }
     vision is Vision.Editing && action is Action.Write -> {
         vision.holdingEdit.writableResult
             ?.let { (drift, holding) ->
@@ -134,6 +145,19 @@ private fun symbolValidity(symbol: String): Validity<String, String> {
     return when {
         trimmedSymbol.isBlank() -> Validity.Invalid(symbol, "No a symbol")
         else -> Validity.Valid(trimmedSymbol)
+    }
+}
+
+private fun accountValidity(name: String): Validity<CustodianAccount, String> {
+    val trimmed = name.trim()
+    return if (trimmed.isBlank()) Validity.Invalid(name, "No account")
+    else {
+        val account = if (name == MAIN_ACCOUNT.name) {
+            MAIN_ACCOUNT
+        } else {
+            CustodianAccount(name, name.toUpperCase(Locale.ENGLISH))
+        }
+        Validity.Valid(account)
     }
 }
 

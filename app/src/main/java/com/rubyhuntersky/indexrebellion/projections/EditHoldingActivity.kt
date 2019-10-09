@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.support.v4.app.FragmentActivity
 import android.support.v7.app.AppCompatActivity
 import com.rubyhuntersky.indexrebellion.data.cash.CashAmount
+import com.rubyhuntersky.indexrebellion.data.techtonic.vault.CustodianAccount
 import com.rubyhuntersky.indexrebellion.interactions.editholding.EditHoldingStory
 import com.rubyhuntersky.indexrebellion.interactions.editholding.EditHoldingStory.Action
 import com.rubyhuntersky.indexrebellion.interactions.editholding.EditHoldingStory.Vision
@@ -17,15 +18,16 @@ import com.rubyhuntersky.vx.android.coop.CoopContentView
 import com.rubyhuntersky.vx.android.putActivityInteractionSearchKey
 import com.rubyhuntersky.vx.android.toTextInputSight
 import com.rubyhuntersky.vx.android.toUnit
-import com.rubyhuntersky.vx.tower.additions.extend.extendFloor
+import com.rubyhuntersky.vx.tower.additions.extend.extendFloors
 import com.rubyhuntersky.vx.tower.additions.fixSight
 import com.rubyhuntersky.vx.tower.additions.handleEvents
 import com.rubyhuntersky.vx.tower.additions.inCoop
 import com.rubyhuntersky.vx.tower.additions.mapSight
 import com.rubyhuntersky.vx.tower.additions.pad.plusVPad
+import com.rubyhuntersky.vx.tower.towerOf
 import com.rubyhuntersky.vx.tower.towers.InputType
-import com.rubyhuntersky.vx.tower.towers.click.ClickEvent
 import com.rubyhuntersky.vx.tower.towers.click.ButtonSight
+import com.rubyhuntersky.vx.tower.towers.click.ClickEvent
 import com.rubyhuntersky.vx.tower.towers.textinput.TextInputEvent
 import com.rubyhuntersky.vx.tower.towers.textinput.TextInputSight
 import java.math.BigDecimal
@@ -34,13 +36,18 @@ import java.math.BigDecimal
 class EditHoldingActivity : AppCompatActivity() {
 
     private lateinit var interaction: Interaction<Vision, Action>
-    private val visionTower = Standard.BodyTower().mapSight(Vision::toString)
 
     private val symbolInputTower = Standard.InsetTextInputTower<Unit>()
         .mapSight { vision: Vision ->
             vision.symbolEdit
                 ?.toTextInputSight(InputType.WORD, Unit, String::toString)
-                ?: TextInputSight(InputType.WORD, topic = Unit, text = "", error = "BAD: $vision", enabled = false)
+                ?: TextInputSight(
+                    type = InputType.WORD,
+                    topic = Unit,
+                    text = "",
+                    error = "BAD: $vision",
+                    enabled = false
+                )
         }
         .handleEvents { event ->
             (event as TextInputEvent.Changed)
@@ -68,14 +75,44 @@ class EditHoldingActivity : AppCompatActivity() {
 
     private val priceInputTower = Standard.InsetTextInputTower<Unit>()
         .mapSight { vision: Vision ->
-            vision.priceEdit?.toTextInputSight(InputType.UNSIGNED_DECIMAL, Unit, CashAmount::toDollarStat)
-                ?: TextInputSight(InputType.UNSIGNED_DECIMAL, Unit, "", error = "BAD: $vision", enabled = false)
+            vision.priceEdit?.toTextInputSight(
+                type = InputType.UNSIGNED_DECIMAL,
+                topic = Unit,
+                stringify = CashAmount::toDollarStat
+            ) ?: TextInputSight(
+                type = InputType.UNSIGNED_DECIMAL,
+                topic = Unit,
+                text = "",
+                error = "BAD: $vision",
+                enabled = false
+            )
         }
         .handleEvents { event ->
             (event as TextInputEvent.Changed)
                 .let { Action.SetPrice(Pair(event.text, event.selection)) }
                 .let(interaction::sendAction)
         }
+
+    private fun visionToAccountEdit(vision: Vision): TextInputSight<Unit> =
+        vision.accountEdit?.toTextInputSight(
+            type = InputType.WORD,
+            topic = Unit,
+            stringify = CustodianAccount::id
+        ) ?: TextInputSight(
+            type = InputType.WORD,
+            topic = Unit,
+            text = "",
+            error = "BAD: $vision",
+            enabled = false
+        )
+
+    private val accountInputTower =
+        towerOf(this::visionToAccountEdit, Standard.InsetTextInputTower<Unit>())
+            .handleEvents { event ->
+                (event as TextInputEvent.Changed)
+                    .let { Action.SetAccount(Pair(event.text, event.selection)) }
+                    .let(interaction::sendAction)
+            }
 
     private val saveTower = Standard.CenteredTextButton<Unit>()
         .fixSight(ButtonSight(Unit, "Save"))
@@ -87,10 +124,12 @@ class EditHoldingActivity : AppCompatActivity() {
         }
 
     private val pageTower = symbolInputTower
-        .extendFloor(sizeInputTower)
-        .extendFloor(priceInputTower)
-        .extendFloor(saveTower)
-        .extendFloor(visionTower)
+        .extendFloors(
+            sizeInputTower,
+            priceInputTower,
+            accountInputTower,
+            saveTower
+        )
         .plusVPad(Standard.uniformPad)
 
     private val coopContentView = CoopContentView(pageTower.inCoop())

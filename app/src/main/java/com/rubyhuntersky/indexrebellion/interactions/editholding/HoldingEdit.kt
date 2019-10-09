@@ -6,10 +6,11 @@ import com.rubyhuntersky.indexrebellion.data.techtonic.MAIN_ACCOUNT
 import com.rubyhuntersky.indexrebellion.data.techtonic.instrument.InstrumentId
 import com.rubyhuntersky.indexrebellion.data.techtonic.market.InstrumentSample
 import com.rubyhuntersky.indexrebellion.data.techtonic.vault.Custodian
+import com.rubyhuntersky.indexrebellion.data.techtonic.vault.CustodianAccount
 import com.rubyhuntersky.indexrebellion.data.techtonic.vault.SpecificHolding
 import com.rubyhuntersky.interaction.edit.Ancient
-import com.rubyhuntersky.interaction.edit.StringNovel
 import com.rubyhuntersky.interaction.edit.Seed
+import com.rubyhuntersky.interaction.edit.StringNovel
 import com.rubyhuntersky.interaction.stringedit.StringEdit
 import java.math.BigDecimal
 import java.util.*
@@ -32,6 +33,11 @@ data class HoldingEdit(
         label = "Price",
         ancient = symbolEditToAncientPrice(symbolEdit, drift, type)?.let(::Ancient),
         enabled = type.isPriceEditable
+    ),
+    val accountEdit: StringEdit<CustodianAccount> = StringEdit(
+        label = "Account",
+        ancient = Ancient(MAIN_ACCOUNT),
+        enabled = true
     )
 ) {
     val writableResult: Pair<Drift, SpecificHolding>?
@@ -43,13 +49,29 @@ data class HoldingEdit(
             return if (drift != null && symbolValue != null && sizeValue != null && priceValue != null) {
                 val instrumentId = symbolValue.toInstrumentId(type)
                 val now = Date()
-                val novel = SpecificHolding(instrumentId, Custodian.Wallet, MAIN_ACCOUNT, sizeValue, now)
-                if (novel.equalsExcludingDate(type.ancient)) null
+                val holding =
+                    SpecificHolding(
+                        instrumentId = instrumentId,
+                        custodian = Custodian.Wallet,
+                        custodianAccount = accountEdit.validValue ?: MAIN_ACCOUNT,
+                        size = sizeValue,
+                        lastModified = now
+                    )
+                if (holding.equalsIgnoringModifyDate(type.ancient)) null
                 else {
-                    val sample = instrumentId.toSample(drift)?.setPrice(priceValue, now)
-                        ?: InstrumentSample(instrumentId, instrumentId.symbol, priceValue, priceValue, now)
-                    val novelDrift = drift.replace(sample)
-                    Pair(novelDrift.replace(novel), novel)
+                    val novelDrift = drift
+                        .replace(
+                            instrumentId.toSample(drift)?.setPrice(priceValue, now)
+                                ?: InstrumentSample(
+                                    instrumentId = instrumentId,
+                                    instrumentName = instrumentId.symbol,
+                                    sharePrice = priceValue,
+                                    macroPrice = priceValue,
+                                    sampleDate = now
+                                )
+                        )
+                        .replace(holding)
+                    Pair(novelDrift, holding)
                 }
             } else null
         }
@@ -70,19 +92,30 @@ data class HoldingEdit(
         priceEdit = priceEdit.setNovel(novel)
     )
 
+    fun setAccountNovel(novel: StringNovel<CustodianAccount>?): HoldingEdit = copy(
+        accountEdit = accountEdit.setNovel(novel)
+    )
+
     fun setDrift(drift: Drift): HoldingEdit = copy(
         drift = drift,
         priceEdit = priceEdit.setAncient(symbolEditToAncientPrice(symbolEdit, drift, type))
     )
 
     companion object {
-        private fun InstrumentId.toSharePrice(drift: Drift?) = toSample(drift)?.let(InstrumentSample::sharePrice)
+        private fun InstrumentId.toSharePrice(drift: Drift?) =
+            toSample(drift)?.let(InstrumentSample::sharePrice)
+
         private fun InstrumentId.toSample(drift: Drift?) = drift?.findSample(this)
 
-        private fun sharePriceFromSymbol(symbol: String, type: HoldingEditType, drift: Drift?): CashAmount? =
+        private fun sharePriceFromSymbol(
+            symbol: String,
+            type: HoldingEditType,
+            drift: Drift?
+        ): CashAmount? =
             symbol.toInstrumentId(type).toSharePrice(drift)
 
-        private fun String.toInstrumentId(type: HoldingEditType) = type.toInstrumentId(trim().toUpperCase())
+        private fun String.toInstrumentId(type: HoldingEditType) =
+            type.toInstrumentId(trim().toUpperCase())
 
         private fun symbolEditToAncientPrice(
             symbolEdit: StringEdit<String>,

@@ -21,7 +21,7 @@ data class SpecificHolding(
             custodian == other.custodian &&
             custodianAccount == other.custodianAccount
 
-    fun equalsExcludingDate(other: Any?): Boolean {
+    fun equalsIgnoringModifyDate(other: Any?): Boolean {
         if (this === other) return true
         if (other !is SpecificHolding) return false
         if (instrumentId != other.instrumentId) return false
