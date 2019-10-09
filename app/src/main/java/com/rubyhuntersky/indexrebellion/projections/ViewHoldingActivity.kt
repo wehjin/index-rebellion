@@ -17,9 +17,16 @@ import com.rubyhuntersky.vx.common.Span
 import com.rubyhuntersky.vx.tower.additions.*
 import com.rubyhuntersky.vx.tower.additions.extend.extendFloors
 import com.rubyhuntersky.vx.tower.additions.pad.plusVPad
+import com.rubyhuntersky.vx.tower.towerOf
 import com.rubyhuntersky.vx.tower.towers.click.ButtonSight
 import com.rubyhuntersky.vx.tower.towers.click.ClickTower
 import io.reactivex.disposables.Disposable
+
+
+private fun Vision.Viewing.toHoldingTitle() = holding.instrumentName ?: holding.instrumentId.symbol
+private fun Vision.Viewing.toHoldingShares() = "${holding.size} shares"
+private fun Vision.Viewing.toHoldingDollars() = holding.cashValue?.toDollarStat() ?: "Unknown value"
+private fun Vision.Viewing.toHoldingPlate() = plate.memberTag
 
 class ViewHoldingActivity : AppCompatActivity() {
 
@@ -40,16 +47,11 @@ class ViewHoldingActivity : AppCompatActivity() {
 
     @Suppress("RedundantLambdaArrow")
     private val pageTower =
-        Standard.TitleTower()
-            .mapSight { viewing: Vision.Viewing ->
-                viewing.holding.instrumentName ?: viewing.holding.instrumentId.symbol
-            }
+        towerOf(Vision.Viewing::toHoldingTitle, Standard.TitleTower())
             .extendFloors(
-                Standard.SubtitleTower().mapSight { viewing: Vision.Viewing -> "${viewing.holding.size} shares" },
-                Standard.SubtitleTower().mapSight { viewing: Vision.Viewing ->
-                    viewing.holding.cashValue?.toDollarStat() ?: "Unknown value"
-                },
-                Standard.SubtitleTower().mapSight { viewing: Vision.Viewing -> viewing.plate.memberTag },
+                towerOf(Vision.Viewing::toHoldingShares, Standard.SubtitleTower()),
+                towerOf(Vision.Viewing::toHoldingDollars, Standard.SubtitleTower()),
+                towerOf(Vision.Viewing::toHoldingPlate, Standard.SubtitleTower()),
                 buttonBar
             )
             .plusVPad(Standard.uniformPad)
@@ -66,7 +68,8 @@ class ViewHoldingActivity : AppCompatActivity() {
     }
 
     private fun startActivityInteraction() {
-        val activityInteraction = ActivityInteraction(ViewHoldingStory.groupId, this, this::renderVision)
+        val activityInteraction =
+            ActivityInteraction(ViewHoldingStory.groupId, this, this::renderVision)
         lifecycle.addObserver(activityInteraction)
         interaction = activityInteraction
     }
