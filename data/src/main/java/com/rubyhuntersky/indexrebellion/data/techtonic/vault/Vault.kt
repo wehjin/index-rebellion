@@ -45,13 +45,18 @@ data class Vault(
         return Pair(aggregateValue, portions)
     }
 
-    fun toInstrumentsByPlate(plating: Plating): Map<Plate, Set<InstrumentId>> = specificHoldings.fold(
-        initial = mutableMapOf(),
-        operation = { instruments, holding ->
-            val plate = plating.findPlate(holding.instrumentId)
-            instruments.also {
-                it[plate] = (it[plate] ?: emptySet()).plus(holding.instrumentId)
+    fun toInstrumentsByPlate(plating: Plating): Map<Plate, Set<InstrumentId>> =
+        specificHoldings.fold(
+            initial = mutableMapOf(),
+            operation = { instruments, holding ->
+                val plate = plating.findPlate(holding.instrumentId)
+                instruments.also {
+                    it[plate] = (it[plate] ?: emptySet()).plus(holding.instrumentId)
+                }
             }
-        }
-    )
+        )
+
+    fun removeSpecificHolding(specificHolding: SpecificHolding): Vault {
+        return copy(specificHoldings = specificHoldings.filter(specificHolding::isAlly).toSet())
+    }
 }

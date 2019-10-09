@@ -1,7 +1,7 @@
 package com.rubyhuntersky.vx.android
 
 import android.content.Context
-import android.support.constraint.ConstraintLayout
+import androidx.constraintlayout.widget.ConstraintLayout
 import android.util.AttributeSet
 import com.rubyhuntersky.indexrebellion.R
 import com.rubyhuntersky.vx.android.backingviews.BackingInputLayout

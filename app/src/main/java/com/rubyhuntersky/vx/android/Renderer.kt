@@ -1,6 +1,6 @@
 package com.rubyhuntersky.vx.android
 
-import android.support.annotation.LayoutRes
+import androidx.annotation.LayoutRes
 import android.view.View
 
 interface Renderer<V : Any, A : Any, Data : Any> {

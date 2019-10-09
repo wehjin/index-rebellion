@@ -73,7 +73,7 @@
                 custom:text="$3.33M"
                 custom:textColor="@color/secondaryLightColor" />
 
-            <android.support.design.button.MaterialButton
+            <com.google.android.material.button.MaterialButton
                 android:id="@+id/newInvestmentButton"
                 style="@style/Widget.MaterialComponents.Button.OutlinedButton.Icon"
                 android:layout_width="match_parent"

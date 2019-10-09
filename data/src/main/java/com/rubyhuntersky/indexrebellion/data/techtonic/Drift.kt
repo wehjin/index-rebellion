@@ -102,6 +102,10 @@ data class Drift(
         val new = vault.deleteHoldings(instrumentId)
         return copy(vault = new)
     }
+
+    fun removeSpecificHolding(specificHolding: SpecificHolding): Drift {
+        return copy(vault = vault.removeSpecificHolding(specificHolding))
+    }
 }
 
 

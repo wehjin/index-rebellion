@@ -14,3 +14,10 @@ interface GenieParams3<Params, Result> :
         name: String = defaultWishName
     ): Wish<Params, Action> = toWish(name, onResult, onError)
 }
+
+fun <Result : Any, Params : GenieParams<Result>, Action : Any> wishFor(
+    params: GenieParams3<Params, Result>,
+    onResult: (Result) -> Action,
+    onError: (Throwable) -> Action,
+    name: String = params.defaultWishName
+): Wish<Params, Action> = params.toWish(name, onResult, onError)

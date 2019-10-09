@@ -1,7 +1,7 @@
 package com.rubyhuntersky.interaction.preandroid
 
 import android.content.Intent
-import android.support.v4.app.FragmentActivity
+import androidx.fragment.app.FragmentActivity
 import com.rubyhuntersky.interaction.android.ProjectionSource
 import com.rubyhuntersky.interaction.core.Interaction
 import com.rubyhuntersky.vx.android.putActivityInteractionSearchKey

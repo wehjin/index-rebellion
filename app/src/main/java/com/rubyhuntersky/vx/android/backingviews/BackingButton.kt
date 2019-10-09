@@ -2,7 +2,7 @@ package com.rubyhuntersky.vx.android.backingviews
 
 import android.R
 import android.content.Context
-import android.support.design.button.MaterialButton
+import com.google.android.material.button.MaterialButton
 import android.util.AttributeSet
 import android.view.ContextThemeWrapper
 import com.rubyhuntersky.vx.android.coop.ViewBackedCoopView

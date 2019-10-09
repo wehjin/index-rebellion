@@ -1,6 +1,6 @@
 package com.rubyhuntersky.indexrebellion.presenters
 
-import android.support.v4.app.FragmentActivity
+import androidx.fragment.app.FragmentActivity
 import com.rubyhuntersky.indexrebellion.R
 import com.rubyhuntersky.indexrebellion.interactions.ChooseHoldingTypeStory
 import com.rubyhuntersky.indexrebellion.interactions.ChooseHoldingTypeStory.Action

@@ -31,7 +31,8 @@ class ViewHoldingStoryTest {
     private val showToastGenie =
         object : Genie<ShowToast, Nothing> {
             override val paramsClass: Class<ShowToast> = ShowToast::class.java
-            override fun toSingle(params: ShowToast): Single<Nothing> = Single.create { showToastText = params }
+            override fun toSingle(params: ShowToast): Single<Nothing> =
+                Single.create { showToastText = params }
         }
 
     private val today = Date()
@@ -70,7 +71,11 @@ class ViewHoldingStoryTest {
     fun reclassify() {
         story.sendAction(Action.Reclassify)
         story.visions.test().assertValue(
-            Vision.Viewing(startingDrift.findHolding(tslaInstrumentId)!!, Plate.Unknown)
+            Vision.Viewing(
+                startingDrift.findHolding(tslaInstrumentId)!!,
+                Plate.Unknown,
+                listOf(holding)
+            )
         )
         assertNotEquals("", showToastText)
     }

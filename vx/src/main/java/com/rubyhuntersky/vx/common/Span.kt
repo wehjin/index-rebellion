@@ -23,7 +23,10 @@ sealed class Span(val orbit: Orbit = Orbit.Center) {
     companion object {
         val HALF = Relative(0.500f)
         val THIRD = Relative(0.333f)
+        val FIFTH = Relative(1f / 5)
+        val SIXTH = Relative(1f / 6)
+        val EIGHTH = Relative(1f / 8)
     }
 
-    operator fun <Sight : Any, Event : Any> get(tower: Tower<Sight, Event>): Share<Sight, Event> = Share(this, tower)
+    operator fun <Sight : Any, Event : Any> get(tower: Tower<Sight, Event>) = Share(this, tower)
 }

@@ -1,6 +1,6 @@
 package com.rubyhuntersky.indexrebellion.presenters.correctiondetails
 
-import android.support.v4.app.FragmentActivity
+import androidx.fragment.app.FragmentActivity
 import com.rubyhuntersky.indexrebellion.R
 import com.rubyhuntersky.indexrebellion.data.cash.CashAmount
 import com.rubyhuntersky.indexrebellion.interactions.correctiondetails.Action

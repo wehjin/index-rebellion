@@ -37,7 +37,11 @@ class ViewDriftStoryTest {
         story.sendAction(Action.ViewHolding(Fixture.TSLA_INSTRUMENT))
         ViewHoldingStory.findInEdge(edge).visions.test()
             .assertValue(
-                ViewHoldingStory.Vision.Viewing(drift.findHolding(Fixture.TSLA_INSTRUMENT)!!, Plate.Unknown)
+                ViewHoldingStory.Vision.Viewing(
+                    drift.findHolding(Fixture.TSLA_INSTRUMENT)!!,
+                    Plate.Unknown,
+                    listOf(Fixture.TSLA_SPECIFIC_HOLDING)
+                )
             )
     }
 }

@@ -29,14 +29,14 @@
         android:gravity="center_vertical"
         android:orientation="horizontal">
 
-        <android.support.design.widget.TextInputLayout
+        <com.google.android.material.textfield.TextInputLayout
             style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:hint="@string/total">
 
-            <android.support.design.widget.TextInputEditText
+            <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/totalCountEditText"
                 style="@style/Widget.MaterialComponents.TextInputEditText.FilledBox"
                 android:layout_width="match_parent"
@@ -46,7 +46,7 @@
                 android:singleLine="true"
                 tools:text="1010" />
 
-        </android.support.design.widget.TextInputLayout>
+        </com.google.android.material.textfield.TextInputLayout>
 
         <TextView
             android:layout_width="wrap_content"
@@ -76,14 +76,14 @@
             android:textColor="@color/secondaryDarkStrokeColor" />
 
 
-        <android.support.design.widget.TextInputLayout
+        <com.google.android.material.textfield.TextInputLayout
             style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:hint="@string/more">
 
-            <android.support.design.widget.TextInputEditText
+            <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/deltaCountEditText"
                 style="@style/ThemeOverlay.MaterialComponents.TextInputEditText.FilledBox"
                 android:layout_width="match_parent"
@@ -93,20 +93,20 @@
                 android:singleLine="true"
                 tools:text="10" />
 
-        </android.support.design.widget.TextInputLayout>
+        </com.google.android.material.textfield.TextInputLayout>
     </LinearLayout>
 
     <Space
         android:layout_width="match_parent"
         android:layout_height="24dp" />
 
-    <android.support.design.widget.TextInputLayout
+    <com.google.android.material.textfield.TextInputLayout
         style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="@string/share_price">
 
-        <android.support.design.widget.TextInputEditText
+        <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/sharePriceEditText"
             style="@style/ThemeOverlay.MaterialComponents.TextInputEditText.FilledBox"
             android:layout_width="match_parent"
@@ -118,7 +118,7 @@
             android:singleLine="true"
             tools:text="10" />
 
-    </android.support.design.widget.TextInputLayout>
+    </com.google.android.material.textfield.TextInputLayout>
 
     <Space
         android:layout_width="match_parent"
@@ -134,7 +134,7 @@
         android:layout_width="match_parent"
         android:layout_height="16dp" />
 
-    <android.support.design.button.MaterialButton
+    <com.google.android.material.button.MaterialButton
         android:id="@+id/saveButton"
         style="@style/Widget.MaterialComponents.Button"
         android:layout_width="wrap_content"

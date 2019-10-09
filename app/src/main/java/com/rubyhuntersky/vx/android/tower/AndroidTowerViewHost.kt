@@ -2,8 +2,8 @@ package com.rubyhuntersky.vx.android.tower
 
 import android.content.Context
 import android.graphics.Color
-import android.support.constraint.ConstraintLayout
-import android.support.constraint.ConstraintSet
+import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.constraintlayout.widget.ConstraintSet
 import android.util.Log
 import android.view.View
 import android.widget.Space

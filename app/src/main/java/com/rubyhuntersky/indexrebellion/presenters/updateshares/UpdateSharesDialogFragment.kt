@@ -1,6 +1,6 @@
 package com.rubyhuntersky.indexrebellion.presenters.updateshares
 
-import android.support.v4.app.FragmentActivity
+import androidx.fragment.app.FragmentActivity
 import android.text.Editable
 import android.text.TextWatcher
 import android.util.Log

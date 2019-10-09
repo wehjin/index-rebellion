@@ -21,6 +21,7 @@ import com.rubyhuntersky.indexrebellion.presenters.updateshares.UpdateSharesDial
 import com.rubyhuntersky.indexrebellion.projections.*
 import com.rubyhuntersky.indexrebellion.spirits.djinns.readdrift.ReadDriftsDjinn
 import com.rubyhuntersky.indexrebellion.spirits.genies.DeleteGeneralHolding
+import com.rubyhuntersky.indexrebellion.spirits.genies.RemoveSpecificHolding
 import com.rubyhuntersky.indexrebellion.spirits.genies.WriteDivision
 import com.rubyhuntersky.indexrebellion.spirits.genies.showtoast.ShowToast
 import com.rubyhuntersky.indexrebellion.spirits.genies.writedrift.WriteDrift
@@ -48,8 +49,10 @@ class MyApplication : Application() {
 
         // Books
         rebellionBook = SharedRebellionBook.also { it.open(this) }
-        val driftBook = SharedPreferencesBook(this, "DriftBook", Drift.serializer(), true) { DEFAULT_DRIFT }
-        val accessBook = SharedPreferencesBook(this, "Access2Book", Access2.serializer()) { Access2() }
+        val driftBook =
+            SharedPreferencesBook(this, "DriftBook", Drift.serializer(), true) { DEFAULT_DRIFT }
+        val accessBook =
+            SharedPreferencesBook(this, "Access2Book", Access2.serializer()) { Access2() }
 
         val edge = AndroidEdge
         with(edge.lamp) {
@@ -65,6 +68,7 @@ class MyApplication : Application() {
             add(FetchRbhAccessTokenGenie)
             add(DeleteGeneralHolding.GENIE(driftBook))
             add(WriteDivision.GENIE(driftBook))
+            add(RemoveSpecificHolding.GENIE(driftBook))
         }
 
         ViewDriftStory()

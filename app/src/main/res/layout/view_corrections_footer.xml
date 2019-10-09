@@ -6,7 +6,7 @@
     android:layout_height="wrap_content"
     android:paddingBottom="72dp">
 
-    <android.support.design.button.MaterialButton
+    <com.google.android.material.button.MaterialButton
         android:id="@+id/plusConstituentButton"
         style="@style/Widget.MaterialComponents.Button.OutlinedButton"
         android:layout_width="wrap_content"

@@ -1,7 +1,7 @@
 package com.rubyhuntersky.indexrebellion.presenters.main
 
-import android.support.v7.widget.LinearLayoutManager
-import android.support.v7.widget.RecyclerView
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import android.util.Log
 import com.rubyhuntersky.indexrebellion.data.report.Correction
 import com.rubyhuntersky.indexrebellion.data.report.RebellionReport

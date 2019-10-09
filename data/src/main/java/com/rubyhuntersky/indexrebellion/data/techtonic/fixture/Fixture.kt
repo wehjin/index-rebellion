@@ -18,7 +18,8 @@ object Fixture {
     const val TSLA_NAME = "Tesla, Inc."
     val TSLA_INSTRUMENT = InstrumentId("TSLA", InstrumentType.StockExchange)
     val TSLA_SHARE_PRICE = CashAmount(420)
-    val TSLA_MACRO_PRICE = CashAmount(BigDecimal.valueOf(170000000) * BigDecimal.valueOf(TSLA_SHARE_PRICE.toDouble()))
+    val TSLA_MACRO_PRICE =
+        CashAmount(BigDecimal.valueOf(170000000) * BigDecimal.valueOf(TSLA_SHARE_PRICE.toDouble()))
     val TSLA_SAMPLE = InstrumentSample(
         TSLA_INSTRUMENT,
         TSLA_NAME,
@@ -26,8 +27,10 @@ object Fixture {
         TSLA_MACRO_PRICE,
         Date(1533635280000)
     )
+    val TSLA_SPECIFIC_HOLDING =
+        SpecificHolding(TSLA_INSTRUMENT, Custodian.Etrade, MAIN_ACCOUNT, BigDecimal.TEN, TODAY)
 
     val DRIFT = DEFAULT_DRIFT
         .replace(TSLA_SAMPLE)
-        .replace(SpecificHolding(TSLA_INSTRUMENT, Custodian.Etrade, MAIN_ACCOUNT, BigDecimal.TEN, TODAY))
+        .replace(TSLA_SPECIFIC_HOLDING)
 }

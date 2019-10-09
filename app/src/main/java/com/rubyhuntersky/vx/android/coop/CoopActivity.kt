@@ -1,7 +1,7 @@
 package com.rubyhuntersky.vx.android.coop
 
 import android.os.Bundle
-import android.support.v7.app.AppCompatActivity
+import androidx.appcompat.app.AppCompatActivity
 import com.rubyhuntersky.vx.Vx
 import com.rubyhuntersky.vx.coop.Coop
 

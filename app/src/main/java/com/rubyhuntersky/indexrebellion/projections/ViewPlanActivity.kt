@@ -2,7 +2,7 @@ package com.rubyhuntersky.indexrebellion.projections
 
 import android.content.Intent
 import android.os.Bundle
-import android.support.v4.app.FragmentActivity
+import androidx.fragment.app.FragmentActivity
 import com.rubyhuntersky.indexrebellion.data.techtonic.plan.Division
 import com.rubyhuntersky.indexrebellion.data.techtonic.plan.DivisionElement
 import com.rubyhuntersky.indexrebellion.interactions.viewplan.ViewPlanStory

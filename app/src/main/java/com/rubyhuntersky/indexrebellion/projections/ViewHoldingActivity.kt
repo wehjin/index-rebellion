@@ -2,8 +2,8 @@ package com.rubyhuntersky.indexrebellion.projections
 
 import android.content.Intent
 import android.os.Bundle
-import android.support.v4.app.FragmentActivity
-import android.support.v7.app.AppCompatActivity
+import androidx.fragment.app.FragmentActivity
+import androidx.appcompat.app.AppCompatActivity
 import com.rubyhuntersky.indexrebellion.data.techtonic.vault.SpecificHolding
 import com.rubyhuntersky.indexrebellion.interactions.viewholding.ViewHoldingStory
 import com.rubyhuntersky.indexrebellion.interactions.viewholding.ViewHoldingStory.Action
@@ -23,6 +23,7 @@ import com.rubyhuntersky.vx.tower.additions.replicate.replicate
 import com.rubyhuntersky.vx.tower.towerOf
 import com.rubyhuntersky.vx.tower.towers.click.ButtonSight
 import com.rubyhuntersky.vx.tower.towers.click.ClickTower
+import com.rubyhuntersky.vx.tower.towers.click.clickTowerOf
 import io.reactivex.disposables.Disposable
 
 
@@ -65,12 +66,22 @@ class ViewHoldingActivity : AppCompatActivity() {
                         .extendFloor(
                             towerOf(SpecificHolding::toSharesText, Standard.SubtitleTower())
                         )
+                        .shl(
+                            Share(
+                                span = Span.EIGHTH,
+                                tower = clickTowerOf<SpecificHolding>("rm").handleEvents {
+                                    post(Action.Remove(it))
+                                }
+                            )
+                        )
                         .vpad(Standard.uniformPad.height)
                         .replicate().handleEvents { }
                 )
             )
             .plusVPad(Standard.uniformPad)
             .plusHMargin(Standard.uniformMargin)
+
+    private fun post(action: Action) = interaction.sendAction(action)
 
     private val coopContentView = CoopContentView(pageTower.inCoop())
     private lateinit var eventUpdates: Disposable

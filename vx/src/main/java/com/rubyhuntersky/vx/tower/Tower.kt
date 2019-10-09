@@ -66,7 +66,7 @@ interface Tower<Sight : Any, Event : Any> {
     operator fun plus(margin: Margin): Tower<Sight, Event> = plusHMargin(margin)
 }
 
-fun <EdgeVision : Any, CoreVision : Any, Event : Any> towerOf(
-    coreVisionFromEdge: (EdgeVision) -> CoreVision,
-    tower: Tower<CoreVision, Event>
-): Tower<EdgeVision, Event> = tower.mapSight(coreVisionFromEdge)
+fun <Edge : Any, Core : Any, Event : Any> towerOf(
+    edgeToCore: (Edge) -> Core,
+    tower: Tower<Core, Event>
+): Tower<Edge, Event> = tower.mapSight(edgeToCore)

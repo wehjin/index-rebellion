@@ -1,6 +1,6 @@
 package com.rubyhuntersky.indexrebellion.presenters.constituentsearch
 
-import android.support.v4.app.FragmentActivity
+import androidx.fragment.app.FragmentActivity
 import com.rubyhuntersky.indexrebellion.interactions.constituentsearch.Action
 import com.rubyhuntersky.interaction.core.Portal
 
