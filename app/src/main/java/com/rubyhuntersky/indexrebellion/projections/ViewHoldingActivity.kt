@@ -4,6 +4,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.support.v4.app.FragmentActivity
 import android.support.v7.app.AppCompatActivity
+import com.rubyhuntersky.indexrebellion.data.techtonic.vault.SpecificHolding
 import com.rubyhuntersky.indexrebellion.interactions.viewholding.ViewHoldingStory
 import com.rubyhuntersky.indexrebellion.interactions.viewholding.ViewHoldingStory.Action
 import com.rubyhuntersky.indexrebellion.interactions.viewholding.ViewHoldingStory.Vision
@@ -15,8 +16,10 @@ import com.rubyhuntersky.vx.android.coop.CoopContentView
 import com.rubyhuntersky.vx.android.toUnit
 import com.rubyhuntersky.vx.common.Span
 import com.rubyhuntersky.vx.tower.additions.*
+import com.rubyhuntersky.vx.tower.additions.extend.extendFloor
 import com.rubyhuntersky.vx.tower.additions.extend.extendFloors
 import com.rubyhuntersky.vx.tower.additions.pad.plusVPad
+import com.rubyhuntersky.vx.tower.additions.replicate.replicate
 import com.rubyhuntersky.vx.tower.towerOf
 import com.rubyhuntersky.vx.tower.towers.click.ButtonSight
 import com.rubyhuntersky.vx.tower.towers.click.ClickTower
@@ -27,6 +30,9 @@ private fun Vision.Viewing.toHoldingTitle() = holding.instrumentName ?: holding.
 private fun Vision.Viewing.toHoldingShares() = "${holding.size} shares"
 private fun Vision.Viewing.toHoldingDollars() = holding.cashValue?.toDollarStat() ?: "Unknown value"
 private fun Vision.Viewing.toHoldingPlate() = plate.memberTag
+private fun Vision.Viewing.toSpecificHoldings() = specificHoldings
+private fun SpecificHolding.toAccountText() = custodianAccount.id
+private fun SpecificHolding.toSharesText() = "$size shares"
 
 class ViewHoldingActivity : AppCompatActivity() {
 
@@ -52,7 +58,16 @@ class ViewHoldingActivity : AppCompatActivity() {
                 towerOf(Vision.Viewing::toHoldingShares, Standard.SubtitleTower()),
                 towerOf(Vision.Viewing::toHoldingDollars, Standard.SubtitleTower()),
                 towerOf(Vision.Viewing::toHoldingPlate, Standard.SubtitleTower()),
-                buttonBar
+                buttonBar,
+                towerOf(
+                    Vision.Viewing::toSpecificHoldings,
+                    towerOf(SpecificHolding::toAccountText, Standard.TitleTower())
+                        .extendFloor(
+                            towerOf(SpecificHolding::toSharesText, Standard.SubtitleTower())
+                        )
+                        .vpad(Standard.uniformPad.height)
+                        .replicate().handleEvents { }
+                )
             )
             .plusVPad(Standard.uniformPad)
             .plusHMargin(Standard.uniformMargin)

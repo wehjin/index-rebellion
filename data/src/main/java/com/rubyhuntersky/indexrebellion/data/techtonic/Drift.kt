@@ -34,12 +34,17 @@ data class Drift(
                 val sample = market.findSample(instrumentId)
                 val specificHoldings = entry.value
                 val size = specificHoldings.map { it.size }.fold(BigDecimal.ZERO, BigDecimal::plus)
-                val custodians = specificHoldings.map { it.custodian }.toSet()
-                val instrumentName = sample?.instrumentName
-                val cashValue = sample?.sharePrice?.times(size.toDouble())
-                val sampleModified = sample?.sampleDate ?: Date(0)
-                val lastModified = specificHoldings.map { it.lastModified }.fold(sampleModified, Date::later)
-                GeneralHolding(instrumentId, size, custodians, instrumentName, cashValue, lastModified)
+                GeneralHolding(
+                    instrumentId,
+                    size,
+                    custodians = specificHoldings.map { it.custodian }.toSet(),
+                    instrumentName = sample?.instrumentName,
+                    cashValue = sample?.sharePrice?.times(size.toDouble()),
+                    lastModified = specificHoldings.map { it.lastModified }.fold(
+                        initial = sample?.sampleDate ?: Date(0),
+                        operation = Date::later
+                    )
+                )
             }
             .toSet()
     }
@@ -71,12 +76,17 @@ data class Drift(
     fun findHolding(instrumentId: InstrumentId): GeneralHolding? =
         generalHoldings.firstOrNull { it.instrumentId == instrumentId }
 
+    fun findSpecificHoldings(instrumentId: InstrumentId): List<SpecificHolding>? =
+        vault.specificHoldings.filter { it.instrumentId == instrumentId }
+
     fun findSample(instrumentId: InstrumentId): InstrumentSample? = market.findSample(instrumentId)
 
     fun find(divisionId: DivisionId): Division? = plan.findDivision(divisionId)
 
     fun replace(sample: InstrumentSample): Drift = copy(market = market.replaceSample(sample))
-    fun replace(samples: List<InstrumentSample>): Drift = copy(market = market.replaceSamples(samples))
+    fun replace(samples: List<InstrumentSample>): Drift =
+        copy(market = market.replaceSamples(samples))
+
     fun replace(division: Division): Drift = copy(plan = plan.replace(division))
 
     fun replace(holding: SpecificHolding): Drift {

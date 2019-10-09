@@ -4,6 +4,7 @@ import com.rubyhuntersky.indexrebellion.data.techtonic.Drift
 import com.rubyhuntersky.indexrebellion.data.techtonic.GeneralHolding
 import com.rubyhuntersky.indexrebellion.data.techtonic.instrument.InstrumentId
 import com.rubyhuntersky.indexrebellion.data.techtonic.plating.Plate
+import com.rubyhuntersky.indexrebellion.data.techtonic.vault.SpecificHolding
 import com.rubyhuntersky.indexrebellion.interactions.classifyinstrument.ClassifyInstrumentStory
 import com.rubyhuntersky.indexrebellion.interactions.viewholding.ViewHoldingStory.Action
 import com.rubyhuntersky.indexrebellion.interactions.viewholding.ViewHoldingStory.Vision
@@ -13,12 +14,18 @@ import com.rubyhuntersky.interaction.core.*
 import com.rubyhuntersky.interaction.core.wish.Wish
 import com.rubyhuntersky.indexrebellion.interactions.classifyinstrument.Action as ClassifyInstrumentAction
 
-class ViewHoldingStory : Interaction<Vision, Action> by Story(::start, ::isEnding, ::revise, groupId) {
+class ViewHoldingStory :
+    Interaction<Vision, Action> by Story(::start, ::isEnding, ::revise, groupId) {
 
     sealed class Vision {
         object Idle : Vision()
         data class Reading(val instrumentId: InstrumentId) : Vision()
-        data class Viewing(val holding: GeneralHolding, val plate: Plate) : Vision()
+        data class Viewing(
+            val holding: GeneralHolding,
+            val plate: Plate,
+            val specificHoldings: List<SpecificHolding>
+        ) : Vision()
+
         object Ended : Vision()
     }
 
@@ -57,13 +64,15 @@ private fun revise(vision: Vision, action: Action, edge: Edge): Revision<Vision,
         val instrumentId = vision.instrumentId
         val holding = action.drift.findHolding(instrumentId)!!
         val plate = action.drift.plating.findPlate(instrumentId)
-        Revision(Vision.Viewing(holding, plate))
+        val specificHoldings = action.drift.findSpecificHoldings(instrumentId)!!
+        Revision(Vision.Viewing(holding, plate, specificHoldings))
     }
     vision is Vision.Viewing && action is Action.Load -> {
         val instrumentId = vision.holding.instrumentId
         val holding = action.drift.findHolding(instrumentId)!!
         val plate = action.drift.plating.findPlate(instrumentId)
-        Revision(Vision.Viewing(holding, plate))
+        val specificHoldings = action.drift.findSpecificHoldings(instrumentId)!!
+        Revision(Vision.Viewing(holding, plate, specificHoldings))
     }
     vision is Vision.Viewing && action is Action.Reclassify -> {
         val reclassify = edge.wish(
