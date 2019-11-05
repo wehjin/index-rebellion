@@ -6,6 +6,8 @@ import com.rubyhuntersky.indexrebellion.data.techtonic.instrument.InstrumentId
 import com.rubyhuntersky.indexrebellion.data.techtonic.plating.Plate
 import com.rubyhuntersky.indexrebellion.data.techtonic.vault.SpecificHolding
 import com.rubyhuntersky.indexrebellion.interactions.classifyinstrument.ClassifyInstrumentStory
+import com.rubyhuntersky.indexrebellion.interactions.editholding.EditHoldingStory
+import com.rubyhuntersky.indexrebellion.interactions.editholding.HoldingEditType
 import com.rubyhuntersky.indexrebellion.interactions.viewholding.ViewHoldingStory.Action
 import com.rubyhuntersky.indexrebellion.interactions.viewholding.ViewHoldingStory.Vision
 import com.rubyhuntersky.indexrebellion.spirits.djinns.readdrift.ReadDrifts
@@ -41,7 +43,8 @@ class ViewHoldingStory :
         data class Load(val drift: Drift) : Action()
         object Reclassify : Action()
         object Delete : Action()
-        data class Remove(val specificHolding: SpecificHolding) : Action()
+        data class RemoveSpecificHolding(val specificHolding: SpecificHolding) : Action()
+        data class EditSpecificHolding(val specificHolding: SpecificHolding) : Action()
     }
 
     companion object : InteractionCompanion<Vision, Action> {
@@ -55,6 +58,7 @@ private fun isEnding(maybe: Any?): Boolean = maybe is Vision.Ended
 
 private const val RECLASSIFY = "reclassify"
 private const val DELETE_HOLDING = "delete-holding"
+private const val EDIT_SPECIFIC_HOLDING = "edit-specific-holding"
 
 private fun revise(vision: Vision, action: Action, edge: Edge): Revision<Vision, Action> = when {
     vision is Vision.Idle && action is Action.Init -> {
@@ -99,25 +103,41 @@ private fun revise(vision: Vision, action: Action, edge: Edge): Revision<Vision,
         )
         Vision.Ended and ReadDrifts.unwish<Action>() and deleteHoldings
     }
-    vision is Vision.Viewing && action is Action.Remove -> {
+    vision is Vision.Viewing && action is Action.RemoveSpecificHolding -> {
         vision and wishFor(
             RemoveSpecificHolding(action.specificHolding),
             Action::Load,
             Action::Ignore
         )
     }
+    action is Action.EditSpecificHolding -> action(vision, edge)
     action is Action.End -> {
         Vision.Ended and
                 ReadDrifts.unwish<Action>() and
                 Wish.none(RECLASSIFY) and
                 Wish.none(DELETE_HOLDING) and
-                RemoveSpecificHolding.unwish()
+                RemoveSpecificHolding.unwish() and
+                Wish.none(EDIT_SPECIFIC_HOLDING)
     }
     action is Action.Ignore -> vision.revision()
     else -> {
         logError("BAD REVISION: $action, $vision")
         Revision(vision)
     }
+}
+
+private operator fun Action.EditSpecificHolding.invoke(
+    vision: Vision,
+    edge: Edge
+): Revision<Vision, Action> {
+    check(vision is Vision.Viewing)
+    val wishForEditSpecificHolding = edge.wish(
+        name = EDIT_SPECIFIC_HOLDING,
+        interaction = EditHoldingStory(),
+        startAction = EditHoldingStory.Action.Start(HoldingEditType.ShareCount(specificHolding)),
+        endVisionToAction = Action::Ignore
+    )
+    return vision and wishForEditSpecificHolding
 }
 
 private fun addTag(message: String): String = "${ViewHoldingStory.groupId} $message"

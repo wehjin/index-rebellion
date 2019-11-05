@@ -10,7 +10,10 @@ import io.reactivex.Observable
 fun <Sight : Any, CoreEvent : Any, EdgeEvent : Any> Tower<Sight, CoreEvent>.mapEvent(coreToEdgeEvent: ((CoreEvent) -> EdgeEvent)): Tower<Sight, EdgeEvent> {
     val core = this
     return object : Tower<Sight, EdgeEvent> {
-        override fun enview(viewHost: Tower.ViewHost, viewId: ViewId): Tower.View<Sight, EdgeEvent> {
+        override fun enview(
+            viewHost: Tower.ViewHost,
+            viewId: ViewId
+        ): Tower.View<Sight, EdgeEvent> {
             val coreView = core.enview(viewHost, viewId)
             return object : Tower.View<Sight, EdgeEvent> {
 
@@ -35,9 +38,11 @@ fun <Sight : Any, Event : Any> Tower<Sight, Event>.handleEvents(onEvent: ((Event
             val coreView = core.enview(viewHost, viewId)
             return object : Tower.View<Sight, Nothing> {
 
-                override fun drop() = coreView.drop()
+                override fun drop() {
+                    eventHandler.dispose()
+                    coreView.drop()
+                }
 
-                @Suppress("unused")
                 private val eventHandler = coreView.events.subscribe(onEvent)
 
                 override val events: Observable<Nothing> get() = coreView.events.flatMap { Observable.never<Nothing>() }

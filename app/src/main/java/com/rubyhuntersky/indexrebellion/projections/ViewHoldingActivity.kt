@@ -2,12 +2,12 @@ package com.rubyhuntersky.indexrebellion.projections
 
 import android.content.Intent
 import android.os.Bundle
-import androidx.fragment.app.FragmentActivity
 import androidx.appcompat.app.AppCompatActivity
-import com.rubyhuntersky.indexrebellion.data.techtonic.vault.SpecificHolding
+import androidx.fragment.app.FragmentActivity
 import com.rubyhuntersky.indexrebellion.interactions.viewholding.ViewHoldingStory
 import com.rubyhuntersky.indexrebellion.interactions.viewholding.ViewHoldingStory.Action
 import com.rubyhuntersky.indexrebellion.interactions.viewholding.ViewHoldingStory.Vision
+import com.rubyhuntersky.indexrebellion.projections.drift.specificHoldingsTower
 import com.rubyhuntersky.interaction.android.ActivityInteraction
 import com.rubyhuntersky.interaction.android.ProjectionSource
 import com.rubyhuntersky.interaction.core.Edge
@@ -16,14 +16,11 @@ import com.rubyhuntersky.vx.android.coop.CoopContentView
 import com.rubyhuntersky.vx.android.toUnit
 import com.rubyhuntersky.vx.common.Span
 import com.rubyhuntersky.vx.tower.additions.*
-import com.rubyhuntersky.vx.tower.additions.extend.extendFloor
 import com.rubyhuntersky.vx.tower.additions.extend.extendFloors
 import com.rubyhuntersky.vx.tower.additions.pad.plusVPad
-import com.rubyhuntersky.vx.tower.additions.replicate.replicate
 import com.rubyhuntersky.vx.tower.towerOf
 import com.rubyhuntersky.vx.tower.towers.click.ButtonSight
 import com.rubyhuntersky.vx.tower.towers.click.ClickTower
-import com.rubyhuntersky.vx.tower.towers.click.clickTowerOf
 import io.reactivex.disposables.Disposable
 
 
@@ -32,8 +29,6 @@ private fun Vision.Viewing.toHoldingShares() = "${holding.size} shares"
 private fun Vision.Viewing.toHoldingDollars() = holding.cashValue?.toDollarStat() ?: "Unknown value"
 private fun Vision.Viewing.toHoldingPlate() = plate.memberTag
 private fun Vision.Viewing.toSpecificHoldings() = specificHoldings
-private fun SpecificHolding.toAccountText() = custodianAccount.id
-private fun SpecificHolding.toSharesText() = "$size shares"
 
 class ViewHoldingActivity : AppCompatActivity() {
 
@@ -62,20 +57,10 @@ class ViewHoldingActivity : AppCompatActivity() {
                 buttonBar,
                 towerOf(
                     Vision.Viewing::toSpecificHoldings,
-                    towerOf(SpecificHolding::toAccountText, Standard.TitleTower())
-                        .extendFloor(
-                            towerOf(SpecificHolding::toSharesText, Standard.SubtitleTower())
-                        )
-                        .shl(
-                            Share(
-                                span = Span.EIGHTH,
-                                tower = clickTowerOf<SpecificHolding>("rm").handleEvents {
-                                    post(Action.Remove(it))
-                                }
-                            )
-                        )
-                        .vpad(Standard.uniformPad.height)
-                        .replicate().handleEvents { }
+                    specificHoldingsTower(
+                        remove = { post(Action.RemoveSpecificHolding(it)) },
+                        edit = { post(Action.EditSpecificHolding(it)) }
+                    )
                 )
             )
             .plusVPad(Standard.uniformPad)
@@ -101,11 +86,7 @@ class ViewHoldingActivity : AppCompatActivity() {
     }
 
     @Suppress("UNUSED_PARAMETER")
-    private fun renderVision(
-        vision: Vision,
-        sendAction: (Action) -> Unit,
-        edge: Edge
-    ) {
+    private fun renderVision(vision: Vision, sendAction: (Action) -> Unit, edge: Edge) {
         when (vision) {
             is Vision.Viewing -> coopContentView.setSight(vision)
         }

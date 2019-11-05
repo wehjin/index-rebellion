@@ -109,16 +109,15 @@ private fun revise(vision: Vision, action: Action): Revision<Vision, Action> = w
         Revision(Vision.Editing(edit))
     }
     vision is Vision.Editing && action is Action.Write -> {
-        vision.holdingEdit.writableResult
-            ?.let { (drift, holding) ->
-                val writeDrift = WriteDrift(drift).toWish<WriteDrift, Action>(
-                    name = WRITE_DRIFT_WISH,
-                    onResult = Action::Ignore,
-                    onError = Action::Ignore
-                )
-                Revision(Vision.Ended(holding), writeDrift)
-            }
-            ?: Revision(vision)
+        val writableResult = vision.holdingEdit.writableResult
+        writableResult?.let { (drift, holding) ->
+            val writeDrift = WriteDrift(drift).toWish<WriteDrift, Action>(
+                name = WRITE_DRIFT_WISH,
+                onResult = Action::Ignore,
+                onError = Action::Ignore
+            )
+            Revision(Vision.Ended(holding), writeDrift)
+        } ?: Revision(vision)
     }
     else -> Revision<Vision, Action>(vision).also {
         System.err.println(addTag("BAD REVISION: $action, $vision"))

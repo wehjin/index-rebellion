@@ -36,8 +36,8 @@ data class HoldingEdit(
     ),
     val accountEdit: StringEdit<CustodianAccount> = StringEdit(
         label = "Account",
-        ancient = Ancient(MAIN_ACCOUNT),
-        enabled = true
+        ancient = Ancient(type.ancient?.custodianAccount ?: MAIN_ACCOUNT),
+        enabled = type.isAccountEditable
     )
 ) {
     val writableResult: Pair<Drift, SpecificHolding>?
@@ -46,6 +46,7 @@ data class HoldingEdit(
             val symbolValue = symbolEdit.writableValue
             val sizeValue = sizeEdit.writableValue
             val priceValue = priceEdit.validValue
+            val accountValue = accountEdit.validValue
             return if (drift != null && symbolValue != null && sizeValue != null && priceValue != null) {
                 val instrumentId = symbolValue.toInstrumentId(type)
                 val now = Date()
@@ -53,7 +54,7 @@ data class HoldingEdit(
                     SpecificHolding(
                         instrumentId = instrumentId,
                         custodian = Custodian.Wallet,
-                        custodianAccount = accountEdit.validValue ?: MAIN_ACCOUNT,
+                        custodianAccount = accountValue ?: MAIN_ACCOUNT,
                         size = sizeValue,
                         lastModified = now
                     )

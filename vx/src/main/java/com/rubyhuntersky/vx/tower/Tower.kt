@@ -52,11 +52,13 @@ interface Tower<Sight : Any, Event : Any> {
     fun <NeverE : Any> neverEvent(): Tower<Sight, NeverE> = NeverTower(this)
 
     infix fun and(tower: Tower<Sight, Event>): Tower<Sight, Event> = extendFloor(tower)
+
     infix fun shl(share: Share<Sight, Event>): Tower<Sight, Event> {
         return plusHShare(HShare.End(share.span, share.tower))
     }
 
     infix fun pad(size: Int): Tower<Sight, Event> = this hpad size vpad size
+
     infix fun hpad(size: Int): Tower<Sight, Event> {
         return plusHMargin(Margin.Uniform(Span.Absolute(size)))
     }
@@ -70,3 +72,19 @@ fun <Edge : Any, Core : Any, Event : Any> towerOf(
     edgeToCore: (Edge) -> Core,
     tower: Tower<Core, Event>
 ): Tower<Edge, Event> = tower.mapSight(edgeToCore)
+
+fun <Sight : Any, Event : Any> pack(
+    head: Tower<Sight, Event>,
+    space: Int,
+    tail: Tower<Sight, Event>
+): Tower<Sight, Event> {
+    val marginSpan = Span.Absolute(space) / 2
+    val headAndMargin = head.plusHMargin(Margin.Independent(Span.None, marginSpan))
+    val marginAhdTail = tail.plusHMargin(Margin.Independent(marginSpan, Span.None))
+    return headAndMargin.plusHShare(HShare.End(Span.HALF, marginAhdTail))
+}
+
+fun <Sight : Any, Event : Any> combine(
+    ceiling: Tower<Sight, Event>,
+    floor: Tower<Sight, Event>
+): Tower<Sight, Event> = ceiling and floor

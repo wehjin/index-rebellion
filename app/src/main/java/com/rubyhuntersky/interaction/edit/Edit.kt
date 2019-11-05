@@ -24,10 +24,18 @@ interface Edit<T : Any, MutationT : Any, SelectionT : Any, NovelT : Novel<T, Mut
         }
 
     val writableValue: T?
-        get() = if (isValueFresh || isValueChanged) validValue else null
+        get() {
+            return if (enabled) {
+                if (isValueFresh || isValueChanged) validValue else null
+            } else {
+                validValue
+            }
+        }
 
     private val isValueFresh: Boolean
-        get() = ancient == null && (novel != null || seed != null)
+        get() {
+            return ancient == null && (novel != null || seed != null)
+        }
 
     private val isValueChanged: Boolean
         get() {
