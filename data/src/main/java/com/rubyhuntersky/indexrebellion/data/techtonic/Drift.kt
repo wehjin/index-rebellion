@@ -83,6 +83,8 @@ data class Drift(
 
     fun find(divisionId: DivisionId): Division? = plan.findDivision(divisionId)
 
+    fun getInstruments(plate: Plate) = vault.toInstrumentsByPlate(plating)[plate] ?: emptySet()
+
     fun replace(sample: InstrumentSample): Drift = copy(market = market.replaceSample(sample))
     fun replace(samples: List<InstrumentSample>): Drift =
         copy(market = market.replaceSamples(samples))

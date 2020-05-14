@@ -4,6 +4,7 @@ import com.rubyhuntersky.indexrebellion.data.cash.CashAmount
 import com.rubyhuntersky.indexrebellion.data.common.DateSerializer
 import com.rubyhuntersky.indexrebellion.data.techtonic.instrument.InstrumentId
 import kotlinx.serialization.Serializable
+import java.math.BigDecimal
 import java.util.*
 
 @Serializable
@@ -17,4 +18,11 @@ data class InstrumentSample(
 ) {
     fun setPrice(price: CashAmount, date: Date?) =
         copy(sharePrice = price, sampleDate = date ?: sampleDate)
+
+    val marketCap: MarketCap
+        get() = if (macroPrice.value <= BigDecimal.ONE) {
+            MarketCap.NotSupported
+        } else {
+            MarketCap.Supported(macroPrice.value)
+        }
 }
